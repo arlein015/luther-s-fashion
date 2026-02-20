@@ -7,19 +7,23 @@
     <style>
         body { font-family: 'Helvetica', sans-serif; background-color: #f9f9f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
         .container { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; max-width: 400px; width: 90%; }
-        h1 { font-size: 26px; letter-spacing: 2px; text-transform: uppercase; }
+        h1 { font-size: 26px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
         .product-img { width: 100%; border-radius: 15px; margin: 20px 0; }
-        .price { font-size: 24px; font-weight: bold; margin-bottom: 20px; }
-        .btn-buy { background-color: #000; color: #fff; padding: 15px 30px; text-decoration: none; border-radius: 50px; display: inline-block; font-weight: bold; }
+        .price { font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #000; }
+        .btn-buy { background-color: #000; color: #fff; padding: 15px 30px; text-decoration: none; border-radius: 50px; display: inline-block; font-weight: bold; transition: 0.3s; }
+        .btn-buy:hover { background-color: #333; transform: scale(1.05); }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>LUTHER'S MODE</h1>
         <p><i>L'élégance à votre portée</i></p>
-        <img src=<img src="badg noir.jpg" class="product-img">
-        <p>Découvrez notre nouvelle collection exclusive.</p>
+        
+        <img src="badg noir.jpg" class="product-img" alt="Ma Collection">
+        
+        <p>Découvrez notre nouvelle collection exclusive. Qualité premium et design unique.</p>
         <div class="price">49,99 €</div>
+        
         <a href="#" class="btn-buy">Acheter maintenant</a>
     </div>
 </body>
