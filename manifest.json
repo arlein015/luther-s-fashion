@@ -1,0 +1,15 @@
+{
+  "name": "Luther Fashion Brand",
+  "short_name": "LutherMode",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f0f2f5",
+  "theme_color": "#1e3a8a",
+  "icons": [
+    {
+      "src": "logo-l.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
