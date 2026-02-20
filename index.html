@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther's Mode | Premium</title>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <title>Luther's Mode | Premium Shop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Poppins', sans-serif; margin: 0; background: #1a252f; color: #fff; }
         
-        /* HEADER STYLE */
+        /* HEADER AVEC LOGO L STYLISÉ */
         header { 
             padding: 25px 15px; background: linear-gradient(to bottom, #2c3e50, #1a252f);
             display: flex; align-items: center; justify-content: center; padding-right: 10%; gap: 15px;
@@ -18,42 +18,39 @@
             box-shadow: 0 0 0 2px #2980b9; display: flex; align-items: center; justify-content: center;
             font-family: 'Great Vibes', cursive; font-size: 45px; color: #fff;
         }
-        .site-title { font-size: 22px; font-weight: bold; text-transform: uppercase; }
+        .site-title { font-size: 22px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* RECHERCHE */
-        .search-container { display: flex; align-items: center; gap: 10px; padding: 10px 20px; background: #111b24; }
-        .logo-small {
-            width: 30px; height: 30px; border-radius: 50%; background: #000; border: 1.5px solid #fff;
-            display: flex; align-items: center; justify-content: center; font-family: 'Great Vibes', cursive; font-size: 18px;
-        }
-        #search-bar { flex-grow: 1; padding: 10px; border-radius: 20px; border: none; outline: none; }
-
-        /* CATALOGUE */
-        #catalog { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px; }
-        .p-card { background: #fff; border-radius: 12px; overflow: hidden; cursor: pointer; color: #333; text-align: center; }
+        /* CATALOGUE ALIGNÉ */
+        #catalog { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 12px; }
+        .p-card { background: #fff; border-radius: 15px; overflow: hidden; cursor: pointer; color: #333; transition: 0.3s; }
+        .p-card:active { transform: scale(0.95); }
         .p-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
-        .p-info { padding: 8px; font-size: 12px; font-weight: bold; }
+        .p-info { padding: 10px; font-size: 13px; font-weight: bold; }
 
-        /* MODAL */
-        #details-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; padding: 15px; box-sizing: border-box; overflow-y: auto; }
-        .modal-content { background: #fff; color: #333; border-radius: 20px; padding: 20px; max-width: 450px; margin: auto; position: relative; }
-        .close { position: absolute; right: 15px; top: 10px; font-size: 25px; cursor: pointer; }
+        /* FENÊTRE DE COMMANDE STYLISÉE */
+        #details-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; padding: 15px; box-sizing: border-box; overflow-y: auto; align-items: center; justify-content: center; }
+        .modal-content { background: #fff; color: #333; border-radius: 25px; padding: 20px; max-width: 420px; width: 100%; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .close { position: absolute; right: 20px; top: 15px; font-size: 28px; cursor: pointer; color: #999; }
 
-        /* OPTIONS */
-        .section-label { font-size: 13px; font-weight: bold; margin: 15px 0 5px; text-align: left; color: #2c3e50; }
-        .btn-row { display: flex; gap: 12px; margin-bottom: 10px; }
+        /* ALIGNEMENT DES OPTIONS (COULEURS ET TAILLES) */
+        .section-label { font-size: 14px; font-weight: 600; margin: 18px 0 8px; text-align: left; color: #1a252f; }
+        .options-row { display: flex; gap: 15px; justify-content: flex-start; align-items: center; }
         
-        .dot { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; transition: 0.3s; }
-        .dot.selected { border-color: #2980b9; transform: scale(1.1); box-shadow: 0 0 5px rgba(0,0,0,0.2); }
+        /* LES 4 COULEURS ALIGNÉES */
+        .dot { width: 35px; height: 35px; border-radius: 50%; border: 2px solid #eee; cursor: pointer; transition: 0.3s; position: relative; }
+        .dot.selected { border-color: #2980b9; transform: scale(1.15); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .dot.selected::after { content: '✓'; position: absolute; color: white; font-size: 18px; top: 50%; left: 50%; transform: translate(-50%, -50%); text-shadow: 0 0 3px #000; }
         
-        .size-box { padding: 8px 14px; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: bold; }
-        .size-box.selected { background: #2980b9; color: #fff; border-color: #2980b9; }
+        /* LES TAILLES ALIGNÉES */
+        .size-box { flex: 1; text-align: center; padding: 10px; border: 1px solid #ddd; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.2s; background: #fdfdfd; }
+        .size-box.selected { background: #2980b9; color: #fff; border-color: #2980b9; transform: translateY(-2px); }
 
-        .delivery-info { background: #eef7ff; padding: 10px; border-radius: 10px; font-size: 11px; text-align: left; border-left: 5px solid #2980b9; margin-top: 15px; }
+        .delivery-card { background: #f0f7ff; padding: 12px; border-radius: 12px; font-size: 12px; text-align: left; border-left: 5px solid #2980b9; margin-top: 15px; display: flex; align-items: center; gap: 10px; }
 
-        /* BOUTON MODIFIÉ */
-        .cmd-btn { background: #1a252f; color: #fff; width: 100%; padding: 15px; border: none; font-weight: bold; border-radius: 10px; cursor: pointer; margin-top: 15px; font-size: 14px; }
-        input { width: 100%; padding: 12px; margin-top: 8px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        /* BOUTON CONFIRMÉ */
+        .cmd-btn { background: #1a252f; color: #fff; width: 100%; padding: 18px; border: none; font-weight: bold; border-radius: 15px; cursor: pointer; margin-top: 20px; font-size: 15px; text-transform: uppercase; box-shadow: 0 5px 15px rgba(26, 37, 47, 0.3); }
+        input { width: 100%; padding: 14px; margin-top: 10px; border: 1px solid #eee; border-radius: 12px; box-sizing: border-box; background: #f9f9f9; outline: none; }
+        input:focus { border-color: #2980b9; background: #fff; }
     </style>
 </head>
 <body>
@@ -63,108 +60,89 @@
     <div class="site-title">LUTHER'S MODE</div>
 </header>
 
-<div class="search-container">
-    <div class="logo-small">L</div>
-    <input type="text" id="search-bar" placeholder="Rechercher...">
-</div>
-
 <div id="catalog"></div>
 
 <div id="details-view">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">×</span>
-        <img id="main-img" style="width:100%; border-radius:15px; transition: 0.3s;">
-        <h2 id="det-title" style="font-size: 18px; margin: 10px 0;"></h2>
-        <div style="font-size: 20px; font-weight: bold; color: #2980b9;">78,850 Ar</div>
+        <img id="main-img" style="width:100%; border-radius:20px; margin-bottom:10px;">
+        <h2 id="det-title" style="font-size: 19px; margin: 10px 0; color: #1a252f;"></h2>
+        <div style="font-size: 22px; font-weight: 700; color: #2980b9;">78,850 Ar</div>
 
         <div class="section-label">Couleurs disponibles :</div>
-        <div class="btn-row" id="color-choice">
-            <div class="dot" style="background:black" onclick="updateColor('Noir', 'badg noir.JPG', this)"></div>
-            <div class="dot" style="background:blue" onclick="updateColor('Bleu', 'badg bleu.JPG', this)"></div>
-            <div class="dot" style="background:red" onclick="updateColor('Rouge', 'badg rouge.JPG', this)"></div>
+        <div class="options-row">
+            <div class="dot" style="background:black" onclick="changeColor('Noir', 'badg noir.JPG', this)"></div>
+            <div class="dot" style="background:#0047AB" onclick="changeColor('Bleu', 'badg bleu.JPG', this)"></div>
+            <div class="dot" style="background:#E32636" onclick="changeColor('Rouge', 'badg rouge.JPG', this)"></div>
+            <div class="dot" style="background:#FFFFFF; border: 2px solid #ddd;" onclick="changeColor('Blanc', 'badg blanc.JPG', this)"></div>
         </div>
 
         <div class="section-label">Tailles disponibles :</div>
-        <div class="btn-row">
+        <div class="options-row">
             <div class="size-box" onclick="selSize('M', this)">M</div>
             <div class="size-box" onclick="selSize('L', this)">L</div>
             <div class="size-box" onclick="selSize('XL', this)">XL</div>
         </div>
 
-        <div class="delivery-info">
-            🚚 <b>Livraison :</b> Antananarivo (24h) | Province (48h-72h).
+        <div class="delivery-card">
+            <span style="font-size: 20px;">🚚</span>
+            <div><b>Livraison :</b> Antananarivo (24h) | Province (48h-72h).</div>
         </div>
 
         <input type="text" id="cust-name" placeholder="Ton Nom Complet">
         <input type="tel" id="cust-tel" placeholder="Ton Numéro de Téléphone">
         
-        <button class="cmd-btn" onclick="passerCommande()">CONFIRMÉ VOS COMMANDE</button>
+        <button class="cmd-btn" onclick="confirmer()">CONFIRMÉ VOS COMMANDE</button>
     </div>
 </div>
 
 <script>
-    let orderData = { item: '', color: 'Noir', size: '', img: 'badg noir.JPG' };
+    let currentSelect = { title: '', color: '', size: '', image: '' };
 
-    // FONCTION POUR CHANGER L'IMAGE ET LA COULEUR
-    function updateColor(colorName, imgPath, el) {
-        // 1. Changer l'image affichée
-        document.getElementById('main-img').src = imgPath;
-        
-        // 2. Mettre à jour les données de commande
-        orderData.color = colorName;
-        orderData.img = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1) + imgPath;
+    // Correction affichage Bleu et alignement
+    function changeColor(nom, image, element) {
+        document.getElementById('main-img').src = image;
+        currentSelect.color = nom;
+        currentSelect.image = image;
 
-        // 3. Style visuel du bouton sélectionné
         document.querySelectorAll('.dot').forEach(d => d.classList.remove('selected'));
-        el.classList.add('selected');
+        element.classList.add('selected');
     }
 
-    function selSize(s, el) {
+    function selSize(s, element) {
         document.querySelectorAll('.size-box').forEach(b => b.classList.remove('selected'));
-        el.classList.add('selected');
-        orderData.size = s;
+        element.classList.add('selected');
+        currentSelect.size = s;
     }
 
     function openModal(title) {
-        orderData.item = title;
+        currentSelect.title = title;
         document.getElementById('det-title').innerText = title;
-        document.getElementById('main-img').src = "badg noir.JPG"; // Image par défaut
-        document.getElementById('details-view').style.display = 'block';
+        document.getElementById('main-img').src = "badg noir.JPG"; 
+        document.getElementById('details-view').style.display = 'flex';
     }
 
     function closeModal() {
         document.getElementById('details-view').style.display = 'none';
     }
 
-    // Génération du catalogue
-    const catalog = document.getElementById('catalog');
-    for(let i=1; i<=10; i++) {
-        const div = document.createElement('div');
-        div.className = 'p-card';
-        div.innerHTML = `
-            <img src="badg noir.JPG" onerror="this.src='https://via.placeholder.com/150'">
-            <div class="p-info">Article Luther #${i}<br>78,850 Ar</div>
-        `;
-        div.onclick = () => openModal("Article Luther #" + i);
-        catalog.appendChild(div);
+    // Création du catalogue
+    const grid = document.getElementById('catalog');
+    for(let i=1; i<=8; i++) {
+        const item = document.createElement('div');
+        item.className = 'p-card';
+        item.innerHTML = `<img src="badg noir.JPG" onerror="this.src='https://via.placeholder.com/200'"><div class="p-info">Article Luther #${i}<br><span style="color:#2980b9">78,850 Ar</span></div>`;
+        item.onclick = () => openModal("Article Luther #" + i);
+        grid.appendChild(item);
     }
 
-    function passerCommande() {
-        const nom = document.getElementById('cust-name').value;
-        const tel = document.getElementById('cust-tel').value;
-        if(!nom || !tel || !orderData.size) {
-            return alert("Veuillez choisir une taille et entrer vos informations !");
-        }
+    function confirmer() {
+        const n = document.getElementById('cust-name').value;
+        const t = document.getElementById('cust-tel').value;
+        if(!n || !t || !currentSelect.color || !currentSelect.size) return alert("Remplis tout stp !");
         
-        const msg = `🔥 *COMMANDE CONFIRMÉE*\n\n` +
-                    `*Article:* ${orderData.item}\n` +
-                    `*Couleur:* ${orderData.color}\n` +
-                    `*Taille:* ${orderData.size}\n\n` +
-                    `📸 *Lien Photo:* ${orderData.img}\n\n` +
-                    `👤 *Client:* ${nom}\n` +
-                    `📞 *Tél:* ${tel}`;
-        
-        window.location.href = `https://wa.me/261339622155?text=${encodeURIComponent(msg)}`;
+        const texte = `🔥 *COMMANDE CONFIRMÉE*\n\n*Article:* ${currentSelect.title}\n*Couleur:* ${currentSelect.color}\n*Taille:* ${currentSelect.size}\n\n👤 *Client:* ${n}\n📞 *Tél:* ${t}`;
+        window.location.href = `https://wa.me/261339622155?text=${encodeURIComponent(texte)}`;
     }
 </script>
 </body>
