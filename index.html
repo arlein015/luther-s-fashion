@@ -7,14 +7,14 @@
     <style>
         body { font-family: sans-serif; background-color: #f9f9f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
         .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; max-width: 400px; width: 100%; }
-        .product-img { width: 100%; border-radius: 15px; margin: 15px 0; min-height: 300px; object-fit: contain; background: #eee; }
+        .product-img { width: 100%; border-radius: 15px; margin: 15px 0; min-height: 300px; object-fit: contain; background: #eee; transition: 0.3s; }
         .price { font-size: 26px; font-weight: bold; margin: 15px 0; }
         .options-title { font-size: 12px; font-weight: bold; margin-top: 15px; color: #888; text-transform: uppercase; }
         .selection-group { display: flex; justify-content: center; gap: 10px; margin: 10px 0 20px 0; flex-wrap: wrap; }
         .color-circle { width: 35px; height: 35px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; transition: 0.2s; }
         .color-circle:hover { transform: scale(1.1); border-color: #000; }
-        .size-btn { border: 1px solid #ddd; padding: 8px 12px; border-radius: 5px; font-size: 14px; }
-        .btn-buy { background-color: #25d366; color: #fff; padding: 15px 30px; text-decoration: none; border-radius: 50px; display: inline-block; font-weight: bold; width: 80%; }
+        .size-btn { border: 1px solid #ddd; padding: 8px 12px; border-radius: 5px; font-size: 14px; cursor: pointer; }
+        .btn-buy { background-color: #25d366; color: #fff; padding: 15px 30px; text-decoration: none; border-radius: 50px; display: inline-block; font-weight: bold; width: 80%; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -35,10 +35,10 @@
         <div class="selection-group">
             <div class="color-circle" style="background: black;" onclick="changeColor('badg noir.jpg')"></div>
             <div class="color-circle" style="background: blue;" onclick="changeColor('Badg bleu.JPG')"></div>
-            <div class="color-circle" style="background: yellow;" onclick="changeColor('Badg jaune.JPG')"></div>
+            <div class="color-circle" style="background: yellow;" onclick="changeColor('badg jaune.JPG')"></div>
             <div class="color-circle" style="background: #800000;" onclick="changeColor('Badg grenat.JPG')"></div>
-            <div class="color-circle" style="background: red;" onclick="changeColor('Badg rouge.JPG')"></div>
-            <div class="color-circle" style="background: green;" onclick="changeColor('Badg vert.JPG')"></div>
+            <div class="color-circle" style="background: red;" onclick="changeColor('badg rouge.JPG')"></div>
+            <div class="color-circle" style="background: green;" onclick="changeColor('badg vert.JPG')"></div>
         </div>
 
         <a href="https://wa.me/261339622155?text=Bonjour+Luther+je+commande+cet+article" class="btn-buy">
@@ -48,7 +48,7 @@
 
     <script>
         function changeColor(imageName) {
-            // Force le changement avec le nom exact
+            // Change l'image affichée
             document.getElementById('mainImage').src = imageName;
         }
     </script>
