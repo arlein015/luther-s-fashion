@@ -3,145 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther's Mode | Catalogue 2026</title>
+    <title>Luther's Mode | Catalogue</title>
     <style>
-        body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #fff; margin: 0; padding: 0; color: #333; }
-        header { padding: 20px; text-align: center; border-bottom: 1px solid #eee; font-weight: bold; letter-spacing: 3px; font-size: 20px; position: sticky; top: 0; background: white; z-index: 100; }
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; background: #fff; }
+        header { padding: 15px; text-align: center; border-bottom: 1px solid #eee; font-weight: bold; position: sticky; top: 0; background: white; z-index: 10; }
 
-        /* VUE 1 : GRILLE 30 PRODUITS */
-        #view-catalog { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px; max-width: 1000px; margin: 0 auto; }
-        .grid-item { border-radius: 4px; overflow: hidden; cursor: pointer; background: #fff; transition: 0.2s; border: 1px solid #f0f0f0; }
-        .grid-item img { width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block; }
-        .grid-info { padding: 10px; }
-        .grid-name { font-size: 12px; color: #666; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .grid-price { font-size: 14px; font-weight: bold; color: #000; }
+        /* GRILLE PRINCIPALE (Affiche 2 produits par ligne) */
+        #catalog { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px; }
+        .product-card { border: 1px solid #f0f0f0; border-radius: 4px; overflow: hidden; cursor: pointer; }
+        .product-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
+        .product-info { padding: 8px; }
+        .product-name { font-size: 12px; color: #666; margin-bottom: 4px; }
+        .product-price { font-size: 14px; font-weight: bold; }
 
-        /* VUE 2 : DÉTAILS DU PRODUIT SELECTIONNÉ */
-        #view-details { display: none; padding: 15px; max-width: 600px; margin: 0 auto; }
-        .back-btn { background: none; border: none; font-size: 24px; cursor: pointer; padding: 10px 0; }
-        .detail-img { width: 100%; border-radius: 8px; margin-bottom: 15px; }
-        .detail-price { font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #000; }
+        /* VUE DÉTAILLÉE (Cachée par défaut) */
+        #details-view { display: none; padding: 15px; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 20; overflow-y: auto; box-sizing: border-box; }
+        .close-btn { font-size: 24px; cursor: pointer; margin-bottom: 10px; display: block; }
+        .detail-img { width: 100%; border-radius: 8px; }
         
-        .label { font-size: 11px; color: #999; text-transform: uppercase; margin-top: 20px; font-weight: bold; }
-        .selection-group { display: flex; gap: 12px; margin: 10px 0 25px; }
-        .color-opt { width: 34px; height: 34px; border-radius: 50%; border: 2px solid #eee; cursor: pointer; }
-        .size-opt { border: 1px solid #ddd; padding: 10px 20px; border-radius: 4px; cursor: pointer; background: white; font-weight: bold; }
-        .size-opt.active { background: black; color: white; border-color: black; }
+        .option-title { font-size: 11px; color: #999; text-transform: uppercase; margin-top: 20px; }
+        .btn-group { display: flex; gap: 10px; margin: 10px 0; }
+        .color-dot { width: 30px; height: 30px; border-radius: 50%; border: 1px solid #ddd; cursor: pointer; }
+        .size-btn { border: 1px solid #ddd; padding: 8px 15px; border-radius: 4px; background: white; cursor: pointer; }
+        .size-btn.active { background: black; color: white; }
 
-        /* VUE 3 : FORMULAIRE FINAL */
-        #view-checkout { display: none; padding: 20px; max-width: 500px; margin: 0 auto; text-align: center; }
-        input { width: 100%; padding: 15px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; font-size: 16px; }
-
-        /* BOUTON NOIR GLOBAL */
-        .btn-main { background: black; color: white; width: 100%; padding: 18px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; }
+        /* FORMULAIRE ET BOUTON NOIR */
+        #checkout-form { display: none; padding: 20px; }
+        input { width: 100%; padding: 15px; margin-bottom: 10px; border: 1px solid #eee; border-radius: 5px; box-sizing: border-box; }
+        .action-btn { background: black; color: white; width: 100%; padding: 18px; border: none; font-weight: bold; cursor: pointer; margin-top: 20px; }
     </style>
 </head>
 <body>
 
 <header>LUTHER'S MODE</header>
 
-<div id="view-catalog"></div>
+<div id="catalog"></div>
 
-<div id="view-details">
-    <button class="back-btn" onclick="showCatalog()">✕</button>
-    <img id="detail-img-src" class="detail-img" src="">
-    <h2 id="detail-title" style="margin:0; font-size: 20px;"></h2>
-    <div id="detail-price-val" class="detail-price"></div>
+<div id="details-view">
+    <span class="close-btn" onclick="hideDetails()">✕</span>
+    <img id="det-img" class="detail-img">
+    <h2 id="det-title" style="margin: 15px 0 5px;"></h2>
+    <div id="det-price" style="font-size: 20px; font-weight: bold;"></div>
 
-    <div class="label">Couleurs disponibles</div>
-    <div class="selection-group" id="color-container"></div>
+    <div class="option-title">Couleur</div>
+    <div class="btn-group" id="color-box"></div>
 
-    <div class="label">Choisir la taille</div>
-    <div class="selection-group">
-        <button class="size-opt" onclick="selectSize(this, 'S')">S</button>
-        <button class="size-opt" onclick="selectSize(this, 'M')">M</button>
-        <button class="size-opt" onclick="selectSize(this, 'L')">L</button>
-        <button class="size-opt" onclick="selectSize(this, 'XL')">XL</button>
+    <div class="option-title">Taille</div>
+    <div class="btn-group">
+        <button class="size-btn" onclick="setSize(this, 'S')">S</button>
+        <button class="size-btn" onclick="setSize(this, 'M')">M</button>
+        <button class="size-btn" onclick="setSize(this, 'L')">L</button>
     </div>
 
-    <button class="btn-main" onclick="goToCheckout()">AJOUTER AU PANIER</button>
+    <button class="action-btn" onclick="showCheckout()">AJOUTER AU PANIER</button>
 </div>
 
-<div id="view-checkout">
-    <h2 style="margin-bottom:30px;">LIVRAISON</h2>
-    <input type="text" id="nom" placeholder="Nom Complet">
-    <input type="tel" id="tel" placeholder="Téléphone">
-    <input type="text" id="adresse" placeholder="Adresse ou Quartier">
-    <button class="btn-main" onclick="sendToWhatsApp()">PAYÉE</button>
+<div id="checkout-form">
+    <h3 style="text-align:center;">COORDONNÉES DE LIVRAISON</h3>
+    <input type="text" id="client-nom" placeholder="Nom Complet">
+    <input type="tel" id="client-tel" placeholder="Téléphone">
+    <input type="text" id="client-adr" placeholder="Adresse / Ville">
+    <button class="action-btn" onclick="sendWhatsApp()">PAYÉE</button>
 </div>
 
 <script>
-    // LISTE DES 30 PRODUITS (Tu peux changer les noms, prix et images ici)
+    // 1. Liste des 30 produits
     const products = [];
-    for (let i = 1; i <= 30; i++) {
+    for(let i=1; i<=30; i++) {
         products.push({
             id: i,
             name: "Article Luther #" + i,
-            price: (50000 + (i * 2000)).toLocaleString() + " Ar",
-            img: "image" + i + ".JPG", // Assure-toi d'avoir image1.JPG, image2.JPG...
-            colors: ['#000', '#2a52be', '#e31b23']
+            price: (70000 + (i * 1000)) + " Ar",
+            img: i === 1 ? "badg noir.JPG" : (i === 2 ? "badg vert.JPG" : "badg noir.JPG"),
+            colors: ['black', 'blue', 'red']
         });
     }
 
-    // AFFICHER LE CATALOGUE
-    const catalog = document.getElementById('view-catalog');
+    // 2. Affichage du catalogue
+    const catalogDiv = document.getElementById('catalog');
     products.forEach(p => {
-        catalog.innerHTML += `
-            <div class="grid-item" onclick="openDetails(${p.id})">
-                <img src="${p.img}" onerror="this.src='badg noir.JPG'">
-                <div class="grid-info">
-                    <div class="grid-name">${p.name}</div>
-                    <div class="grid-price">${p.price}</div>
+        catalogDiv.innerHTML += `
+            <div class="product-card" onclick="showDetails(${p.id})">
+                <img src="${p.img}">
+                <div class="product-info">
+                    <div class="product-name">${p.name}</div>
+                    <div class="product-price">${p.price}</div>
                 </div>
             </div>`;
     });
 
-    let order = { name: '', price: '', color: 'Noir', size: 'M' };
+    let currentSelection = { name: '', price: '', size: 'M', color: 'Noir' };
 
-    function openDetails(id) {
-        const p = products.find(item => item.id === id);
-        order.name = p.name;
-        order.price = p.price;
+    // 3. Fonctions de navigation
+    function showDetails(id) {
+        const p = products.find(x => x.id === id);
+        currentSelection.name = p.name;
+        currentSelection.price = p.price;
         
-        document.getElementById('detail-title').innerText = p.name;
-        document.getElementById('detail-price-val').innerText = p.price;
-        document.getElementById('detail-img-src').src = p.img;
+        document.getElementById('det-title').innerText = p.name;
+        document.getElementById('det-price').innerText = p.price;
+        document.getElementById('det-img').src = p.img;
         
-        // Générer les ronds de couleur
-        const colorDiv = document.getElementById('color-container');
-        colorDiv.innerHTML = '';
+        const cBox = document.getElementById('color-box');
+        cBox.innerHTML = '';
         p.colors.forEach(c => {
-            colorDiv.innerHTML += `<div class="color-opt" style="background:${c}" onclick="order.color='${c}'"></div>`;
+            cBox.innerHTML += `<div class="color-dot" style="background:${c}" onclick="currentSelection.color='${c}'"></div>`;
         });
 
-        document.getElementById('view-catalog').style.display = 'none';
-        document.getElementById('view-details').style.display = 'block';
-        window.scrollTo(0,0);
+        document.getElementById('details-view').style.display = 'block';
     }
 
-    function showCatalog() {
-        document.getElementById('view-details').style.display = 'none';
-        document.getElementById('view-catalog').style.display = 'grid';
-    }
+    function hideDetails() { document.getElementById('details-view').style.display = 'none'; }
 
-    function selectSize(btn, s) {
-        document.querySelectorAll('.size-opt').forEach(o => o.classList.remove('active'));
+    function setSize(btn, s) {
+        document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        order.size = s;
+        currentSelection.size = s;
     }
 
-    function goToCheckout() {
-        document.getElementById('view-details').style.display = 'none';
-        document.getElementById('view-checkout').style.display = 'block';
+    function showCheckout() {
+        document.getElementById('details-view').style.display = 'none';
+        document.getElementById('checkout-form').style.display = 'block';
     }
 
-    function sendToWhatsApp() {
-        const client = document.getElementById('nom').value;
-        const tel = document.getElementById('tel').value;
-        if(!client || !tel) return alert("Veuillez remplir vos coordonnées");
+    function sendWhatsApp() {
+        const nom = document.getElementById('client-nom').value;
+        const tel = document.getElementById('client-tel').value;
+        if(!nom || !tel) return alert("Remplissez vos infos");
 
-        const message = `LUTHER MODE - NOUVELLE COMMANDE\n\nProduit: ${order.name}\nPrix: ${order.price}\nTaille: ${order.size}\n\nClient: ${client}\nContact: ${tel}`;
-        window.location.href = `https://wa.me/261339622155?text=${encodeURIComponent(message)}`;
+        const text = `COMMANDE LUTHER MODE\nProduit: ${currentSelection.name}\nPrix: ${currentSelection.price}\nTaille: ${currentSelection.size}\nClient: ${nom}\nTél: ${tel}`;
+        window.location.href = `https://wa.me/261339622155?text=${encodeURIComponent(text)}`;
     }
 </script>
 
