@@ -13,27 +13,27 @@
         .selection-group { display: flex; justify-content: center; gap: 10px; margin: 10px 0 20px 0; flex-wrap: wrap; }
         .color-circle { width: 35px; height: 35px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; transition: 0.2s; }
         .color-circle:hover { transform: scale(1.1); border-color: #000; }
-        .size-btn { border: 1px solid #ddd; padding: 8px 12px; border-radius: 5px; font-size: 14px; cursor: pointer; }
-        .btn-buy { background-color: #25d366; color: #fff; padding: 15px 30px; text-decoration: none; border-radius: 50px; display: inline-block; font-weight: bold; width: 80%; margin-top: 10px; }
+        .size-btn { border: 1px solid #ddd; padding: 8px 12px; border-radius: 5px; font-size: 14px; }
+        .btn-buy { background-color: #25d366; color: #fff; padding: 15px 30px; text-decoration: none; border-radius: 50px; display: inline-block; font-weight: bold; width: 80%; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>LUTHER'S MODE</h1>
         
-        <img src="badg noir.jpg" id="mainImage" class="product-img">
+        <img src="badg noir.JPG" id="mainImage" class="product-img">
         
         <div class="price">78,850 Ar</div>
 
-        <div class="options-title">Taille</div>
+        <div class="options-title">Taille disponible</div>
         <div class="selection-group">
             <div class="size-btn">S</div><div class="size-btn">M</div>
             <div class="size-btn">L</div><div class="size-btn">XL</div>
         </div>
 
-        <div class="options-title">Couleur disponible</div>
+        <div class="options-title">Couleur</div>
         <div class="selection-group">
-            <div class="color-circle" style="background: black;" onclick="changeColor('badg noir.jpg')"></div>
+            <div class="color-circle" style="background: black;" onclick="changeColor('badg noir.JPG')"></div>
             <div class="color-circle" style="background: blue;" onclick="changeColor('Badg bleu.JPG')"></div>
             <div class="color-circle" style="background: yellow;" onclick="changeColor('badg jaune.JPG')"></div>
             <div class="color-circle" style="background: #800000;" onclick="changeColor('Badg grenat.JPG')"></div>
@@ -48,7 +48,6 @@
 
     <script>
         function changeColor(imageName) {
-            // Change l'image affichée
             document.getElementById('mainImage').src = imageName;
         }
     </script>
