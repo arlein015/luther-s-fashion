@@ -3,27 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther's Mode | Commande</title>
+    <title>Luther's Mode | Boutique</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; padding: 20px; margin: 0; }
         .container { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); max-width: 450px; width: 100%; text-align: center; }
-        
         .product-img { width: 100%; height: auto; max-height: 350px; border-radius: 10px; object-fit: contain; background: #eee; }
-        .price { font-size: 24px; font-weight: bold; margin: 10px 0; }
-
+        .price { font-size: 24px; font-weight: bold; margin: 15px 0; }
         .section-title { font-size: 12px; font-weight: bold; color: #888; text-transform: uppercase; margin-top: 20px; margin-bottom: 10px; border-top: 1px solid #eee; padding-top: 10px; }
         
         .selection-group { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
         .color-circle { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; }
-        .size-btn { border: 1px solid #ccc; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+        
+        /* Style pour les boutons de taille */
+        .size-btn { border: 1px solid #ddd; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 14px; background: white; }
+        .size-btn.active { border-color: black; background: #f0f0f0; font-weight: bold; }
 
-        /* Style du Formulaire */
         .form-group { text-align: left; margin-bottom: 15px; }
         label { display: block; font-size: 14px; margin-bottom: 5px; font-weight: bold; }
-        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
 
         .btn-order { background-color: #000; color: white; padding: 15px; text-decoration: none; border-radius: 5px; display: block; font-weight: bold; margin-top: 20px; border: none; width: 100%; cursor: pointer; }
-        .btn-order:hover { background-color: #333; }
     </style>
 </head>
 <body>
@@ -33,14 +32,22 @@
         <img src="badg noir.JPG" id="mainImage" class="product-img">
         <div class="price">78,850 Ar</div>
 
-        <div class="section-title">1. Choisissez votre couleur</div>
+        <div class="section-title">1. Choisir Couleur & Taille</div>
+        
         <div class="selection-group">
-            <div class="color-circle" style="background: black;" onclick="updateChoice('Noir', 'badg noir.JPG')"></div>
-            <div class="color-circle" style="background: blue;" onclick="updateChoice('Bleu', 'Badg bleu.JPG')"></div>
-            <div class="color-circle" style="background: yellow;" onclick="updateChoice('Jaune', 'badg jaune.JPG')"></div>
-            <div class="color-circle" style="background: #800000;" onclick="updateChoice('Grenat', 'Badg grenat.JPG')"></div>
-            <div class="color-circle" style="background: red;" onclick="updateChoice('Rouge', 'badg rouge.JPG')"></div>
-            <div class="color-circle" style="background: green;" onclick="updateChoice('Vert', 'badg vert.JPG')"></div>
+            <div class="color-circle" style="background: black;" onclick="updateColor('Noir', 'badg noir.JPG')"></div>
+            <div class="color-circle" style="background: blue;" onclick="updateColor('Bleu', 'Badg bleu.JPG')"></div>
+            <div class="color-circle" style="background: yellow;" onclick="updateColor('Jaune', 'badg jaune.JPG')"></div>
+            <div class="color-circle" style="background: #800000;" onclick="updateColor('Grenat', 'Badg grenat.JPG')"></div>
+            <div class="color-circle" style="background: red;" onclick="updateColor('Rouge', 'badg rouge.JPG')"></div>
+            <div class="color-circle" style="background: green;" onclick="updateColor('Vert', 'badg vert.JPG')"></div>
+        </div>
+
+        <div class="selection-group">
+            <button class="size-btn" onclick="updateSize(this, 'S')">S</button>
+            <button class="size-btn" onclick="updateSize(this, 'M')">M</button>
+            <button class="size-btn" onclick="updateSize(this, 'L')">L</button>
+            <button class="size-btn" onclick="updateSize(this, 'XL')">XL</button>
         </div>
 
         <div class="section-title">2. Informations de livraison</div>
@@ -49,7 +56,7 @@
             <input type="text" id="nom" placeholder="Ex: Jean Dupont">
         </div>
         <div class="form-group">
-            <label>Adresse exacte (Ville, Quartier, Lot)</label>
+            <label>Adresse exacte (Ville, Quartier)</label>
             <input type="text" id="adresse" placeholder="Ex: Antananarivo, Itaosy Lot 123">
         </div>
         <div class="form-group">
@@ -58,15 +65,24 @@
         </div>
 
         <button class="btn-order" onclick="envoyerCommande()">VALIDER LA COMMANDE</button>
-        <p style="font-size: 10px; color: #999; margin-top: 10px;">Paiement à la livraison ou via Mobile Money après validation.</p>
+        <p style="font-size: 10px; color: #999; margin-top: 10px;">Paiement à la livraison ou Mobile Money.</p>
     </div>
 
     <script>
         let couleurChoisie = "Noir";
+        let tailleChoisie = "Non précisée";
 
-        function updateChoice(nomCouleur, imgPath) {
-            couleurChoisie = nomCouleur;
-            document.getElementById('mainImage').src = imgPath;
+        function updateColor(nom, img) {
+            couleurChoisie = nom;
+            document.getElementById('mainImage').src = img;
+        }
+
+        function updateSize(btn, taille) {
+            // Désélectionner les autres boutons
+            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+            // Sélectionner le bouton cliqué
+            btn.classList.add('active');
+            tailleChoisie = taille;
         }
 
         function envoyerCommande() {
@@ -74,22 +90,20 @@
             const adresse = document.getElementById('adresse').value;
             const tel = document.getElementById('tel').value;
 
-            if(nom == "" || adresse == "" || tel == "") {
-                alert("Merci de remplir tous les champs pour la livraison.");
+            if(!nom || !adresse || !tel) {
+                alert("Merci de remplir vos infos de livraison.");
                 return;
             }
 
-            const message = `Nouvelle Commande Luther's Mode :
-- Produit : Badge Logo
+            const message = `COMMANDE LUTHER'S MODE :
+- Article : Badge Logo
 - Couleur : ${couleurChoisie}
+- Taille : ${tailleChoisie}
 - Client : ${nom}
 - Adresse : ${adresse}
-- Contact : ${tel}
-- Total : 78,850 Ar`;
+- Contact : ${tel}`;
 
-            // Envoi vers WhatsApp (le plus fiable pour recevoir les coordonnées)
-            const whatsappUrl = `https://wa.me/261339622155?text=${encodeURIComponent(message)}`;
-            window.location.href = whatsappUrl;
+            window.location.href = `https://wa.me/261339622155?text=${encodeURIComponent(message)}`;
         }
     </script>
 </body>
