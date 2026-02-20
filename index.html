@@ -12,7 +12,6 @@
         }
         body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); color: #333; text-align: center; }
 
-        /* HEADER STYLE MANUSCRIT */
         header { padding: 40px 20px; }
         .logo-text { 
             font-family: 'Alex Brush', cursive; font-size: 85px; 
@@ -21,165 +20,24 @@
         }
         .sub-logo { letter-spacing: 4px; font-size: 13px; color: #444; text-transform: uppercase; margin-top: -10px; font-weight: 600; }
 
-        /* BARRE DE RECHERCHE FLOTTANTE */
         .search-container {
             background: #fff; max-width: 700px; margin: 0 auto 30px;
             display: flex; align-items: center; padding: 12px 25px;
-            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 90%;
         }
         .logo-l-circle {
             width: 40px; height: 40px; border: 2.5px solid #1e3a8a; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             font-size: 22px; font-weight: bold; color: #1e3a8a; margin-right: 15px;
         }
-        #search-bar { border: 1px solid #ddd; border-radius: 20px; padding: 8px 20px; flex: 1; outline: none; color: #666; }
+        #search-bar { border: 1px solid #ddd; border-radius: 20px; padding: 8px 20px; flex: 1; outline: none; }
 
-        /* CATÉGORIES CLIQUABLES (FIXÉES) */
-        .categories { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; }
-        .cat-btn { 
-            padding: 10px 25px; border-radius: 25px; border: none; 
-            background: #fff; color: #555; cursor: pointer; 
-            font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: 0.3s;
-        }
-        .cat-btn.active { background: #1e3a8a; color: #fff; transform: translateY(-2px); }
-        .cat-btn:hover { background: #f8f9fa; }
+        .categories { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; overflow-x: auto; padding: 10px; }
+        .cat-btn { padding: 8px 20px; border-radius: 20px; border: none; background: #fff; cursor: pointer; font-weight: 600; transition: 0.3s; white-space: nowrap; }
+        .cat-btn.active { background: #1e3a8a; color: #fff; }
 
-        /* GRILLE CATALOGUE */
-        .catalog-title { text-align: left; max-width: 1100px; margin: 0 auto 15px; font-weight: bold; font-size: 14px; color: #555; text-transform: uppercase; padding-left: 20px;}
-        .catalog { 
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; 
-            padding: 0 20px 40px; max-width: 1100px; margin: 0 auto;
-        }
+        .catalog-title { text-align: left; max-width: 1100px; margin: 0 auto 10px; font-weight: bold; font-size: 14px; padding-left: 20px; color: #888; }
+        .catalog { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 0 20px 40px; max-width: 1100px; margin: 0 auto; }
         @media (max-width: 850px) { .catalog { grid-template-columns: repeat(2, 1fr); } }
 
-        .card { 
-            background: #fff; border-radius: 15px; padding: 15px; text-align: left;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03); cursor: pointer; transition: 0.3s;
-        }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
-        .card img { width: 100%; border-radius: 10px; margin-bottom: 15px; background: #f9f9f9; }
-        .card-name { font-size: 13px; font-weight: 600; color: #333; margin-bottom: 5px; }
-        .card-price { font-size: 15px; font-weight: bold; color: #000; }
-
-        /* MODAL STYLE IMAGE */
-        #modal { 
-            display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.8); 
-            z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(8px);
-        }
-        .modal-content { 
-            background: #fff; border-radius: 25px; padding: 35px; width: 90%; max-width: 420px; 
-            box-shadow: 0 20px 60px rgba(0,0,0,0.1); position: relative;
-        }
-        .modal-logo { font-family: 'Alex Brush', cursive; font-size: 45px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        .color-group { display: flex; justify-content: center; gap: 12px; margin: 25px 0; }
-        .dot { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: 0.2s; }
-        .dot.active { border-color: #333; transform: scale(1.2); }
-
-        .confirm-btn { 
-            background: var(--gradient); color: #fff; width: 100%; padding: 18px; 
-            border: none; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 15px;
-        }
-        input { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 10px; border: 1px solid #eee; box-sizing: border-box; background: #fafafa; }
-    </style>
-</head>
-<body>
-
-<header>
-    <div class="logo-text">Luther</div>
-    <div class="sub-logo">FASHION BRAND</div>
-</header>
-
-<div class="search-container">
-    <div class="logo-l-circle">L</div>
-    <input type="text" id="search-bar" placeholder="search-bar">
-</div>
-
-<div class="categories">
-    <button class="cat-btn active" onclick="filter('Tout', this)">Tout</button>
-    <button class="cat-btn" onclick="filter('Chaussure', this)">Chaussures</button>
-    <button class="cat-btn" onclick="filter('Vestes', this)">Vestes</button>
-    <button class="cat-btn" onclick="filter('Short', this)">Short</button>
-</div>
-
-<div class="catalog-title">CATALOG</div>
-<div class="catalog" id="main-list"></div>
-
-<div id="modal">
-    <div class="modal-content">
-        <div class="modal-logo">Luther</div>
-        <p style="font-size: 10px; letter-spacing: 2px; color: #aaa; margin-top:-10px; margin-bottom: 20px;">FASHION BRAND</p>
-        
-        <div class="color-group">
-            <div class="dot" style="background:#1e3a8a" onclick="setCol('Bleu', this)"></div>
-            <div class="dot" style="background:#93c5fd" onclick="setCol('Ciel', this)"></div>
-            <div class="dot" style="background:#a855f7" onclick="setCol('Violet', this)"></div>
-            <div class="dot" style="background:#d8b4fe" onclick="setCol('Lilas', this)"></div>
-            <div class="dot" style="background:#64748b" onclick="setCol('Gris', this)"></div>
-        </div>
-
-        <div id="item-info" style="text-align: left; margin-bottom: 15px;">
-            <div id="item-title" style="font-weight: 600; font-size: 14px;"></div>
-            <div id="item-col-label" style="font-size: 12px; color: #888;">color: <span id="col-name" style="color:#333">Sélectionne</span></div>
-        </div>
-
-        <input type="text" id="c-name" placeholder="Ton Nom Complet">
-        <input type="tel" id="c-tel" placeholder="Tel : Téléphone">
-
-        <button class="confirm-btn" onclick="finishOrder()">CONFIRMÉ VOIS COMMANDE</button>
-        <p onclick="closeModal()" style="margin-top: 15px; cursor: pointer; font-size: 12px; color: #bbb; text-decoration: underline;">Fermer</p>
-    </div>
-</div>
-
-<script>
-    const list = document.getElementById('main-list');
-    let current = { title: '', color: '' };
-
-    // Génération des 100 produits
-    const types = ['Chaussure', 'Vestes', 'Short'];
-    for(let i=1; i<=100; i++){
-        const type = types[i % 3];
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.setAttribute('data-cat', type);
-        card.innerHTML = `
-            <img src="badg noir.JPG">
-            <div class="card-name">${type} Luther</div>
-            <div class="card-price">18,50$</div>
-        `;
-        card.onclick = () => {
-            current.title = `${type} Luther #${i}`;
-            document.getElementById('item-title').innerText = current.title;
-            document.getElementById('modal').style.display = 'flex';
-        };
-        list.appendChild(card);
-    }
-
-    // FONCTION DE FILTRE CORRIGÉE
-    function filter(cat, btn) {
-        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        document.querySelectorAll('.card').forEach(c => {
-            c.style.display = (cat === 'Tout' || c.getAttribute('data-cat') === cat) ? 'block' : 'none';
-        });
-    }
-
-    function setCol(c, el) {
-        current.color = c;
-        document.getElementById('col-name').innerText = c;
-        document.querySelectorAll('.dot').forEach(d => d.classList.remove('active'));
-        el.classList.add('active');
-    }
-
-    function closeModal() { document.getElementById('modal').style.display = 'none'; }
-
-    function finishOrder() {
-        const n = document.getElementById('c-name').value;
-        const t = document.getElementById('c-tel').value;
-        if(!n || !t || !current.color) return alert("Choisis une couleur et remplis tes infos !");
-        const msg = `💎 *LUTHER FASHION BRAND*\nArticle: ${current.title}\nCouleur: ${current.color}\nClient: ${n}\nTél: ${t}`;
-        window.location.href = `https://wa.me/261339622155?text=${encodeURIComponent(msg)}`;
-    }
-</script>
-</body>
-</html>
+        .card { background: #fff; border-radius: 15px; padding: 15px; text-align: left; box-shadow: 0 4px 15px rgba
