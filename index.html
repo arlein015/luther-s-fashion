@@ -35,11 +35,11 @@
         .qty-box { display: flex; align-items: center; border: 1px solid #eee; border-radius: 20px; padding: 2px 10px; background: #fff; }
         .qty-btn { background: none; border: none; font-size: 18px; cursor: pointer; padding: 0 10px; font-weight: bold; }
 
-        .buy-btn { background: #000; color: #fff; width: 100%; padding: 15px; border: none; font-weight: bold; cursor: pointer; border-radius: 8px; margin-top: 20px; font-size: 14px; }
+        .buy-btn { background: #000; color: #fff; width: 100%; padding: 15px; border: none; font-weight: bold; cursor: pointer; border-radius: 8px; margin-top: 20px; font-size: 14px; text-transform: uppercase; }
 
-        /* Livraison */
-        #checkout { display: none; padding: 20px; background: white; text-align: center; }
-        input { width: 100%; padding: 12px; margin-bottom: 8px; border: 1px solid #eee; border-radius: 6px; box-sizing: border-box; background: #fcfcfc; }
+        /* Formulaire intégré */
+        #checkout-form { border-top: 1px solid #eee; margin-top: 25px; padding-top: 20px; text-align: left; }
+        input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #eee; border-radius: 6px; box-sizing: border-box; background: #fcfcfc; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -62,5 +62,98 @@
             <div class="section-title">Taille</div>
             <div class="row">
                 <button class="sz-btn" onclick="selectSize(this, 'S')">S</button>
-                <button class="sz-btn active" onclick="selectSize(this, 'M')">M</button>
-                <button class="sz-btn" onclick="selectSize(this, '
+                <button class="sz-btn" onclick="selectSize(this, 'M')">M</button>
+                <button class="sz-btn" onclick="selectSize(this, 'L')">L</button>
+            </div>
+        </div>
+        <div>
+            <div class="section-title">Quantité</div>
+            <div class="qty-box">
+                <button class="qty-btn" onclick="changeQty(-1)">-</button>
+                <span id="qty-val" style="font-weight:bold;">1</span>
+                <button class="qty-btn" onclick="changeQty(1)">+</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="checkout-form">
+        <div class="section-title">Coordonnées de livraison</div>
+        <input type="text" id="user-name" placeholder="Nom Complet">
+        <input type="tel" id="user-tel" placeholder="Numéro de Téléphone">
+        <input type="text" id="user-addr" placeholder="Adresse Exacte (Ville, Quartier)">
+        <button class="buy-btn" onclick="orderWA()">Commander Maintenant</button>
+    </div>
+</div>
+
+<script>
+    const myColors = [
+        { name: 'Noir', code: '#000', file: 'badg noir.JPG' },
+        { name: 'Vert', code: '#28a745', file: 'badg vert.JPG' },
+        { name: 'Bleu', code: '#007bff', file: 'badg bleu.JPG' },
+        { name: 'Rouge', code: '#ff4d4d', file: 'badg rouge.JPG' }
+    ];
+
+    const catalog = document.getElementById('catalog');
+    for(let i=1; i<=30; i++) {
+        catalog.innerHTML += `
+            <div class="p-card" onclick="openDetails('Article Luther #${i}', '78,850 Ar')">
+                <img src="badg noir.JPG">
+                <div class="p-info">
+                    <div class="p-name">Article Luther #${i}</div>
+                    <div class="p-price">78,850 Ar</div>
+                </div>
+            </div>`;
+    }
+
+    let current = { name: '', price: '', size: 'M', color: 'Noir', qty: 1 };
+
+    function openDetails(name, price) {
+        current.name = name; current.price = price; current.qty = 1;
+        document.getElementById('qty-val').innerText = "1";
+        document.getElementById('det-title').innerText = name;
+        document.getElementById('det-price').innerText = price;
+        document.getElementById('main-img').src = 'badg noir.JPG';
+
+        const cBox = document.getElementById('color-selection');
+        cBox.innerHTML = '';
+        myColors.forEach((c, idx) => {
+            const d = document.createElement('div');
+            d.className = 'dot' + (idx === 0 ? ' active' : '');
+            d.style.backgroundColor = c.code;
+            d.onclick = () => {
+                document.querySelectorAll('.dot').forEach(el => el.classList.remove('active'));
+                d.classList.add('active');
+                document.getElementById('main-img').src = c.file;
+                current.color = c.name;
+            };
+            cBox.appendChild(d);
+        });
+        document.getElementById('details-view').style.display = 'block';
+    }
+
+    function closeDetails() { document.getElementById('details-view').style.display = 'none'; }
+    
+    function selectSize(btn, s) {
+        document.querySelectorAll('.sz-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        current.size = s;
+    }
+
+    function changeQty(v) {
+        current.qty = Math.max(1, current.qty + v);
+        document.getElementById('qty-val').innerText = current.qty;
+    }
+
+    function orderWA() {
+        const n = document.getElementById('user-name').value;
+        const t = document.getElementById('user-tel').value;
+        const a = document.getElementById('user-addr').value;
+        if(!n || !t || !a) return alert("Veuillez remplir toutes les coordonnées de livraison");
+        
+        const msg = `*COMMANDE LUTHER MODE*\nArticle: ${current.name}\nCouleur: ${current.color}\nTaille: ${current.size}\nQté: ${current.qty}\n---\nClient: ${n}\nTél: ${t}\nAdresse: ${a}`;
+        window.location.href = `https://wa.me/261339622155?text=${encodeURIComponent(msg)}`;
+    }
+</script>
+
+</body>
+</html>
