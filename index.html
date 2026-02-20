@@ -3,178 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther's Mode | Official Boutique</title>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Luther Fashion Brand</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Poppins', sans-serif; margin: 0; background: #1a252f; color: #fff; }
-        
-        /* HEADER */
-        header { padding: 30px 20px; text-align: center; background: linear-gradient(to bottom, #2c3e50, #1a252f); }
-        .logo-main {
-            width: 75px; height: 75px; border-radius: 50%; border: 3px solid #fff; margin: 0 auto 10px;
-            display: flex; align-items: center; justify-content: center; background: #000;
-            font-family: 'Great Vibes', cursive; font-size: 45px;
+        :root {
+            --gradient: linear-gradient(135deg, #1e3a8a, #a855f7);
+            --bg: #e5e5e0; /* Couleur de fond exacte */
         }
+        body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); color: #333; }
 
-        /* BARRE DE RECHERCHE + LOGO */
-        .search-container { 
-            display: flex; align-items: center; max-width: 500px; margin: -25px auto 15px; 
-            background: #fff; border-radius: 40px; padding: 5px 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-            width: 90%;
+        /* HEADER & LOGO */
+        header { padding: 50px 20px; text-align: center; }
+        .logo-text { 
+            font-size: 80px; font-weight: bold; 
+            background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin: 0; line-height: 1;
         }
-        .logo-small {
-            width: 30px; height: 30px; border-radius: 50%; background: #000; border: 1.5px solid #2980b9;
-            display: flex; align-items: center; justify-content: center; font-family: 'Great Vibes', cursive; color: #fff; font-size: 16px;
-        }
-        #search-bar { border: none; outline: none; padding: 10px; flex: 1; border-radius: 40px; font-size: 14px; color: #333; }
+        .sub-logo { letter-spacing: 5px; font-size: 14px; color: #666; text-transform: uppercase; margin-top: 10px; }
 
-        /* BARRE DE CATÉGORIES (NE PAS ENLEVER) */
-        .category-bar { display: flex; justify-content: center; gap: 10px; padding: 10px; overflow-x: auto; margin-bottom: 20px; }
+        /* RECHERCHE ÉPURÉE */
+        .search-box {
+            display: flex; align-items: center; max-width: 600px; margin: 20px auto;
+            background: #fff; border: 1px solid #ccc; border-radius: 10px; padding: 10px 20px;
+        }
+        .logo-circle-s {
+            width: 35px; height: 35px; border-radius: 50%; border: 2px solid #1e3a8a;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; color: #1e3a8a; margin-right: 15px;
+        }
+        #search-bar { border: none; outline: none; flex: 1; font-size: 16px; color: #888; }
+
+        /* CATÉGORIES STYLÉES */
+        .categories { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
         .cat-btn { 
-            padding: 8px 18px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); 
-            background: rgba(255,255,255,0.1); color: #fff; cursor: pointer; white-space: nowrap; font-size: 13px;
+            padding: 10px 25px; border-radius: 8px; border: 1px solid #bbb; 
+            background: #eee; color: #333; cursor: pointer; transition: 0.3s;
         }
-        .cat-btn.active { background: #fff; color: #1a252f; font-weight: bold; border-color: #fff; }
+        .cat-btn.active { background: #bae6fd; border-color: #7dd3fc; }
 
-        /* CATALOGUE 4 COLONNES */
+        /* GRILLE DE PRODUITS (Comme sur l'image) */
         .catalog { 
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; 
-            padding: 20px; max-width: 1100px; margin: 0 auto; 
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; 
+            padding: 20px; max-width: 1200px; margin: 0 auto;
         }
-        @media (max-width: 850px) { .catalog { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 900px) { .catalog { grid-template-columns: repeat(2, 1fr); } }
 
-        .card { background: #fff; border-radius: 12px; overflow: hidden; color: #333; cursor: pointer; transition: 0.3s; }
-        .card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
-        .card-info { padding: 10px; text-align: center; font-weight: bold; font-size: 12px; }
+        .card { 
+            background: #fff; border-radius: 25px; overflow: hidden; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer;
+        }
+        .card img { width: 100%; aspect-ratio: 1/1.1; object-fit: cover; background: #f9f9f9; }
+        .card-info { padding: 15px; }
+        .card-name { font-weight: 600; font-size: 14px; margin-bottom: 5px; }
+        .card-price { font-weight: bold; font-size: 16px; color: #000; }
+        .card-sub { font-size: 12px; color: #aaa; }
 
-        /* MODAL COMMANDE */
-        #modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; padding: 15px; }
-        .modal-box { background: #fff; border-radius: 20px; padding: 25px; max-width: 400px; width: 100%; color: #333; position: relative; }
-        .close { position: absolute; top: 10px; right: 15px; font-size: 25px; cursor: pointer; }
-
-        /* OPTIONS COULEURS ET TAILLES */
-        .section-label { font-size: 13px; font-weight: 700; margin-top: 15px; display: block; }
-        .row { display: flex; gap: 10px; margin: 8px 0; flex-wrap: wrap; }
+        /* MODAL DE COMMANDE */
+        #modal { 
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.2); 
+            z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(2px);
+        }
+        .modal-box { 
+            background: #fdfdf5; border-radius: 30px; padding: 30px; width: 90%; max-width: 400px; 
+            text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .modal-logo { font-size: 40px; font-weight: bold; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        .dot { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #eee; cursor: pointer; }
-        .dot.active { border-color: #2980b9; transform: scale(1.1); box-shadow: 0 0 5px rgba(0,0,0,0.2); }
-        
-        .size { padding: 8px 15px; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: bold; }
-        .size.active { background: #1a252f; color: #fff; }
+        /* BOUTONS COULEURS DÉGRADÉES */
+        .color-row { display: flex; justify-content: center; gap: 10px; margin: 20px 0; }
+        .dot { width: 25px; height: 25px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+        .dot.selected { border-color: #333; transform: scale(1.2); }
 
-        .btn-confirm { background: #1a252f; color: #fff; width: 100%; padding: 16px; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 20px; font-size: 14px; }
-        input { width: 100%; padding: 12px; margin-top: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .btn-confirm { 
+            background: var(--gradient); color: #fff; width: 100%; padding: 15px; 
+            border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 20px;
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo-main">L</div>
-    <div class="site-title">LUTHER'S MODE</div>
+    <div class="logo-text">LUTHER</div>
+    <div class="sub-logo">FASHION BRAND</div>
 </header>
 
-<div class="search-container">
-    <div class="logo-small">L</div>
-    <input type="text" id="search-bar" placeholder="Rechercher...">
+<div class="search-box">
+    <div class="logo-circle-s">L</div>
+    <input type="text" id="search-bar" placeholder="Rechercher un modèle exclusif...">
 </div>
 
-<div class="category-bar">
-    <button class="cat-btn active" onclick="filter('Tout', this)">Tout</button>
-    <button class="cat-btn" onclick="filter('Chaussure', this)">Chaussure</button>
-    <button class="cat-btn" onclick="filter('Veste', this)">Veste</button>
-    <button class="cat-btn" onclick="filter('Short', this)">Short</button>
-    <button class="cat-btn" onclick="filter('Casquette', this)">Casquette</button>
+<div class="categories">
+    <button class="cat-btn" onclick="filter('Tout')">Tout</button>
+    <button class="cat-btn active" onclick="filter('Chaussure')">Chaussures</button>
+    <button class="cat-btn" onclick="filter('Veste')">Vestes</button>
+    <button class="cat-btn" onclick="filter('Short')">Shorts</button>
 </div>
 
-<div class="catalog" id="list"></div>
+<div class="catalog" id="product-list"></div>
 
 <div id="modal">
     <div class="modal-box">
-        <span class="close" onclick="closeM()">×</span>
-        <img id="m-img" style="width:100%; border-radius:15px; margin-bottom:10px;">
-        <h2 id="m-title" style="font-size: 18px; margin: 0;"></h2>
-        <div id="m-price" style="font-size: 20px; font-weight: 700; color: #2980b9;"></div>
-
-        <span class="section-label">Couleurs disponibles :</span>
-        <div class="row">
-            <div class="dot" style="background:black" onclick="updateImg('Noir', 'badg noir.JPG', this)"></div>
-            <div class="dot" style="background:blue" onclick="updateImg('Bleu', 'badg bleu.JPG', this)"></div>
-            <div class="dot" style="background:green" onclick="updateImg('Vert', 'badg vert.JPG', this)"></div>
-            <div class="dot" style="background:yellow" onclick="updateImg('Jaune', 'badg jaune.JPG', this)"></div>
-            <div class="dot" style="background:red" onclick="updateImg('Rouge', 'badg rouge.JPG', this)"></div>
+        <div class="modal-logo">LUTHER</div>
+        <p style="font-size: 12px; letter-spacing: 2px; color: #888;">FASHION BRAND</p>
+        
+        <div class="color-row">
+            <div class="dot" style="background:#0047ab" onclick="setCol('Bleu', this)"></div>
+            <div class="dot" style="background:#93c5fd" onclick="setCol('Ciel', this)"></div>
+            <div class="dot" style="background:#a855f7" onclick="setCol('Violet', this)"></div>
+            <div class="dot" style="background:#64748b" onclick="setCol('Gris', this)"></div>
+            <div class="dot" style="background:#c084fc" onclick="setCol('Lilas', this)"></div>
         </div>
 
-        <span class="section-label">Tailles disponibles :</span>
-        <div class="row">
-            <div class="size" onclick="selSize('S', this)">S</div>
-            <div class="size" onclick="selSize('M', this)">M</div>
-            <div class="size" onclick="selSize('L', this)">L</div>
-            <div class="size" onclick="selSize('XL', this)">XL</div>
-        </div>
+        <div id="selected-title" style="font-weight: 600; margin-bottom: 10px;"></div>
+        
+        <input type="text" id="client-name" placeholder="Ton Nom Complet" style="width:100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ddd;">
+        <input type="tel" id="client-tel" placeholder="Ton Téléphone" style="width:100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd;">
 
-        <input type="text" id="user-n" placeholder="Ton Nom Complet">
-        <input type="tel" id="user-t" placeholder="Ton Téléphone">
-
-        <button class="btn-confirm" onclick="sendWhatsApp()">CONFIRMÉ VOS COMMANDE</button>
+        <button class="btn-confirm" onclick="orderNow()">CONFIRMÉ VOS COMMANDE</button>
+        <p onclick="closeM()" style="margin-top: 15px; cursor: pointer; font-size: 13px; color: #888;">Fermer</p>
     </div>
 </div>
 
 <script>
-    let currentProd = { title: '', price: '', color: '', size: '' };
-    const priceList = { 'Chaussure': '£85', 'Veste': '£115', 'Short': '£45', 'Casquette': '£30' };
+    const grid = document.getElementById('product-list');
+    let order = { title: '', price: '', color: '', size: 'M' };
 
-    // Génération des 100 produits
-    const list = document.getElementById('list');
-    const cats = ['Chaussure', 'Veste', 'Short', 'Casquette'];
-    for(let i=1; i<=100; i++) {
-        const cat = cats[i % 4];
-        const p = priceList[cat];
-        const d = document.createElement('div');
-        d.className = 'card';
-        d.setAttribute('data-cat', cat);
-        d.innerHTML = `<img src="badg noir.JPG"><div class="card-info">${cat} Luther #${i}<br><span style="color:#2980b9">${p}</span></div>`;
-        d.onclick = () => openM(`${cat} Luther #${i}`, p);
-        list.appendChild(d);
-    }
-
-    function openM(t, p) {
-        currentProd.title = t; currentProd.price = p;
-        document.getElementById('m-title').innerText = t;
-        document.getElementById('m-price').innerText = p;
-        document.getElementById('m-img').src = "badg noir.JPG";
-        document.getElementById('modal').style.display = 'flex';
+    // Génération de 100 produits style Luxe
+    for(let i=1; i<=100; i++){
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <img src="badg noir.JPG">
+            <div class="card-info">
+                <div class="card-name">Fébermesde Ramics</div>
+                <div class="card-price">£45.00</div>
+                <div class="card-sub">Art. #${i}</div>
+            </div>
+        `;
+        card.onclick = () => {
+            order.title = "Fébermesde Ramics #" + i;
+            document.getElementById('selected-title').innerText = order.title;
+            document.getElementById('modal').style.display = 'flex';
+        };
+        grid.appendChild(card);
     }
 
     function closeM() { document.getElementById('modal').style.display = 'none'; }
-
-    // CORRECTION : L'IMAGE CHANGE RÉELLEMENT ICI
-    function updateImg(color, imgFile, element) {
-        document.getElementById('m-img').src = imgFile;
-        currentProd.color = color;
-        document.querySelectorAll('.dot').forEach(d => d.classList.remove('active'));
-        element.classList.add('active');
+    function setCol(c, el) {
+        order.color = c;
+        document.querySelectorAll('.dot').forEach(d => d.classList.remove('selected'));
+        el.classList.add('selected');
     }
 
-    function selSize(s, element) {
-        currentProd.size = s;
-        document.querySelectorAll('.size').forEach(b => b.classList.remove('active'));
-        element.classList.add('active');
-    }
-
-    function filter(cat, btn) {
-        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        document.querySelectorAll('.card').forEach(c => {
-            c.style.display = (cat === 'Tout' || c.getAttribute('data-cat') === cat) ? 'block' : 'none';
-        });
-    }
-
-    function sendWhatsApp() {
-        const n = document.getElementById('user-n').value;
-        const t = document.getElementById('user-t').value;
-        if(!n || !t || !currentProd.color || !currentProd.size) return alert("Complète toutes les options !");
-        
-        const msg = `👑 *NOUVELLE COMMANDE*\n*Article:* ${currentProd.title}\n*Prix:* ${currentProd.price}\n*Couleur:* ${currentProd.color}\n*Taille:* ${currentProd.size}\n\n*Client:* ${n}\n*Tél:* ${t}`;
+    function orderNow() {
+        const n = document.getElementById('client-name').value;
+        const t = document.getElementById('client-tel').value;
+        if(!n || !t || !order.color) return alert("Remplis tout !");
+        const msg = `💎 *LUTHER FASHION BRAND*\nArticle: ${order.title}\nCouleur: ${order.color}\nClient: ${n}\nTél: ${t}`;
         window.location.href = `https://wa.me/261339622155?text=${encodeURIComponent(msg)}`;
     }
 </script>
