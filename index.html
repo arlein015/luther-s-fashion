@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther's Mode | Boutique</title>
+    <title>Luther's Mode | Boutique Officielle</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background-color: #f8f8f8; display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; }
-        h1 { letter-spacing: 4px; text-transform: uppercase; margin-bottom: 30px; font-size: 24px; }
+        h1 { letter-spacing: 4px; text-transform: uppercase; margin-bottom: 30px; font-size: 24px; text-align: center; }
 
         /* Cartes produits alignées verticalement */
         .product-card { 
@@ -29,7 +29,6 @@
         /* Options de sélection */
         .selection-group { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; }
         .color-circle { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #eee; cursor: pointer; transition: 0.2s; }
-        .color-circle:hover { transform: scale(1.1); }
         
         .size-btn { border: 1px solid #ddd; padding: 6px 12px; border-radius: 5px; cursor: pointer; background: white; font-size: 13px; }
         .size-btn.active { border-color: #000; background: #000; color: #fff; }
@@ -53,7 +52,7 @@
     <div class="product-card">
         <img src="badg noir.JPG" id="img1" class="product-img">
         <h2>Badge Logo Classic</h2>
-        <div class="price">45,23$</div>
+        <div class="price">78,850 Ar</div>
         <div class="section-title">Couleur</div>
         <div class="selection-group">
             <div class="color-circle" style="background: black;" onclick="updateItem(1, 'Noir', 'badg noir.JPG')"></div>
@@ -76,7 +75,7 @@
     <div class="product-card">
         <img src="badg vert.JPG" id="img2" class="product-img">
         <h2>T-Shirt Casual</h2>
-        <div class="price">17,29$</div>
+        <div class="price">95,000 Ar</div>
         <div class="section-title">Couleur</div>
         <div class="selection-group">
             <div class="color-circle" style="background: green;" onclick="updateItem(2, 'Vert', 'badg vert.JPG')"></div>
@@ -86,7 +85,6 @@
         <div class="selection-group">
             <button class="size-btn" onclick="updateSize(2, this, 'M')">M</button>
             <button class="size-btn" onclick="updateSize(2, this, 'L')">L</button>
-            <button class="size-btn" onclick="updateSize(2, this, 'XL')">XL</button>
         </div>
         <div class="qty-control">
             <button class="qty-btn" onclick="changeQty(2, -1)">-</button>
@@ -98,15 +96,10 @@
     <div class="product-card">
         <img src="Badg bleu.JPG" id="img3" class="product-img">
         <h2>Casquette Sport</h2>
-        <div class="price">27,25$</div>
+        <div class="price">45,000 Ar</div>
         <div class="section-title">Couleur</div>
         <div class="selection-group">
             <div class="color-circle" style="background: blue;" onclick="updateItem(3, 'Bleu', 'Badg bleu.JPG')"></div>
-            <div class="color-circle" style="background: #800000;" onclick="updateItem(3, 'Grenat', 'Badg grenat.JPG')"></div>
-        </div>
-        <div class="section-title">Taille</div>
-        <div class="selection-group">
-            <button class="size-btn" onclick="updateSize(3, this, 'Unique')">Taille Unique</button>
         </div>
         <div class="qty-control">
             <button class="qty-btn" onclick="changeQty(3, -1)">-</button>
@@ -118,16 +111,10 @@
     <div class="product-card">
         <img src="badg rouge.JPG" id="img4" class="product-img">
         <h2>Sweat à Capuche</h2>
-        <div class="price">25,74$</div>
+        <div class="price">120,000 Ar</div>
         <div class="section-title">Couleur</div>
         <div class="selection-group">
             <div class="color-circle" style="background: red;" onclick="updateItem(4, 'Rouge', 'badg rouge.JPG')"></div>
-            <div class="color-circle" style="background: black;" onclick="updateItem(4, 'Noir', 'badg noir.JPG')"></div>
-        </div>
-        <div class="section-title">Taille</div>
-        <div class="selection-group">
-            <button class="size-btn" onclick="updateSize(4, this, 'L')">L</button>
-            <button class="size-btn" onclick="updateSize(4, this, 'XL')">XL</button>
         </div>
         <div class="qty-control">
             <button class="qty-btn" onclick="changeQty(4, -1)">-</button>
@@ -139,7 +126,7 @@
     <div class="form-section">
         <h3>COORDONNÉES DE LIVRAISON</h3>
         <input type="text" id="nom" placeholder="Nom Complet">
-        <input type="text" id="adresse" placeholder="Adresse Exacte (Ville, Quartier)">
+        <input type="text" id="adresse" placeholder="Adresse Exacte">
         <input type="tel" id="tel" placeholder="Téléphone">
         <button class="btn-order" onclick="validerCommande()">Valider la commande globale</button>
     </div>
@@ -147,4 +134,46 @@
     <script>
         let panier = {
             1: { nom: "Badge Logo Classic", couleur: "Noir", taille: "S", qte: 1 },
-            2
+            2: { nom: "T-Shirt Casual", couleur: "Vert", taille: "M", qte: 0 },
+            3: { nom: "Casquette Sport", couleur: "Bleu", taille: "Unique", qte: 0 },
+            4: { nom: "Sweat à Capuche", couleur: "Rouge", taille: "Unique", qte: 0 }
+        };
+
+        function updateItem(id, col, img) {
+            panier[id].couleur = col;
+            document.getElementById('img' + id).src = img;
+        }
+
+        function updateSize(id, btn, sz) {
+            let btns = btn.parentElement.querySelectorAll('.size-btn');
+            btns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            panier[id].taille = sz;
+        }
+
+        function changeQty(id, delta) {
+            panier[id].qte = Math.max(0, panier[id].qte + delta);
+            document.getElementById('qty' + id).innerText = panier[id].qte;
+        }
+
+        function validerCommande() {
+            const nom = document.getElementById('nom').value;
+            const adr = document.getElementById('adresse').value;
+            const tel = document.getElementById('tel').value;
+
+            if(!nom || !adr || !tel) { alert("Remplissez vos infos !"); return; }
+
+            let details = "";
+            for (let id in panier) {
+                if(panier[id].qte > 0) {
+                    details += `- ${panier[id].nom} : ${panier[id].qte}x (${panier[id].couleur}, T:${panier[id].taille})\n`;
+                }
+            }
+            if(details === "") { alert("Panier vide !"); return; }
+
+            const msg = `LUTHER MODE - COMMANDE :\nClient : ${nom}\nAdresse : ${adr}\nContact : ${tel}\n\nPANIER :\n${details}`;
+            window.location.href = `https://wa.me/261339622155?text=${encodeURIComponent(msg)}`;
+        }
+    </script>
+</body>
+</html>
