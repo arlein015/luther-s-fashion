@@ -3,67 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther's Mode</title>
+    <title>Luther's Mode | Boutique</title>
     <style>
-        body { font-family: sans-serif; background-color: #f4f4f4; margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
-        
-        /* Grille de 2 colonnes pour les produits */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 600px; }
-        @media (max-width: 400px) { .grid { grid-template-columns: 1fr; } }
+        body { font-family: Arial, sans-serif; background: #fff; margin: 0; padding: 0; }
+        header { padding: 15px; text-align: center; border-bottom: 1px solid #eee; font-weight: bold; letter-spacing: 2px; }
 
-        .card { background: white; padding: 10px; border-radius: 10px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .card img { width: 100%; border-radius: 8px; }
-        .name { font-size: 14px; font-weight: bold; margin: 5px 0; }
-        
-        /* Bouton Valider ma sélection */
-        #btn-next { background: black; color: white; border: none; padding: 15px; width: 100%; max-width: 400px; border-radius: 8px; font-weight: bold; cursor: pointer; margin: 20px 0; }
+        /* VUE 1 : GRILLE CATALOGUE */
+        #view-catalog { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px; }
+        .grid-item { border-radius: 8px; overflow: hidden; cursor: pointer; background: #f9f9f9; padding-bottom: 10px; }
+        .grid-item img { width: 100%; height: auto; display: block; }
+        .grid-info { padding: 8px; text-align: left; }
+        .grid-name { font-size: 13px; color: #333; margin-bottom: 4px; }
+        .grid-price { font-size: 15px; font-weight: bold; }
 
-        /* Formulaire caché au début */
-        #form-checkout { display: none; background: white; padding: 20px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
-        .btn-pay { background: black; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        /* VUE 2 : DÉTAILS PRODUIT (Cachée par défaut) */
+        #view-details { display: none; padding: 20px; }
+        .back-btn { background: none; border: none; font-size: 20px; cursor: pointer; margin-bottom: 15px; }
+        .detail-img { width: 100%; border-radius: 10px; margin-bottom: 20px; }
+        .detail-price { font-size: 22px; font-weight: bold; margin: 10px 0; }
+        .option-label { font-size: 12px; color: #888; text-transform: uppercase; margin: 20px 0 10px; }
+        
+        .selection-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        .color-opt { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #eee; cursor: pointer; }
+        .size-opt { border: 1px solid #ddd; padding: 8px 15px; border-radius: 5px; cursor: pointer; background: white; }
+        .size-opt.active { background: black; color: white; border-color: black; }
+
+        /* BOUTONS ACTIONS */
+        .btn-black { background: black; color: white; width: 100%; padding: 18px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 20px; }
+
+        /* FORMULAIRE FINAL */
+        #view-checkout { display: none; padding: 20px; text-align: center; }
+        input { width: 100%; padding: 15px; margin-bottom: 10px; border: 1px solid #eee; border-radius: 8px; box-sizing: border-box; background: #f9f9f9; }
     </style>
 </head>
 <body>
 
-    <div class="grid">
-        <div class="card">
-            <img src="badg noir.JPG">
-            <div class="name">Badge Logo Classic</div>
-            <div style="font-size:12px;">78,850 Ar</div>
-        </div>
-        <div class="card">
-            <img src="badg vert.JPG">
-            <div class="name">T-Shirt Casual</div>
-            <div style="font-size:12px;">95,000 Ar</div>
-        </div>
-        </div>
+<header>LUTHER'S MODE</header>
 
-    <button id="btn-next" onclick="afficherFormulaire()">VALIDER MA SÉLECTION</button>
+<div id="view-catalog">
+    <div class="grid-item" onclick="openProduct(1, 'Badge Logo Classic', '78,850 Ar', 'badg noir.JPG')">
+        <img src="badg noir.JPG">
+        <div class="grid-info">
+            <div class="grid-name">Badge Logo Classic</div>
+            <div class="grid-price">78,850 Ar</div>
+        </div>
+    </div>
+    <div class="grid-item" onclick="openProduct(2, 'T-Shirt Casual', '95,000 Ar', 'badg vert.JPG')">
+        <img src="badg vert.JPG">
+        <div class="grid-info">
+            <div class="grid-name">T-Shirt Casual</div>
+            <div class="grid-price">95,000 Ar</div>
+        </div>
+    </div>
+</div>
 
-    <div id="form-checkout">
-        <h3 style="text-align:center; margin-top:0;">COORDONNÉES</h3>
-        <input type="text" id="nom" placeholder="Nom Complet">
-        <input type="tel" id="tel" placeholder="Téléphone">
-        <input type="text" id="adresse" placeholder="Adresse Exacte">
-        <button class="btn-pay" onclick="payer()">PAYÉE</button>
+<div id="view-details">
+    <button class="back-btn" onclick="showCatalog()">←</button>
+    <img id="main-img" class="detail-img" src="">
+    <h2 id="p-name"></h2>
+    <div id="p-price" class="detail-price"></div>
+
+    <div class="option-label">Couleur</div>
+    <div class="selection-group">
+        <div class="color-opt" style="background: black;" onclick="selectColor('Noir')"></div>
+        <div class="color-opt" style="background: #2a52be;" onclick="selectColor('Bleu')"></div>
+        <div class="color-opt" style="background: #e31b23;" onclick="selectColor('Rouge')"></div>
     </div>
 
-    <script>
-        function afficherFormulaire() {
-            // Cache le bouton et affiche le formulaire
-            document.getElementById('form-checkout').style.display = 'block';
-            document.getElementById('btn-next').style.display = 'none';
-            // Descend la page automatiquement
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-        }
+    <div class="option-label">Taille</div>
+    <div class="selection-group">
+        <button class="size-opt" onclick="selectSize(this, 'S')">S</button>
+        <button class="size-opt" onclick="selectSize(this, 'M')">M</button>
+        <button class="size-opt" onclick="selectSize(this, 'L')">L</button>
+    </div>
 
-        function payer() {
-            const nom = document.getElementById('nom').value;
-            if(!nom) { alert("Veuillez remplir vos infos"); return; }
-            const message = `Commande de ${nom}`;
-            window.location.href = `https://wa.me/261339622155?text=${encodeURIComponent(message)}`;
-        }
-    </script>
+    <button class="btn-black" onclick="showCheckout()">Ajouter au panier / Commander</button>
+</div>
+
+<div id="view-checkout">
+    <h3>COORDONNÉES DE LIVRAISON</h3>
+    <input type="text" id="nom" placeholder="Nom Complet">
+    <input type="tel" id="tel" placeholder="Téléphone">
+    <input type="text" id="adresse" placeholder="Adresse Exacte">
+    <button class="btn-black" onclick="finish()">PAYÉE</button>
+</div>
+
+<script>
+    let currentOrder = { name: '', price: '', color: 'Noir', size: 'M' };
+
+    function openProduct(id, name, price, img) {
+        currentOrder.name = name;
+        currentOrder.price = price;
+        document.getElementById('p-name').innerText = name;
+        document.getElementById('p-price').innerText = price;
+        document.getElementById('main-img').src = img;
+        
+        document.getElementById('view-catalog').style.display = 'none';
+        document.getElementById('view-details').style.display = 'block';
+        window.scrollTo(0,0);
+    }
+
+    function showCatalog() {
+        document.getElementById('view-details').style.display = 'none';
+        document.getElementById('view-catalog').style.display = 'grid';
+    }
+
+    function selectColor(c) { currentOrder.color = c; alert("Couleur sélectionnée : " + c); }
+
+    function selectSize(btn, s) {
+        let opts = document.querySelectorAll('.size-opt');
+        opts.forEach(o => o.classList.remove('active'));
+        btn.classList.add('active');
+        currentOrder.size = s;
+    }
+
+    function showCheckout() {
+        document.getElementById('view-details').style.display = 'none';
+        document.getElementById('view-checkout').style.display = 'block';
+    }
+
+    function finish() {
+        const client = document.getElementById('nom').value;
+        if(!client) return alert("Nom requis");
+        
+        const msg = `LUTHER MODE - COMMANDE :\nProduit : ${currentOrder.name}\nPrix : ${currentOrder.price}\nOptions : ${currentOrder.color}, Taille ${currentOrder.size}\nClient : ${client}`;
+        window.location.href = `https://wa.me/261339622155?text=${encodeURIComponent(msg)}`;
+    }
+</script>
+
 </body>
 </html>
