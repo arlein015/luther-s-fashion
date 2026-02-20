@@ -1,140 +1,36 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther's Mode | Catalogue</title>
-    <style>
-        body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; background: #fff; }
-        header { padding: 15px; text-align: center; border-bottom: 1px solid #eee; font-weight: bold; position: sticky; top: 0; background: white; z-index: 10; }
+<style>
+    /* ... (reste du style inchangé) ... */
 
-        /* GRILLE PRINCIPALE (Affiche 2 produits par ligne) */
-        #catalog { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px; }
-        .product-card { border: 1px solid #f0f0f0; border-radius: 4px; overflow: hidden; cursor: pointer; }
-        .product-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
-        .product-info { padding: 8px; }
-        .product-name { font-size: 12px; color: #666; margin-bottom: 4px; }
-        .product-price { font-size: 14px; font-weight: bold; }
-
-        /* VUE DÉTAILLÉE (Cachée par défaut) */
-        #details-view { display: none; padding: 15px; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 20; overflow-y: auto; box-sizing: border-box; }
-        .close-btn { font-size: 24px; cursor: pointer; margin-bottom: 10px; display: block; }
-        .detail-img { width: 100%; border-radius: 8px; }
-        
-        .option-title { font-size: 11px; color: #999; text-transform: uppercase; margin-top: 20px; }
-        .btn-group { display: flex; gap: 10px; margin: 10px 0; }
-        .color-dot { width: 30px; height: 30px; border-radius: 50%; border: 1px solid #ddd; cursor: pointer; }
-        .size-btn { border: 1px solid #ddd; padding: 8px 15px; border-radius: 4px; background: white; cursor: pointer; }
-        .size-btn.active { background: black; color: white; }
-
-        /* FORMULAIRE ET BOUTON NOIR */
-        #checkout-form { display: none; padding: 20px; }
-        input { width: 100%; padding: 15px; margin-bottom: 10px; border: 1px solid #eee; border-radius: 5px; box-sizing: border-box; }
-        .action-btn { background: black; color: white; width: 100%; padding: 18px; border: none; font-weight: bold; cursor: pointer; margin-top: 20px; }
-    </style>
-</head>
-<body>
-
-<header>LUTHER'S MODE</header>
-
-<div id="catalog"></div>
-
-<div id="details-view">
-    <span class="close-btn" onclick="hideDetails()">✕</span>
-    <img id="det-img" class="detail-img">
-    <h2 id="det-title" style="margin: 15px 0 5px;"></h2>
-    <div id="det-price" style="font-size: 20px; font-weight: bold;"></div>
-
-    <div class="option-title">Couleur</div>
-    <div class="btn-group" id="color-box"></div>
-
-    <div class="option-title">Taille</div>
-    <div class="btn-group">
-        <button class="size-btn" onclick="setSize(this, 'S')">S</button>
-        <button class="size-btn" onclick="setSize(this, 'M')">M</button>
-        <button class="size-btn" onclick="setSize(this, 'L')">L</button>
-    </div>
-
-    <button class="action-btn" onclick="showCheckout()">AJOUTER AU PANIER</button>
-</div>
-
-<div id="checkout-form">
-    <h3 style="text-align:center;">COORDONNÉES DE LIVRAISON</h3>
-    <input type="text" id="client-nom" placeholder="Nom Complet">
-    <input type="tel" id="client-tel" placeholder="Téléphone">
-    <input type="text" id="client-adr" placeholder="Adresse / Ville">
-    <button class="action-btn" onclick="sendWhatsApp()">PAYÉE</button>
-</div>
-
-<script>
-    // 1. Liste des 30 produits
-    const products = [];
-    for(let i=1; i<=30; i++) {
-        products.push({
-            id: i,
-            name: "Article Luther #" + i,
-            price: (70000 + (i * 1000)) + " Ar",
-            img: i === 1 ? "badg noir.JPG" : (i === 2 ? "badg vert.JPG" : "badg noir.JPG"),
-            colors: ['black', 'blue', 'red']
-        });
+    /* GRILLE PRINCIPALE RÉGLÉE SUR 4 COLONNES */
+    #catalog { 
+        display: grid; 
+        grid-template-columns: repeat(4, 1fr); /* 4 produits par ligne */
+        gap: 8px; 
+        padding: 10px; 
+        max-width: 1200px; 
+        margin: 0 auto; 
     }
 
-    // 2. Affichage du catalogue
-    const catalogDiv = document.getElementById('catalog');
-    products.forEach(p => {
-        catalogDiv.innerHTML += `
-            <div class="product-card" onclick="showDetails(${p.id})">
-                <img src="${p.img}">
-                <div class="product-info">
-                    <div class="product-name">${p.name}</div>
-                    <div class="product-price">${p.price}</div>
-                </div>
-            </div>`;
-    });
-
-    let currentSelection = { name: '', price: '', size: 'M', color: 'Noir' };
-
-    // 3. Fonctions de navigation
-    function showDetails(id) {
-        const p = products.find(x => x.id === id);
-        currentSelection.name = p.name;
-        currentSelection.price = p.price;
-        
-        document.getElementById('det-title').innerText = p.name;
-        document.getElementById('det-price').innerText = p.price;
-        document.getElementById('det-img').src = p.img;
-        
-        const cBox = document.getElementById('color-box');
-        cBox.innerHTML = '';
-        p.colors.forEach(c => {
-            cBox.innerHTML += `<div class="color-dot" style="background:${c}" onclick="currentSelection.color='${c}'"></div>`;
-        });
-
-        document.getElementById('details-view').style.display = 'block';
+    /* ADAPTATION POUR MOBILE (2 colonnes pour la lisibilité) */
+    @media (max-width: 768px) {
+        #catalog { 
+            grid-template-columns: repeat(2, 1fr); 
+        }
     }
 
-    function hideDetails() { document.getElementById('details-view').style.display = 'none'; }
-
-    function setSize(btn, s) {
-        document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentSelection.size = s;
+    .product-card { 
+        border: 1px solid #f2f2f2; 
+        border-radius: 2px; 
+        overflow: hidden; 
+        cursor: pointer; 
+        background: #fff;
+    }
+    
+    .product-card img { 
+        width: 100%; 
+        aspect-ratio: 3/4; /* Format légèrement vertical style SHEIN */
+        object-fit: cover; 
     }
 
-    function showCheckout() {
-        document.getElementById('details-view').style.display = 'none';
-        document.getElementById('checkout-form').style.display = 'block';
-    }
-
-    function sendWhatsApp() {
-        const nom = document.getElementById('client-nom').value;
-        const tel = document.getElementById('client-tel').value;
-        if(!nom || !tel) return alert("Remplissez vos infos");
-
-        const text = `COMMANDE LUTHER MODE\nProduit: ${currentSelection.name}\nPrix: ${currentSelection.price}\nTaille: ${currentSelection.size}\nClient: ${nom}\nTél: ${tel}`;
-        window.location.href = `https://wa.me/261339622155?text=${encodeURIComponent(text)}`;
-    }
-</script>
-
-</body>
-</html>
+    /* ... (reste du style inchangé) ... */
+</style>
