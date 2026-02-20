@@ -3,90 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther's Mode | Official</title>
+    <title>Luther's Mode | Premium Store</title>
     <style>
-        /* BASE DARK PREMIUM */
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #1a252f; color: #fff; }
+        /* BASE DARK */
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #242f3f; color: #fff; }
         
-        /* HEADER AVEC LOGO "L" */
+        /* LOGO IDENTIQUE AU MODÈLE */
         header { 
-            padding: 20px; text-align: center; 
-            background: linear-gradient(135deg, #2c3e50, #000);
-            display: flex; align-items: center; justify-content: center; gap: 15px;
+            padding: 30px 10px; text-align: center; 
+            background: linear-gradient(to bottom, #2c3e50, #242f3f);
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
         }
-        .logo-circle {
-            width: 45px; height: 45px; border-radius: 50%; border: 2px solid #fff;
+        .logo-l {
+            width: 65px; height: 65px; border-radius: 50%;
+            background: #000;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 2px #2980b9; /* Double bordure bleue */
             display: flex; align-items: center; justify-content: center;
-            font-size: 24px; font-weight: bold; background: #000; box-shadow: 0 0 10px rgba(255,255,255,0.2);
+            font-size: 35px; font-weight: bold; color: #fff;
+            text-shadow: 0 0 10px rgba(41,128,185,0.8);
         }
+        .site-title { font-size: 26px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
 
-        /* RECHERCHE */
-        .search-area { padding: 10px 15px; background: #2c3e50; }
-        #search-bar { 
-            width: 100%; padding: 12px; border: none; border-radius: 8px; 
-            background: #ecf0f1; color: #333; font-size: 14px;
-        }
+        /* RECHERCHE ET CATÉGORIES */
+        .search-area { padding: 15px; background: #1a252f; text-align: center; }
+        #search-bar { width: 90%; padding: 12px 20px; border-radius: 25px; border: none; background: #fff; color: #333; font-size: 16px; }
 
-        /* BARRE DE CATÉGORIES COULISSANTE */
-        .category-bar {
-            display: flex; overflow-x: auto; gap: 10px; padding: 12px;
-            background: #243447; white-space: nowrap; scrollbar-width: none;
-        }
+        .category-bar { display: flex; overflow-x: auto; gap: 10px; padding: 15px; background: #2c3e50; scrollbar-width: none; }
         .category-bar::-webkit-scrollbar { display: none; }
-        .cat-item {
-            padding: 8px 18px; background: rgba(255,255,255,0.1);
-            border-radius: 20px; font-size: 13px; cursor: pointer; border: 1px solid rgba(255,255,255,0.2);
-        }
-        .cat-item.active { background: #fff; color: #1a252f; font-weight: bold; }
+        .cat-btn { padding: 8px 20px; border-radius: 20px; background: #455a64; color: #fff; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; white-space: nowrap; }
+        .cat-btn.active { background: #fff; color: #242f3f; font-weight: bold; }
 
-        /* GRILLE DE 4 */
-        #catalog { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 8px; }
-        .p-card { background: #fff; border-radius: 10px; overflow: hidden; cursor: pointer; }
+        /* CATALOGUE ET CARTES */
+        #catalog { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 15px; }
+        @media (min-width: 600px) { #catalog { grid-template-columns: repeat(4, 1fr); } }
+        .p-card { background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.3); cursor: pointer; }
         .p-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
-        .p-info { padding: 6px; color: #333; text-align: center; font-size: 9px; font-weight: bold; }
+        .p-info { padding: 10px; color: #333; text-align: center; font-size: 12px; font-weight: bold; }
 
-        /* MODAL PRODUIT PREMIUM */
-        #details-view { 
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.95); z-index: 200; overflow-y: auto; padding: 15px; box-sizing: border-box;
-        }
-        .modal-content {
-            background: #fff; color: #333; border-radius: 20px; padding: 20px; 
-            max-width: 450px; margin: 10px auto; position: relative; text-align: center;
-        }
-        .close { position: absolute; right: 15px; top: 10px; font-size: 30px; cursor: pointer; color: #bbb; }
-        .det-img { width: 100%; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        /* MODAL PRODUIT */
+        #details-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; overflow-y: auto; padding: 20px; box-sizing: border-box; }
+        .modal-content { background: #fff; color: #333; border-radius: 20px; padding: 25px; max-width: 500px; margin: 0 auto; position: relative; text-align: center; }
+        .close { position: absolute; right: 20px; top: 15px; font-size: 35px; cursor: pointer; color: #ccc; }
+        .det-img { width: 100%; border-radius: 15px; margin-bottom: 15px; }
 
         /* BOUTON DÉGRADÉ */
         .cmd-btn { 
             background: linear-gradient(135deg, #4b6cb7, #182848); 
-            color: white; width: 100%; padding: 16px; border: none; 
-            font-weight: bold; border-radius: 50px; cursor: pointer; margin-top: 15px; font-size: 14px;
+            color: white; width: 100%; padding: 20px; border: none; 
+            font-weight: bold; border-radius: 50px; cursor: pointer; margin-top: 20px; font-size: 16px;
         }
 
-        .dot { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #eee; cursor: pointer; }
+        .dot { width: 35px; height: 35px; border-radius: 50%; border: 2px solid #eee; cursor: pointer; }
         .dot.active { border-color: #4b6cb7; transform: scale(1.1); }
-        .row { display: flex; gap: 8px; justify-content: center; margin: 10px 0; }
-        input { width: 100%; padding: 12px; margin-bottom: 8px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
+        .row { display: flex; gap: 10px; justify-content: center; margin: 15px 0; }
+        input { width: 100%; padding: 15px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 10px; font-size: 16px; background: #f9f9f9; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo-circle">L</div>
-    LUTHER'S MODE
+    <div class="logo-l">L</div>
+    <div class="site-title">LUTHER'S MODE</div>
 </header>
 
 <div class="search-area">
-    <input type="text" id="search-bar" placeholder="🔍 Rechercher un article..." onkeyup="doSearch()">
+    <input type="text" id="search-bar" placeholder="🔍 Rechercher un vêtement..." onkeyup="search()">
 </div>
 
 <div class="category-bar">
-    <div class="cat-item active" onclick="filterCat('Tout')">Tout</div>
-    <div class="cat-item" onclick="filterCat('Chaussure')">Chaussure</div>
-    <div class="cat-item" onclick="filterCat('Casquette')">Casquette</div>
-    <div class="cat-item" onclick="filterCat('Short')">Short</div>
-    <div class="cat-item" onclick="filterCat('Veste')">Veste</div>
+    <button class="cat-btn active" onclick="filter('Tout')">Tout</button>
+    <button class="cat-btn" onclick="filter('Chaussure')">Chaussure</button>
+    <button class="cat-btn" onclick="filter('Casquette')">Casquette</button>
+    <button class="cat-btn" onclick="filter('Short')">Short</button>
+    <button class="cat-btn" onclick="filter('Veste')">Veste</button>
 </div>
 
 <div id="catalog"></div>
@@ -95,24 +85,23 @@
     <div class="modal-content">
         <span class="close" onclick="document.getElementById('details-view').style.display='none'">×</span>
         <img id="main-img" class="det-img">
-        <h2 id="det-title" style="margin:5px 0; font-size: 18px;"></h2>
-        <div style="font-size: 20px; font-weight: bold; color: #4b6cb7;">78,850 Ar</div>
+        <h2 id="det-title" style="margin:5px 0;"></h2>
+        <div style="font-size: 26px; font-weight: bold; color: #2980b9;">78,850 Ar</div>
 
         <div class="row" id="color-box"></div>
 
         <div class="row">
-            <button style="padding:8px 15px; border-radius: 5px; border:1px solid #ddd; background:#fff;">S</button>
-            <button style="padding:8px 15px; border-radius: 5px; border:1px solid #ddd; background:#fff;">M</button>
-            <button style="padding:8px 15px; border-radius: 5px; border:1px solid #ddd; background:#fff;">L</button>
+            <button onclick="current.size='S'" style="padding:10px 20px; border-radius:10px; border:1px solid #ddd;">S</button>
+            <button onclick="current.size='M'" style="padding:10px 20px; border-radius:10px; border:1px solid #ddd;">M</button>
+            <button onclick="current.size='L'" style="padding:10px 20px; border-radius:10px; border:1px solid #ddd;">L</button>
         </div>
 
-        <div style="text-align: left; margin-top: 15px;">
-            <input type="text" id="u-nom" placeholder="Ton Nom Complet">
-            <input type="tel" id="u-tel" placeholder="Ton Numéro de Téléphone">
-            <input type="text" id="u-adr" placeholder="Ton Adresse">
+        <div style="margin-top:20px;">
+            <input type="text" id="name" placeholder="Ton Nom Complet">
+            <input type="tel" id="tel" placeholder="Ton Numéro">
+            <input type="text" id="addr" placeholder="Ton Adresse">
+            <button class="cmd-btn" onclick="send()">COMMANDER MAINTENANT</button>
         </div>
-        
-        <button class="cmd-btn" onclick="orderNow()">COMMANDER MAINTENANT</button>
     </div>
 </div>
 
@@ -126,33 +115,30 @@
 
     let current = { name: '', size: 'M', color: 'Noir', img: '' };
 
-    // Génération du catalogue avec catégories fictives
-    const cats = ['Chaussure', 'Casquette', 'Short', 'Veste'];
     const grid = document.getElementById('catalog');
+    const categories = ['Chaussure', 'Casquette', 'Short', 'Veste'];
+
     for (let i = 1; i <= 30; i++) {
-        const myCat = cats[i % 4];
+        const cat = categories[i % 4];
         const card = document.createElement('div');
         card.className = 'p-card';
-        card.setAttribute('data-name', "Luther #" + i);
-        card.setAttribute('data-cat', myCat);
+        card.setAttribute('data-name', "Article Luther #" + i);
+        card.setAttribute('data-cat', cat);
         card.innerHTML = `<img src="badg noir.JPG"><div class="p-info">Luther #${i}<br>78,850 Ar</div>`;
-        card.onclick = () => openP("Article Luther #" + i);
+        card.onclick = () => openModal("Article Luther #" + i);
         grid.appendChild(card);
     }
 
-    function filterCat(cat) {
-        // Mise à jour visuelle des boutons
-        document.querySelectorAll('.cat-item').forEach(el => el.classList.remove('active'));
+    function filter(cat) {
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
         event.target.classList.add('active');
-
         const cards = document.getElementsByClassName('p-card');
         for (let c of cards) {
-            if(cat === 'Tout') { c.style.display = "block"; }
-            else { c.style.display = c.getAttribute('data-cat') === cat ? "block" : "none"; }
+            c.style.display = (cat === 'Tout' || c.getAttribute('data-cat') === cat) ? "block" : "none";
         }
     }
 
-    function doSearch() {
+    function search() {
         const q = document.getElementById('search-bar').value.toLowerCase();
         const cards = document.getElementsByClassName('p-card');
         for (let c of cards) {
@@ -160,11 +146,10 @@
         }
     }
 
-    function openP(title) {
+    function openModal(title) {
         current.name = title;
         document.getElementById('det-title').innerText = title;
         document.getElementById('main-img').src = 'badg noir.JPG';
-        
         const box = document.getElementById('color-box');
         box.innerHTML = '';
         colors.forEach(c => {
@@ -181,12 +166,12 @@
         document.getElementById('details-view').style.display = 'block';
     }
 
-    function orderNow() {
-        const n = document.getElementById('u-nom').value;
-        const t = document.getElementById('u-tel').value;
-        const a = document.getElementById('u-adr').value;
+    function send() {
+        const n = document.getElementById('name').value;
+        const t = document.getElementById('tel').value;
+        const a = document.getElementById('addr').value;
         if(!n || !t) return alert("Remplis tes infos !");
-        const msg = `LUTHER MODE\nProduit: ${current.name}\nCouleur: ${current.color}\nPhoto: ${current.img}\nClient: ${n}\nTél: ${t}\nAdresse: ${a}`;
+        const msg = `🔥 *COMMANDE LUTHER MODE*\n\n*Produit:* ${current.name}\n*Couleur:* ${current.color}\n*Taille:* ${current.size}\n\n📸 *Photo:* ${current.img}\n\n*Client:* ${n}\n*Tél:* ${t}\n*Adresse:* ${a}`;
         window.location.href = `https://wa.me/261339622155?text=${encodeURIComponent(msg)}`;
     }
 </script>
