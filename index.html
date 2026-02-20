@@ -70,9 +70,31 @@
     </div>
 
     <script>
-        let choix = {
-            1: { nom: "Badge Logo", couleur: "Noir", taille: "S" },
-            2: { nom: "Autre Article", couleur: "Vert", taille: "Unique" }
+        // On ajoute les produits 3 et 4 dans la liste
+let panier = {
+    1: { nom: "Badge Logo", couleur: "Noir", taille: "Non choisie" },
+    2: { nom: "T-shirt V1", couleur: "Vert", taille: "Non choisie" },
+    3: { nom: "Produit 3", couleur: "Noir", taille: "Non choisie" },
+    4: { nom: "Produit 4", couleur: "Blanc", taille: "Non choisie" }
+};
+
+// Modifie le message final pour inclure tout le monde
+function commander() {
+    // ... (garde le début pour le nom, adresse, tel)
+    
+    const msg = `COMMANDE LUTHER'S MODE :
+Client : ${nom}
+Adresse : ${adr}
+Tél : ${tel}
+
+DÉTAILS :
+- ${panier[1].nom} (${panier[1].couleur}, ${panier[1].taille})
+- ${panier[2].nom} (${panier[2].couleur}, ${panier[2].taille})
+- ${panier[3].nom} (${panier[3].couleur}, ${panier[3].taille})
+- ${panier[4].nom} (${panier[4].couleur}, ${panier[4].taille})`;
+
+    window.location.href = `https://wa.me/261339622155?text=${encodeURIComponent(msg)}`;
+}
         };
 
         function selColor(id, col, img) {
@@ -109,9 +131,9 @@ DETAILS :
 </body>
 </html>
 <div class="product-card">
-    <h3>NOM DU PRODUIT 3</h3>
+    <h3>kopy</h3>
     <img src="NOM_IMAGE_3.JPG" id="img3" class="product-img">
-    <div class="price">Prix Ar</div>
+    <div class="price">27,12$</div>
     <div class="selection-group">
         <div class="color-circle" style="background: black;" onclick="updateItem(3, 'Noir', 'NOM_IMAGE_3_NOIR.JPG')"></div>
     </div>
@@ -122,9 +144,9 @@ DETAILS :
 </div>
 
 <div class="product-card">
-    <h3>NOM DU PRODUIT 4</h3>
+    <h3>kiraro</h3>
     <img src="NOM_IMAGE_4.JPG" id="img4" class="product-img">
-    <div class="price">Prix Ar</div>
+    <div class="price">34,26$</div>
     <div class="selection-group">
         <div class="color-circle" style="background: white; border: 1px solid #ddd;" onclick="updateItem(4, 'Blanc', 'NOM_IMAGE_4_BLANC.JPG')"></div>
     </div>
