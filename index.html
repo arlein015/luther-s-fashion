@@ -1,36 +1,111 @@
-<style>
-    /* ... (reste du style inchangé) ... */
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luther's Mode | Mini-Catalogue</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; background: #fff; }
+        header { padding: 10px; text-align: center; border-bottom: 1px solid #eee; font-weight: bold; font-size: 14px; letter-spacing: 2px; position: sticky; top: 0; background: white; z-index: 10; }
 
-    /* GRILLE PRINCIPALE RÉGLÉE SUR 4 COLONNES */
-    #catalog { 
-        display: grid; 
-        grid-template-columns: repeat(4, 1fr); /* 4 produits par ligne */
-        gap: 8px; 
-        padding: 10px; 
-        max-width: 1200px; 
-        margin: 0 auto; 
-    }
-
-    /* ADAPTATION POUR MOBILE (2 colonnes pour la lisibilité) */
-    @media (max-width: 768px) {
+        /* GRILLE DE 4 PRODUITS PAR LIGNE (Même sur mobile) */
         #catalog { 
-            grid-template-columns: repeat(2, 1fr); 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); /* Force 4 colonnes */
+            gap: 5px; /* Espace réduit pour faire petit */
+            padding: 5px; 
         }
+
+        .product-card { border: 1px solid #f2f2f2; border-radius: 2px; overflow: hidden; cursor: pointer; display: flex; flex-direction: column; }
+        .product-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
+        
+        .product-info { padding: 4px; text-align: left; }
+        .product-name { font-size: 9px; color: #777; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+        .product-price { font-size: 10px; font-weight: bold; color: #000; }
+
+        /* VUE DÉTAILLÉE (Reste grande pour bien choisir) */
+        #details-view { display: none; padding: 15px; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 20; overflow-y: auto; box-sizing: border-box; }
+        .close-btn { font-size: 24px; cursor: pointer; display: block; margin-bottom: 10px; }
+        .detail-img { width: 100%; border-radius: 8px; }
+        .detail-price { font-size: 20px; font-weight: bold; margin: 10px 0; }
+        
+        .option-title { font-size: 11px; color: #999; text-transform: uppercase; margin-top: 15px; }
+        .btn-group { display: flex; gap: 10px; margin: 8px 0; }
+        .color-dot { width: 25px; height: 25px; border-radius: 50%; border: 1px solid #ddd; cursor: pointer; }
+        .size-btn { border: 1px solid #ddd; padding: 6px 12px; border-radius: 4px; background: white; cursor: pointer; font-size: 12px; }
+        .size-btn.active { background: black; color: white; }
+
+        /* FORMULAIRE FINAL */
+        #checkout-form { display: none; padding: 20px; text-align: center; }
+        input { width: 100%; padding: 12px; margin-bottom: 8px; border: 1px solid #eee; border-radius: 4px; box-sizing: border-box; font-size: 14px; }
+        .action-btn { background: black; color: white; width: 100%; padding: 15px; border: none; font-weight: bold; cursor: pointer; border-radius: 4px; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+<header>LUTHER'S MODE</header>
+
+<div id="catalog"></div>
+
+<div id="details-view">
+    <span class="close-btn" onclick="hideDetails()">✕</span>
+    <img id="det-img" class="detail-img">
+    <h2 id="det-title" style="margin: 10px 0 5px; font-size: 18px;"></h2>
+    <div id="det-price" class="detail-price"></div>
+
+    <div class="option-title">Couleur</div>
+    <div class="btn-group" id="color-box"></div>
+
+    <div class="option-title">Taille</div>
+    <div class="btn-group">
+        <button class="size-btn" onclick="setSize(this, 'S')">S</button>
+        <button class="size-btn" onclick="setSize(this, 'M')">M</button>
+        <button class="size-btn" onclick="setSize(this, 'L')">L</button>
+    </div>
+
+    <button class="action-btn" onclick="showCheckout()">VALIDER LE CHOIX</button>
+</div>
+
+<div id="checkout-form">
+    <h3>LIVRAISON</h3>
+    <input type="text" id="client-nom" placeholder="Nom Complet">
+    <input type="tel" id="client-tel" placeholder="Téléphone">
+    <input type="text" id="client-adr" placeholder="Adresse exacte">
+    <button class="action-btn" onclick="sendWhatsApp()">PAYÉE</button>
+</div>
+
+<script>
+    // Liste simplifiée pour 30 produits
+    const products = [];
+    for(let i=1; i<=30; i++) {
+        products.push({
+            id: i,
+            name: "Luther Model " + i,
+            price: (65000 + (i * 1000)) + " Ar",
+            img: i === 1 ? "badg noir.JPG" : (i === 2 ? "badg vert.JPG" : "badg noir.JPG")
+        });
     }
 
-    .product-card { 
-        border: 1px solid #f2f2f2; 
-        border-radius: 2px; 
-        overflow: hidden; 
-        cursor: pointer; 
-        background: #fff;
-    }
-    
-    .product-card img { 
-        width: 100%; 
-        aspect-ratio: 3/4; /* Format légèrement vertical style SHEIN */
-        object-fit: cover; 
-    }
+    const catalogDiv = document.getElementById('catalog');
+    products.forEach(p => {
+        catalogDiv.innerHTML += `
+            <div class="product-card" onclick="showDetails(${p.id})">
+                <img src="${p.img}">
+                <div class="product-info">
+                    <div class="product-name">${p.name}</div>
+                    <div class="product-price">${p.price}</div>
+                </div>
+            </div>`;
+    });
 
-    /* ... (reste du style inchangé) ... */
-</style>
+    let currentSelection = { name: '', price: '', size: 'M', color: 'Noir' };
+
+    function showDetails(id) {
+        const p = products.find(x => x.id === id);
+        currentSelection.name = p.name;
+        currentSelection.price = p.price;
+        document.getElementById('det-title').innerText = p.name;
+        document.getElementById('det-price').innerText = p.price;
+        document.getElementById('det-img').src = p.img;
+
+        const cBox
