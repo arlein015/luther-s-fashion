@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Luther's Mode</title>
     <style>
-        body { font-family: sans-serif; margin: 0; padding: 0; background: #fff; }
-        header { text-align: center; padding: 15px; border-bottom: 1px solid #eee; font-weight: bold; position: sticky; top: 0; background: #fff; z-index: 100; }
-        
+        body { font-family: sans-serif; margin: 0; background: #fff; }
+        header { padding: 15px; text-align: center; border-bottom: 1px solid #eee; font-weight: bold; position: sticky; top: 0; background: white; z-index: 100; }
+
         /* Grille de 4 */
         #catalog { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; padding: 5px; }
         .p-card { border: 1px solid #f2f2f2; cursor: pointer; text-align: left; }
@@ -15,36 +15,35 @@
         .p-info { padding: 4px; font-size: 8px; font-weight: bold; }
 
         /* Fiche Produit */
-        #details-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 200; overflow-y: auto; padding: 20px; box-sizing: border-box; text-align: center; }
+        #details-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 200; padding: 20px; box-sizing: border-box; overflow-y: auto; text-align: center; }
         .close { float: right; font-size: 28px; cursor: pointer; color: #ccc; }
         .det-img { width: 100%; max-width: 300px; border-radius: 10px; margin: 10px 0; }
         
         .section-title { font-size: 10px; color: #999; text-transform: uppercase; margin: 15px 0 5px; font-weight: bold; }
         .row { display: flex; gap: 10px; justify-content: center; margin-bottom: 15px; }
         
-        /* Boutons Options */
+        /* Options */
         .dot { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #eee; cursor: pointer; }
         .dot.active { border-color: #000; transform: scale(1.1); }
-        .sz-btn { border: 1px solid #ddd; padding: 8px 12px; background: #fff; cursor: pointer; border-radius: 5px; font-size: 12px; }
-        .sz-btn.active { background: #000; color: #fff; }
+        .sz-btn { border: 1px solid #ddd; padding: 8px 12px; background: white; cursor: pointer; border-radius: 5px; font-size: 12px; }
+        .sz-btn.active { background: black; color: white; }
 
-        /* Formulaire intégré */
-        .delivery-box { border-top: 1px solid #eee; margin-top: 25px; padding-top: 20px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto; }
+        /* Formulaire Livraison */
+        .delivery-box { border-top: 1px solid #eee; margin-top: 25px; padding-top: 20px; text-align: left; max-width: 400px; margin: 0 auto; }
         input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #eee; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
-        .cmd-btn { background: #000; color: #fff; width: 100%; padding: 16px; border: none; font-weight: bold; cursor: pointer; border-radius: 8px; font-size: 14px; text-transform: uppercase; }
+        .cmd-btn { background: black; color: white; width: 100%; padding: 16px; border: none; font-weight: bold; cursor: pointer; border-radius: 8px; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
 <header>LUTHER'S MODE</header>
-
 <div id="catalog"></div>
 
 <div id="details-view">
     <span class="close" onclick="document.getElementById('details-view').style.display='none'">✕</span>
     <img id="main-img" class="det-img">
     <h2 id="det-title" style="margin: 5px 0; font-size: 18px;"></h2>
-    <div id="det-price" style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">78,850 Ar</div>
+    <div style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">78,850 Ar</div>
 
     <div class="section-title">Couleur</div>
     <div id="color-selection" class="row"></div>
@@ -60,48 +59,52 @@
         <div class="section-title">Informations de Livraison</div>
         <input type="text" id="user-name" placeholder="Nom Complet">
         <input type="tel" id="user-tel" placeholder="Numéro de Téléphone">
-        <input type="text" id="user-addr" placeholder="Adresse Exacte (Quartier/Ville)">
+        <input type="text" id="user-addr" placeholder="Adresse Exacte">
         <button class="cmd-btn" onclick="sendToWA()">Commander Maintenant</button>
     </div>
 </div>
 
 <script>
-    // Configuration robuste
-    const productColors = [
+    // Remplace par ton lien GitHub réel pour les photos
+    const baseUrl = window.location.href.split('index.html')[0]; 
+    
+    const colors = [
         { name: 'Noir', code: '#000', file: 'badg noir.JPG' },
         { name: 'Vert', code: '#28a745', file: 'badg vert.JPG' },
         { name: 'Bleu', code: '#007bff', file: 'badg bleu.JPG' },
         { name: 'Rouge', code: '#ff0000', file: 'badg rouge.JPG' }
     ];
 
-    let currentOrder = { name: '', size: 'M', color: 'Noir' };
+    let current = { name: '', size: 'M', color: 'Noir', imgUrl: '' };
 
-    // Construction de la grille
     const grid = document.getElementById('catalog');
     for (let i = 1; i <= 30; i++) {
         const card = document.createElement('div');
         card.className = 'p-card';
         card.innerHTML = `<img src="badg noir.JPG"><div class="p-info">Article Luther #${i}<br>78,850 Ar</div>`;
-        card.onclick = function() { openProduct("Article Luther #" + i); };
+        card.onclick = () => openProduct("Article Luther #" + i);
         grid.appendChild(card);
     }
 
     function openProduct(name) {
-        currentOrder.name = name;
+        current.name = name;
+        current.color = colors[0].name;
+        current.imgUrl = baseUrl + colors[0].file;
         document.getElementById('det-title').innerText = name;
-        document.getElementById('main-img').src = 'badg noir.JPG';
+        document.getElementById('main-img').src = colors[0].file;
         
         const cBox = document.getElementById('color-selection');
         cBox.innerHTML = '';
-        productColors.forEach((c, idx) => {
+        colors.forEach((c, idx) => {
             const d = document.createElement('div');
             d.className = 'dot' + (idx === 0 ? ' active' : '');
             d.style.backgroundColor = c.code;
-            d.onclick = function() {
+            d.onclick = () => {
                 document.querySelectorAll('.dot').forEach(el => el.classList.remove('active'));
                 d.classList.add('active');
-                document.getElementById('main-img').src = c.file; // Changement d'image
-                currentOrder.color = c.name;
+                document.getElementById('main-img').src = c.file; // Change l'image
+                current.color = c.name;
+                current.imgUrl = baseUrl + c.file; // Stocke le lien de la photo
             };
             cBox.appendChild(d);
         });
@@ -111,16 +114,18 @@
     function setSize(btn, s) {
         document.querySelectorAll('.sz-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        currentOrder.size = s;
+        current.size = s;
     }
 
     function sendToWA() {
         const nom = document.getElementById('user-name').value;
         const tel = document.getElementById('user-tel').value;
         const adr = document.getElementById('user-addr').value;
-        if(!nom || !tel) return alert("Veuillez remplir vos coordonnées");
+        if(!nom || !tel) return alert("Remplissez vos infos");
         
-        const msg = `LUTHER MODE\nArticle: ${currentOrder.name}\nCouleur: ${currentOrder.color}\nTaille: ${currentOrder.size}\nClient: ${nom}\nTél: ${tel}\nAdresse: ${adr}`;
+        // Le message contient maintenant le lien de la photo !
+        const msg = `📦 *COMMANDE LUTHER MODE*\n\n*Article:* ${current.name}\n*Couleur:* ${current.color}\n*Taille:* ${current.size}\n\n*PHOTO DU PRODUIT:* ${current.imgUrl}\n\n*CLIENT:* ${nom}\n*TÉL:* ${tel}\n*ADRESSE:* ${adr}`;
+        
         window.location.href = `https://wa.me/261339622155?text=${encodeURIComponent(msg)}`;
     }
 </script>
