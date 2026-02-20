@@ -3,142 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther's Mode | Boutique</title>
+    <title>Luther's Mode</title>
     <style>
-        body { font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #f7f7f7; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
+        body { font-family: sans-serif; background-color: #f4f4f4; margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
         
-        /* Menu catégories style SHEIN */
-        .categories { display: flex; gap: 15px; margin-bottom: 20px; font-size: 14px; color: #666; overflow-x: auto; width: 100%; padding: 10px; border-bottom: 1px solid #eee; }
-        .active-cat { color: #000; font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 5px; }
+        /* Grille de 2 colonnes pour les produits */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 600px; }
+        @media (max-width: 400px) { .grid { grid-template-columns: 1fr; } }
 
-        /* Grille de produits style image_c55187.jpg */
-        .product-grid { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); /* 2 colonnes par ligne */
-            gap: 10px; 
-            width: 100%; 
-            max-width: 800px;
-        }
-
-        .product-card { background: white; border-radius: 4px; overflow: hidden; display: flex; flex-direction: column; padding-bottom: 10px; }
-        .img-container { width: 100%; position: relative; }
-        .product-img { width: 100%; height: auto; display: block; }
+        .card { background: white; padding: 10px; border-radius: 10px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .card img { width: 100%; border-radius: 8px; }
+        .name { font-size: 14px; font-weight: bold; margin: 5px 0; }
         
-        .info-container { padding: 8px; text-align: left; }
-        .product-name { font-size: 12px; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
-        .price { font-size: 16px; font-weight: bold; color: #000; }
+        /* Bouton Valider ma sélection */
+        #btn-next { background: black; color: white; border: none; padding: 15px; width: 100%; max-width: 400px; border-radius: 8px; font-weight: bold; cursor: pointer; margin: 20px 0; }
 
-        /* Options de sélection */
-        .selection-box { padding: 0 8px; margin-bottom: 5px; }
-        .dots { display: flex; gap: 5px; margin: 5px 0; }
-        .dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid #ddd; cursor: pointer; }
-        .sizes { display: flex; gap: 4px; }
-        .sz-btn { font-size: 10px; border: 1px solid #eee; background: none; padding: 2px 5px; cursor: pointer; }
-        .sz-btn.active { background: #000; color: #fff; border-color: #000; }
-
-        .qty-row { display: flex; justify-content: space-between; align-items: center; padding: 0 8px; margin-top: 5px; }
-        .cart-icon { background: #f0f0f0; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; font-size: 14px; }
-
-        /* BOUTON ÉTAPE SUIVANTE */
-        #btn-validate { background: #000; color: #fff; width: 90%; max-width: 400px; padding: 15px; border: none; font-weight: bold; margin: 25px 0; cursor: pointer; letter-spacing: 1px; }
-
-        /* SECTION COORDONNÉES (Cachée au début) */
-        #checkout-form { 
-            display: none; 
-            background: white; width: 90%; max-width: 400px; padding: 20px; border-radius: 8px; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 40px;
-        }
-        .form-title { font-size: 14px; font-weight: bold; text-transform: uppercase; margin-bottom: 20px; text-align: center; }
-        input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #eee; border-radius: 4px; box-sizing: border-box; background: #fafafa; }
-        .btn-pay { background: #000; color: white; width: 100%; padding: 15px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        /* Formulaire caché au début */
+        #form-checkout { display: none; background: white; padding: 20px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        .btn-pay { background: black; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div class="categories">
-        <span class="active-cat">Best-sellers</span>
-        <span>Femmes</span>
-        <span>Hommes</span>
-        <span>Enfant</span>
-    </div>
-
-    <div class="product-grid">
-        <div class="product-card">
-            <div class="img-container"><img src="badg noir.JPG" id="img1" class="product-img"></div>
-            <div class="info-container">
-                <div class="product-name">Badge Logo Classic</div>
-                <div class="price">78.85 Ar</div>
-            </div>
-            <div class="selection-box">
-                <div class="dots">
-                    <div class="dot" style="background: black;" onclick="update(1, 'Noir', 'badg noir.JPG')"></div>
-                    <div class="dot" style="background: blue;" onclick="update(1, 'Bleu', 'Badg bleu.JPG')"></div>
-                </div>
-                <div class="sizes">
-                    <button class="sz-btn" onclick="sz(1, this, 'S')">S</button>
-                    <button class="sz-btn" onclick="sz(1, this, 'M')">M</button>
-                </div>
-            </div>
-            <div class="qty-row">
-                <div style="font-size: 12px;">Qté: <span id="q1">1</span></div>
-                <button class="cart-icon" onclick="add(1)">+</button>
-            </div>
+    <div class="grid">
+        <div class="card">
+            <img src="badg noir.JPG">
+            <div class="name">Badge Logo Classic</div>
+            <div style="font-size:12px;">78,850 Ar</div>
+        </div>
+        <div class="card">
+            <img src="badg vert.JPG">
+            <div class="name">T-Shirt Casual</div>
+            <div style="font-size:12px;">95,000 Ar</div>
+        </div>
         </div>
 
-        <div class="product-card">
-            <div class="img-container"><img src="badg vert.JPG" id="img2" class="product-img"></div>
-            <div class="info-container">
-                <div class="product-name">T-Shirt Casual</div>
-                <div class="price">95.00 Ar</div>
-            </div>
-            <div class="selection-box">
-                <div class="dots"><div class="dot" style="background: green;" onclick="update(2, 'Vert', 'badg vert.JPG')"></div></div>
-                <div class="sizes"><button class="sz-btn" onclick="sz(2, this, 'L')">L</button></div>
-            </div>
-            <div class="qty-row">
-                <div style="font-size: 12px;">Qté: <span id="q2">0</span></div>
-                <button class="cart-icon" onclick="add(2)">+</button>
-            </div>
-        </div>
-    </div>
+    <button id="btn-next" onclick="afficherFormulaire()">VALIDER MA SÉLECTION</button>
 
-    <button id="btn-validate" onclick="showForm()">VALIDER LA SÉLECTION</button>
-
-    <div id="checkout-form">
-        <div class="form-title">Coordonnés de livraison</div>
+    <div id="form-checkout">
+        <h3 style="text-align:center; margin-top:0;">COORDONNÉES</h3>
         <input type="text" id="nom" placeholder="Nom Complet">
         <input type="tel" id="tel" placeholder="Téléphone">
-        <input type="text" id="adresse" placeholder="Adresse / Ville">
-        <button class="btn-pay" onclick="pay()">PAYÉE</button>
+        <input type="text" id="adresse" placeholder="Adresse Exacte">
+        <button class="btn-pay" onclick="payer()">PAYÉE</button>
     </div>
 
     <script>
-        let basket = {
-            1: { n: "Badge", c: "Noir", t: "S", q: 1 },
-            2: { n: "T-Shirt", c: "Vert", t: "L", q: 0 }
-        };
-
-        function update(id, col, img) { basket[id].c = col; document.getElementById('img'+id).src = img; }
-        function sz(id, btn, size) { 
-            let bs = btn.parentElement.querySelectorAll('.sz-btn');
-            bs.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            basket[id].t = size; 
-        }
-        function add(id) { basket[id].q++; document.getElementById('q'+id).innerText = basket[id].q; }
-
-        function showForm() {
-            document.getElementById('checkout-form').style.display = 'block';
-            document.getElementById('btn-validate').style.display = 'none';
+        function afficherFormulaire() {
+            // Cache le bouton et affiche le formulaire
+            document.getElementById('form-checkout').style.display = 'block';
+            document.getElementById('btn-next').style.display = 'none';
+            // Descend la page automatiquement
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
 
-        function pay() {
+        function payer() {
             const nom = document.getElementById('nom').value;
-            if(!nom) { alert("Nom requis"); return; }
-            let txt = `COMMANDE LUTHER MODE\nClient: ${nom}\n\nArticles:\n`;
-            for(let id in basket) { if(basket[id].q > 0) txt += `- ${basket[id].n} x${basket[id].q} (${basket[id].c}, ${basket[id].t})\n`; }
-            window.location.href = `https://wa.me/261339622155?text=${encodeURIComponent(txt)}`;
+            if(!nom) { alert("Veuillez remplir vos infos"); return; }
+            const message = `Commande de ${nom}`;
+            window.location.href = `https://wa.me/261339622155?text=${encodeURIComponent(message)}`;
         }
     </script>
 </body>
