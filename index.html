@@ -6,56 +6,71 @@
     <title>Luther's Mode</title>
     <style>
         body { font-family: sans-serif; margin: 0; background: #fff; }
-        header { padding: 10px; text-align: center; border-bottom: 1px solid #eee; font-weight: bold; position: sticky; top: 0; background: white; z-index: 100; }
+        header { padding: 15px; text-align: center; border-bottom: 1px solid #eee; font-weight: bold; position: sticky; top: 0; background: white; z-index: 100; font-size: 20px; }
         
-        /* BARRE DE RECHERCHE */
-        .search-container { padding: 10px; background: #f9f9f9; border-bottom: 1px solid #eee; }
-        #search-bar { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 25px; box-sizing: border-box; font-size: 14px; outline: none; }
+        /* BARRE DE RECHERCHE TRÈS VISIBLE */
+        .search-area { 
+            padding: 12px; 
+            background: #f1f1f1; 
+            position: sticky; 
+            top: 55px; /* Juste sous le header */
+            z-index: 90;
+        }
+        #search-bar { 
+            width: 100%; 
+            padding: 14px; 
+            border: 2px solid #ddd; 
+            border-radius: 8px; 
+            font-size: 16px; 
+            box-sizing: border-box;
+            color: #000;
+        }
 
         /* GRILLE DE 4 */
-        #catalog { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; padding: 5px; }
-        .p-card { border: 1px solid #f2f2f2; cursor: pointer; text-align: left; background: #fff; }
+        #catalog { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; padding: 10px; }
+        .p-card { border: 1px solid #eee; cursor: pointer; background: #fff; border-radius: 4px; overflow: hidden; }
         .p-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
-        .p-info { padding: 4px; font-size: 8px; font-weight: bold; }
+        .p-info { padding: 5px; font-size: 9px; font-weight: bold; text-align: left; }
 
-        /* VUE PRODUIT & FORMULAIRE */
+        /* VUE PRODUIT */
         #details-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 200; padding: 20px; box-sizing: border-box; overflow-y: auto; text-align: center; }
-        .close { float: right; font-size: 28px; cursor: pointer; color: #ccc; }
-        .det-img { width: 100%; max-width: 300px; border-radius: 10px; margin: 10px 0; }
+        .close { float: right; font-size: 30px; cursor: pointer; color: #999; font-weight: bold; }
+        .det-img { width: 100%; max-width: 320px; border-radius: 12px; margin: 15px 0; }
         
-        .section-title { font-size: 10px; color: #999; text-transform: uppercase; margin: 15px 0 5px; font-weight: bold; }
-        .row { display: flex; gap: 10px; justify-content: center; margin-bottom: 15px; }
+        .section-title { font-size: 11px; color: #888; text-transform: uppercase; margin: 20px 0 8px; font-weight: bold; letter-spacing: 1px; }
+        .row { display: flex; gap: 12px; justify-content: center; margin-bottom: 20px; }
         
-        .dot { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #eee; cursor: pointer; }
+        .dot { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #eee; cursor: pointer; }
         .dot.active { border-color: #000; transform: scale(1.1); }
-        .sz-btn { border: 1px solid #ddd; padding: 8px 12px; background: white; cursor: pointer; border-radius: 5px; font-size: 12px; }
-        .sz-btn.active { background: black; color: white; }
+        .sz-btn { border: 1px solid #ddd; padding: 10px 15px; background: white; cursor: pointer; border-radius: 6px; font-size: 13px; min-width: 45px; }
+        .sz-btn.active { background: black; color: white; border-color: black; }
 
-        .delivery-box { border-top: 1px solid #eee; margin-top: 25px; padding-top: 20px; text-align: left; max-width: 400px; margin: 0 auto; }
-        input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #eee; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
-        .cmd-btn { background: black; color: white; width: 100%; padding: 16px; border: none; font-weight: bold; cursor: pointer; border-radius: 8px; text-transform: uppercase; }
+        /* FORMULAIRE LIVRAISON */
+        .delivery-box { border-top: 1px solid #eee; margin-top: 30px; padding-top: 20px; text-align: left; max-width: 450px; margin: 0 auto; }
+        .delivery-box input { width: 100%; padding: 15px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 15px; }
+        .cmd-btn { background: #000; color: #fff; width: 100%; padding: 18px; border: none; font-weight: bold; cursor: pointer; border-radius: 10px; font-size: 15px; text-transform: uppercase; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <header>LUTHER'S MODE</header>
 
-<div class="search-container">
-    <input type="text" id="search-bar" placeholder="Rechercher un produit (ex: Luther #5)..." onkeyup="filterProducts()">
+<div class="search-area">
+    <input type="text" id="search-bar" placeholder="🔍 Rechercher un article..." onkeyup="doSearch()">
 </div>
 
 <div id="catalog"></div>
 
 <div id="details-view">
     <span class="close" onclick="document.getElementById('details-view').style.display='none'">✕</span>
-    <img id="main-img" class="det-img">
-    <h2 id="det-title" style="margin: 5px 0; font-size: 18px;"></h2>
-    <div style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">78,850 Ar</div>
+    <img id="main-img" class="det-img" src="">
+    <h2 id="det-title" style="margin: 10px 0; font-size: 22px;"></h2>
+    <div style="font-size: 24px; font-weight: bold; color: #000; margin-bottom: 10px;">78,850 Ar</div>
 
-    <div class="section-title">Couleur</div>
+    <div class="section-title">Choisir la Couleur</div>
     <div id="color-selection" class="row"></div>
 
-    <div class="section-title">Taille</div>
+    <div class="section-title">Choisir la Taille</div>
     <div class="row">
         <button class="sz-btn" onclick="setSize(this, 'S')">S</button>
         <button class="sz-btn active" onclick="setSize(this, 'M')">M</button>
@@ -63,66 +78,56 @@
     </div>
 
     <div class="delivery-box">
-        <div class="section-title">Informations de Livraison</div>
-        <input type="text" id="user-name" placeholder="Nom Complet">
-        <input type="tel" id="user-tel" placeholder="Numéro de Téléphone">
-        <input type="text" id="user-addr" placeholder="Adresse Exacte">
-        <button class="cmd-btn" onclick="sendToWA()">Commander Maintenant</button>
+        <div class="section-title">Tes Coordonnées</div>
+        <input type="text" id="user-name" placeholder="Ton Nom Complet">
+        <input type="tel" id="user-tel" placeholder="Ton Numéro de Téléphone">
+        <input type="text" id="user-addr" placeholder="Ton Adresse Exacte">
+        <button class="cmd-btn" onclick="orderNow()">Commander via WhatsApp</button>
     </div>
 </div>
 
 <script>
-    // Récupération de l'URL de base pour les liens photos
     const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
 
     const colors = [
         { name: 'Noir', code: '#000', file: 'badg noir.JPG' },
         { name: 'Vert', code: '#28a745', file: 'badg vert.JPG' },
         { name: 'Bleu', code: '#007bff', file: 'badg bleu.JPG' },
-        { name: 'Rouge', code: '#ff0000', file: 'badg rouge.JPG' }
+        { name: 'Rouge', code: '#ff4d4d', file: 'badg rouge.JPG' }
     ];
 
-    let current = { name: '', size: 'M', color: 'Noir', imgUrl: '' };
+    let currentChoice = { name: '', size: 'M', color: 'Noir', imgUrl: '' };
 
-    // Génération initiale du catalogue
-    const grid = document.getElementById('catalog');
-    function loadProducts() {
-        grid.innerHTML = '';
-        for (let i = 1; i <= 30; i++) {
-            const card = document.createElement('div');
-            card.className = 'p-card';
-            card.setAttribute('data-name', "Article Luther #" + i);
-            card.innerHTML = `<img src="badg noir.JPG"><div class="p-info">Article Luther #${i}<br>78,850 Ar</div>`;
-            card.onclick = () => openProduct("Article Luther #" + i);
-            grid.appendChild(card);
-        }
+    // Création des 30 produits
+    const catalog = document.getElementById('catalog');
+    for (let i = 1; i <= 30; i++) {
+        const item = document.createElement('div');
+        item.className = 'p-card';
+        item.setAttribute('data-search', "article luther " + i);
+        item.innerHTML = `<img src="badg noir.JPG"><div class="p-info">Article Luther #${i}<br>78,850 Ar</div>`;
+        item.onclick = () => openItem("Article Luther #" + i);
+        catalog.appendChild(item);
     }
-    loadProducts();
 
     // FONCTION DE RECHERCHE
-    function filterProducts() {
-        const query = document.getElementById('search-bar').value.toLowerCase();
+    function doSearch() {
+        const input = document.getElementById('search-bar').value.toLowerCase();
         const cards = document.getElementsByClassName('p-card');
-        
         for (let card of cards) {
-            const name = card.getAttribute('data-name').toLowerCase();
-            if (name.includes(query)) {
-                card.style.display = "block";
-            } else {
-                card.style.display = "none";
-            }
+            const txt = card.getAttribute('data-search');
+            card.style.display = txt.includes(input) ? "block" : "none";
         }
     }
 
-    function openProduct(name) {
-        current.name = name;
-        current.color = colors[0].name;
-        current.imgUrl = baseUrl + colors[0].file;
-        document.getElementById('det-title').innerText = name;
+    function openItem(title) {
+        currentChoice.name = title;
+        currentChoice.color = colors[0].name;
+        currentChoice.imgUrl = baseUrl + colors[0].file;
+        document.getElementById('det-title').innerText = title;
         document.getElementById('main-img').src = colors[0].file;
         
-        const cBox = document.getElementById('color-selection');
-        cBox.innerHTML = '';
+        const box = document.getElementById('color-selection');
+        box.innerHTML = '';
         colors.forEach((c, idx) => {
             const d = document.createElement('div');
             d.className = 'dot' + (idx === 0 ? ' active' : '');
@@ -131,10 +136,10 @@
                 document.querySelectorAll('.dot').forEach(el => el.classList.remove('active'));
                 d.classList.add('active');
                 document.getElementById('main-img').src = c.file; 
-                current.color = c.name;
-                current.imgUrl = baseUrl + c.file; 
+                currentChoice.color = c.name;
+                currentChoice.imgUrl = baseUrl + c.file; 
             };
-            cBox.appendChild(d);
+            box.appendChild(d);
         });
         document.getElementById('details-view').style.display = 'block';
     }
@@ -142,16 +147,16 @@
     function setSize(btn, s) {
         document.querySelectorAll('.sz-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        current.size = s;
+        currentChoice.size = s;
     }
 
-    function sendToWA() {
-        const nom = document.getElementById('user-name').value;
-        const tel = document.getElementById('user-tel').value;
-        const adr = document.getElementById('user-addr').value;
-        if(!nom || !tel) return alert("Remplissez vos infos");
+    function orderNow() {
+        const n = document.getElementById('user-name').value;
+        const t = document.getElementById('user-tel').value;
+        const a = document.getElementById('user-addr').value;
+        if(!n || !t) return alert("Remplis ton nom et ton téléphone");
         
-        const msg = `📦 *COMMANDE LUTHER MODE*\n\n*Article:* ${current.name}\n*Couleur:* ${current.color}\n*Taille:* ${current.size}\n\n*PHOTO DU PRODUIT:* ${current.imgUrl}\n\n*CLIENT:* ${nom}\n*TÉL:* ${tel}\n*ADRESSE:* ${adr}`;
+        const msg = `📦 *COMMANDE LUTHER MODE*\n\n*Produit:* ${currentChoice.name}\n*Couleur:* ${currentChoice.color}\n*Taille:* ${currentChoice.size}\n\n*Lien Photo:* ${currentChoice.imgUrl}\n\n*Client:* ${n}\n*Tél:* ${t}\n*Adresse:* ${a}`;
         window.location.href = `https://wa.me/261339622155?text=${encodeURIComponent(msg)}`;
     }
 </script>
