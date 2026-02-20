@@ -1,144 +1,30 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther's Mode | Boutique</title>
-    <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f0f0f0; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        
-        /* Grille des produits */
-        .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 900px; width: 100%; margin-bottom: 30px; }
-        @media (max-width: 600px) { .product-grid { grid-template-columns: 1fr; } }
-
-        .product-card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; }
-        .img-box { background: #f9f9f9; border-radius: 15px; padding: 10px; margin-bottom: 15px; }
-        .product-img { width: 100%; height: auto; max-height: 200px; object-fit: contain; }
-        
-        /* Bouton pour passer à l'étape suivante */
-        #btn-next-step { background: #000; color: white; padding: 20px 40px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-bottom: 30px; }
-
-        /* SECTION LIVRAISON (CACHÉE PAR DÉFAUT) */
-        #checkout-section { 
-            display: none; /* C'est ici qu'on le cache */
-            background: white; padding: 30px; border-radius: 20px; max-width: 900px; width: 100%; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; box-sizing: border-box; 
-            margin-top: 20px;
-        }
-
-        .input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
-        input { width: 100%; padding: 15px; border: 1px solid #eee; border-radius: 10px; background: #fafafa; font-size: 14px; box-sizing: border-box; }
-        
-        .btn-pay { background: #000; color: white; padding: 20px; border-radius: 12px; width: 100%; border: none; font-weight: bold; cursor: pointer; font-size: 16px; text-transform: uppercase; }
-        
-        /* Styles boutons et couleurs */
-        .color-dot { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #eee; cursor: pointer; display: inline-block; margin: 0 4px; }
-        .size-btn { border: 1px solid #ddd; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; background: white; margin: 0 2px; }
-        .size-btn.active { border-color: #000; background: #f0f0f0; font-weight: bold; }
-        .qty-box { display: inline-flex; align-items: center; gap: 15px; border: 1px solid #eee; padding: 5px 15px; border-radius: 25px; margin-top: 10px; }
-    </style>
-</head>
-<body>
-
-    <div class="product-grid">
-        <div class="product-card">
-            <div class="img-box"><img src="badg noir.JPG" id="img1" class="product-img"></div>
-            <div class="product-name">Badge Logo Classic</div>
-            <div style="font-size: 10px; color:#aaa; margin-top:10px;">COULEUR</div>
-            <div class="selection-group">
-                <div class="color-dot" style="background: black;" onclick="updateItem(1, 'Noir', 'badg noir.JPG')"></div>
-                <div class="color-dot" style="background: blue;" onclick="updateItem(1, 'Bleu', 'Badg bleu.JPG')"></div>
-                <div class="color-dot" style="background: red;" onclick="updateItem(1, 'Rouge', 'badg rouge.JPG')"></div>
-            </div>
-            <div style="font-size: 10px; color:#aaa; margin-top:10px;">TAILLE</div>
-            <div class="selection-group">
-                <button class="size-btn" onclick="updateSize(1, this, 'S')">S</button>
-                <button class="size-btn" onclick="updateSize(1, this, 'M')">M</button>
-                <button class="size-btn" onclick="updateSize(1, this, 'L')">L</button>
-            </div>
-            <div class="qty-box">
-                <button onclick="changeQty(1, -1)">-</button>
-                <span id="qty1">1</span>
-                <button onclick="changeQty(1, 1)">+</button>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <div class="img-box"><img src="badg vert.JPG" id="img2" class="product-img"></div>
-            <div class="product-name">T-Shirt Casual</div>
-            <div style="font-size: 10px; color:#aaa; margin-top:10px;">COULEUR</div>
-            <div class="selection-group">
-                <div class="color-dot" style="background: green;" onclick="updateItem(2, 'Vert', 'badg vert.JPG')"></div>
-            </div>
-            <div style="font-size: 10px; color:#aaa; margin-top:10px;">TAILLE</div>
-            <div class="selection-group">
-                <button class="size-btn" onclick="updateSize(2, this, 'S')">S</button>
-                <button class="size-btn" onclick="updateSize(2, this, 'M')">M</button>
-                <button class="size-btn" onclick="updateSize(2, this, 'L')">L</button>
-            </div>
-            <div class="qty-box">
-                <button onclick="changeQty(2, -1)">-</button>
-                <span id="qty2">0</span>
-                <button onclick="changeQty(2, 1)">+</button>
-            </div>
-        </div>
+<div class="product-grid">
     </div>
 
-    <button id="btn-next-step" onclick="showCheckout()">Valider la commande</button>
+<button id="btn-etape-suivante" onclick="ouvrirFormulaire()" style="background: black; color: white; padding: 15px; width: 100%; max-width: 400px; border-radius: 10px; cursor: pointer; font-weight: bold; margin: 20px 0;">
+    VALIDER MA SÉLECTION
+</button>
 
-    <div id="checkout-section">
-        <h2 style="text-transform: uppercase; letter-spacing: 2px;">Coordonnés de livraison</h2>
-        <div class="input-group">
-            <input type="text" id="nom" placeholder="Nom Complet">
-            <input type="tel" id="tel" placeholder="Téléphone">
-        </div>
-        <div class="input-group">
-            <input type="text" id="adresse" placeholder="Adresse Exacte">
-            <input type="text" id="ville" placeholder="Ville / Quartier">
-        </div>
-        <button class="btn-pay" onclick="envoyerWhatsApp()">PAYÉE</button>
-    </div>
+<div id="section-paiement" style="display: none; background: white; padding: 25px; border-radius: 15px; max-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px;">
+    <h3>COORDONNÉES DE LIVRAISON</h3>
+    <input type="text" id="nom" placeholder="Nom Complet">
+    <input type="tel" id="tel" placeholder="Téléphone">
+    <input type="text" id="adresse" placeholder="Adresse Exacte">
+    
+    <button onclick="finaliser()" style="background: black; color: white; padding: 15px; width: 100%; border-radius: 10px; margin-top: 15px; font-weight: bold;">
+        PAYÉE
+    </button>
+</div>
 
-    <script>
-        let basket = {
-            1: { nom: "Badge Logo", couleur: "Noir", taille: "S", qte: 1 },
-            2: { nom: "T-Shirt Casual", couleur: "Vert", taille: "M", qte: 0 }
-        };
+<script>
+function ouvrirFormulaire() {
+    // Cette ligne cache le bouton "Valider ma sélection"
+    document.getElementById('btn-etape-suivante').style.display = 'none';
+    // Cette ligne affiche le formulaire et le bouton "PAYÉE"
+    document.getElementById('section-paiement').style.display = 'block';
+}
 
-        function updateItem(id, col, img) { basket[id].couleur = col; document.getElementById('img' + id).src = img; }
-        function updateSize(id, btn, sz) { 
-            let btns = btn.parentElement.querySelectorAll('.size-btn');
-            btns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            basket[id].taille = sz; 
-        }
-        function changeQty(id, delta) { 
-            basket[id].qte = Math.max(0, basket[id].qte + delta); 
-            document.getElementById('qty' + id).innerText = basket[id].qte; 
-        }
-
-        // FONCTION POUR AFFICHER LE FORMULAIRE
-        function showCheckout() {
-            document.getElementById('checkout-section').style.display = 'block';
-            document.getElementById('btn-next-step').style.display = 'none';
-            // Scroll automatique vers le formulaire
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-        }
-
-        function envoyerWhatsApp() {
-            const nom = document.getElementById('nom').value;
-            const tel = document.getElementById('tel').value;
-            if(!nom || !tel) { alert("Veuillez remplir vos coordonnées !"); return; }
-            
-            let recap = "";
-            for (let id in basket) {
-                if(basket[id].qte > 0) {
-                    recap += `- ${basket[id].nom} x${basket[id].qte} (${basket[id].couleur}, T:${basket[id].taille})\n`;
-                }
-            }
-            const msg = `LUTHER MODE - PAIEMENT À EFFECTUER :\nClient : ${nom}\nContact : ${tel}\n\nPANIER :\n${recap}`;
-            window.location.href = `https://wa.me/261339622155?text=${encodeURIComponent(msg)}`;
-        }
-    </script>
-</body>
-</html>
+function finaliser() {
+    // Ton script WhatsApp habituel ici
+}
+</script>
