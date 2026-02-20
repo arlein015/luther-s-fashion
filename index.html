@@ -3,121 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther's Mode | Boutique</title>
+    <title>Luther's Mode</title>
     <style>
         body { font-family: sans-serif; margin: 0; background: #fff; }
-        header { padding: 10px; text-align: center; border-bottom: 1px solid #eee; font-weight: bold; position: sticky; top: 0; background: white; z-index: 10; font-size: 14px; }
+        header { padding: 15px; text-align: center; border-bottom: 1px solid #eee; font-weight: bold; font-size: 14px; letter-spacing: 2px; }
 
-        /* MINI-GRILLE DE 4 */
-        #catalog { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; padding: 5px; }
-        .p-card { border: 1px solid #f2f2f2; cursor: pointer; display: flex; flex-direction: column; }
-        .p-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #f9f9f9; }
-        .p-info { padding: 4px; }
-        .p-name { font-size: 9px; color: #777; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .p-price { font-size: 10px; font-weight: bold; }
+        /* GRILLE DE 4 TRÈS PETITE */
+        #catalog { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 4px; 
+            padding: 5px; 
+        }
+
+        .p-card { border: 1px solid #eee; cursor: pointer; text-align: left; }
+        .p-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #ccc; display: block; }
+        .p-info { padding: 3px; }
+        .p-name { font-size: 8px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .p-price { font-size: 9px; font-weight: bold; }
 
         /* VUE DÉTAILLÉE */
-        #details-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 20; padding: 15px; box-sizing: border-box; overflow-y: auto; }
-        .close { font-size: 24px; cursor: pointer; margin-bottom: 10px; display: block; }
-        .det-img { width: 100%; border-radius: 8px; }
-        .det-price { font-size: 20px; font-weight: bold; margin: 10px 0; }
+        #details-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 100; padding: 15px; box-sizing: border-box; overflow-y: auto; }
+        .close { font-size: 25px; cursor: pointer; margin-bottom: 15px; display: inline-block; }
+        .det-img { width: 100%; border-radius: 5px; }
         
-        .opt-title { font-size: 11px; color: #999; text-transform: uppercase; margin-top: 15px; }
-        .btn-group { display: flex; gap: 8px; margin: 8px 0; }
-        .dot { width: 25px; height: 25px; border-radius: 50%; border: 1px solid #ddd; cursor: pointer; }
-        .sz-btn { border: 1px solid #ddd; padding: 6px 10px; background: white; cursor: pointer; font-size: 12px; }
-        .sz-btn.active { background: black; color: white; }
-
-        /* FORMULAIRE */
-        #checkout { display: none; padding: 20px; text-align: center; }
-        input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #eee; border-radius: 4px; box-sizing: border-box; }
-        .black-btn { background: black; color: white; width: 100%; padding: 15px; border: none; font-weight: bold; cursor: pointer; border-radius: 4px; margin-top: 10px; }
+        /* FORMULAIRE FINAL */
+        #checkout { display: none; padding: 20px; }
+        input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        .btn-black { background: black; color: white; width: 100%; padding: 15px; border: none; font-weight: bold; cursor: pointer; border-radius: 4px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <header>LUTHER'S MODE</header>
 
-<div id="catalog"></div>
+<div id="catalog">
+    <div class="p-card" onclick="showDetails('Badge Logo Classic', '78,850 Ar', 'badg noir.JPG')">
+        <img src="badg noir.JPG">
+        <div class="p-info"><div class="p-name">Badge Logo</div><div class="p-price">78,850 Ar</div></div>
+    </div>
+    <div class="p-card" onclick="showDetails('T-Shirt Casual', '95,000 Ar', 'badg vert.JPG')">
+        <img src="badg vert.JPG">
+        <div class="p-info"><div class="p-name">T-Shirt</div><div class="p-price">95,000 Ar</div></div>
+    </div>
+</div>
 
 <div id="details-view">
     <span class="close" onclick="hideDetails()">✕</span>
-    <img id="main-img" class="det-img" src="">
-    <h2 id="main-title" style="margin: 10px 0 5px; font-size: 18px;"></h2>
-    <div id="main-price" class="det-price"></div>
-
-    <div class="opt-title">Couleur</div>
-    <div class="btn-group">
-        <div class="dot" style="background:black" onclick="selectColor('Noir')"></div>
-        <div class="dot" style="background:blue" onclick="selectColor('Bleu')"></div>
-        <div class="dot" style="background:red" onclick="selectColor('Rouge')"></div>
-    </div>
-
-    <div class="opt-title">Taille</div>
-    <div class="btn-group">
-        <button class="sz-btn" onclick="selectSize(this, 'S')">S</button>
-        <button class="sz-btn" onclick="selectSize(this, 'M')">M</button>
-        <button class="sz-btn" onclick="selectSize(this, 'L')">L</button>
-    </div>
-
-    <button class="black-btn" onclick="openCheckout()">VALIDER LE CHOIX</button>
+    <img id="det-img" class="det-img">
+    <h2 id="det-title" style="font-size: 18px;"></h2>
+    <div id="det-price" style="font-size: 20px; font-weight: bold; margin-bottom: 20px;"></div>
+    
+    <p style="font-size: 12px; color: #888;">TAILLE: M | COULEUR: Standard</p>
+    <button class="btn-black" onclick="openCheckout()">VALIDER LE CHOIX</button>
 </div>
 
 <div id="checkout">
-    <h3>LIVRAISON</h3>
-    <input type="text" id="c-nom" placeholder="Nom Complet">
-    <input type="tel" id="c-tel" placeholder="Téléphone">
-    <input type="text" id="c-adr" placeholder="Adresse exacte">
-    <button class="black-btn" onclick="sendWA()">PAYÉE</button>
+    <h3 style="text-align: center;">COORDONNÉES</h3>
+    <input type="text" id="nom" placeholder="Nom Complet">
+    <input type="tel" id="tel" placeholder="Téléphone">
+    <input type="text" id="adr" placeholder="Adresse / Ville">
+    <button class="btn-black" onclick="sendWA()">PAYÉE</button>
 </div>
 
 <script>
-    // Création des 30 produits
-    const items = [];
-    for(let i=1; i<=30; i++) {
-        items.push({
-            id: i,
-            name: "Article Luther #" + i,
-            price: (60000 + (i * 1500)) + " Ar",
-            // Utilise tes images si elles existent, sinon met une image par défaut
-            img: i === 1 ? "badg noir.JPG" : (i === 2 ? "badg vert.JPG" : "badg noir.JPG")
-        });
+    // Ajout automatique des 28 autres produits
+    const cat = document.getElementById('catalog');
+    for(let i=3; i<=30; i++) {
+        cat.innerHTML += `
+            <div class="p-card" onclick="showDetails('Article #${i}', '70,000 Ar', 'badg noir.JPG')">
+                <img src="badg noir.JPG">
+                <div class="p-info"><div class="p-name">Article #${i}</div><div class="p-price">70,000 Ar</div></div>
+            </div>`;
     }
 
-    // Affichage dans la grille
-    const cat = document.getElementById('catalog');
-    items.forEach(p => {
-        const card = document.createElement('div');
-        card.className = 'p-card';
-        card.onclick = () => showDetails(p.id);
-        card.innerHTML = `
-            <img src="${p.img}" alt="${p.name}">
-            <div class="p-info">
-                <div class="p-name">${p.name}</div>
-                <div class="p-price">${p.price}</div>
-            </div>`;
-        cat.appendChild(card);
-    });
+    let current = { n: '', p: '' };
 
-    let current = { name: '', price: '', size: 'M', color: 'Noir' };
-
-    function showDetails(id) {
-        const p = items.find(x => x.id === id);
-        current.name = p.name;
-        current.price = p.price;
-        document.getElementById('main-title').innerText = p.name;
-        document.getElementById('main-price').innerText = p.price;
-        document.getElementById('main-img').src = p.img;
+    function showDetails(name, price, img) {
+        current.n = name;
+        current.p = price;
+        document.getElementById('det-title').innerText = name;
+        document.getElementById('det-price').innerText = price;
+        document.getElementById('det-img').src = img;
         document.getElementById('details-view').style.display = 'block';
     }
 
     function hideDetails() { document.getElementById('details-view').style.display = 'none'; }
-    function selectColor(c) { current.color = c; }
-    function selectSize(btn, s) {
-        document.querySelectorAll('.sz-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        current.size = s;
-    }
 
     function openCheckout() {
         document.getElementById('details-view').style.display = 'none';
@@ -125,10 +96,10 @@
     }
 
     function sendWA() {
-        const n = document.getElementById('c-nom').value;
-        const t = document.getElementById('c-tel').value;
-        if(!n || !t) return alert("Remplissez vos coordonnées");
-        const msg = `LUTHER MODE\nProduit: ${current.name}\nPrix: ${current.price}\nTaille: ${current.size}\nClient: ${n}\nTél: ${t}`;
+        const n = document.getElementById('nom').value;
+        const t = document.getElementById('tel').value;
+        if(!n || !t) return alert("Remplissez vos infos");
+        const msg = `LUTHER MODE\nArticle: ${current.n}\nPrix: ${current.p}\nClient: ${n}\nTél: ${t}`;
         window.location.href = `https://wa.me/261339622155?text=${encodeURIComponent(msg)}`;
     }
 </script>
