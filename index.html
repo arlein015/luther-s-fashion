@@ -7,7 +7,7 @@
     <style>
         body { font-family: sans-serif; background-color: #f9f9f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
         .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; max-width: 400px; width: 100%; }
-        .product-img { width: 100%; border-radius: 15px; margin: 15px 0; transition: 0.3s; min-height: 250px; object-fit: contain; background: #eee; }
+        .product-img { width: 100%; border-radius: 15px; margin: 15px 0; transition: 0.3s; min-height: 250px; object-fit: contain; background: #f0f0f0; }
         .price { font-size: 26px; font-weight: bold; margin: 15px 0; }
         .options-title { font-size: 12px; font-weight: bold; margin-top: 15px; color: #888; text-transform: uppercase; }
         .selection-group { display: flex; justify-content: center; gap: 10px; margin: 10px 0 20px 0; flex-wrap: wrap; }
@@ -21,7 +21,7 @@
     <div class="container">
         <h1>LUTHER'S MODE</h1>
         
-        <img src="badg noir.jpg" id="mainImage" class="product-img">
+        <img src="badg noir.jpg" id="mainImage" class="product-img" onerror="this.src='https://via.placeholder.com/400x400?text=Image+non+trouvée'">
         
         <div class="price">78,850 Ar</div>
 
@@ -50,8 +50,9 @@
 
     <script>
         function changeColor(imageName) {
-            // Cette ligne change l'image quand on clique
-            document.getElementById('mainImage').src = imageName;
+            const img = document.getElementById('mainImage');
+            img.src = imageName;
+            console.log("Chargement de : " + imageName);
         }
     </script>
 </body>
