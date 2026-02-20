@@ -3,40 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther's Mode | 30 Articles</title>
+    <title>Luther's Mode | Catalogue 30 Produits</title>
     <style>
         body { font-family: sans-serif; margin: 0; background: #fff; }
-        header { padding: 10px; text-align: center; border-bottom: 1px solid #eee; font-weight: bold; position: sticky; top: 0; background: white; z-index: 10; font-size: 14px; }
+        header { padding: 10px; text-align: center; border-bottom: 1px solid #eee; font-weight: bold; position: sticky; top: 0; background: white; z-index: 10; font-size: 14px; letter-spacing: 1px; }
 
-        /* MINI-GRILLE DE 4 */
+        /* GRILLE MINIATURE DE 4 */
         #catalog { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; padding: 5px; }
         .p-card { border: 1px solid #f2f2f2; cursor: pointer; text-align: left; }
-        .p-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #f9f9f9; }
+        .p-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block; }
         .p-info { padding: 4px; }
         .p-name { font-size: 8px; color: #777; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .p-price { font-size: 9px; font-weight: bold; }
 
         /* VUE DÉTAILLÉE */
-        #details-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 20; padding: 15px; box-sizing: border-box; overflow-y: auto; }
-        .close { font-size: 24px; cursor: pointer; margin-bottom: 10px; display: block; }
-        .det-img { width: 100%; border-radius: 8px; margin-bottom: 10px; }
-        .det-price { font-size: 20px; font-weight: bold; margin: 10px 0; text-align: center; }
+        #details-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 20; padding: 15px; box-sizing: border-box; overflow-y: auto; text-align: center; }
+        .close { font-size: 24px; cursor: pointer; float: left; }
+        .det-img { width: 100%; max-width: 400px; border-radius: 8px; margin: 10px 0; }
         
-        .opt-title { font-size: 10px; color: #999; text-transform: uppercase; margin-top: 15px; text-align: center; }
+        .opt-title { font-size: 10px; color: #999; text-transform: uppercase; margin-top: 15px; }
         .btn-group { display: flex; gap: 10px; margin: 8px 0; justify-content: center; }
-        .dot { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #eee; cursor: pointer; transition: 0.2s; }
-        .dot:hover { transform: scale(1.1); border-color: #000; }
-        .sz-btn { border: 1px solid #ddd; padding: 8px 15px; background: white; cursor: pointer; border-radius: 4px; }
-        .sz-btn.active { background: black; color: white; border-color: black; }
+        
+        /* PASTILLES DE COULEUR */
+        .color-dot { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #eee; cursor: pointer; }
+        .color-dot.active { border-color: #000; transform: scale(1.1); }
+        
+        .sz-btn { border: 1px solid #ddd; padding: 6px 12px; background: white; cursor: pointer; border-radius: 4px; font-size: 12px; }
+        .sz-btn.active { background: black; color: white; }
 
         /* QUANTITÉ */
-        .qty-box { display: flex; align-items: center; justify-content: center; border: 1px solid #eee; border-radius: 20px; width: 120px; margin: 10px auto; padding: 5px; }
-        .qty-btn { background: none; border: none; font-size: 20px; width: 30px; cursor: pointer; font-weight: bold; }
+        .qty-box { display: flex; align-items: center; justify-content: center; border: 1px solid #eee; border-radius: 20px; width: 100px; margin: 10px auto; }
+        .qty-btn { background: none; border: none; font-size: 18px; width: 30px; cursor: pointer; }
 
         /* FORMULAIRE */
-        #checkout { display: none; padding: 20px; text-align: center; }
-        input { width: 100%; padding: 15px; margin-bottom: 10px; border: 1px solid #eee; border-radius: 8px; box-sizing: border-box; }
-        .black-btn { background: black; color: white; width: 100%; padding: 18px; border: none; font-weight: bold; cursor: pointer; border-radius: 8px; margin-top: 10px; }
+        #checkout { display: none; padding: 20px; }
+        input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #eee; border-radius: 6px; box-sizing: border-box; }
+        .black-btn { background: black; color: white; width: 100%; padding: 15px; border: none; font-weight: bold; cursor: pointer; border-radius: 6px; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -48,124 +50,123 @@
 <div id="details-view">
     <span class="close" onclick="hideDetails()">✕</span>
     <img id="main-img" class="det-img" src="">
-    <h2 id="main-title" style="margin: 0; font-size: 18px; text-align: center;"></h2>
-    <div id="main-price" class="det-price"></div>
+    <h2 id="main-title" style="margin: 5px 0; font-size: 18px;"></h2>
+    <div id="main-price" style="font-size: 20px; font-weight: bold; margin-bottom: 10px;"></div>
 
     <div class="opt-title">Couleur</div>
-    <div id="color-list" class="btn-group"></div>
+    <div id="color-selection" class="btn-group"></div>
 
     <div class="opt-title">Taille</div>
     <div class="btn-group">
-        <button class="sz-btn" onclick="selectSize(this, 'S')">S</button>
-        <button class="sz-btn" onclick="selectSize(this, 'M')">M</button>
-        <button class="sz-btn" onclick="selectSize(this, 'L')">L</button>
+        <button class="sz-btn" onclick="setSize(this, 'S')">S</button>
+        <button class="sz-btn" onclick="setSize(this, 'M')">M</button>
+        <button class="sz-btn" onclick="setSize(this, 'L')">L</button>
     </div>
 
     <div class="opt-title">Quantité</div>
     <div class="qty-box">
-        <button class="qty-btn" onclick="changeQty(-1)">-</button>
-        <span id="qty-val" style="margin: 0 15px; font-weight: bold;">1</span>
-        <button class="qty-btn" onclick="changeQty(1)">+</button>
+        <button class="qty-btn" onclick="updateQty(-1)">-</button>
+        <span id="qty-display" style="font-weight:bold;">1</span>
+        <button class="qty-btn" onclick="updateQty(1)">+</button>
     </div>
 
-    <button class="black-btn" onclick="openCheckout()">AJOUTER AU PANIER</button>
+    <button class="black-btn" style="margin-top:20px;" onclick="showCheckout()">Ajouter au panier</button>
 </div>
 
 <div id="checkout">
-    <h2 style="margin-bottom: 20px;">LIVRAISON</h2>
-    <input type="text" id="c-nom" placeholder="Nom Complet">
-    <input type="tel" id="c-tel" placeholder="Téléphone">
-    <input type="text" id="c-adr" placeholder="Adresse Exacte">
-    <button class="black-btn" onclick="sendWA()">PAYÉE</button>
+    <h3 style="text-align:center;">COORDONNÉES DE LIVRAISON</h3>
+    <input type="text" id="user-nom" placeholder="Nom Complet">
+    <input type="tel" id="user-tel" placeholder="Téléphone">
+    <input type="text" id="user-adr" placeholder="Adresse / Ville">
+    <button class="black-btn" onclick="sendToWhatsApp()">PAYÉE</button>
 </div>
 
 <script>
-    // 1. Liste des 30 produits avec leurs images par couleur
+    // Liste des 30 produits avec variantes de couleurs
     const products = [];
     for(let i=1; i<=30; i++) {
         products.push({
             id: i,
-            name: "Article Luther " + i,
-            basePrice: 78850,
-            // Chaque produit a 3 couleurs et 3 images différentes
+            name: "Article Luther #" + i,
+            price: 78850,
             variants: [
-                { colorName: 'Noir', colorCode: '#000', img: 'badg noir.JPG' },
-                { colorName: 'Vert', colorCode: '#28a745', img: 'badg vert.JPG' },
-                { colorName: 'Bleu', colorCode: '#007bff', img: 'badg noir.JPG' } // Remplace par tes vrais fichiers
+                { name: 'Noir', code: '#000', img: 'badg noir.JPG' },
+                { name: 'Vert', code: '#28a745', img: 'badg vert.JPG' },
+                { name: 'Bleu', code: '#007bff', img: 'badg noir.JPG' }
             ]
         });
     }
 
-    // 2. Affichage initial du catalogue
-    const cat = document.getElementById('catalog');
+    const catalog = document.getElementById('catalog');
     products.forEach(p => {
-        cat.innerHTML += `
-            <div class="p-card" onclick="showDetails(${p.id})">
-                <img src="${p.variants[0].img}">
+        catalog.innerHTML += `
+            <div class="p-card" onclick="openDetails(${p.id})">
+                <img src="${p.variants[0].img}" onerror="this.src='badg noir.JPG'">
                 <div class="p-info">
                     <div class="p-name">${p.name}</div>
-                    <div class="p-price">${p.basePrice.toLocaleString()} Ar</div>
+                    <div class="p-price">${p.price.toLocaleString()} Ar</div>
                 </div>
             </div>`;
     });
 
     let currentOrder = { name: '', price: 0, size: 'M', color: '', qty: 1 };
 
-    // 3. Fonction pour ouvrir les détails et changer d'image
-    function showDetails(id) {
+    function openDetails(id) {
         const p = products.find(x => x.id === id);
         currentOrder.name = p.name;
-        currentOrder.price = p.basePrice;
+        currentOrder.price = p.price;
         currentOrder.qty = 1;
-        document.getElementById('qty-val').innerText = "1";
-        
+        document.getElementById('qty-display').innerText = "1";
         document.getElementById('main-title').innerText = p.name;
-        document.getElementById('main-price').innerText = p.basePrice.toLocaleString() + " Ar";
+        document.getElementById('main-price').innerText = p.price.toLocaleString() + " Ar";
         document.getElementById('main-img').src = p.variants[0].img;
         
-        // Générer les boutons de couleur qui changent l'image
-        const colorList = document.getElementById('color-list');
-        colorList.innerHTML = '';
-        p.variants.forEach(v => {
+        // Génération des pastilles cliquables
+        const colorDiv = document.getElementById('color-selection');
+        colorDiv.innerHTML = '';
+        p.variants.forEach((v, index) => {
             const dot = document.createElement('div');
-            dot.className = 'dot';
-            dot.style.backgroundColor = v.colorCode;
+            dot.className = 'color-dot' + (index === 0 ? ' active' : '');
+            dot.style.backgroundColor = v.code;
             dot.onclick = function() {
+                document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+                dot.classList.add('active');
                 document.getElementById('main-img').src = v.img; // Change l'image !
-                currentOrder.color = v.colorName;
+                currentOrder.color = v.name;
             };
-            colorList.appendChild(dot);
+            colorDiv.appendChild(dot);
         });
 
         document.getElementById('details-view').style.display = 'block';
-        window.scrollTo(0,0);
     }
 
     function hideDetails() { document.getElementById('details-view').style.display = 'none'; }
     
-    function selectSize(btn, s) {
+    function setSize(btn, s) {
         document.querySelectorAll('.sz-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         currentOrder.size = s;
     }
 
-    function changeQty(v) {
-        currentOrder.qty = Math.max(1, currentOrder.qty + v);
-        document.getElementById('qty-val').innerText = currentOrder.qty;
+    function updateQty(val) {
+        currentOrder.qty = Math.max(1, currentOrder.qty + val);
+        document.getElementById('qty-display').innerText = currentOrder.qty;
     }
 
-    function openCheckout() {
+    function showCheckout() {
         document.getElementById('details-view').style.display = 'none';
         document.getElementById('checkout').style.display = 'block';
     }
 
-    function sendWA() {
-        const n = document.getElementById('c-nom').value;
-        const t = document.getElementById('c-tel').value;
-        if(!n || !t) return alert("Remplissez vos coordonnées");
+    function sendToWhatsApp() {
+        const n = document.getElementById('user-nom').value;
+        const t = document.getElementById('user-tel').value;
+        if(!n || !t) return alert("Infos manquantes");
         
-        const total = currentOrder.price * currentOrder.qty;
-        const msg = `LUTHER MODE\nProduit: ${currentOrder.name}\nOptions: ${currentOrder.color}, Taille ${currentOrder.size}\nQuantité: ${currentOrder.qty}\nTOTAL: ${total.toLocaleString()} Ar\nClient: ${n}\nTél: ${t}`;
-        
+        const msg = `COMMANDE LUTHER MODE\nArticle: ${currentOrder.name}\nCouleur: ${currentOrder.color}\nTaille: ${currentOrder.size}\nQuantité: ${currentOrder.qty}\nClient: ${n}\nTél: ${t}`;
         window.location.href = `https://wa.me/261339622155?text=${encodeURIComponent(msg)}`;
     }
+</script>
+
+</body>
+</html>
