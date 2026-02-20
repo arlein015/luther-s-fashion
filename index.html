@@ -3,70 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther's Mode | Boutique Officielle</title>
+    <title>Luther's Mode | Officiel</title>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Poppins', sans-serif; margin: 0; background: #1a252f; color: #fff; }
+        body { font-family: 'Poppins', sans-serif; margin: 0; background: #1a252f; color: #fff; overflow-x: hidden; }
         
-        /* HEADER DÉCALÉ À GAUCHE */
+        /* HEADER */
         header { 
-            padding: 25px 20px; 
-            background: linear-gradient(to bottom, #2c3e50, #1a252f);
-            display: flex; align-items: center; 
-            justify-content: center; /* Base centrée */
-            padding-right: 12%; /* Pousse légèrement vers la gauche */
-            gap: 15px;
+            padding: 25px 15px; background: #2c3e50;
+            display: flex; align-items: center; justify-content: center; gap: 15px;
         }
-
         .logo-l {
-            width: 75px; height: 75px; border-radius: 50%;
-            background: #000; border: 3px solid #fff;
-            box-shadow: 0 0 0 2px #2980b9; 
-            display: flex; align-items: center; justify-content: center;
-            font-family: 'Great Vibes', cursive; font-size: 50px; color: #fff;
-            padding-bottom: 5px;
+            width: 70px; height: 70px; border-radius: 50%; background: #000; border: 3px solid #fff;
+            box-shadow: 0 0 0 2px #2980b9; display: flex; align-items: center; justify-content: center;
+            font-family: 'Great Vibes', cursive; font-size: 45px; color: #fff;
         }
-
-        .site-title { font-size: 24px; font-weight: bold; text-transform: uppercase; }
+        .site-title { font-size: 22px; font-weight: bold; }
 
         /* RECHERCHE ET CATÉGORIES */
         .search-container { display: flex; align-items: center; gap: 10px; padding: 10px 15px; background: #111b24; }
         .logo-small {
-            width: 32px; height: 32px; border-radius: 50%; background: #000; border: 1.5px solid #fff;
-            box-shadow: 0 0 0 1px #2980b9; display: flex; align-items: center; justify-content: center;
-            font-family: 'Great Vibes', cursive; font-size: 20px;
+            width: 30px; height: 30px; border-radius: 50%; background: #000; border: 1.5px solid #fff;
+            display: flex; align-items: center; justify-content: center; font-family: 'Great Vibes', cursive;
         }
-        #search-bar { flex-grow: 1; padding: 10px 15px; border-radius: 20px; border: none; outline: none; }
+        #search-bar { flex-grow: 1; padding: 10px; border-radius: 20px; border: none; }
 
-        .category-bar { display: flex; overflow-x: auto; gap: 8px; padding: 12px; scrollbar-width: none; }
-        .cat-btn { padding: 7px 18px; border-radius: 15px; background: #34495e; color: #fff; border: none; cursor: pointer; white-space: nowrap; font-size: 13px; }
-        .cat-btn.active { background: #fff; color: #1a252f; font-weight: bold; }
+        .category-bar { display: flex; overflow-x: auto; gap: 8px; padding: 12px; }
+        .cat-btn { padding: 7px 15px; border-radius: 15px; background: #34495e; color: #fff; border: none; white-space: nowrap; }
 
         /* CATALOGUE */
         #catalog { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px; }
-        .p-card { background: #fff; border-radius: 12px; overflow: hidden; cursor: pointer; color: #333; text-align: center; }
-        .p-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
-        .p-info { padding: 8px; font-size: 11px; font-weight: bold; }
+        .p-card { background: #fff; border-radius: 12px; overflow: hidden; color: #333; text-align: center; padding-bottom: 10px; }
+        .p-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #eee; }
 
-        /* MODAL AVEC COULEURS, TAILLES ET LIVRAISON */
-        #details-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; padding: 20px; box-sizing: border-box; overflow-y: auto; }
-        .modal-content { background: #fff; color: #333; border-radius: 20px; padding: 20px; max-width: 450px; margin: 0 auto; position: relative; }
-        .close { position: absolute; right: 15px; top: 10px; font-size: 25px; cursor: pointer; font-weight: bold; }
+        /* MODAL OPTIONS */
+        #details-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; padding: 15px; box-sizing: border-box; overflow-y: auto; }
+        .modal-content { background: #fff; color: #333; border-radius: 20px; padding: 20px; max-width: 400px; margin: auto; position: relative; }
+        .close { position: absolute; right: 15px; top: 10px; font-size: 30px; cursor: pointer; }
 
-        /* SECTIONS OPTIONS */
-        .option-title { font-size: 14px; font-weight: bold; margin: 15px 0 5px; text-align: left; border-bottom: 1px solid #eee; padding-bottom: 3px;}
-        .choice-row { display: flex; gap: 10px; margin-bottom: 15px; justify-content: flex-start; flex-wrap: wrap; }
+        .option-group { text-align: left; margin-top: 15px; }
+        .option-title { font-size: 14px; font-weight: bold; margin-bottom: 5px; color: #2c3e50; }
+        .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
         
-        .color-dot { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; }
-        .color-dot.selected { border-color: #2980b9; transform: scale(1.1); }
+        .dot { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; }
+        .dot.active { border-color: #2980b9; transform: scale(1.1); }
         
-        .size-btn { padding: 8px 15px; border: 1px solid #ddd; border-radius: 8px; background: #f9f9f9; cursor: pointer; font-size: 13px; }
-        .size-btn.selected { background: #2980b9; color: #fff; border-color: #2980b9; }
+        .s-btn { padding: 6px 12px; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; }
+        .s-btn.active { background: #2980b9; color: #fff; }
 
-        .delivery-box { background: #f0f7ff; padding: 10px; border-radius: 10px; font-size: 12px; text-align: left; color: #2c3e50; border: 1px dashed #2980b9; }
-
-        .cmd-btn { background: #2c3e50; color: white; width: 100%; padding: 15px; border: none; font-weight: bold; border-radius: 12px; cursor: pointer; margin-top: 20px; }
-        input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .delivery { background: #e3f2fd; padding: 10px; border-radius: 8px; font-size: 12px; margin-top: 15px; border-left: 4px solid #2980b9; }
+        
+        .cmd-btn { background: #1a252f; color: #fff; width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; margin-top: 15px; cursor: pointer; }
+        input { width: 100%; padding: 10px; margin-top: 8px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
     </style>
 </head>
 <body>
@@ -78,108 +66,26 @@
 
 <div class="search-container">
     <div class="logo-small">L</div>
-    <input type="text" id="search-bar" placeholder="Rechercher..." onkeyup="search()">
+    <input type="text" id="search-bar" placeholder="Rechercher...">
 </div>
 
 <div class="category-bar">
-    <button class="cat-btn active" onclick="filter('Tout')">Tout</button>
+    <button class="cat-btn" onclick="filter('Tout')">Tout</button>
     <button class="cat-btn" onclick="filter('Chaussure')">Chaussure</button>
     <button class="cat-btn" onclick="filter('Casquette')">Casquette</button>
-    <button class="cat-btn" onclick="filter('Short')">Short</button>
-    <button class="cat-btn" onclick="filter('Veste')">Veste</button>
 </div>
 
-<div id="catalog"></div>
+<div id="catalog">
+    </div>
 
 <div id="details-view">
     <div class="modal-content">
-        <span class="close" onclick="closeModal()">×</span>
+        <span class="close" onclick="document.getElementById('details-view').style.display='none'">×</span>
         <img id="main-img" style="width:100%; border-radius:10px;">
         <h2 id="det-title" style="font-size: 18px; margin: 10px 0;"></h2>
-        <div id="det-price" style="font-size: 22px; font-weight: bold; color: #2980b9; margin-bottom: 10px;">78,850 Ar</div>
+        <div id="det-price" style="font-size: 20px; font-weight: bold; color: #2980b9;">78,850 Ar</div>
 
-        <div class="option-title">Choisir la Couleur</div>
-        <div class="choice-row" id="colors">
-            <div class="color-dot" style="background:#000" onclick="selectColor('Noir', this)"></div>
-            <div class="color-dot" style="background:#fff" onclick="selectColor('Blanc', this)"></div>
-            <div class="color-dot" style="background:#2980b9" onclick="selectColor('Bleu', this)"></div>
-            <div class="color-dot" style="background:#c0392b" onclick="selectColor('Rouge', this)"></div>
-        </div>
-
-        <div class="option-title">Choisir la Taille</div>
-        <div class="choice-row" id="sizes">
-            <button class="size-btn" onclick="selectSize('S', this)">S</button>
-            <button class="size-btn" onclick="selectSize('M', this)">M</button>
-            <button class="size-btn" onclick="selectSize('L', this)">L</button>
-            <button class="size-btn" onclick="selectSize('XL', this)">XL</button>
-        </div>
-
-        <div class="option-title">Information Livraison</div>
-        <div class="delivery-box">
-            📍 <b>Antananarivo :</b> 24h à 48h (3.000 Ar)<br>
-            Province : 3 à 5 jours via Cotisse/Sonatra.
-        </div>
-
-        <input type="text" id="cust-name" placeholder="Ton Nom" style="margin-top:20px">
-        <input type="tel" id="cust-tel" placeholder="Ton Téléphone">
-        
-        <button class="cmd-btn" onclick="sendWhatsApp()">COMMANDER VIA WHATSAPP</button>
-    </div>
-</div>
-
-<script>
-    let currentOrder = { name: '', price: '78,850 Ar', color: '', size: '' };
-
-    function selectColor(color, el) {
-        document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('selected'));
-        el.classList.add('selected');
-        currentOrder.color = color;
-    }
-
-    function selectSize(size, el) {
-        document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
-        el.classList.add('selected');
-        currentOrder.size = size;
-    }
-
-    function openModal(title, img) {
-        currentOrder.name = title;
-        document.getElementById('det-title').innerText = title;
-        document.getElementById('main-img').src = img;
-        document.getElementById('details-view').style.display = 'block';
-    }
-
-    function closeModal() {
-        document.getElementById('details-view').style.display = 'none';
-    }
-
-    const categories = ['Chaussure', 'Casquette', 'Short', 'Veste'];
-    const grid = document.getElementById('catalog');
-    for (let i = 1; i <= 20; i++) {
-        const cat = categories[i % 4];
-        const card = document.createElement('div');
-        card.className = 'p-card';
-        card.setAttribute('data-cat', cat);
-        card.innerHTML = `<img src="https://via.placeholder.com/300"><div class="p-info">Luther #${i}<br>78,850 Ar</div>`;
-        card.onclick = () => openModal("Luther #" + i, "https://via.placeholder.com/300");
-        grid.appendChild(card);
-    }
-
-    function sendWhatsApp() {
-        const nom = document.getElementById('cust-name').value;
-        const tel = document.getElementById('cust-tel').value;
-        if(!nom || !tel || !currentOrder.color || !currentOrder.size) {
-            return alert("Veuillez choisir la couleur, la taille et remplir vos infos !");
-        }
-        const message = `🔥 *NOUVELLE COMMANDE LUTHER MODE*\n\n` +
-                        `*Article:* ${currentOrder.name}\n` +
-                        `*Prix:* ${currentOrder.price}\n` +
-                        `*Couleur:* ${currentOrder.color}\n` +
-                        `*Taille:* ${currentOrder.size}\n\n` +
-                        `👤 *Client:* ${nom}\n` +
-                        `📞 *Tél:* ${tel}`;
-        window.location.href = `https://wa.me/261339622155?text=${encodeURIComponent(message)}`;
-    }
-</script>
-</body>
-</html>
+        <div class="option-group">
+            <div class="option-title">Couleurs :</div>
+            <div class="btn-group" id="color-list">
+                <div class="dot" style="background:black" onclick="sel
