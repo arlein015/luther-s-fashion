@@ -1,47 +1,4 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther's Mode | Boutique Officielle</title>
-    <style>
-        body { font-family: 'Helvetica', sans-serif; background-color: #f9f9f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
-        .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; max-width: 400px; width: 100%; }
-        h1 { font-size: 24px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
-        .product-img { width: 100%; border-radius: 15px; margin: 15px 0; transition: 0.4s ease; height: 300px; object-fit: cover; }
-        .price { font-size: 26px; font-weight: bold; color: #000; margin: 10px 0; }
-        
-        .options-title { font-size: 13px; font-weight: bold; text-transform: uppercase; margin-top: 20px; color: #888; letter-spacing: 1px; }
-        .selection-group { display: flex; justify-content: center; gap: 10px; margin: 10px 0; flex-wrap: wrap; }
-        
-        /* Tailles */
-        .size-option { border: 1px solid #ddd; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 14px; }
-        .size-option:hover { border-color: #000; }
-
-        /* Couleurs */
-        .color-circle { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #eee; cursor: pointer; transition: 0.3s; }
-        .color-circle:hover { transform: scale(1.2); border-color: #000; }
-
-        .btn-buy { background-color: #25d366; color: #fff; padding: 15px 30px; text-decoration: none; border-radius: 50px; display: inline-block; font-weight: bold; margin-top: 20px; width: 80%; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>LUTHER'S MODE</h1>
-        
-        <img src="noir.jpg" id="mainImage" class="product-img">
-        
-        <div class="price">78,850 Ar</div>
-
-        <div class="options-title">Taille</div>
-        <div class="selection-group">
-            <div class="size-option">S</div>
-            <div class="size-option">M</div>
-            <div class="size-option">L</div>
-            <div class="size-option">XL</div>
-        </div>
-
-        <div class="options-title">Couleur disponible</div>
+<div class="options-title">Couleur disponible</div>
         <div class="selection-group">
             <div class="color-circle" style="background: black;" onclick="changeColor('noir.jpg')"></div>
             <div class="color-circle" style="background: blue;" onclick="changeColor('bleu.jpg')"></div>
@@ -51,15 +8,10 @@
             <div class="color-circle" style="background: green;" onclick="changeColor('vert.jpg')"></div>
         </div>
 
-        <a href="https://wa.me/261339622155?text=Bonjour+Luther,+je+souhaite+commander+un+article" class="btn-buy">
-            Commander sur WhatsApp
-        </a>
-    </div>
-
-    <script>
+<script>
         function changeColor(nomFichier) {
-            document.getElementById('mainImage').src = nomFichier;
+            console.log("Tentative de changement vers : " + nomFichier);
+            const img = document.getElementById('mainImage');
+            img.src = nomFichier;
         }
     </script>
-</body>
-</html>
