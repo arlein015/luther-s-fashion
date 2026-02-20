@@ -3,52 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther's Mode</title>
+    <title>Luther's Mode | Premium</title>
     <style>
-        body { font-family: sans-serif; margin: 0; background: #fff; }
-        header { padding: 15px; text-align: center; border-bottom: 1px solid #eee; font-weight: bold; position: sticky; top: 0; background: white; z-index: 100; font-size: 20px; }
+        /* DESIGN GLOBAL - DARK MODE */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: #2c3e50; color: #fff; }
         
-        /* BARRE DE RECHERCHE TRÈS VISIBLE */
-        .search-area { 
-            padding: 12px; 
-            background: #f1f1f1; 
-            position: sticky; 
-            top: 55px; /* Juste sous le header */
-            z-index: 90;
+        header { 
+            padding: 30px 15px; 
+            text-align: center; 
+            background: linear-gradient(to bottom, #34495e, #2c3e50);
+            font-size: 28px; 
+            font-weight: bold; 
+            letter-spacing: 3px;
+            text-transform: uppercase;
         }
+
+        /* BARRE DE RECHERCHE STYLE */
+        .search-area { padding: 15px; background: #34495e; text-align: center; }
         #search-bar { 
-            width: 100%; 
-            padding: 14px; 
-            border: 2px solid #ddd; 
-            border-radius: 8px; 
-            font-size: 16px; 
-            box-sizing: border-box;
-            color: #000;
+            width: 90%; max-width: 600px; padding: 12px 20px; 
+            border: none; border-radius: 25px; font-size: 16px; 
+            background: #ecf0f1; color: #2c3e50; outline: none;
         }
 
-        /* GRILLE DE 4 */
-        #catalog { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; padding: 10px; }
-        .p-card { border: 1px solid #eee; cursor: pointer; background: #fff; border-radius: 4px; overflow: hidden; }
-        .p-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
-        .p-info { padding: 5px; font-size: 9px; font-weight: bold; text-align: left; }
+        /* GRILLE DE CATALOGUE */
+        #catalog { 
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 20px; 
+            max-width: 1000px; margin: 0 auto;
+        }
+        @media (min-width: 600px) { #catalog { grid-template-columns: repeat(4, 1fr); } }
 
-        /* VUE PRODUIT */
-        #details-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 200; padding: 20px; box-sizing: border-box; overflow-y: auto; text-align: center; }
-        .close { float: right; font-size: 30px; cursor: pointer; color: #999; font-weight: bold; }
-        .det-img { width: 100%; max-width: 320px; border-radius: 12px; margin: 15px 0; }
-        
-        .section-title { font-size: 11px; color: #888; text-transform: uppercase; margin: 20px 0 8px; font-weight: bold; letter-spacing: 1px; }
-        .row { display: flex; gap: 12px; justify-content: center; margin-bottom: 20px; }
+        /* CARTES PRODUITS MODERNES */
+        .p-card { 
+            background: #fff; color: #333; border-radius: 15px; 
+            overflow: hidden; cursor: pointer; transition: transform 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .p-card:hover { transform: translateY(-5px); }
+        .p-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
+        .p-info { padding: 12px; text-align: center; }
+        .p-name { font-size: 12px; color: #7f8c8d; margin-bottom: 5px; }
+        .p-price { font-size: 14px; font-weight: bold; color: #2980b9; }
+
+        /* VUE PRODUIT POPUP */
+        #details-view { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.8); z-index: 200; overflow-y: auto;
+        }
+        .modal-content {
+            background: #fff; color: #333; width: 90%; max-width: 500px; 
+            margin: 50px auto; border-radius: 20px; padding: 25px; position: relative;
+        }
+        .close { position: absolute; right: 20px; top: 15px; font-size: 30px; cursor: pointer; color: #95a5a6; }
+        .det-img { width: 100%; border-radius: 15px; margin-bottom: 15px; }
+
+        /* OPTIONS */
+        .section-title { font-size: 12px; color: #95a5a6; text-transform: uppercase; margin: 15px 0 10px; font-weight: bold; }
+        .row { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
         
         .dot { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #eee; cursor: pointer; }
-        .dot.active { border-color: #000; transform: scale(1.1); }
-        .sz-btn { border: 1px solid #ddd; padding: 10px 15px; background: white; cursor: pointer; border-radius: 6px; font-size: 13px; min-width: 45px; }
-        .sz-btn.active { background: black; color: white; border-color: black; }
+        .dot.active { border-color: #2980b9; transform: scale(1.1); box-shadow: 0 0 8px rgba(41,128,185,0.5); }
+        
+        .sz-btn { border: 1px solid #ddd; padding: 10px 20px; background: #fff; cursor: pointer; border-radius: 25px; font-size: 14px; }
+        .sz-btn.active { background: #2c3e50; color: #fff; border-color: #2c3e50; }
 
-        /* FORMULAIRE LIVRAISON */
-        .delivery-box { border-top: 1px solid #eee; margin-top: 30px; padding-top: 20px; text-align: left; max-width: 450px; margin: 0 auto; }
-        .delivery-box input { width: 100%; padding: 15px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 15px; }
-        .cmd-btn { background: #000; color: #fff; width: 100%; padding: 18px; border: none; font-weight: bold; cursor: pointer; border-radius: 10px; font-size: 15px; text-transform: uppercase; margin-top: 10px; }
+        /* FORMULAIRE & BOUTON DÉGRADÉ */
+        .delivery-box { border-top: 1px solid #eee; padding-top: 20px; margin-top: 20px; }
+        input { width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; background: #f9f9f9; }
+        
+        .cmd-btn { 
+            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%); 
+            color: white; width: 100%; padding: 18px; border: none; font-weight: bold; 
+            cursor: pointer; border-radius: 50px; font-size: 16px; text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(75,108,183,0.4);
+        }
     </style>
 </head>
 <body>
@@ -56,66 +84,70 @@
 <header>LUTHER'S MODE</header>
 
 <div class="search-area">
-    <input type="text" id="search-bar" placeholder="🔍 Rechercher un article..." onkeyup="doSearch()">
+    <input type="text" id="search-bar" placeholder="🔍 Rechercher un vêtement..." onkeyup="doSearch()">
 </div>
 
 <div id="catalog"></div>
 
 <div id="details-view">
-    <span class="close" onclick="document.getElementById('details-view').style.display='none'">✕</span>
-    <img id="main-img" class="det-img" src="">
-    <h2 id="det-title" style="margin: 10px 0; font-size: 22px;"></h2>
-    <div style="font-size: 24px; font-weight: bold; color: #000; margin-bottom: 10px;">78,850 Ar</div>
+    <div class="modal-content">
+        <span class="close" onclick="document.getElementById('details-view').style.display='none'">×</span>
+        <img id="main-img" class="det-img">
+        <h2 id="det-title" style="margin: 0; font-size: 24px;"></h2>
+        <div id="det-price" style="font-size: 26px; font-weight: bold; color: #2980b9; margin-top: 5px;">78,850 Ar</div>
 
-    <div class="section-title">Choisir la Couleur</div>
-    <div id="color-selection" class="row"></div>
+        <div class="section-title">Choisir la Couleur</div>
+        <div id="color-selection" class="row"></div>
 
-    <div class="section-title">Choisir la Taille</div>
-    <div class="row">
-        <button class="sz-btn" onclick="setSize(this, 'S')">S</button>
-        <button class="sz-btn active" onclick="setSize(this, 'M')">M</button>
-        <button class="sz-btn" onclick="setSize(this, 'L')">L</button>
-    </div>
+        <div class="section-title">Sélecteur de Taille</div>
+        <div class="row">
+            <button class="sz-btn" onclick="setSize(this, 'S')">S</button>
+            <button class="sz-btn active" onclick="setSize(this, 'M')">M</button>
+            <button class="sz-btn" onclick="setSize(this, 'L')">L</button>
+        </div>
 
-    <div class="delivery-box">
-        <div class="section-title">Tes Coordonnées</div>
-        <input type="text" id="user-name" placeholder="Ton Nom Complet">
-        <input type="tel" id="user-tel" placeholder="Ton Numéro de Téléphone">
-        <input type="text" id="user-addr" placeholder="Ton Adresse Exacte">
-        <button class="cmd-btn" onclick="orderNow()">Commander via WhatsApp</button>
+        <div class="delivery-box">
+            <div class="section-title">Tes Coordonnées</div>
+            <input type="text" id="user-name" placeholder="Nom Complet">
+            <input type="tel" id="user-tel" placeholder="Numéro Téléphone">
+            <input type="text" id="user-addr" placeholder="Ville et Quartier">
+            <button class="cmd-btn" onclick="orderNow()">Valider la Commande</button>
+        </div>
     </div>
 </div>
 
 <script>
     const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
-
     const colors = [
         { name: 'Noir', code: '#000', file: 'badg noir.JPG' },
-        { name: 'Vert', code: '#28a745', file: 'badg vert.JPG' },
-        { name: 'Bleu', code: '#007bff', file: 'badg bleu.JPG' },
-        { name: 'Rouge', code: '#ff4d4d', file: 'badg rouge.JPG' }
+        { name: 'Vert', code: '#27ae60', file: 'badg vert.JPG' },
+        { name: 'Bleu', code: '#2980b9', file: 'badg bleu.JPG' },
+        { name: 'Rouge', code: '#c0392b', file: 'badg rouge.JPG' }
     ];
 
     let currentChoice = { name: '', size: 'M', color: 'Noir', imgUrl: '' };
 
-    // Création des 30 produits
+    // Générer 30 produits
     const catalog = document.getElementById('catalog');
     for (let i = 1; i <= 30; i++) {
         const item = document.createElement('div');
         item.className = 'p-card';
         item.setAttribute('data-search', "article luther " + i);
-        item.innerHTML = `<img src="badg noir.JPG"><div class="p-info">Article Luther #${i}<br>78,850 Ar</div>`;
+        item.innerHTML = `
+            <img src="badg noir.JPG">
+            <div class="p-info">
+                <div class="p-name">LUTHER COLLECTION</div>
+                <div class="p-price">#${i} - 78,850 Ar</div>
+            </div>`;
         item.onclick = () => openItem("Article Luther #" + i);
         catalog.appendChild(item);
     }
 
-    // FONCTION DE RECHERCHE
     function doSearch() {
         const input = document.getElementById('search-bar').value.toLowerCase();
         const cards = document.getElementsByClassName('p-card');
         for (let card of cards) {
-            const txt = card.getAttribute('data-search');
-            card.style.display = txt.includes(input) ? "block" : "none";
+            card.style.display = card.getAttribute('data-search').includes(input) ? "block" : "none";
         }
     }
 
@@ -154,12 +186,11 @@
         const n = document.getElementById('user-name').value;
         const t = document.getElementById('user-tel').value;
         const a = document.getElementById('user-addr').value;
-        if(!n || !t) return alert("Remplis ton nom et ton téléphone");
+        if(!n || !t) return alert("Veuillez remplir vos infos");
         
-        const msg = `📦 *COMMANDE LUTHER MODE*\n\n*Produit:* ${currentChoice.name}\n*Couleur:* ${currentChoice.color}\n*Taille:* ${currentChoice.size}\n\n*Lien Photo:* ${currentChoice.imgUrl}\n\n*Client:* ${n}\n*Tél:* ${t}\n*Adresse:* ${a}`;
+        const msg = `🔥 *COMMANDE PREMIUM LUTHER*\n\n*Modèle:* ${currentChoice.name}\n*Couleur:* ${currentChoice.color}\n*Taille:* ${currentChoice.size}\n\n📸 *Photo:* ${currentChoice.imgUrl}\n\n*Client:* ${n}\n*Tél:* ${t}\n*Lieu:* ${a}`;
         window.location.href = `https://wa.me/261339622155?text=${encodeURIComponent(msg)}`;
     }
 </script>
-
 </body>
 </html>
