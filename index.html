@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther's Mode | Luxury Shop</title>
+    <title>Luther's Mode | Official Boutique</title>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Poppins', sans-serif; margin: 0; background: #1a252f; color: #fff; }
@@ -16,9 +16,9 @@
             font-family: 'Great Vibes', cursive; font-size: 45px;
         }
 
-        /* BARRE DE RECHERCHE AVEC LOGO */
+        /* BARRE DE RECHERCHE + LOGO */
         .search-container { 
-            display: flex; align-items: center; max-width: 500px; margin: -25px auto 20px; 
+            display: flex; align-items: center; max-width: 500px; margin: -25px auto 15px; 
             background: #fff; border-radius: 40px; padding: 5px 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.3);
             width: 90%;
         }
@@ -28,32 +28,41 @@
         }
         #search-bar { border: none; outline: none; padding: 10px; flex: 1; border-radius: 40px; font-size: 14px; color: #333; }
 
+        /* BARRE DE CATÉGORIES (NE PAS ENLEVER) */
+        .category-bar { display: flex; justify-content: center; gap: 10px; padding: 10px; overflow-x: auto; margin-bottom: 20px; }
+        .cat-btn { 
+            padding: 8px 18px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); 
+            background: rgba(255,255,255,0.1); color: #fff; cursor: pointer; white-space: nowrap; font-size: 13px;
+        }
+        .cat-btn.active { background: #fff; color: #1a252f; font-weight: bold; border-color: #fff; }
+
         /* CATALOGUE 4 COLONNES */
         .catalog { 
             display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; 
             padding: 20px; max-width: 1100px; margin: 0 auto; 
         }
-        @media (max-width: 800px) { .catalog { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 850px) { .catalog { grid-template-columns: repeat(2, 1fr); } }
 
         .card { background: #fff; border-radius: 12px; overflow: hidden; color: #333; cursor: pointer; transition: 0.3s; }
-        .card:hover { transform: scale(1.03); }
         .card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
-        .card-info { padding: 10px; text-align: center; font-weight: bold; font-size: 13px; }
+        .card-info { padding: 10px; text-align: center; font-weight: bold; font-size: 12px; }
 
         /* MODAL COMMANDE */
         #modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; padding: 15px; }
-        .modal-box { background: #fff; border-radius: 20px; padding: 20px; max-width: 400px; width: 100%; color: #333; position: relative; }
+        .modal-box { background: #fff; border-radius: 20px; padding: 25px; max-width: 400px; width: 100%; color: #333; position: relative; }
         .close { position: absolute; top: 10px; right: 15px; font-size: 25px; cursor: pointer; }
 
-        /* COULEURS ET TAILLES */
-        .row { display: flex; gap: 12px; margin: 10px 0; flex-wrap: wrap; }
-        .dot { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; transition: 0.2s; }
-        .dot.active { border-color: #2980b9; transform: scale(1.15); box-shadow: 0 0 5px rgba(0,0,0,0.3); }
+        /* OPTIONS COULEURS ET TAILLES */
+        .section-label { font-size: 13px; font-weight: 700; margin-top: 15px; display: block; }
+        .row { display: flex; gap: 10px; margin: 8px 0; flex-wrap: wrap; }
         
-        .size { padding: 8px 12px; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: bold; }
-        .size.active { background: #1a252f; color: #fff; border-color: #1a252f; }
+        .dot { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #eee; cursor: pointer; }
+        .dot.active { border-color: #2980b9; transform: scale(1.1); box-shadow: 0 0 5px rgba(0,0,0,0.2); }
+        
+        .size { padding: 8px 15px; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: bold; }
+        .size.active { background: #1a252f; color: #fff; }
 
-        .btn-confirm { background: #1a252f; color: #fff; width: 100%; padding: 16px; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 15px; font-size: 14px; }
+        .btn-confirm { background: #1a252f; color: #fff; width: 100%; padding: 16px; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 20px; font-size: 14px; }
         input { width: 100%; padding: 12px; margin-top: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
     </style>
 </head>
@@ -66,7 +75,15 @@
 
 <div class="search-container">
     <div class="logo-small">L</div>
-    <input type="text" id="search-bar" placeholder="Rechercher un modèle...">
+    <input type="text" id="search-bar" placeholder="Rechercher...">
+</div>
+
+<div class="category-bar">
+    <button class="cat-btn active" onclick="filter('Tout', this)">Tout</button>
+    <button class="cat-btn" onclick="filter('Chaussure', this)">Chaussure</button>
+    <button class="cat-btn" onclick="filter('Veste', this)">Veste</button>
+    <button class="cat-btn" onclick="filter('Short', this)">Short</button>
+    <button class="cat-btn" onclick="filter('Casquette', this)">Casquette</button>
 </div>
 
 <div class="catalog" id="list"></div>
@@ -75,48 +92,53 @@
     <div class="modal-box">
         <span class="close" onclick="closeM()">×</span>
         <img id="m-img" style="width:100%; border-radius:15px; margin-bottom:10px;">
-        <h2 id="m-title" style="font-size: 18px; margin: 5px 0;"></h2>
+        <h2 id="m-title" style="font-size: 18px; margin: 0;"></h2>
         <div id="m-price" style="font-size: 20px; font-weight: 700; color: #2980b9;"></div>
 
-        <div style="font-size: 13px; font-weight: 600; margin-top:15px;">Couleurs :</div>
+        <span class="section-label">Couleurs disponibles :</span>
         <div class="row">
-            <div class="dot" style="background:black" onclick="changeCol('Noir', 'badg noir.JPG', this)"></div>
-            <div class="dot" style="background:blue" onclick="changeCol('Bleu', 'badg bleu.JPG', this)"></div>
-            <div class="dot" style="background:green" onclick="changeCol('Vert', 'badg vert.JPG', this)"></div>
-            <div class="dot" style="background:yellow" onclick="changeCol('Jaune', 'badg jaune.JPG', this)"></div>
-            <div class="dot" style="background:red" onclick="changeCol('Rouge', 'badg rouge.JPG', this)"></div>
+            <div class="dot" style="background:black" onclick="updateImg('Noir', 'badg noir.JPG', this)"></div>
+            <div class="dot" style="background:blue" onclick="updateImg('Bleu', 'badg bleu.JPG', this)"></div>
+            <div class="dot" style="background:green" onclick="updateImg('Vert', 'badg vert.JPG', this)"></div>
+            <div class="dot" style="background:yellow" onclick="updateImg('Jaune', 'badg jaune.JPG', this)"></div>
+            <div class="dot" style="background:red" onclick="updateImg('Rouge', 'badg rouge.JPG', this)"></div>
         </div>
 
-        <div style="font-size: 13px; font-weight: 600; margin-top:10px;">Tailles :</div>
+        <span class="section-label">Tailles disponibles :</span>
         <div class="row">
-            <div class="size" onclick="selS('S', this)">S</div>
-            <div class="size" onclick="selS('M', this)">M</div>
-            <div class="size" onclick="selS('L', this)">L</div>
-            <div class="size" onclick="selS('XL', this)">XL</div>
+            <div class="size" onclick="selSize('S', this)">S</div>
+            <div class="size" onclick="selSize('M', this)">M</div>
+            <div class="size" onclick="selSize('L', this)">L</div>
+            <div class="size" onclick="selSize('XL', this)">XL</div>
         </div>
 
-        <input type="text" id="u-name" placeholder="Ton Nom Complet">
-        <input type="tel" id="u-tel" placeholder="Ton Téléphone">
+        <input type="text" id="user-n" placeholder="Ton Nom Complet">
+        <input type="tel" id="user-t" placeholder="Ton Téléphone">
 
-        <button class="btn-confirm" onclick="send()">CONFIRMÉ VOS COMMANDE</button>
+        <button class="btn-confirm" onclick="sendWhatsApp()">CONFIRMÉ VOS COMMANDE</button>
     </div>
 </div>
 
 <script>
-    let currentOrder = { title: '', price: '', color: '', size: '' };
+    let currentProd = { title: '', price: '', color: '', size: '' };
+    const priceList = { 'Chaussure': '£85', 'Veste': '£115', 'Short': '£45', 'Casquette': '£30' };
 
-    // Génération des 100 articles
+    // Génération des 100 produits
     const list = document.getElementById('list');
+    const cats = ['Chaussure', 'Veste', 'Short', 'Casquette'];
     for(let i=1; i<=100; i++) {
+        const cat = cats[i % 4];
+        const p = priceList[cat];
         const d = document.createElement('div');
         d.className = 'card';
-        d.innerHTML = `<img src="badg noir.JPG" onerror="this.src='https://via.placeholder.com/200'"><div class="card-info">Luther Art. #${i}<br><span style="color:#2980b9">£45</span></div>`;
-        d.onclick = () => openM(`Luther Art. #${i}`, '£45');
+        d.setAttribute('data-cat', cat);
+        d.innerHTML = `<img src="badg noir.JPG"><div class="card-info">${cat} Luther #${i}<br><span style="color:#2980b9">${p}</span></div>`;
+        d.onclick = () => openM(`${cat} Luther #${i}`, p);
         list.appendChild(d);
     }
 
     function openM(t, p) {
-        currentOrder.title = t; currentOrder.price = p;
+        currentProd.title = t; currentProd.price = p;
         document.getElementById('m-title').innerText = t;
         document.getElementById('m-price').innerText = p;
         document.getElementById('m-img').src = "badg noir.JPG";
@@ -125,27 +147,35 @@
 
     function closeM() { document.getElementById('modal').style.display = 'none'; }
 
-    // CORRECTION DU CHANGEMENT DE COULEUR
-    function changeCol(color, img, el) {
-        document.getElementById('m-img').src = img; // Change l'image affichée
-        currentOrder.color = color;
+    // CORRECTION : L'IMAGE CHANGE RÉELLEMENT ICI
+    function updateImg(color, imgFile, element) {
+        document.getElementById('m-img').src = imgFile;
+        currentProd.color = color;
         document.querySelectorAll('.dot').forEach(d => d.classList.remove('active'));
-        el.classList.add('active');
+        element.classList.add('active');
     }
 
-    function selS(s, el) {
-        currentOrder.size = s;
+    function selSize(s, element) {
+        currentProd.size = s;
         document.querySelectorAll('.size').forEach(b => b.classList.remove('active'));
-        el.classList.add('active');
+        element.classList.add('active');
     }
 
-    function send() {
-        const n = document.getElementById('u-name').value;
-        const t = document.getElementById('u-tel').value;
-        if(!n || !t || !currentOrder.color || !currentOrder.size) return alert("Choisis la couleur et la taille !");
+    function filter(cat, btn) {
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.card').forEach(c => {
+            c.style.display = (cat === 'Tout' || c.getAttribute('data-cat') === cat) ? 'block' : 'none';
+        });
+    }
+
+    function sendWhatsApp() {
+        const n = document.getElementById('user-n').value;
+        const t = document.getElementById('user-t').value;
+        if(!n || !t || !currentProd.color || !currentProd.size) return alert("Complète toutes les options !");
         
-        const text = `🔥 *COMMANDE CONFIRMÉE*\n*Produit:* ${currentOrder.title}\n*Prix:* ${currentOrder.price}\n*Couleur:* ${currentOrder.color}\n*Taille:* ${currentOrder.size}\n\n*Client:* ${n}\n*Tél:* ${t}`;
-        window.location.href = `https://wa.me/261339622155?text=${encodeURIComponent(text)}`;
+        const msg = `👑 *NOUVELLE COMMANDE*\n*Article:* ${currentProd.title}\n*Prix:* ${currentProd.price}\n*Couleur:* ${currentProd.color}\n*Taille:* ${currentProd.size}\n\n*Client:* ${n}\n*Tél:* ${t}`;
+        window.location.href = `https://wa.me/261339622155?text=${encodeURIComponent(msg)}`;
     }
 </script>
 </body>
