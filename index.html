@@ -9,9 +9,11 @@
         .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; max-width: 400px; width: 100%; }
         .product-img { width: 100%; border-radius: 15px; margin: 15px 0; min-height: 300px; object-fit: contain; background: #eee; }
         .price { font-size: 26px; font-weight: bold; margin: 15px 0; }
+        .options-title { font-size: 12px; font-weight: bold; margin-top: 15px; color: #888; text-transform: uppercase; }
         .selection-group { display: flex; justify-content: center; gap: 10px; margin: 10px 0 20px 0; flex-wrap: wrap; }
         .color-circle { width: 35px; height: 35px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; transition: 0.2s; }
         .color-circle:hover { transform: scale(1.1); border-color: #000; }
+        .size-btn { border: 1px solid #ddd; padding: 8px 12px; border-radius: 5px; font-size: 14px; }
         .btn-buy { background-color: #25d366; color: #fff; padding: 15px 30px; text-decoration: none; border-radius: 50px; display: inline-block; font-weight: bold; width: 80%; }
     </style>
 </head>
@@ -23,7 +25,13 @@
         
         <div class="price">78,850 Ar</div>
 
-        <div class="options-title" style="font-size:12px; color:#888; margin-bottom:10px;">COULEURS DISPONIBLES</div>
+        <div class="options-title">Taille</div>
+        <div class="selection-group">
+            <div class="size-btn">S</div><div class="size-btn">M</div>
+            <div class="size-btn">L</div><div class="size-btn">XL</div>
+        </div>
+
+        <div class="options-title">Couleur disponible</div>
         <div class="selection-group">
             <div class="color-circle" style="background: black;" onclick="changeColor('badg noir.jpg')"></div>
             <div class="color-circle" style="background: blue;" onclick="changeColor('Badg bleu.JPG')"></div>
@@ -39,9 +47,9 @@
     </div>
 
     <script>
-        function changeColor(imgName) {
-            // Cette fonction va maintenant chercher le bon nom (ex: Badg bleu.JPG)
-            document.getElementById('mainImage').src = imgName;
+        function changeColor(imageName) {
+            // Force le changement avec le nom exact
+            document.getElementById('mainImage').src = imageName;
         }
     </script>
 </body>
