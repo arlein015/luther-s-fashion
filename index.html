@@ -6,7 +6,7 @@
     <title>Luther Fashion Brand</title>
     
     <meta property="og:title" content="Luther Fashion Brand - Collection Luxe">
-    <meta property="og:description" content="Découvrez nos exclusivités Homme, Femme et Enfant.">
+    <meta property="og:description" content="Découvrez nos exclusivités. Commandez sur WhatsApp.">
     <meta property="og:image" content="https://arlein015.github.io/luther-s-fashion/badg%20noir.JPG">
     <meta property="og:url" content="https://arlein015.github.io/luther-s-fashion/">
     <meta property="og:type" content="website">
@@ -26,17 +26,17 @@
         .logo-l-circle { width: 30px; height: 30px; border: 2px solid #1e3a8a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold; color: #1e3a8a; margin-right: 15px; }
 
         .categories { display: flex; gap: 10px; overflow-x: auto; padding: 10px 20px; max-width: 1100px; margin: 0 auto; scrollbar-width: none; }
-        .cat-btn { background: var(--card-bg); padding: 8px 15px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 1px solid #ddd; color: var(--text); }
+        .cat-btn { background: var(--card-bg); padding: 8px 15px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 1px solid #ddd; color: var(--text); transition: 0.2s; }
         .cat-btn.active { background: var(--gradient); color: white; border: none; }
 
         .catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; padding: 20px; max-width: 1100px; margin: 0 auto; }
-        .card { background: var(--card-bg); border-radius: 15px; padding: 10px; cursor: pointer; transition: 0.3s; }
+        .card { background: var(--card-bg); border-radius: 15px; padding: 10px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .card img { width: 100%; border-radius: 10px; aspect-ratio: 1/1; object-fit: cover; }
         
         #cart-badge { position: fixed; bottom: 25px; right: 25px; background: var(--gradient); color: white; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
         
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .modal-content { background: var(--card-bg); border-radius: 25px; padding: 20px; width: 90%; max-width: 400px; text-align: center; color: var(--text); }
+        .modal-content { background: var(--card-bg); border-radius: 25px; padding: 20px; width: 90%; max-width: 400px; text-align: center; color: var(--text); position: relative; }
         
         .color-dot { width: 25px; height: 25px; border-radius: 50%; display: inline-block; margin: 5px; cursor: pointer; border: 2px solid transparent; }
         .color-dot.active { border-color: #1e3a8a; transform: scale(1.2); }
@@ -70,14 +70,16 @@
 <div id="modal" class="modal">
     <div class="modal-content">
         <img id="m-img" src="" style="width:100%; border-radius:15px">
-        <h2 id="m-name"></h2>
+        <h2 id="m-name" style="margin:10px 0"></h2>
         <p id="m-price" style="font-weight:bold; color:#1e3a8a; font-size:20px"></p>
+        
         <div>
-            <p style="font-size:12px; font-weight:bold">COULEURS DISPONIBLES :</p>
+            <p style="font-size:12px; font-weight:bold">COULEURS :</p>
             <div id="color-options"></div>
         </div>
+
         <button class="btn" onclick="addToCart()">AJOUTER AU PANIER</button>
-        <button class="btn" onclick="socialShare()" style="background:#1877f2"><i class="fab fa-facebook"></i> PUBLIER SUR FACEBOOK</button>
+        <button class="btn" onclick="socialShare()" style="background:#1877f2"><i class="fab fa-facebook"></i> PARTAGER SUR FACEBOOK</button>
         <p onclick="closeM()" style="cursor:pointer; margin-top:15px; font-size:12px; opacity:0.6">Fermer</p>
     </div>
 </div>
@@ -87,62 +89,6 @@
     let selected = {};
     let currentCat = 'Tout';
 
-    // Création des 100 produits
+    // 1. Liste des 100 produits
     const categories = ['Homme', 'Femme', 'Enfant', 'Accessoires'];
     const colors = ['#000000', '#FFFFFF', '#FF0000', '#0000FF'];
-    const products = Array.from({ length: 100 }, (_, i) => ({
-        id: i,
-        name: `Article Luther #${i + 1}`,
-        price: `${(Math.random() * 150 + 40).toFixed(0)}€`,
-        img: "badg noir.JPG",
-        cat: categories[i % 4]
-    }));
-
-    function init() { renderProducts(products); }
-
-    function renderProducts(list) {
-        const container = document.getElementById('main-list');
-        container.innerHTML = list.map(p => `
-            <div class="card" onclick="openM(${p.id})">
-                <img src="${p.img}">
-                <div style="font-size:11px; opacity:0.6; margin-top:5px">${p.cat}</div>
-                <div style="font-weight:600">${p.name}</div>
-                <div style="color:#1e3a8a; font-weight:bold">${p.price}</div>
-            </div>
-        `).join('');
-    }
-
-    function openM(id) {
-        const p = products.find(x => x.id === id);
-        selected = { ...p, color: colors[0] };
-        document.getElementById('m-name').innerText = p.name;
-        document.getElementById('m-price').innerText = p.price;
-        document.getElementById('m-img').src = p.img;
-        
-        const colorBox = document.getElementById('color-options');
-        colorBox.innerHTML = colors.map(c => `<div class="color-dot" style="background:${c}" onclick="selectColor('${c}', this)"></div>`).join('');
-        colorBox.children[0].classList.add('active');
-        document.getElementById('modal').style.display = 'flex';
-    }
-
-    function selectColor(c, el) {
-        selected.color = c;
-        document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
-        el.classList.add('active');
-    }
-
-    function filterCat(cat, el) {
-        currentCat = cat;
-        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-        el.classList.add('active');
-        filterProducts();
-    }
-
-    function filterProducts() {
-        const query = document.getElementById('search-input').value.toLowerCase();
-        const filtered = products.filter(p => (currentCat === 'Tout' || p.cat === currentCat) && p.name.toLowerCase().includes(query));
-        renderProducts(filtered);
-    }
-
-    function socialShare() {
-        const url = window.location.href;
