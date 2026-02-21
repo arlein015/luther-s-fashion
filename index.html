@@ -6,9 +6,7 @@
     <title>Luther Fashion Brand</title>
     
     <meta property="og:title" content="Luther Fashion Brand - Collection Luxe">
-    <meta property="og:description" content="Découvrez nos exclusivités. Commandez sur WhatsApp.">
     <meta property="og:image" content="https://arlein015.github.io/luther-s-fashion/badg%20noir.JPG">
-    <meta property="og:url" content="https://arlein015.github.io/luther-s-fashion/">
     <meta property="og:type" content="website">
 
     <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -25,21 +23,18 @@
         .search-container { background: var(--card-bg); max-width: 700px; margin: 10px auto 20px; display: flex; align-items: center; padding: 12px 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 90%; }
         .logo-l-circle { width: 30px; height: 30px; border: 2px solid #1e3a8a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold; color: #1e3a8a; margin-right: 15px; }
 
-        .categories { display: flex; gap: 10px; overflow-x: auto; padding: 10px 20px; max-width: 1100px; margin: 0 auto; scrollbar-width: none; }
-        .cat-btn { background: var(--card-bg); padding: 8px 15px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 1px solid #ddd; color: var(--text); transition: 0.2s; }
+        .categories { display: flex; gap: 10px; overflow-x: auto; padding: 10px 20px; max-width: 1100px; margin: 0 auto; }
+        .cat-btn { background: var(--card-bg); padding: 8px 15px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 1px solid #ddd; white-space: nowrap; }
         .cat-btn.active { background: var(--gradient); color: white; border: none; }
 
         .catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; padding: 20px; max-width: 1100px; margin: 0 auto; }
-        .card { background: var(--card-bg); border-radius: 15px; padding: 10px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .card { background: var(--card-bg); border-radius: 15px; padding: 10px; cursor: pointer; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .card img { width: 100%; border-radius: 10px; aspect-ratio: 1/1; object-fit: cover; }
         
-        #cart-badge { position: fixed; bottom: 25px; right: 25px; background: var(--gradient); color: white; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        #cart-badge { position: fixed; bottom: 25px; right: 25px; background: var(--gradient); color: white; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 1000; }
         
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .modal-content { background: var(--card-bg); border-radius: 25px; padding: 20px; width: 90%; max-width: 400px; text-align: center; color: var(--text); position: relative; }
-        
-        .color-dot { width: 25px; height: 25px; border-radius: 50%; display: inline-block; margin: 5px; cursor: pointer; border: 2px solid transparent; }
-        .color-dot.active { border-color: #1e3a8a; transform: scale(1.2); }
+        .modal-content { background: var(--card-bg); border-radius: 25px; padding: 20px; width: 90%; max-width: 400px; text-align: center; }
         .btn { background: var(--gradient); color: white; width: 100%; padding: 14px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
@@ -55,7 +50,7 @@
     <input type="text" id="search-input" onkeyup="filterProducts()" placeholder="Rechercher homme, enfant, accessoires..." style="border:none; background:transparent; width:100%; outline:none; color:inherit">
 </div>
 
-<div class="categories">
+<div class="categories" id="cat-list">
     <div class="cat-btn active" onclick="filterCat('Tout', this)">Tout</div>
     <div class="cat-btn" onclick="filterCat('Homme', this)">Homme</div>
     <div class="cat-btn" onclick="filterCat('Femme', this)">Femme</div>
@@ -70,25 +65,71 @@
 <div id="modal" class="modal">
     <div class="modal-content">
         <img id="m-img" src="" style="width:100%; border-radius:15px">
-        <h2 id="m-name" style="margin:10px 0"></h2>
-        <p id="m-price" style="font-weight:bold; color:#1e3a8a; font-size:20px"></p>
-        
-        <div>
-            <p style="font-size:12px; font-weight:bold">COULEURS :</p>
-            <div id="color-options"></div>
-        </div>
-
-        <button class="btn" onclick="addToCart()">AJOUTER AU PANIER</button>
-        <button class="btn" onclick="socialShare()" style="background:#1877f2"><i class="fab fa-facebook"></i> PARTAGER SUR FACEBOOK</button>
+        <h2 id="m-name"></h2>
+        <p id="m-price" style="font-weight:bold; color:#1e3a8a"></p>
+        <button class="btn" onclick="socialShare()"><i class="fab fa-facebook"></i> PARTAGER SUR FACEBOOK</button>
         <p onclick="closeM()" style="cursor:pointer; margin-top:15px; font-size:12px; opacity:0.6">Fermer</p>
     </div>
 </div>
 
 <script>
-    let cart = [];
-    let selected = {};
-    let currentCat = 'Tout';
-
-    // 1. Liste des 100 produits
+    // 1. LISTE DES PRODUITS (L'élément qui manque sur ta capture)
     const categories = ['Homme', 'Femme', 'Enfant', 'Accessoires'];
-    const colors = ['#000000', '#FFFFFF', '#FF0000', '#0000FF'];
+    const products = Array.from({ length: 100 }, (_, i) => ({
+        id: i,
+        name: `Luther Style #${i + 1}`,
+        price: `${(Math.random() * 100 + 50).toFixed(0)}€`,
+        img: "badg noir.JPG",
+        cat: categories[i % 4]
+    }));
+
+    // 2. FONCTION INITIALE
+    function init() {
+        const container = document.getElementById('main-list');
+        if(!container) return;
+        container.innerHTML = products.map(p => `
+            <div class="card" onclick="openM(${p.id})">
+                <img src="${p.img}">
+                <div style="font-size:11px; color:gray">${p.cat}</div>
+                <div style="font-weight:600">${p.name}</div>
+                <div style="color:#1e3a8a; font-weight:bold">${p.price}</div>
+            </div>
+        `).join('');
+    }
+
+    function openM(id) {
+        const p = products.find(x => x.id === id);
+        document.getElementById('m-name').innerText = p.name;
+        document.getElementById('m-price').innerText = p.price;
+        document.getElementById('m-img').src = p.img;
+        document.getElementById('modal').style.display = 'flex';
+    }
+
+    function filterCat(cat, el) {
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+        const filtered = products.filter(p => cat === 'Tout' || p.cat === cat);
+        renderFiltered(filtered);
+    }
+
+    function renderFiltered(list) {
+        document.getElementById('main-list').innerHTML = list.map(p => `
+            <div class="card" onclick="openM(${p.id})">
+                <img src="${p.img}">
+                <div style="font-weight:600">${p.name}</div>
+                <div style="color:#1e3a8a; font-weight:bold">${p.price}</div>
+            </div>
+        `).join('');
+    }
+
+    function socialShare() {
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
+    }
+
+    function closeM() { document.getElementById('modal').style.display = 'none'; }
+
+    // LANCEMENT FORCE
+    window.onload = init;
+</script>
+</body>
+</html>
