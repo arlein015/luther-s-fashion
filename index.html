@@ -15,7 +15,7 @@
     <style>
         :root { --gradient: linear-gradient(to right, #1e3a8a, #a855f7); --bg: #f0f2f5; --card-bg: #fff; --text: #333; }
         body.dark-mode { --bg: #121212; --card-bg: #1e1e1e; --text: #ffffff; }
-        body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); color: var(--text); padding-bottom: 100px; }
+        body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); color: var(--text); padding-bottom: 100px; transition: 0.3s; }
         
         header { padding: 20px; display: flex; align-items: center; justify-content: space-between; max-width: 1100px; margin: 0 auto; }
         .logo-text { font-family: 'Alex Brush', cursive; font-size: 50px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
@@ -34,12 +34,12 @@
         #cart-badge { position: fixed; bottom: 25px; right: 25px; background: var(--gradient); color: white; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
         
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .modal-content { background: var(--card-bg); border-radius: 25px; padding: 20px; width: 95%; max-width: 450px; text-align: center; color: var(--text); overflow-y: auto; max-height: 90vh; }
+        .modal-content { background: var(--card-bg); border-radius: 25px; padding: 20px; width: 90%; max-width: 450px; text-align: center; color: var(--text); max-height: 90vh; overflow-y: auto; }
         
         .color-dot { width: 30px; height: 30px; border-radius: 50%; display: inline-block; margin: 5px; cursor: pointer; border: 2px solid #ddd; }
         .color-dot.active { border: 3px solid #1e3a8a; transform: scale(1.1); }
         
-        .size-btn { padding: 8px 15px; border: 1px solid #ddd; border-radius: 8px; margin: 2px; cursor: pointer; background: white; font-weight: bold; }
+        .size-btn { padding: 8px 12px; border: 1px solid #ddd; border-radius: 8px; margin: 2px; cursor: pointer; background: white; font-weight: bold; }
         .size-btn.active { background: #1e3a8a; color: white; border: none; }
         
         .btn-main { background: var(--gradient); color: white; width: 100%; padding: 14px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 10px; }
@@ -58,7 +58,7 @@
 
 <div class="search-container">
     <div class="logo-l-circle">L</div>
-    <input type="text" id="search-input" onkeyup="filterProducts()" placeholder="Rechercher homme, femme, enfant...">
+    <input type="text" id="search-input" onkeyup="filterProducts()" placeholder="Rechercher un style...">
 </div>
 
 <div class="categories">
@@ -78,57 +78,22 @@
         <h2 id="m-name" style="margin:10px 0"></h2>
         <p id="m-price" style="font-weight:bold; color:#1e3a8a; font-size:22px"></p>
         
-        <div>
-            <p style="font-size:12px; font-weight:bold">COULEURS :</p>
-            <div id="colors">
-                <div class="color-dot" style="background:red" onclick="selectCol('Rouge', this)"></div>
-                <div class="color-dot" style="background:green" onclick="selectCol('Vert', this)"></div>
-                <div class="color-dot" style="background:yellow" onclick="selectCol('Jaune', this)"></div>
-                <div class="color-dot" style="background:blue" onclick="selectCol('Bleu', this)"></div>
-            </div>
+        <p style="font-size:12px; font-weight:bold">COULEURS :</p>
+        <div id="colors">
+            <div class="color-dot" style="background:red" onclick="selCol('Rouge', this)"></div>
+            <div class="color-dot" style="background:green" onclick="selCol('Vert', this)"></div>
+            <div class="color-dot" style="background:yellow" onclick="selCol('Jaune', this)"></div>
+            <div class="color-dot" style="background:blue" onclick="selCol('Bleu', this)"></div>
         </div>
 
-        <div style="margin-top:10px">
-            <p style="font-size:12px; font-weight:bold">TAILLES :</p>
-            <div id="sizes">
-                <button class="size-btn" onclick="selectSize('S', this)">S</button>
-                <button class="size-btn active" onclick="selectSize('M', this)">M</button>
-                <button class="size-btn" onclick="selectSize('L', this)">L</button>
-                <button class="size-btn" onclick="selectSize('XL', this)">XL</button>
-            </div>
+        <p style="font-size:12px; font-weight:bold; margin-top:10px">TAILLES :</p>
+        <div id="sizes">
+            <button class="size-btn" onclick="selSize('S', this)">S</button>
+            <button class="size-btn active" onclick="selSize('M', this)">M</button>
+            <button class="size-btn" onclick="selSize('L', this)">L</button>
+            <button class="size-btn" onclick="selSize('XL', this)">XL</button>
         </div>
 
         <button class="btn-main" onclick="addToCart()"><i class="fas fa-shopping-basket"></i> AJOUTER AU PANIER</button>
 
-        <p style="font-size:12px; font-weight:bold; margin-top:20px; border-top: 1px solid #eee; padding-top: 10px;">PARTAGER SUR :</p>
-        <div class="share-grid">
-            <div class="share-item" onclick="share('fb')"><div class="share-icon" style="background:#1877f2"><i class="fab fa-facebook-f"></i></div>FB</div>
-            <div class="share-item" onclick="share('wa')"><div class="share-icon" style="background:#25d366"><i class="fab fa-whatsapp"></i></div>WhatsApp</div>
-            <div class="share-item" onclick="share('ig')"><div class="share-icon" style="background:#e1306c"><i class="fab fa-instagram"></i></div>Insta</div>
-            <div class="share-item" onclick="share('tk')"><div class="share-icon" style="background:#000000"><i class="fab fa-tiktok"></i></div>TikTok</div>
-            <div class="share-item" onclick="share('tw')"><div class="share-icon" style="background:#1da1f2"><i class="fab fa-twitter"></i></div>Twitter</div>
-            <div class="share-item" onclick="copyLink()"><div class="share-icon" style="background:#6c757d"><i class="fas fa-link"></i></div>Lien</div>
-        </div>
-        
-        <p onclick="closeM()" style="cursor:pointer; margin-top:20px; font-size:12px; opacity:0.6">Fermer</p>
-    </div>
-</div>
-
-<script>
-    let cart = [];
-    let currentSelection = { color: 'Rouge', size: 'M' };
-    const products = Array.from({ length: 100 }, (_, i) => ({
-        id: i,
-        name: `Luther Style #${i + 1}`,
-        price: `${(Math.random() * 100 + 40).toFixed(0)}€`,
-        img: "badg noir.JPG",
-        cat: i % 3 === 0 ? 'Homme' : (i % 3 === 1 ? 'Femme' : 'Enfant')
-    }));
-
-    function init() {
-        const container = document.getElementById('main-list');
-        container.innerHTML = products.map(p => `
-            <div class="card" onclick="openM(${p.id})">
-                <img src="${p.img}">
-                <div style="font-weight:600; margin-top:8px">${p.name}</div>
-                <div style="color:#1e3a8a; font-weight:bold">${
+        <p style="font-size:11px; font-weight:bold; margin-top:15px">PARTAGER :
