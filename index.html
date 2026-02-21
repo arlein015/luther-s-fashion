@@ -4,96 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Luther Fashion Brand</title>
-    
-    <meta property="og:title" content="Luther Fashion Brand - Collection Luxe">
-    <meta property="og:image" content="https://arlein015.github.io/luther-s-fashion/badg%20noir.JPG">
-    <meta property="og:type" content="website">
-
     <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
     <style>
         :root { --gradient: linear-gradient(to right, #1e3a8a, #a855f7); --bg: #f0f2f5; --card-bg: #fff; --text: #333; }
-        body.dark-mode { --bg: #121212; --card-bg: #1e1e1e; --text: #ffffff; }
-        body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); color: var(--text); padding-bottom: 100px; transition: 0.3s; }
-        
-        header { padding: 20px; display: flex; align-items: center; justify-content: space-between; max-width: 1100px; margin: 0 auto; }
-        .logo-text { font-family: 'Alex Brush', cursive; font-size: 50px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
-        
-        .search-container { background: var(--card-bg); max-width: 700px; margin: 10px auto 20px; display: flex; align-items: center; padding: 12px 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 90%; }
-        .logo-l-circle { width: 30px; height: 30px; border: 2px solid #1e3a8a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold; color: #1e3a8a; margin-right: 15px; }
-
-        .categories { display: flex; gap: 10px; overflow-x: auto; padding: 10px 20px; max-width: 1100px; margin: 0 auto; scrollbar-width: none; }
-        .cat-btn { background: var(--card-bg); padding: 8px 15px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 1px solid #ddd; white-space: nowrap; color: var(--text); }
-        .cat-btn.active { background: var(--gradient); color: white; border: none; }
-
-        .catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; padding: 20px; max-width: 1100px; margin: 0 auto; }
-        .card { background: var(--card-bg); border-radius: 15px; padding: 10px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; }
+        body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); color: var(--text); padding-bottom: 100px; }
+        header { padding: 20px; text-align: center; }
+        .logo-text { font-family: 'Alex Brush', cursive; font-size: 50px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .search-container { background: var(--card-bg); margin: 10px auto; padding: 12px; border-radius: 15px; width: 85%; box-shadow: 0 5px 15px rgba(0,0,0,0.05); display: flex; align-items: center; }
+        .catalog { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 15px; }
+        .card { background: var(--card-bg); border-radius: 15px; padding: 10px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .card img { width: 100%; border-radius: 10px; aspect-ratio: 1/1; object-fit: cover; }
-        
-        #cart-badge { position: fixed; bottom: 25px; right: 25px; background: var(--gradient); color: white; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .modal-content { background: var(--card-bg); border-radius: 25px; padding: 20px; width: 90%; max-width: 450px; text-align: center; color: var(--text); max-height: 90vh; overflow-y: auto; }
-        
-        .color-dot { width: 30px; height: 30px; border-radius: 50%; display: inline-block; margin: 5px; cursor: pointer; border: 2px solid #ddd; }
-        .color-dot.active { border: 3px solid #1e3a8a; transform: scale(1.1); }
-        
-        .size-btn { padding: 8px 12px; border: 1px solid #ddd; border-radius: 8px; margin: 2px; cursor: pointer; background: white; font-weight: bold; }
-        .size-btn.active { background: #1e3a8a; color: white; border: none; }
-        
-        .btn-main { background: var(--gradient); color: white; width: 100%; padding: 14px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        
+        #cart-badge { position: fixed; bottom: 20px; right: 20px; background: var(--gradient); color: white; padding: 15px; border-radius: 50px; font-weight: bold; z-index: 1000; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: white; border-radius: 20px; padding: 20px; width: 100%; max-width: 400px; text-align: center; max-height: 90vh; overflow-y: auto; }
+        .color-dot { width: 30px; height: 30px; border-radius: 50%; display: inline-block; margin: 5px; border: 2px solid #ddd; cursor: pointer; }
+        .size-btn { padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px; margin: 2px; cursor: pointer; background: white; }
+        .btn-add { background: var(--gradient); color: white; width: 100%; padding: 12px; border: none; border-radius: 25px; font-weight: bold; margin-top: 15px; }
         .share-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
-        .share-item { cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 10px; gap: 5px; }
-        .share-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; }
+        .share-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin: 0 auto; font-size: 18px; }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="logo-text">Luther</div>
-    <div onclick="document.body.classList.toggle('dark-mode')" style="cursor:pointer; font-size:24px">🌙</div>
-</header>
+<header><div class="logo-text">Luther</div></header>
 
 <div class="search-container">
-    <div class="logo-l-circle">L</div>
-    <input type="text" id="search-input" onkeyup="filterProducts()" placeholder="Rechercher un style...">
+    <div style="width:25px; height:25px; border:2px solid #1e3a8a; border-radius:50%; text-align:center; font-weight:bold; color:#1e3a8a; margin-right:10px">L</div>
+    <input type="text" placeholder="Rechercher..." style="border:none; outline:none; width:100%">
 </div>
 
-<div class="categories">
-    <div class="cat-btn active" onclick="filterCat('Tout', this)">Tout</div>
-    <div class="cat-btn" onclick="filterCat('Homme', this)">Homme</div>
-    <div class="cat-btn" onclick="filterCat('Femme', this)">Femme</div>
-    <div class="cat-btn" onclick="filterCat('Enfant', this)">Enfant</div>
-</div>
-
-<div class="catalog" id="main-list"></div>
+<div class="catalog" id="list"></div>
 
 <div id="cart-badge">🛒 Panier (<span id="count">0</span>)</div>
 
 <div id="modal" class="modal">
     <div class="modal-content">
         <img id="m-img" src="" style="width:100%; border-radius:15px">
-        <h2 id="m-name" style="margin:10px 0"></h2>
-        <p id="m-price" style="font-weight:bold; color:#1e3a8a; font-size:22px"></p>
+        <h3 id="m-name"></h3>
+        <p id="m-price" style="font-weight:bold; color:#1e3a8a"></p>
         
         <p style="font-size:12px; font-weight:bold">COULEURS :</p>
-        <div id="colors">
-            <div class="color-dot" style="background:red" onclick="selCol('Rouge', this)"></div>
-            <div class="color-dot" style="background:green" onclick="selCol('Vert', this)"></div>
-            <div class="color-dot" style="background:yellow" onclick="selCol('Jaune', this)"></div>
-            <div class="color-dot" style="background:blue" onclick="selCol('Bleu', this)"></div>
-        </div>
+        <div class="color-dot" style="background:red" onclick="this.style.border='3px solid black'"></div>
+        <div class="color-dot" style="background:green" onclick="this.style.border='3px solid black'"></div>
+        <div class="color-dot" style="background:yellow" onclick="this.style.border='3px solid black'"></div>
+        <div class="color-dot" style="background:blue" onclick="this.style.border='3px solid black'"></div>
 
         <p style="font-size:12px; font-weight:bold; margin-top:10px">TAILLES :</p>
-        <div id="sizes">
-            <button class="size-btn" onclick="selSize('S', this)">S</button>
-            <button class="size-btn active" onclick="selSize('M', this)">M</button>
-            <button class="size-btn" onclick="selSize('L', this)">L</button>
-            <button class="size-btn" onclick="selSize('XL', this)">XL</button>
+        <button class="size-btn">S</button><button class="size-btn">M</button><button class="size-btn">L</button><button class="size-btn">XL</button>
+
+        <button class="btn-add" onclick="add()">🛒 AJOUTER AU PANIER</button>
+
+        <p style="font-size:11px; font-weight:bold; margin-top:15px">PARTAGER SUR :</p>
+        <div class="share-grid">
+            <div onclick="window.open('https://facebook.com/sharer/sharer.php?u='+window.location.href)"><div class="share-icon" style="background:#1877f2"><i class="fab fa-facebook-f"></i></div>FB</div>
+            <div onclick="window.open('https://api.whatsapp.com/send?text='+window.location.href)"><div class="share-icon" style="background:#25d366"><i class="fab fa-whatsapp"></i></div>WA</div>
+            <div onclick="alert('Lien copié pour Instagram')"><div class="share-icon" style="background:#e1306c"><i class="fab fa-instagram"></i></div>IG</div>
+            <div onclick="alert('Lien copié pour TikTok')"><div class="share-icon" style="background:#000"><i class="fab fa-tiktok"></i></div>TK</div>
+            <div onclick="window.open('https://twitter.com/intent/tweet?url='+window.location.href)"><div class="share-icon" style="background:#1da1f2"><i class="fab fa-twitter"></i></div>TW</div>
+            <div onclick="navigator.clipboard.writeText(window.location.href);alert('Lien copié')"><div class="share-icon" style="background:#6c757d"><i class="fas fa-link"></i></div>Lien</div>
         </div>
-
-        <button class="btn-main" onclick="addToCart()"><i class="fas fa-shopping-basket"></i> AJOUTER AU PANIER</button>
-
-        <p style="font-size:11px; font-weight:bold; margin-top:15px">PARTAGER :
+        <p onclick="document.getElementById('modal').style.display='none'" style
