@@ -4,15 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Luther Fashion Brand</title>
+    
     <meta property="og:title" content="Luther Fashion Brand - Collection Luxe">
-<meta property="og:description" content="Découvrez nos vestes et chaussures de luxe. Commandez directement sur WhatsApp.">
-<meta property="og:image" content="https://arlein015.github.io/luther-s-fashion/badg%20noir.JPG">
-<meta property="og:url" content="https://arlein015.github.io/luther-s-fashion/">
-<meta property="og:type" content="website">
+    <meta property="og:description" content="Découvrez nos vestes et chaussures de luxe. Commandez directement sur WhatsApp.">
+    <meta property="og:image" content="https://arlein015.github.io/luther-s-fashion/badg%20noir.JPG">
+    <meta property="og:url" content="https://arlein015.github.io/luther-s-fashion/">
+    <meta property="og:type" content="website">
 
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://arlein015.github.io/luther-s-fashion/badg%20noir.JPG"><link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
     <style>
         :root { 
             --gradient: linear-gradient(to right, #1e3a8a, #a855f7); 
@@ -21,175 +22,111 @@
         body.dark-mode { 
             --bg: #121212; --card-bg: #1e1e1e; --text: #ffffff; 
         }
-        
         body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); color: var(--text); transition: 0.3s; padding-bottom: 100px; }
-
-        /* LOGO À GAUCHE */
         header { padding: 30px 20px; display: flex; align-items: center; justify-content: space-between; max-width: 1100px; margin: 0 auto; }
-        .logo-container { text-align: left; flex: 1; }
-        .logo-text { font-family: 'Alex Brush', cursive; font-size: 60px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; line-height: 1; }
-        .sub-logo { letter-spacing: 3px; font-size: 11px; font-weight: 600; color: var(--text); opacity: 0.8; }
-        
-        .dark-toggle { cursor: pointer; font-size: 22px; padding: 10px; }
-
-        /* RECHERCHE */
+        .logo-text { font-family: 'Alex Brush', cursive; font-size: 60px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
         .search-container { background: var(--card-bg); max-width: 700px; margin: 0 auto 25px; display: flex; align-items: center; padding: 12px 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 90%; }
-        .logo-l-circle { width: 30px; height: 30px; border: 2px solid #1e3a8a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold; color: #1e3a8a; margin-right: 15px; }
-        #search-bar { border: none; background: transparent; color: var(--text); flex: 1; outline: none; font-size: 14px; }
-
-        /* CATALOGUE 4 COLONNES */
-        .catalog { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 0 20px; max-width: 1100px; margin: 0 auto; }
-        @media (max-width: 900px) { .catalog { grid-template-columns: repeat(2, 1fr); } }
-
-        .card { background: var(--card-bg); border-radius: 15px; padding: 10px; text-align: left; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
-        .badge { position: absolute; top: 10px; left: 10px; background: #ef4444; color: white; padding: 3px 7px; border-radius: 5px; font-size: 9px; font-weight: bold; z-index: 5; }
+        .catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; padding: 0 20px; max-width: 1100px; margin: 0 auto; }
+        .card { background: var(--card-bg); border-radius: 15px; padding: 10px; cursor: pointer; transition: 0.2s; }
         .card img { width: 100%; border-radius: 10px; aspect-ratio: 1/1; object-fit: cover; }
-        
-        /* PANIER À DROITE */
-        #cart-badge { position: fixed; bottom: 25px; right: 25px; background: var(--gradient); color: white; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        
-        /* MODALS */
+        #cart-badge { position: fixed; bottom: 25px; right: 25px; background: var(--gradient); color: white; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 1000; }
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .modal-content { background: var(--card-bg); border-radius: 25px; padding: 25px; width: 85%; max-width: 400px; color: var(--text); text-align: center; }
-        
+        .modal-content { background: var(--card-bg); border-radius: 25px; padding: 25px; width: 85%; max-width: 400px; text-align: center; }
         .btn { background: var(--gradient); color: white; width: 100%; padding: 14px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        
-        /* SHARE ICONS */
-        .share-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 20px; }
-        .share-item { cursor: pointer; text-decoration: none; color: var(--text); font-size: 11px; }
-        .share-item i { font-size: 28px; display: block; margin-bottom: 5px; }
-        .fa-facebook { color: #1877f2; }
-        .fa-instagram { color: #e4405f; }
-        .fa-tiktok { color: #000000; }
-        body.dark-mode .fa-tiktok { color: #ffffff; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo-container">
+    <div>
         <div class="logo-text">Luther</div>
-        <div class="sub-logo">FASHION BRAND</div>
+        <div style="letter-spacing:3px; font-size:11px; opacity:0.7">FASHION BRAND</div>
     </div>
-    <div class="dark-toggle" onclick="toggleDark()">🌙</div>
+    <div onclick="document.body.classList.toggle('dark-mode')" style="cursor:pointer; font-size:24px">🌙</div>
 </header>
 
 <div class="search-container">
-    <div class="logo-l-circle">L</div>
-    <input type="text" id="search-bar" placeholder="Rechercher..." onkeyup="search()">
+    <input type="text" placeholder="Rechercher un article..." style="border:none; background:transparent; width:100%; outline:none; color:inherit">
 </div>
 
 <div class="catalog" id="main-list"></div>
 
-<div id="cart-badge" onclick="showCart()">🛒 Panier (<span id="count">0</span>)</div>
+<div id="cart-badge">🛒 Panier (<span id="count">0</span>)</div>
 
 <div id="modal" class="modal">
     <div class="modal-content">
-        <img id="m-img" src="" style="width:100%; border-radius:15px; margin-bottom:10px">
-        <h2 id="m-name" style="margin:5px 0"></h2>
-        <p id="m-price" style="font-weight:bold; color:#1e3a8a; font-size:18px"></p>
-        
+        <img id="m-img" src="" style="width:100%; border-radius:15px">
+        <h2 id="m-name"></h2>
+        <p id="m-price" style="font-weight:bold; color:#1e3a8a"></p>
+        <div style="margin: 15px 0;">
+            <button onclick="changeQty(-1)">-</button>
+            <span id="qty-val" style="margin:0 15px; font-weight:bold">1</span>
+            <button onclick="changeQty(1)">+</button>
+        </div>
         <button class="btn" onclick="addToCart()">AJOUTER AU PANIER</button>
         <button class="btn" onclick="openShare()" style="background:#444">PARTAGER</button>
-        <p onclick="closeM()" style="cursor:pointer; opacity:0.5; font-size:12px; margin-top:15px">Fermer</p>
+        <p onclick="closeM()" style="cursor:pointer; margin-top:15px; font-size:12px">Fermer</p>
     </div>
 </div>
 
-<div id="share-modal" class="modal">
-    <div class="modal-content">
-        <h3>Partager Luther</h3>
-        <div class="share-grid">
-            <div class="share-item" onclick="social('fb')"><i class="fab fa-facebook"></i>Facebook</div>
-            <div class="share-item" onclick="social('tk')"><i class="fab fa-tiktok"></i>TikTok</div>
-            <div class="share-item" onclick="social('ig')"><i class="fab fa-instagram"></i>Insta</div>
-            <div class="share-item" onclick="copy()"><i class="fas fa-link"></i>Lien</div>
-        </div>
-        <button class="btn" onclick="document.getElementById('share-modal').style.display='none'" style="margin-top:20px">Retour</button>
-    </div>
-</div>
+<script>
+    // 1. Définition des variables au début
+    let cart = [];
+    let selected = {};
+    const products = [
+        { name: "Veste Luther #1", price: "$150", img: "badg noir.JPG" },
+        { name: "Chaussure Luther #6", price: "$120", img: "badg noir.JPG" },
+        { name: "Veste Luther #7", price: "$150", img: "badg noir.JPG" }
+    ];
 
-<script>// Cette liste dit au site quels produits afficher
-const products = [
-    { name: "Veste Luther #1", price: "$150", img: "badg noir.JPG" },
-    { name: "Chaussure Luther #6", price: "$120", img: "badg noir.JPG" },
-    { name: "Veste Luther #7", price: "$150", img: "badg noir.JPG" }
-];
-
-// Cette fonction crée les cartes visibles à l'écran
-function init() {
-    const list = document.getElementById('main-list');
-    if(!list) return;
-    list.innerHTML = products.map(p => `
-        <div class="card" onclick="openM({name:'${p.name}', price:'${p.price}'})">
-            <img src="${p.img}">
-            <div style="font-weight:600; margin-top:8px">${p.name}</div>
-            <div style="color:#1e3a8a; font-weight:bold">${p.price}</div>
-        </div>
-    `).join('');
-}
-
-// On demande au navigateur de lancer l'affichage au démarrage
-window.onload = init;
-  let cart = [];
-let selected = {};
-
-// Fonction pour ouvrir le partage direct
-function social(platform) {
-    const shareUrl = window.location.href; // Ton lien GitHub
-    const shareText = `Découvrez la nouvelle collection Luxe chez Luther Fashion Brand ! 💎`;
-    let finalUrl = "";
-
-    switch(platform) {
-        case 'fb':
-            // Ouvre la fenêtre de publication Facebook avec l'image (grâce aux balises Meta)
-            finalUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
-            break;
-        case 'tk':
-            // TikTok ne permet pas le partage automatique de lien via navigateur
-            alert("Lien copié ! Ouvrez TikTok pour créer votre vidéo et collez le lien. ✨");
-            copyToClipboard(shareUrl);
-            finalUrl = "https://www.tiktok.com/";
-            break;
-        case 'ig':
-            // Instagram demande aussi un partage manuel ou via l'application mobile
-            alert("Lien copié ! Partagez cet article dans votre Story ou Bio Instagram. 📸");
-            copyToClipboard(shareUrl);
-            finalUrl = "https://www.instagram.com/";
-            break;
-        case 'copy':
-            copyToClipboard(shareUrl);
-            alert("Lien copié dans le presse-papiers ! 🔗");
-            return;
+    // 2. Affichage des produits
+    function init() {
+        const list = document.getElementById('main-list');
+        list.innerHTML = products.map(p => `
+            <div class="card" onclick="openM({name:'${p.name}', price:'${p.price}', img:'${p.img}'})">
+                <img src="${p.img}">
+                <div style="font-weight:600; margin-top:8px">${p.name}</div>
+                <div style="color:#1e3a8a; font-weight:bold">${p.price}</div>
+            </div>
+        `).join('');
     }
 
-    if (finalUrl) {
-        window.open(finalUrl, '_blank');
+    // 3. Fonction pour rendre les produits CLIQUABLES
+    function openM(p) {
+        selected = { ...p, qty: 1 };
+        document.getElementById('m-name').innerText = p.name;
+        document.getElementById('m-price').innerText = p.price;
+        document.getElementById('m-img').src = p.img;
+        document.getElementById('qty-val').innerText = 1;
+        document.getElementById('modal').style.display = 'flex';
     }
-}
 
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(text);
-}
+    function changeQty(v) {
+        selected.qty = Math.max(1, selected.qty + v);
+        document.getElementById('qty-val').innerText = selected.qty;
+    }
 
-// Les autres fonctions (Panier, Quantité)
-function changeQty(v) {
-    selected.qty = Math.max(1, (selected.qty || 1) + v);
-    document.getElementById('qty-val').innerText = selected.qty;
-}
+    function addToCart() {
+        cart.push({...selected});
+        document.getElementById('count').innerText = cart.length;
+        closeM();
+    }
 
-function addToCart() {
-    cart.push({...selected});
-    document.getElementById('count').innerText = cart.length;
-    document.getElementById('modal').style.display = 'none';
-}
+    function closeM() { document.getElementById('modal').style.display = 'none'; }
 
-function sendWhatsApp() {
-    const n = document.getElementById('c-name').value;
-    const t = document.getElementById('c-tel').value;
-    if(!n || !t) return alert("Veuillez remplir vos informations !");
-    let items = cart.map(i => `- ${i.qty || 1}x ${i.name}`).join('%0A');
-    window.location.href = `https://wa.me/261339622155?text=💎 *COMMANDE LUTHER*%0AClient: ${n}%0ATél: ${t}%0A%0AArticles:%0A${items}`;
-}
+    // 4. Fonctions de partage
+    function social(platform) {
+        const shareUrl = window.location.href;
+        if(platform === 'fb') {
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank');
+        } else {
+            navigator.clipboard.writeText(shareUrl);
+            alert("Lien copié !");
+        }
+    }
+
+    window.onload = init;
 </script>
+
 </body>
 </html>
