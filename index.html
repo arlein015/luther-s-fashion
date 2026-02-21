@@ -10,57 +10,51 @@
         :root { 
             --gradient: linear-gradient(to right, #1e3a8a, #a855f7); 
             --bg: #f0f2f5; --card-bg: #fff; --text: #333; 
-            --input-bg: #f9f9f9; --input-border: #eee;
         }
-        /* MODE SOMBRE */
         body.dark-mode { 
-            --bg: #121212; --card-bg: #1e1e1e; --text: #f0f2f5; 
-            --input-bg: #2a2a2a; --input-border: #3a3a3a;
+            --bg: #121212; --card-bg: #1e1e1e; --text: #ffffff; 
         }
         
         body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); color: var(--text); transition: 0.3s; padding-bottom: 100px; }
 
-        header { padding: 40px 20px; position: relative; display: flex; align-items: center; justify-content: space-between; max-width: 1100px; margin: 0 auto;}
-        .logo-container { text-align: left; }
-        .logo-text { font-family: 'Alex Brush', cursive; font-size: 85px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; line-height: 0.8;}
-        .sub-logo { letter-spacing: 4px; font-size: 13px; font-weight: 600; margin-top: -10px; color: var(--text); }
+        /* LOGO À GAUCHE */
+        header { padding: 30px 20px; display: flex; align-items: center; justify-content: space-between; max-width: 1100px; margin: 0 auto; }
+        .logo-container { text-align: left; flex: 1; }
+        .logo-text { font-family: 'Alex Brush', cursive; font-size: 60px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; line-height: 1; }
+        .sub-logo { letter-spacing: 3px; font-size: 11px; font-weight: 600; color: var(--text); opacity: 0.8; }
         
-        /* BOUTON DARK MODE */
-        .dark-toggle { cursor: pointer; font-size: 24px; color: var(--text); }
+        .dark-toggle { cursor: pointer; font-size: 22px; padding: 10px; }
 
-        .search-container { background: var(--card-bg); max-width: 700px; margin: 0 auto 25px; display: flex; align-items: center; padding: 10px 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 90%; }
-        .logo-l-circle { width: 35px; height: 35px; border: 2px solid #1e3a8a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: #1e3a8a; margin-right: 15px; }
-        #search-bar { border: none; background: transparent; color: var(--text); flex: 1; outline: none; }
+        /* RECHERCHE */
+        .search-container { background: var(--card-bg); max-width: 700px; margin: 0 auto 25px; display: flex; align-items: center; padding: 12px 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 90%; }
+        .logo-l-circle { width: 30px; height: 30px; border: 2px solid #1e3a8a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold; color: #1e3a8a; margin-right: 15px; }
+        #search-bar { border: none; background: transparent; color: var(--text); flex: 1; outline: none; font-size: 14px; }
 
-        /* CATALOGUE 4 COLONNES & BADGES */
-        .catalog { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 0 20px; max-width: 1100px; margin: 0 auto; }
+        /* CATALOGUE 4 COLONNES */
+        .catalog { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 0 20px; max-width: 1100px; margin: 0 auto; }
         @media (max-width: 900px) { .catalog { grid-template-columns: repeat(2, 1fr); } }
 
-        .card { background: var(--card-bg); border-radius: 15px; padding: 12px; text-align: left; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.02); cursor: pointer; }
-        .badge { position: absolute; top: 10px; left: 10px; background: #ef4444; color: white; padding: 4px 8px; border-radius: 5px; font-size: 10px; font-weight: bold; z-index: 10; }
+        .card { background: var(--card-bg); border-radius: 15px; padding: 10px; text-align: left; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        .badge { position: absolute; top: 10px; left: 10px; background: #ef4444; color: white; padding: 3px 7px; border-radius: 5px; font-size: 9px; font-weight: bold; z-index: 5; }
         .card img { width: 100%; border-radius: 10px; aspect-ratio: 1/1; object-fit: cover; }
         
-        /* GALERIE MINIATURES */
-        .thumb-nav { display: flex; gap: 5px; margin-top: 10px; overflow-x: auto; }
-        .thumb { width: 40px; height: 40px; border-radius: 5px; cursor: pointer; border: 2px solid transparent; }
-        .thumb.active { border-color: #1e3a8a; }
-
-        #cart-badge { position: fixed; bottom: 25px; right: 25px; background: var(--gradient); color: white; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 1000; }
+        /* PANIER À DROITE */
+        #cart-badge { position: fixed; bottom: 25px; right: 25px; background: var(--gradient); color: white; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
         
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .modal-content { background: var(--card-bg); border-radius: 25px; padding: 30px; width: 90%; max-width: 450px; color: var(--text); }
+        /* MODALS */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .modal-content { background: var(--card-bg); border-radius: 25px; padding: 25px; width: 85%; max-width: 400px; color: var(--text); text-align: center; }
         
-        .btn { background: var(--gradient); color: white; width: 100%; padding: 15px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text); box-sizing: border-box; }
+        .btn { background: var(--gradient); color: white; width: 100%; padding: 14px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         
-        /* SHARE MODAL */
-        #share-modal .share-options { display: flex; justify-content: space-around; margin-top: 20px; }
-        #share-modal .share-item { text-align: center; cursor: pointer; color: var(--text); }
-        #share-modal .share-item i { font-size: 30px; margin-bottom: 5px; color: #1e3a8a; }
-        #share-modal .share-item span { display: block; font-size: 12px; }
-        .icon-facebook { color: #3b5998 !important; }
-        .icon-tiktok { color: #000000 !important; } /* TikTok n'a pas une couleur standard, on peut utiliser du noir */
-        .icon-instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        /* SHARE ICONS */
+        .share-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 20px; }
+        .share-item { cursor: pointer; text-decoration: none; color: var(--text); font-size: 11px; }
+        .share-item i { font-size: 28px; display: block; margin-bottom: 5px; }
+        .fa-facebook { color: #1877f2; }
+        .fa-instagram { color: #e4405f; }
+        .fa-tiktok { color: #000000; }
+        body.dark-mode .fa-tiktok { color: #ffffff; }
     </style>
 </head>
 <body>
@@ -75,7 +69,7 @@
 
 <div class="search-container">
     <div class="logo-l-circle">L</div>
-    <input type="text" id="search-bar" placeholder="Rechercher une inspiration..." onkeyup="search()">
+    <input type="text" id="search-bar" placeholder="Rechercher..." onkeyup="search()">
 </div>
 
 <div class="catalog" id="main-list"></div>
@@ -85,24 +79,80 @@
 <div id="modal" class="modal">
     <div class="modal-content">
         <img id="m-img" src="" style="width:100%; border-radius:15px; margin-bottom:10px">
-        <div id="m-gallery" class="thumb-nav"></div>
-        <h2 id="m-name" style="margin:10px 0 5px"></h2>
-        <p id="m-price" style="font-weight:bold; color:#1e3a8a; font-size:20px; margin:0"></p>
+        <h2 id="m-name" style="margin:5px 0"></h2>
+        <p id="m-price" style="font-weight:bold; color:#1e3a8a; font-size:18px"></p>
         
-        <p style="margin:15px 0 5px">Quantité :</p>
-        <div style="display:flex; align-items:center; gap:15px">
-            <button onclick="changeQty(-1)" style="width:30px; height:30px; border-radius:50%; border:1px solid #ddd; background:none; color:inherit; cursor:pointer">-</button>
-            <span id="qty-val" style="font-weight:bold">1</span>
-            <button onclick="changeQty(1)" style="width:30px; height:30px; border-radius:50%; border:1px solid #ddd; background:none; color:inherit; cursor:pointer">+</button>
-        </div>
-
         <button class="btn" onclick="addToCart()">AJOUTER AU PANIER</button>
-        <button class="btn" onclick="openShareModal()" style="background:#007bff;">PARTAGER L'ARTICLE</button> <p onclick="closeM()" style="text-align:center; cursor:pointer; color:#aaa; font-size:12px; margin-top:15px">Fermer</p>
+        <button class="btn" onclick="openShare()" style="background:#444">PARTAGER</button>
+        <p onclick="closeM()" style="cursor:pointer; opacity:0.5; font-size:12px; margin-top:15px">Fermer</p>
     </div>
 </div>
 
-<div id="cart-modal" class="modal">
+<div id="share-modal" class="modal">
     <div class="modal-content">
-        <h2 style="margin-top:0">Mon Panier</h2>
-        <div id="cart-items" style="margin-bottom:20px; max-height:200px; overflow-y:auto"></div>
-        <input type="text" id="c-name" placeholder="Nom Complet
+        <h3>Partager Luther</h3>
+        <div class="share-grid">
+            <div class="share-item" onclick="social('fb')"><i class="fab fa-facebook"></i>Facebook</div>
+            <div class="share-item" onclick="social('tk')"><i class="fab fa-tiktok"></i>TikTok</div>
+            <div class="share-item" onclick="social('ig')"><i class="fab fa-instagram"></i>Insta</div>
+            <div class="share-item" onclick="copy()"><i class="fas fa-link"></i>Lien</div>
+        </div>
+        <button class="btn" onclick="document.getElementById('share-modal').style.display='none'" style="margin-top:20px">Retour</button>
+    </div>
+</div>
+
+<script>
+    let cart = [];
+    let selected = {};
+
+    function init() {
+        const list = document.getElementById('main-list');
+        for(let i=1; i<=20; i++) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            const badge = i % 4 === 0 ? '<div class="badge">STOCK LIMITÉ</div>' : '';
+            card.innerHTML = `${badge}<img src="badg noir.JPG"><div style="font-weight:600; font-size:12px; margin-top:8px">Article #${i}</div><div style="color:#1e3a8a; font-weight:bold">$120</div>`;
+            card.onclick = () => {
+                selected = {name: "Article #"+i, price: "$120"};
+                document.getElementById('m-name').innerText = selected.name;
+                document.getElementById('m-price').innerText = selected.price;
+                document.getElementById('m-img').src = "badg noir.JPG";
+                document.getElementById('modal').style.display = 'flex';
+            };
+            list.appendChild(card);
+        }
+    }
+
+    function toggleDark() {
+        document.body.classList.toggle('dark-mode');
+        document.querySelector('.dark-toggle').innerText = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    }
+
+    function openShare() { document.getElementById('share-modal').style.display = 'flex'; }
+    
+    function social(p) {
+        alert("Lien copié ! Partagez-le sur votre application " + p);
+        copy();
+    }
+
+    function copy() {
+        navigator.clipboard.writeText(window.location.href);
+        alert("Lien du site copié !");
+    }
+
+    function addToCart() {
+        cart.push({...selected});
+        document.getElementById('count').innerText = cart.length;
+        document.getElementById('modal').style.display = 'none';
+    }
+
+    function search() {
+        let v = document.getElementById('search-bar').value.toLowerCase();
+        document.querySelectorAll('.card').forEach(c => c.style.display = c.innerText.toLowerCase().includes(v) ? 'block' : 'none');
+    }
+
+    function closeM() { document.getElementById('modal').style.display = 'none'; }
+    window.onload = init;
+</script>
+</body>
+</html>
