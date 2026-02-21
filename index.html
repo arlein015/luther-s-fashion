@@ -73,24 +73,60 @@
 </div>
 
 <script>
-    // 1. LISTE DES PRODUITS (L'élément qui manque sur ta capture)
-    const categories = ['Homme', 'Femme', 'Enfant', 'Accessoires'];
+   <div id="modal" class="modal">
+    <div class="modal-content">
+        <img id="m-img" src="" style="width:100%; border-radius:15px">
+        <h2 id="m-name" style="margin:10px 0"></h2>
+        <p id="m-price" style="font-weight:bold; color:#1e3a8a; font-size:20px"></p>
+        
+        <div style="margin-top:15px">
+            <p style="font-size:12px; font-weight:bold">COULEURS :</p>
+            <div id="color-options">
+                <div class="color-dot" style="background:red" onclick="selectColor('Rouge', this)"></div>
+                <div class="color-dot" style="background:green" onclick="selectColor('Vert', this)"></div>
+                <div class="color-dot" style="background:yellow" onclick="selectColor('Jaune', this)"></div>
+                <div class="color-dot" style="background:blue" onclick="selectColor('Bleu', this)"></div>
+            </div>
+        </div>
+
+        <div style="margin-top:15px">
+            <p style="font-size:12px; font-weight:bold">TAILLES :</p>
+            <select id="size-select" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd">
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="XXL">XXL</option>
+            </select>
+        </div>
+
+        <button class="btn" onclick="addToCart()" style="margin-top:20px">🛒 AJOUTER AU PANIER</button>
+        
+        <button class="btn" onclick="socialShare()" style="background:#1877f2; margin-top:10px">
+            <i class="fab fa-facebook"></i> PARTAGER SUR FACEBOOK
+        </button>
+        
+        <p onclick="closeM()" style="cursor:pointer; margin-top:15px; font-size:12px; opacity:0.6">Fermer</p>
+    </div>
+</div>
+
+<script>
+    let cart = [];
+    let selectedItem = {};
+
+    // Initialisation des produits
     const products = Array.from({ length: 100 }, (_, i) => ({
         id: i,
         name: `Luther Style #${i + 1}`,
-        price: `${(Math.random() * 100 + 50).toFixed(0)}€`,
-        img: "badg noir.JPG",
-        cat: categories[i % 4]
+        price: `${(Math.random() * 100 + 40).toFixed(0)}€`,
+        img: "badg noir.JPG"
     }));
 
-    // 2. FONCTION INITIALE
     function init() {
         const container = document.getElementById('main-list');
-        if(!container) return;
         container.innerHTML = products.map(p => `
             <div class="card" onclick="openM(${p.id})">
                 <img src="${p.img}">
-                <div style="font-size:11px; color:gray">${p.cat}</div>
                 <div style="font-weight:600">${p.name}</div>
                 <div style="color:#1e3a8a; font-weight:bold">${p.price}</div>
             </div>
@@ -99,37 +135,29 @@
 
     function openM(id) {
         const p = products.find(x => x.id === id);
+        selectedItem = { ...p, color: 'Rouge', size: 'M' }; // Valeurs par défaut
         document.getElementById('m-name').innerText = p.name;
         document.getElementById('m-price').innerText = p.price;
         document.getElementById('m-img').src = p.img;
         document.getElementById('modal').style.display = 'flex';
     }
 
-    function filterCat(cat, el) {
-        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-        el.classList.add('active');
-        const filtered = products.filter(p => cat === 'Tout' || p.cat === cat);
-        renderFiltered(filtered);
+    function selectColor(color, el) {
+        selectedItem.color = color;
+        document.querySelectorAll('.color-dot').forEach(d => d.style.border = '2px solid transparent');
+        el.style.border = '2px solid black';
     }
 
-    function renderFiltered(list) {
-        document.getElementById('main-list').innerHTML = list.map(p => `
-            <div class="card" onclick="openM(${p.id})">
-                <img src="${p.img}">
-                <div style="font-weight:600">${p.name}</div>
-                <div style="color:#1e3a8a; font-weight:bold">${p.price}</div>
-            </div>
-        `).join('');
-    }
-
-    function socialShare() {
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
+    function addToCart() {
+        selectedItem.size = document.getElementById('size-select').value;
+        cart.push({...selectedItem});
+        document.getElementById('count').innerText = cart.length; // Met à jour le panier
+        alert(`Ajouté : ${selectedItem.name} (${selectedItem.color}, Taille ${selectedItem.size})`);
+        closeM();
     }
 
     function closeM() { document.getElementById('modal').style.display = 'none'; }
+    function socialShare() { window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank'); }
 
-    // LANCEMENT FORCE
     window.onload = init;
 </script>
-</body>
-</html>
