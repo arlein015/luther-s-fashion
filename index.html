@@ -5,23 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Luther Fashion Brand</title>
     <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root { 
             --gradient: linear-gradient(to right, #1e3a8a, #a855f7); 
             --bg: #f0f2f5; --card-bg: #fff; --text: #333; 
+            --input-bg: #f9f9f9; --input-border: #eee;
         }
         /* MODE SOMBRE */
         body.dark-mode { 
             --bg: #121212; --card-bg: #1e1e1e; --text: #f0f2f5; 
+            --input-bg: #2a2a2a; --input-border: #3a3a3a;
         }
         
         body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); color: var(--text); transition: 0.3s; padding-bottom: 100px; }
 
-        header { padding: 40px 20px; position: relative; }
-        .logo-text { font-family: 'Alex Brush', cursive; font-size: 85px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+        header { padding: 40px 20px; position: relative; display: flex; align-items: center; justify-content: space-between; max-width: 1100px; margin: 0 auto;}
+        .logo-container { text-align: left; }
+        .logo-text { font-family: 'Alex Brush', cursive; font-size: 85px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; line-height: 0.8;}
+        .sub-logo { letter-spacing: 4px; font-size: 13px; font-weight: 600; margin-top: -10px; color: var(--text); }
         
         /* BOUTON DARK MODE */
-        .dark-toggle { position: absolute; top: 20px; right: 20px; cursor: pointer; font-size: 24px; }
+        .dark-toggle { cursor: pointer; font-size: 24px; color: var(--text); }
 
         .search-container { background: var(--card-bg); max-width: 700px; margin: 0 auto 25px; display: flex; align-items: center; padding: 10px 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 90%; }
         .logo-l-circle { width: 35px; height: 35px; border: 2px solid #1e3a8a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: #1e3a8a; margin-right: 15px; }
@@ -31,7 +36,7 @@
         .catalog { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 0 20px; max-width: 1100px; margin: 0 auto; }
         @media (max-width: 900px) { .catalog { grid-template-columns: repeat(2, 1fr); } }
 
-        .card { background: var(--card-bg); border-radius: 15px; padding: 12px; text-align: left; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        .card { background: var(--card-bg); border-radius: 15px; padding: 12px; text-align: left; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.02); cursor: pointer; }
         .badge { position: absolute; top: 10px; left: 10px; background: #ef4444; color: white; padding: 4px 8px; border-radius: 5px; font-size: 10px; font-weight: bold; z-index: 10; }
         .card img { width: 100%; border-radius: 10px; aspect-ratio: 1/1; object-fit: cover; }
         
@@ -40,21 +45,32 @@
         .thumb { width: 40px; height: 40px; border-radius: 5px; cursor: pointer; border: 2px solid transparent; }
         .thumb.active { border-color: #1e3a8a; }
 
-        #cart-badge { position: fixed; bottom: 25px; left: 25px; background: var(--gradient); color: white; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 1000; }
+        #cart-badge { position: fixed; bottom: 25px; right: 25px; background: var(--gradient); color: white; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 1000; }
         
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .modal-content { background: var(--card-bg); border-radius: 25px; padding: 30px; width: 90%; max-width: 450px; color: var(--text); }
         
         .btn { background: var(--gradient); color: white; width: 100%; padding: 15px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .share-btn { background: #25d366; margin-top: 5px; } /* Couleur WhatsApp */
+        input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text); box-sizing: border-box; }
+        
+        /* SHARE MODAL */
+        #share-modal .share-options { display: flex; justify-content: space-around; margin-top: 20px; }
+        #share-modal .share-item { text-align: center; cursor: pointer; color: var(--text); }
+        #share-modal .share-item i { font-size: 30px; margin-bottom: 5px; color: #1e3a8a; }
+        #share-modal .share-item span { display: block; font-size: 12px; }
+        .icon-facebook { color: #3b5998 !important; }
+        .icon-tiktok { color: #000000 !important; } /* TikTok n'a pas une couleur standard, on peut utiliser du noir */
+        .icon-instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     </style>
 </head>
 <body>
 
 <header>
+    <div class="logo-container">
+        <div class="logo-text">Luther</div>
+        <div class="sub-logo">FASHION BRAND</div>
+    </div>
     <div class="dark-toggle" onclick="toggleDark()">🌙</div>
-    <div class="logo-text">Luther</div>
-    <div class="sub-logo" style="letter-spacing: 4px; font-size: 13px; font-weight: 600;">FASHION BRAND</div>
 </header>
 
 <div class="search-container">
@@ -81,121 +97,12 @@
         </div>
 
         <button class="btn" onclick="addToCart()">AJOUTER AU PANIER</button>
-        <button class="btn share-btn" onclick="shareProduct()">PARTAGER L'ARTICLE</button>
-        <p onclick="closeM()" style="text-align:center; cursor:pointer; color:#aaa; font-size:12px; margin-top:15px">Fermer</p>
+        <button class="btn" onclick="openShareModal()" style="background:#007bff;">PARTAGER L'ARTICLE</button> <p onclick="closeM()" style="text-align:center; cursor:pointer; color:#aaa; font-size:12px; margin-top:15px">Fermer</p>
     </div>
 </div>
 
 <div id="cart-modal" class="modal">
     <div class="modal-content">
-        <h2>Mon Panier</h2>
+        <h2 style="margin-top:0">Mon Panier</h2>
         <div id="cart-items" style="margin-bottom:20px; max-height:200px; overflow-y:auto"></div>
-        <input type="text" id="c-name" placeholder="Nom Complet" style="width:100%; padding:12px; margin-bottom:10px; border-radius:10px; border:1px solid #eee; background:var(--bg); color:var(--text)">
-        <input type="tel" id="c-tel" placeholder="Téléphone de livraison" style="width:100%; padding:12px; margin-bottom:10px; border-radius:10px; border:1px solid #eee; background:var(--bg); color:var(--text)">
-        <button class="btn" onclick="sendWhatsApp()">VALIDER SUR WHATSAPP</button>
-        <p onclick="closeCart()" style="text-align:center; cursor:pointer; color:#aaa">Continuer</p>
-    </div>
-</div>
-
-<script>
-    let cart = [];
-    let selected = {};
-    const galleryImages = ["badg noir.JPG", "badg bleu.JPG", "badg rouge.JPG"]; // Utilise tes fichiers GitHub
-
-    function init() {
-        const list = document.getElementById('main-list');
-        for(let i=1; i<=20; i++) {
-            const card = document.createElement('div');
-            card.className = 'card';
-            // Ajout aléatoire de badges de stock
-            const badge = i % 5 === 0 ? '<div class="badge">DERNIER ARTICLE</div>' : '';
-            card.innerHTML = `
-                ${badge}
-                <img src="badg noir.JPG">
-                <div style="font-size:12px; font-weight:600; margin-top:10px">Article Luxe #${i}</div>
-                <div style="font-weight:bold; color:#1e3a8a">$120</div>
-            `;
-            card.onclick = () => openM({name: "Article Luxe #"+i, price: "$120"});
-            list.appendChild(card);
-        }
-    }
-
-    function toggleDark() {
-        document.body.classList.toggle('dark-mode');
-        document.querySelector('.dark-toggle').innerText = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-    }
-
-    function openM(p) {
-        selected = { ...p, qty: 1, img: galleryImages[0] };
-        document.getElementById('m-name').innerText = p.name;
-        document.getElementById('m-price').innerText = p.price;
-        document.getElementById('m-img').src = selected.img;
-        document.getElementById('qty-val').innerText = 1;
-        
-        // Galerie de miniatures
-        const gal = document.getElementById('m-gallery');
-        gal.innerHTML = galleryImages.map(img => `
-            <img src="${img}" class="thumb" onclick="changeImg('${img}', this)">
-        `).join('');
-        
-        document.getElementById('modal').style.display = 'flex';
-    }
-
-    function changeImg(img, el) {
-        selected.img = img;
-        document.getElementById('m-img').src = img;
-        document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
-        el.classList.add('active');
-    }
-
-    function changeQty(v) {
-        selected.qty = Math.max(1, selected.qty + v);
-        document.getElementById('qty-val').innerText = selected.qty;
-    }
-
-    function shareProduct() {
-        const text = `Regarde cet article sur Luther Fashion Brand : ${selected.name} (${selected.price}) !`;
-        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
-    }
-
-    function addToCart() {
-        cart.push({...selected});
-        document.getElementById('count').innerText = cart.length;
-        closeM();
-    }
-
-    // Fonctions de recherche, panier et WhatsApp identiques aux précédentes...
-    function search() {
-        let val = document.getElementById('search-bar').value.toLowerCase();
-        document.querySelectorAll('.card').forEach(c => {
-            c.style.display = c.innerText.toLowerCase().includes(val) ? 'block' : 'none';
-        });
-    }
-
-    function showCart() {
-        if(!cart.length) return alert("Panier vide");
-        document.getElementById('cart-items').innerHTML = cart.map((item, i) => `
-            <div style="border-bottom:1px solid #eee; padding:10px 0; color:var(--text)">
-                <b>${item.qty}x</b> ${item.name} <span style="float:right; cursor:pointer" onclick="remove(${i})">✕</span>
-            </div>
-        `).join('');
-        document.getElementById('cart-modal').style.display = 'flex';
-    }
-
-    function remove(i) { cart.splice(i, 1); document.getElementById('count').innerText = cart.length; showCart(); }
-
-    function sendWhatsApp() {
-        const n = document.getElementById('c-name').value;
-        const t = document.getElementById('c-tel').value;
-        if(!n || !t) return alert("Remplissez vos infos !");
-        let items = cart.map(i => `- ${i.qty}x ${i.name}`).join('%0A');
-        window.location.href = `https://wa.me/261339622155?text=💎 *COMMANDE LUTHER*%0AClient: ${n}%0ATél: ${t}%0A%0AArticles:%0A${items}`;
-    }
-
-    function closeM() { document.getElementById('modal').style.display = 'none'; }
-    function closeCart() { document.getElementById('cart-modal').style.display = 'none'; }
-
-    window.onload = init;
-</script>
-</body>
-</html>
+        <input type="text" id="c-name" placeholder="Nom Complet
