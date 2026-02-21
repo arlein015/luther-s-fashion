@@ -108,7 +108,28 @@
     </div>
 </div>
 
-<script>
+<script>// Cette liste dit au site quels produits afficher
+const products = [
+    { name: "Veste Luther #1", price: "$150", img: "badg noir.JPG" },
+    { name: "Chaussure Luther #6", price: "$120", img: "badg noir.JPG" },
+    { name: "Veste Luther #7", price: "$150", img: "badg noir.JPG" }
+];
+
+// Cette fonction crée les cartes visibles à l'écran
+function init() {
+    const list = document.getElementById('main-list');
+    if(!list) return;
+    list.innerHTML = products.map(p => `
+        <div class="card" onclick="openM({name:'${p.name}', price:'${p.price}'})">
+            <img src="${p.img}">
+            <div style="font-weight:600; margin-top:8px">${p.name}</div>
+            <div style="color:#1e3a8a; font-weight:bold">${p.price}</div>
+        </div>
+    `).join('');
+}
+
+// On demande au navigateur de lancer l'affichage au démarrage
+window.onload = init;
   let cart = [];
 let selected = {};
 
