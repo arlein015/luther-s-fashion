@@ -15,7 +15,7 @@
     <style>
         :root { --gradient: linear-gradient(to right, #1e3a8a, #a855f7); --bg: #f0f2f5; --card-bg: #fff; --text: #333; }
         body.dark-mode { --bg: #121212; --card-bg: #1e1e1e; --text: #ffffff; }
-        body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); color: var(--text); transition: 0.3s; padding-bottom: 100px; }
+        body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); color: var(--text); padding-bottom: 100px; }
         
         header { padding: 20px; display: flex; align-items: center; justify-content: space-between; max-width: 1100px; margin: 0 auto; }
         .logo-text { font-family: 'Alex Brush', cursive; font-size: 50px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
@@ -23,19 +23,26 @@
         .search-container { background: var(--card-bg); max-width: 700px; margin: 10px auto 20px; display: flex; align-items: center; padding: 12px 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 90%; }
         .logo-l-circle { width: 30px; height: 30px; border: 2px solid #1e3a8a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold; color: #1e3a8a; margin-right: 15px; }
 
-        .categories { display: flex; gap: 10px; overflow-x: auto; padding: 10px 20px; max-width: 1100px; margin: 0 auto; }
+        .categories { display: flex; gap: 10px; overflow-x: auto; padding: 10px 20px; max-width: 1100px; margin: 0 auto; scrollbar-width: none; }
         .cat-btn { background: var(--card-bg); padding: 8px 15px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 1px solid #ddd; white-space: nowrap; }
         .cat-btn.active { background: var(--gradient); color: white; border: none; }
 
         .catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; padding: 20px; max-width: 1100px; margin: 0 auto; }
-        .card { background: var(--card-bg); border-radius: 15px; padding: 10px; cursor: pointer; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .card { background: var(--card-bg); border-radius: 15px; padding: 10px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; }
         .card img { width: 100%; border-radius: 10px; aspect-ratio: 1/1; object-fit: cover; }
         
-        #cart-badge { position: fixed; bottom: 25px; right: 25px; background: var(--gradient); color: white; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 1000; }
+        #cart-badge { position: fixed; bottom: 25px; right: 25px; background: var(--gradient); color: white; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
         
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .modal-content { background: var(--card-bg); border-radius: 25px; padding: 20px; width: 90%; max-width: 400px; text-align: center; }
-        .btn { background: var(--gradient); color: white; width: 100%; padding: 14px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        
+        .color-dot { width: 30px; height: 30px; border-radius: 50%; display: inline-block; margin: 5px; cursor: pointer; border: 2px solid #ddd; }
+        .color-dot.active { border: 3px solid #1e3a8a; transform: scale(1.1); }
+        
+        .size-btn { padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px; margin: 2px; cursor: pointer; background: white; }
+        .size-btn.active { background: #1e3a8a; color: white; border: none; }
+        
+        .btn { background: var(--gradient); color: white; width: 100%; padding: 14px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -47,15 +54,14 @@
 
 <div class="search-container">
     <div class="logo-l-circle">L</div>
-    <input type="text" id="search-input" onkeyup="filterProducts()" placeholder="Rechercher homme, enfant, accessoires..." style="border:none; background:transparent; width:100%; outline:none; color:inherit">
+    <input type="text" id="search-input" onkeyup="filterProducts()" placeholder="Rechercher..." style="border:none; background:transparent; width:100%; outline:none; color:inherit">
 </div>
 
-<div class="categories" id="cat-list">
+<div class="categories">
     <div class="cat-btn active" onclick="filterCat('Tout', this)">Tout</div>
     <div class="cat-btn" onclick="filterCat('Homme', this)">Homme</div>
     <div class="cat-btn" onclick="filterCat('Femme', this)">Femme</div>
     <div class="cat-btn" onclick="filterCat('Enfant', this)">Enfant</div>
-    <div class="cat-btn" onclick="filterCat('Accessoires', this)">Accessoires</div>
 </div>
 
 <div class="catalog" id="main-list"></div>
@@ -65,61 +71,44 @@
 <div id="modal" class="modal">
     <div class="modal-content">
         <img id="m-img" src="" style="width:100%; border-radius:15px">
-        <h2 id="m-name"></h2>
-        <p id="m-price" style="font-weight:bold; color:#1e3a8a"></p>
-        <button class="btn" onclick="socialShare()"><i class="fab fa-facebook"></i> PARTAGER SUR FACEBOOK</button>
-        <p onclick="closeM()" style="cursor:pointer; margin-top:15px; font-size:12px; opacity:0.6">Fermer</p>
-    </div>
-</div>
-
-<script>
-   <div id="modal" class="modal">
-    <div class="modal-content">
-        <img id="m-img" src="" style="width:100%; border-radius:15px">
         <h2 id="m-name" style="margin:10px 0"></h2>
         <p id="m-price" style="font-weight:bold; color:#1e3a8a; font-size:20px"></p>
         
-        <div style="margin-top:15px">
+        <div style="margin-top:10px">
             <p style="font-size:12px; font-weight:bold">COULEURS :</p>
-            <div id="color-options">
-                <div class="color-dot" style="background:red" onclick="selectColor('Rouge', this)"></div>
-                <div class="color-dot" style="background:green" onclick="selectColor('Vert', this)"></div>
-                <div class="color-dot" style="background:yellow" onclick="selectColor('Jaune', this)"></div>
-                <div class="color-dot" style="background:blue" onclick="selectColor('Bleu', this)"></div>
+            <div id="colors">
+                <div class="color-dot" style="background:red" onclick="selCol('Rouge', this)"></div>
+                <div class="color-dot" style="background:green" onclick="selCol('Vert', this)"></div>
+                <div class="color-dot" style="background:yellow" onclick="selCol('Jaune', this)"></div>
+                <div class="color-dot" style="background:blue" onclick="selCol('Bleu', this)"></div>
             </div>
         </div>
 
-        <div style="margin-top:15px">
+        <div style="margin-top:10px">
             <p style="font-size:12px; font-weight:bold">TAILLES :</p>
-            <select id="size-select" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd">
-                <option value="S">S</option>
-                <option value="M">M</option>
-                <option value="L">L</option>
-                <option value="XL">XL</option>
-                <option value="XXL">XXL</option>
-            </select>
+            <div id="sizes">
+                <button class="size-btn" onclick="selSize('S', this)">S</button>
+                <button class="size-btn" onclick="selSize('M', this)">M</button>
+                <button class="size-btn" onclick="selSize('L', this)">L</button>
+                <button class="size-btn" onclick="selSize('XL', this)">XL</button>
+            </div>
         </div>
 
-        <button class="btn" onclick="addToCart()" style="margin-top:20px">🛒 AJOUTER AU PANIER</button>
-        
-        <button class="btn" onclick="socialShare()" style="background:#1877f2; margin-top:10px">
-            <i class="fab fa-facebook"></i> PARTAGER SUR FACEBOOK
-        </button>
-        
+        <button class="btn" onclick="addToCart()">🛒 AJOUTER AU PANIER</button>
+        <button class="btn" onclick="socialShare()" style="background:#1877f2"><i class="fab fa-facebook"></i> PARTAGER</button>
         <p onclick="closeM()" style="cursor:pointer; margin-top:15px; font-size:12px; opacity:0.6">Fermer</p>
     </div>
 </div>
 
 <script>
     let cart = [];
-    let selectedItem = {};
-
-    // Initialisation des produits
+    let currentSelection = { color: 'Rouge', size: 'M' };
     const products = Array.from({ length: 100 }, (_, i) => ({
         id: i,
         name: `Luther Style #${i + 1}`,
         price: `${(Math.random() * 100 + 40).toFixed(0)}€`,
-        img: "badg noir.JPG"
+        img: "badg noir.JPG",
+        cat: i % 3 === 0 ? 'Homme' : (i % 3 === 1 ? 'Femme' : 'Enfant')
     }));
 
     function init() {
@@ -127,7 +116,7 @@
         container.innerHTML = products.map(p => `
             <div class="card" onclick="openM(${p.id})">
                 <img src="${p.img}">
-                <div style="font-weight:600">${p.name}</div>
+                <div style="font-weight:600; margin-top:8px">${p.name}</div>
                 <div style="color:#1e3a8a; font-weight:bold">${p.price}</div>
             </div>
         `).join('');
@@ -135,25 +124,43 @@
 
     function openM(id) {
         const p = products.find(x => x.id === id);
-        selectedItem = { ...p, color: 'Rouge', size: 'M' }; // Valeurs par défaut
+        currentSelection = { ...p, color: 'Rouge', size: 'M' };
         document.getElementById('m-name').innerText = p.name;
         document.getElementById('m-price').innerText = p.price;
         document.getElementById('m-img').src = p.img;
         document.getElementById('modal').style.display = 'flex';
     }
 
-    function selectColor(color, el) {
-        selectedItem.color = color;
-        document.querySelectorAll('.color-dot').forEach(d => d.style.border = '2px solid transparent');
-        el.style.border = '2px solid black';
+    function selCol(c, el) {
+        currentSelection.color = c;
+        document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+        el.classList.add('active');
+    }
+
+    function selSize(s, el) {
+        currentSelection.size = s;
+        document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
     }
 
     function addToCart() {
-        selectedItem.size = document.getElementById('size-select').value;
-        cart.push({...selectedItem});
-        document.getElementById('count').innerText = cart.length; // Met à jour le panier
-        alert(`Ajouté : ${selectedItem.name} (${selectedItem.color}, Taille ${selectedItem.size})`);
+        cart.push({...currentSelection});
+        document.getElementById('count').innerText = cart.length;
         closeM();
+        alert("Produit ajouté au panier !");
+    }
+
+    function filterCat(cat, el) {
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+        const filtered = products.filter(p => cat === 'Tout' || p.cat === cat);
+        document.getElementById('main-list').innerHTML = filtered.map(p => `
+            <div class="card" onclick="openM(${p.id})">
+                <img src="${p.img}">
+                <div style="font-weight:600; margin-top:8px">${p.name}</div>
+                <div style="color:#1e3a8a; font-weight:bold">${p.price}</div>
+            </div>
+        `).join('');
     }
 
     function closeM() { document.getElementById('modal').style.display = 'none'; }
@@ -161,3 +168,5 @@
 
     window.onload = init;
 </script>
+</body>
+</html>
