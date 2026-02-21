@@ -26,14 +26,7 @@
         #cart-badge { position: fixed; bottom: 25px; right: 25px; background: var(--gradient); color: white; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.2); border: none; }
         
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; align-items: center; justify-content: center; padding: 15px; backdrop-filter: blur(5px); }
-        .modal-content { background: var(--card-bg); border-radius: 25px; padding: 20px; width: 100%; max-width: 400px; text-align: center; color: var(--text); max-height: 90vh; overflow-y: auto; }
-        
-        .color-dot { width: 30px; height: 30px; border-radius: 50%; display: inline-block; margin: 5px; cursor: pointer; border: 2px solid #ddd; }
-        .color-dot.active { border: 3px solid #1e3a8a; transform: scale(1.1); }
-        .size-btn { padding: 8px 12px; border: 1px solid #ddd; border-radius: 8px; margin: 2px; cursor: pointer; background: white; font-weight: bold; color: #333; }
-        .size-btn.active { background: #1e3a8a; color: white; border: none; }
-
-        .btn-wa { background: #25d366; color: white; width: 100%; padding: 14px; border: none; border-radius: 30px; font-weight: bold; margin-top: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .modal-content { background: var(--card-bg); border-radius: 25px; padding: 20px; width: 100%; max-width: 400px; text-align: center; color: var(--text); }
     </style>
 </head>
 <body>
@@ -45,72 +38,42 @@
 
 <div class="search-container">
     <div style="width:25px; height:25px; border:2px solid #1e3a8a; border-radius:50%; text-align:center; line-height:22px; font-weight:bold; color:#1e3a8a; margin-right:10px">L</div>
-    <input type="text" id="find" placeholder="Rechercher..." style="border:none; outline:none; width:100%; background:transparent; color:inherit" onkeyup="search()">
+    <input type="text" id="find" placeholder="Rechercher..." style="border:none; outline:none; width:100%; background:transparent; color:inherit">
 </div>
 
 <div class="categories">
-    <div class="cat-btn active" onclick="filterCat('Tout', this)">Tout</div>
-    <div class="cat-btn" onclick="filterCat('Homme', this)">Homme</div>
-    <div class="cat-btn" onclick="filterCat('Femme', this)">Femme</div>
-    <div class="cat-btn" onclick="filterCat('Enfant', this)">Enfant</div>
+    <div class="cat-btn active">Tout</div>
+    <div class="cat-btn">Homme</div>
+    <div class="cat-btn">Femme</div>
+    <div class="cat-btn">Enfant</div>
+    <div class="cat-btn">Accessoires</div>
 </div>
 
-<div class="catalog" id="box"></div>
-
-<button id="cart-badge" onclick="openCartView()">🛒 Panier (<span id="nb">0</span>)</button>
-
-<div id="pop" class="modal">
-    <div class="modal-content">
-        <img id="m-img" src="" style="width:100%; border-radius:15px">
-        <h3 id="m-name"></h3>
-        <p id="m-price" style="font-weight:bold; color:#1e3a8a; font-size:22px"></p>
-        
-        <p style="font-size:12px; font-weight:bold">COULEURS :</p>
-        <div class="color-dot active" style="background:red" onclick="selC(this)"></div>
-        <div class="color-dot" style="background:green" onclick="selC(this)"></div>
-        <div class="color-dot" style="background:yellow" onclick="selC(this)"></div>
-
-        <p style="font-size:12px; font-weight:bold; margin-top:10px">TAILLES :</p>
-        <button class="size-btn" onclick="selS(this)">S</button>
-        <button class="size-btn active" onclick="selS(this)">M</button>
-        <button class="size-btn" onclick="selS(this)">L</button>
-
-        <button style="background:var(--gradient); color:white; width:100%; padding:14px; border:none; border-radius:30px; font-weight:bold; margin-top:15px; cursor:pointer" onclick="addToCart()">AJOUTER AU PANIER</button>
-        <p onclick="document.getElementById('pop').style.display='none'" style="cursor:pointer; margin-top:15px; font-size:12px; opacity:0.6">Fermer</p>
+<div class="catalog" id="box">
     </div>
-</div>
 
-<div id="cart-modal" class="modal">
-    <div class="modal-content">
-        <h3>Ma Commande</h3>
-        <div id="cart-list" style="text-align:left; margin:15px 0"></div>
-        <hr>
-        <p style="font-weight:bold">Total: <span id="total">0€</span></p>
-        <button class="btn-wa" onclick="sendWA()">
-            <i class="fab fa-whatsapp"></i> COMMANDER VIA WHATSAPP
-        </button>
-        <p onclick="document.getElementById('cart-modal').style.display='none'" style="cursor:pointer; margin-top:15px; font-size:12px; opacity:0.6">Continuer mes achats</p>
-    </div>
-</div>
+<button id="cart-badge" onclick="alert('Panier cliquable !')">🛒 Panier (0)</button>
 
 <script>
-    // REMPLACE PAR TON NUMÉRO (sans le +)
-    const MON_NUMERO = "22500000000"; 
+    // Liste des produits
+    const products = [
+        { name: "Luther Style #1", price: "78€", img: "badg noir.JPG" },
+        { name: "Luther Style #2", price: "40€", img: "badg noir.JPG" }
+    ];
 
-    const data = Array.from({ length: 20 }, (_, i) => ({
-        id: i,
-        name: `Style #${i + 1}`,
-        price: 40 + (i * 5),
-        img: "badg noir.JPG",
-        cat: i % 3 === 0 ? 'Homme' : (i % 3 === 1 ? 'Femme' : 'Enfant')
-    }));
+    const box = document.getElementById('box');
+    box.innerHTML = products.map(p => `
+        <div class="card">
+            <img src="${p.img}">
+            <div style="font-weight:600; margin-top:8px">${p.name}</div>
+            <div style="color:#1e3a8a; font-weight:bold">${p.price}</div>
+        </div>
+    `).join('');
 
-    let cart = [];
-    let selected = null;
-
-    function render(list) {
-        document.getElementById('box').innerHTML = list.map(p => `
-            <div class="card" onclick="openP(${p.id})">
-                <img src="${p.img}">
-                <div style="font-weight:600; margin-top:8px">${p.name}</div>
-                <div style="color:#1e3a8a; font-weight
+    // Enregistrement du Service Worker (sw.js)
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js');
+    }
+</script>
+</body>
+</html>
