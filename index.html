@@ -57,7 +57,7 @@
 
 <div class="catalog" id="box"></div>
 
-<button id="cart-badge" onclick="openCart()">🛒 Panier (<span id="nb">0</span>)</button>
+<button id="cart-badge" onclick="openCartView()">🛒 Panier (<span id="nb">0</span>)</button>
 
 <div id="pop" class="modal">
     <div class="modal-content">
@@ -75,18 +75,42 @@
         <button class="size-btn active" onclick="selS(this)">M</button>
         <button class="size-btn" onclick="selS(this)">L</button>
 
-        <button style="background:var(--gradient); color:white; width:100%; padding:14px; border:none; border-radius:30px; font-weight:bold; margin-top:15px; cursor:pointer" onclick="add()">AJOUTER AU PANIER</button>
+        <button style="background:var(--gradient); color:white; width:100%; padding:14px; border:none; border-radius:30px; font-weight:bold; margin-top:15px; cursor:pointer" onclick="addToCart()">AJOUTER AU PANIER</button>
         <p onclick="document.getElementById('pop').style.display='none'" style="cursor:pointer; margin-top:15px; font-size:12px; opacity:0.6">Fermer</p>
     </div>
 </div>
 
 <div id="cart-modal" class="modal">
     <div class="modal-content">
-        <h3>Mon Panier</h3>
+        <h3>Ma Commande</h3>
         <div id="cart-list" style="text-align:left; margin:15px 0"></div>
         <hr>
         <p style="font-weight:bold">Total: <span id="total">0€</span></p>
         <button class="btn-wa" onclick="sendWA()">
             <i class="fab fa-whatsapp"></i> COMMANDER VIA WHATSAPP
         </button>
-        <p onclick="document.getElementById('cart-modal').style.display='none'" style="cursor:pointer; margin-top:15px; font-size:12px; opacity
+        <p onclick="document.getElementById('cart-modal').style.display='none'" style="cursor:pointer; margin-top:15px; font-size:12px; opacity:0.6">Continuer mes achats</p>
+    </div>
+</div>
+
+<script>
+    // REMPLACE PAR TON NUMÉRO (sans le +)
+    const MON_NUMERO = "22500000000"; 
+
+    const data = Array.from({ length: 20 }, (_, i) => ({
+        id: i,
+        name: `Style #${i + 1}`,
+        price: 40 + (i * 5),
+        img: "badg noir.JPG",
+        cat: i % 3 === 0 ? 'Homme' : (i % 3 === 1 ? 'Femme' : 'Enfant')
+    }));
+
+    let cart = [];
+    let selected = null;
+
+    function render(list) {
+        document.getElementById('box').innerHTML = list.map(p => `
+            <div class="card" onclick="openP(${p.id})">
+                <img src="${p.img}">
+                <div style="font-weight:600; margin-top:8px">${p.name}</div>
+                <div style="color:#1e3a8a; font-weight
