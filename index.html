@@ -12,17 +12,20 @@
         header { padding: 20px; text-align: center; }
         .logo-text { font-family: 'Alex Brush', cursive; font-size: 50px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .search-container { background: var(--card-bg); margin: 10px auto; padding: 12px; border-radius: 15px; width: 85%; box-shadow: 0 5px 15px rgba(0,0,0,0.05); display: flex; align-items: center; }
-        .catalog { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 15px; }
-        .card { background: var(--card-bg); border-radius: 15px; padding: 10px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .catalog { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 15px; min-height: 200px; }
+        .card { background: var(--card-bg); border-radius: 15px; padding: 10px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; }
         .card img { width: 100%; border-radius: 10px; aspect-ratio: 1/1; object-fit: cover; }
-        #cart-badge { position: fixed; bottom: 20px; right: 20px; background: var(--gradient); color: white; padding: 15px; border-radius: 50px; font-weight: bold; z-index: 1000; }
+        #cart-badge { position: fixed; bottom: 20px; right: 20px; background: var(--gradient); color: white; padding: 15px; border-radius: 50px; font-weight: bold; z-index: 1000; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
         .modal-content { background: white; border-radius: 20px; padding: 20px; width: 100%; max-width: 400px; text-align: center; max-height: 90vh; overflow-y: auto; }
-        .color-dot { width: 30px; height: 30px; border-radius: 50%; display: inline-block; margin: 5px; border: 2px solid #ddd; cursor: pointer; }
-        .size-btn { padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px; margin: 2px; cursor: pointer; background: white; }
-        .btn-add { background: var(--gradient); color: white; width: 100%; padding: 12px; border: none; border-radius: 25px; font-weight: bold; margin-top: 15px; }
+        .color-dot { width: 30px; height: 30px; border-radius: 50%; display: inline-block; margin: 5px; border: 2px solid #ddd; cursor: pointer; transition: 0.2s; }
+        .color-dot.active { border: 3px solid #1e3a8a; transform: scale(1.1); }
+        .size-btn { padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px; margin: 2px; cursor: pointer; background: white; font-weight: bold; }
+        .size-btn.active { background: #1e3a8a; color: white; border: none; }
+        .btn-add { background: var(--gradient); color: white; width: 100%; padding: 12px; border: none; border-radius: 25px; font-weight: bold; margin-top: 15px; cursor: pointer; }
         .share-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
-        .share-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin: 0 auto; font-size: 18px; }
+        .share-item { cursor: pointer; font-size: 10px; }
+        .share-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin: 0 auto 5px; font-size: 18px; }
     </style>
 </head>
 <body>
@@ -30,38 +33,88 @@
 <header><div class="logo-text">Luther</div></header>
 
 <div class="search-container">
-    <div style="width:25px; height:25px; border:2px solid #1e3a8a; border-radius:50%; text-align:center; font-weight:bold; color:#1e3a8a; margin-right:10px">L</div>
-    <input type="text" placeholder="Rechercher..." style="border:none; outline:none; width:100%">
+    <div style="width:25px; height:25px; border:2px solid #1e3a8a; border-radius:50%; text-align:center; line-height:22px; font-weight:bold; color:#1e3a8a; margin-right:10px">L</div>
+    <input type="text" id="search" placeholder="Rechercher..." style="border:none; outline:none; width:100%" onkeyup="search()">
 </div>
 
-<div class="catalog" id="list"></div>
+<div class="catalog" id="main-list">
+    </div>
 
-<div id="cart-badge">🛒 Panier (<span id="count">0</span>)</div>
+<div id="cart-badge">
+    <i class="fas fa-shopping-cart"></i> Panier (<span id="count">0</span>)
+</div>
 
 <div id="modal" class="modal">
     <div class="modal-content">
         <img id="m-img" src="" style="width:100%; border-radius:15px">
-        <h3 id="m-name"></h3>
-        <p id="m-price" style="font-weight:bold; color:#1e3a8a"></p>
+        <h3 id="m-name" style="margin:10px 0"></h3>
+        <p id="m-price" style="font-weight:bold; color:#1e3a8a; font-size:20px"></p>
         
         <p style="font-size:12px; font-weight:bold">COULEURS :</p>
-        <div class="color-dot" style="background:red" onclick="this.style.border='3px solid black'"></div>
-        <div class="color-dot" style="background:green" onclick="this.style.border='3px solid black'"></div>
-        <div class="color-dot" style="background:yellow" onclick="this.style.border='3px solid black'"></div>
-        <div class="color-dot" style="background:blue" onclick="this.style.border='3px solid black'"></div>
+        <div id="color-opts">
+            <div class="color-dot active" style="background:red" onclick="selC('Rouge', this)"></div>
+            <div class="color-dot" style="background:green" onclick="selC('Vert', this)"></div>
+            <div class="color-dot" style="background:yellow" onclick="selC('Jaune', this)"></div>
+            <div class="color-dot" style="background:blue" onclick="selC('Bleu', this)"></div>
+        </div>
 
         <p style="font-size:12px; font-weight:bold; margin-top:10px">TAILLES :</p>
-        <button class="size-btn">S</button><button class="size-btn">M</button><button class="size-btn">L</button><button class="size-btn">XL</button>
-
-        <button class="btn-add" onclick="add()">🛒 AJOUTER AU PANIER</button>
-
-        <p style="font-size:11px; font-weight:bold; margin-top:15px">PARTAGER SUR :</p>
-        <div class="share-grid">
-            <div onclick="window.open('https://facebook.com/sharer/sharer.php?u='+window.location.href)"><div class="share-icon" style="background:#1877f2"><i class="fab fa-facebook-f"></i></div>FB</div>
-            <div onclick="window.open('https://api.whatsapp.com/send?text='+window.location.href)"><div class="share-icon" style="background:#25d366"><i class="fab fa-whatsapp"></i></div>WA</div>
-            <div onclick="alert('Lien copié pour Instagram')"><div class="share-icon" style="background:#e1306c"><i class="fab fa-instagram"></i></div>IG</div>
-            <div onclick="alert('Lien copié pour TikTok')"><div class="share-icon" style="background:#000"><i class="fab fa-tiktok"></i></div>TK</div>
-            <div onclick="window.open('https://twitter.com/intent/tweet?url='+window.location.href)"><div class="share-icon" style="background:#1da1f2"><i class="fab fa-twitter"></i></div>TW</div>
-            <div onclick="navigator.clipboard.writeText(window.location.href);alert('Lien copié')"><div class="share-icon" style="background:#6c757d"><i class="fas fa-link"></i></div>Lien</div>
+        <div id="size-opts">
+            <button class="size-btn" onclick="selS('S', this)">S</button>
+            <button class="size-btn active" onclick="selS('M', this)">M</button>
+            <button class="size-btn" onclick="selS('L', this)">L</button>
+            <button class="size-btn" onclick="selS('XL', this)">XL</button>
         </div>
-        <p onclick="document.getElementById('modal').style.display='none'" style
+
+        <button class="btn-add" onclick="addToCart()">🛒 AJOUTER AU PANIER</button>
+
+        <p style="font-size:11px; font-weight:bold; margin-top:20px; border-top:1px solid #eee; padding-top:10px">PARTAGER SUR :</p>
+        <div class="share-grid">
+            <div class="share-item" onclick="share('fb')"><div class="share-icon" style="background:#1877f2"><i class="fab fa-facebook-f"></i></div>FB</div>
+            <div class="share-item" onclick="share('wa')"><div class="share-icon" style="background:#25d366"><i class="fab fa-whatsapp"></i></div>WA</div>
+            <div class="share-item" onclick="share('ig')"><div class="share-icon" style="background:#e1306c"><i class="fab fa-instagram"></i></div>Insta</div>
+            <div class="share-item" onclick="share('tk')"><div class="share-icon" style="background:#000"><i class="fab fa-tiktok"></i></div>TikTok</div>
+            <div class="share-item" onclick="share('tw')"><div class="share-icon" style="background:#1da1f2"><i class="fab fa-twitter"></i></div>Twitter</div>
+            <div class="share-item" onclick="copyL()"><div class="share-icon" style="background:#6c757d"><i class="fas fa-link"></i></div>Lien</div>
+        </div>
+        <p onclick="closeM()" style="cursor:pointer; margin-top:20px; font-size:12px; color:gray">Fermer</p>
+    </div>
+</div>
+
+<script>
+    // 1. Liste des 100 produits
+    const products = Array.from({ length: 100 }, (_, i) => ({
+        id: i,
+        name: `Luther Style #${i + 1}`,
+        price: `${(Math.random() * 80 + 40).toFixed(0)}€`,
+        img: "badg noir.JPG"
+    }));
+
+    let cartCount = 0;
+    let currentItem = { color: 'Rouge', size: 'M' };
+
+    // 2. Fonction d'affichage
+    function display(items) {
+        const list = document.getElementById('main-list');
+        list.innerHTML = items.map(p => `
+            <div class="card" onclick="openM(${p.id})">
+                <img src="${p.img}">
+                <div style="font-weight:600; margin-top:8px">${p.name}</div>
+                <div style="color:#1e3a8a; font-weight:bold">${p.price}</div>
+            </div>
+        `).join('');
+    }
+
+    // 3. Fenêtre produit
+    function openM(id) {
+        const p = products[id];
+        currentItem = { ...p, color: 'Rouge', size: 'M' };
+        document.getElementById('m-name').innerText = p.name;
+        document.getElementById('m-price').innerText = p.price;
+        document.getElementById('m-img').src = p.img;
+        document.getElementById('modal').style.display = 'flex';
+    }
+
+    function selC(c, el) {
+        currentItem.color = c;
+        document.querySelectorAll('.color-dot').forEach(d
