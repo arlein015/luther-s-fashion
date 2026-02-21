@@ -7,38 +7,138 @@
     <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        :root { --gradient: linear-gradient(to right, #1e3a8a, #a855f7); --bg: #f0f2f5; --card-bg: #fff; --text: #333; }
-        body.dark-mode { --bg: #121212; --card-bg: #1e1e1e; --text: #ffffff; }
-        body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); color: var(--text); padding-bottom: 100px; transition: 0.3s; }
-        
-        header { padding: 20px; display: flex; align-items: center; justify-content: space-between; max-width: 1100px; margin: 0 auto; }
-        .logo-text { font-family: 'Alex Brush', cursive; font-size: 50px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
-        
-        .search-container { background: var(--card-bg); max-width: 700px; margin: 10px auto 20px; display: flex; align-items: center; padding: 12px 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 85%; }
-        .categories { display: flex; gap: 10px; overflow-x: auto; padding: 10px 20px; max-width: 1100px; margin: 0 auto; scrollbar-width: none; }
-        .cat-btn { background: var(--card-bg); padding: 8px 15px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 1px solid #ddd; white-space: nowrap; color: var(--text); }
-        .cat-btn.active { background: var(--gradient); color: white; border: none; }
+        :root {
+            --gradient: linear-gradient(to right, #1e3a8a, #a855f7);
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-color: #333;
+        }
 
-        .catalog { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 20px; max-width: 1100px; margin: 0 auto; }
-        .card { background: var(--card-bg); border-radius: 15px; padding: 10px; cursor: pointer; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .card img { width: 100%; border-radius: 10px; aspect-ratio: 1/1; object-fit: cover; }
-        
-        #cart-badge { position: fixed; bottom: 25px; right: 25px; background: var(--gradient); color: white; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.2); border: none; }
-        
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; align-items: center; justify-content: center; padding: 15px; backdrop-filter: blur(5px); }
-        .modal-content { background: var(--card-bg); border-radius: 25px; padding: 20px; width: 100%; max-width: 400px; text-align: center; color: var(--text); }
+        body.dark-mode {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #ffffff;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding-bottom: 80px;
+            transition: 0.3s;
+        }
+
+        header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .logo-text {
+            font-family: 'Alex Brush', cursive;
+            font-size: 50px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+
+        .search-container {
+            background: var(--card-bg);
+            max-width: 700px;
+            margin: 10px auto 20px;
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            width: 85%;
+        }
+
+        .categories {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 10px 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+            scrollbar-width: none;
+        }
+
+        .cat-btn {
+            background: var(--card-bg);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            white-space: nowrap;
+            color: var(--text-color);
+        }
+
+        .cat-btn.active {
+            background: var(--gradient);
+            color: white;
+            border: none;
+        }
+
+        .catalog {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            padding: 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 10px;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .card img {
+            width: 100%;
+            border-radius: 10px;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+        }
+
+        #cart-badge {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: var(--gradient);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
 <header>
     <div class="logo-text">Luther</div>
-    <div onclick="document.body.classList.toggle('dark-mode')" style="cursor:pointer; font-size:24px">🌙</div>
+    <div onclick="document.body.classList.toggle('dark-mode')" style="cursor:pointer; font-size: 24px;">🌙</div>
 </header>
 
 <div class="search-container">
-    <div style="width:25px; height:25px; border:2px solid #1e3a8a; border-radius:50%; text-align:center; line-height:22px; font-weight:bold; color:#1e3a8a; margin-right:10px">L</div>
-    <input type="text" id="find" placeholder="Rechercher..." style="border:none; outline:none; width:100%; background:transparent; color:inherit">
+    <div style="width: 25px; height: 25px; border: 2px solid #1e3a8a; border-radius: 50%; text-align: center; line-height: 22px; font-weight: bold; color: #1e3a8a; margin-right: 10px;">L</div>
+    <input type="text" placeholder="Rechercher homme, enfant, accessoires..." style="border: none; outline: none; width: 100%; background: transparent; color: inherit;">
 </div>
 
 <div class="categories">
@@ -50,30 +150,29 @@
 </div>
 
 <div class="catalog" id="box">
+    <div class="card">
+        <img src="badg noir.JPG">
+        <div style="font-weight: 600; margin-top: 8px;">Style #1</div>
+        <div style="color: #1e3a8a; font-weight: bold;">78€</div>
     </div>
+    <div class="card">
+        <img src="badg noir.JPG">
+        <div style="font-weight: 600; margin-top: 8px;">Style #2</div>
+        <div style="color: #1e3a8a; font-weight: bold;">40€</div>
+    </div>
+</div>
 
-<button id="cart-badge" onclick="alert('Panier cliquable !')">🛒 Panier (0)</button>
+<div id="cart-badge">
+    <i class="fas fa-shopping-cart"></i>
+    <span>Panier (0)</span>
+</div>
 
 <script>
-    // Liste des produits
-    const products = [
-        { name: "Luther Style #1", price: "78€", img: "badg noir.JPG" },
-        { name: "Luther Style #2", price: "40€", img: "badg noir.JPG" }
-    ];
-
-    const box = document.getElementById('box');
-    box.innerHTML = products.map(p => `
-        <div class="card">
-            <img src="${p.img}">
-            <div style="font-weight:600; margin-top:8px">${p.name}</div>
-            <div style="color:#1e3a8a; font-weight:bold">${p.price}</div>
-        </div>
-    `).join('');
-
-    // Enregistrement du Service Worker (sw.js)
+    // Enregistrement du sw.js
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js');
     }
 </script>
+
 </body>
 </html>
