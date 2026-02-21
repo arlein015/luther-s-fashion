@@ -3,160 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther Fashion Brand</title>
-    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Luther Fashion - Boutique</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        :root { --gradient: linear-gradient(to right, #1e3a8a, #a855f7); --bg: #f0f2f5; --card-bg: #fff; --text: #333; }
-        body.dark-mode { --bg: #121212; --card-bg: #1e1e1e; --text: #ffffff; }
-        body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); color: var(--text); padding-bottom: 100px; transition: 0.3s; }
-        
-        header { padding: 20px; display: flex; align-items: center; justify-content: space-between; max-width: 1100px; margin: 0 auto; }
-        .logo-text { font-family: 'Alex Brush', cursive; font-size: 50px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
-        
-        .search-container { background: var(--card-bg); max-width: 700px; margin: 10px auto 20px; display: flex; align-items: center; padding: 12px 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 90%; }
-        .categories { display: flex; gap: 10px; overflow-x: auto; padding: 10px 20px; max-width: 1100px; margin: 0 auto; scrollbar-width: none; }
-        .cat-btn { background: var(--card-bg); padding: 8px 15px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 1px solid #ddd; white-space: nowrap; color: var(--text); }
-        .cat-btn.active { background: var(--gradient); color: white; border: none; }
-
-        .catalog { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 20px; max-width: 1100px; margin: 0 auto; }
-        .card { background: var(--card-bg); border-radius: 15px; padding: 10px; cursor: pointer; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .card img { width: 100%; border-radius: 10px; aspect-ratio: 1/1; object-fit: cover; }
-        
-        #cart-badge { position: fixed; bottom: 25px; right: 25px; background: var(--gradient); color: white; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.2); border: none; outline: none; }
-        
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; align-items: center; justify-content: center; padding: 15px; backdrop-filter: blur(5px); }
-        .modal-content { background: var(--card-bg); border-radius: 25px; padding: 20px; width: 100%; max-width: 400px; text-align: center; color: var(--text); max-height: 90vh; overflow-y: auto; }
-        
-        .color-dot { width: 30px; height: 30px; border-radius: 50%; display: inline-block; margin: 5px; cursor: pointer; border: 2px solid #ddd; }
-        .color-dot.active { border: 3px solid #1e3a8a; transform: scale(1.1); }
-        .size-btn { padding: 8px 12px; border: 1px solid #ddd; border-radius: 8px; margin: 2px; cursor: pointer; background: white; font-weight: bold; color: #333; }
-        .size-btn.active { background: #1e3a8a; color: white; border: none; }
-        
-        .share-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; }
-        .share-item { cursor: pointer; font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-        .share-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; }
+        :root { --grad: linear-gradient(to right, #1e3a8a, #a855f7); --bg: #f0f2f5; --txt: #333; --card: #fff; }
+        body.dark { --bg: #121212; --txt: #fff; --card: #1e1e1e; }
+        body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); color: var(--txt); transition: 0.3s; padding-bottom: 100px; }
+        header { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 30px; font-weight: bold; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .cats { display: flex; gap: 10px; overflow-x: auto; padding: 15px; scrollbar-width: none; }
+        .btn-c { background: var(--card); padding: 8px 18px; border-radius: 20px; border: 1px solid #ddd; cursor: pointer; color: inherit; white-space: nowrap; font-size: 13px; }
+        .btn-c.active { background: var(--grad); color: #fff; border: none; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 12px; }
+        .item { background: var(--card); border-radius: 15px; padding: 10px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .item img { width: 100%; border-radius: 10px; aspect-ratio: 1/1; object-fit: cover; }
+        #cart-btn { position: fixed; bottom: 20px; right: 20px; background: var(--grad); color: #fff; border: none; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 3000; box-shadow: 0 5px 20px rgba(0,0,0,0.3); }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 4000; align-items: center; justify-content: center; padding: 15px; backdrop-filter: blur(5px); }
+        .box { background: var(--card); border-radius: 25px; padding: 20px; width: 100%; max-width: 400px; text-align: center; color: var(--txt); max-height: 90vh; overflow-y: auto; }
+        .btn-order { width: 100%; background: #25d366; color: #fff; border: none; padding: 15px; border-radius: 30px; font-weight: bold; margin-top: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
     </style>
 </head>
-<body>
+<body class="">
 
 <header>
-    <div class="logo-text">Luther</div>
-    <div onclick="document.body.classList.toggle('dark-mode')" style="cursor:pointer; font-size:24px">🌙</div>
+    <div class="logo">Luther</div>
+    <div onclick="document.body.classList.toggle('dark')" style="cursor:pointer; font-size:22px">🌙</div>
 </header>
 
-<div class="search-container">
-    <input type="text" id="find" placeholder="Rechercher..." style="border:none; outline:none; width:100%; background:transparent; color:inherit" onkeyup="search()">
+<div class="cats">
+    <div class="btn-c active" onclick="setCat('Tout', this)">Tout</div>
+    <div class="btn-c" onclick="setCat('Homme', this)">Homme</div>
+    <div class="btn-c" onclick="setCat('Femme', this)">Femme</div>
+    <div class="btn-c" onclick="setCat('Enfant', this)">Enfant</div>
 </div>
 
-<div class="categories">
-    <div class="cat-btn active" onclick="filterCat('Tout', this)">Tout</div>
-    <div class="cat-btn" onclick="filterCat('Homme', this)">Homme</div>
-    <div class="cat-btn" onclick="filterCat('Femme', this)">Femme</div>
-    <div class="cat-btn" onclick="filterCat('Enfant', this)">Enfant</div>
-</div>
+<div class="grid" id="out"></div>
 
-<div class="catalog" id="box"></div>
-
-<button id="cart-badge" onclick="openCart()">🛒 Panier (<span id="nb">0</span>)</button>
+<button id="cart-btn" onclick="openCartView()">🛒 Panier (<span id="count">0</span>)</button>
 
 <div id="pop" class="modal">
-    <div class="modal-content">
-        <img id="m-img" src="" style="width:100%; border-radius:15px">
-        <h3 id="m-name"></h3>
-        <p id="m-price" style="font-weight:bold; color:#1e3a8a; font-size:22px"></p>
+    <div class="box">
+        <img id="p-img" src="" style="width:100%; border-radius:15px">
+        <h2 id="p-name"></h2>
+        <p id="p-price" style="font-size:24px; font-weight:bold; color:#1e3a8a"></p>
+        <button onclick="addToCart()" style="width:100%; background:var(--grad); color:#fff; border:none; padding:15px; border-radius:30px; font-weight:bold; cursor:pointer">AJOUTER AU PANIER</button>
+        <p onclick="closePop()" style="margin-top:20px; cursor:pointer; font-size:12px; opacity:0.6">Fermer</p>
+    </div>
+</div>
+
+<div id="cart-modal" class="modal">
+    <div class="box">
+        <h3>Votre Commande</h3>
+        <div id="cart-items-list" style="text-align:left; margin:15px 0; max-height:200px; overflow-y:auto"></div>
+        <hr>
+        <p style="font-weight:bold">Total: <span id="total-price">0€</span></p>
         
-        <p style="font-size:12px; font-weight:bold">COULEURS :</p>
-        <div class="color-dot active" style="background:red" onclick="selC(this)"></div>
-        <div class="color-dot" style="background:green" onclick="selC(this)"></div>
-        <div class="color-dot" style="background:yellow" onclick="selC(this)"></div>
-        <div class="color-dot" style="background:blue" onclick="selC(this)"></div>
-
-        <p style="font-size:12px; font-weight:bold; margin-top:10px">TAILLES :</p>
-        <div id="sizes">
-            <button class="size-btn" onclick="selS(this)">S</button>
-            <button class="size-btn active" onclick="selS(this)">M</button>
-            <button class="size-btn" onclick="selS(this)">L</button>
-        </div>
-
-        <button style="background:var(--gradient); color:white; width:100%; padding:14px; border:none; border-radius:30px; font-weight:bold; margin-top:15px; cursor:pointer" onclick="add()">AJOUTER AU PANIER</button>
-
-        <div class="share-grid">
-            <div class="share-item" onclick="sh('fb')"><div class="share-icon" style="background:#1877f2"><i class="fab fa-facebook-f"></i></div>FB</div>
-            <div class="share-item" onclick="sh('wa')"><div class="share-icon" style="background:#25d366"><i class="fab fa-whatsapp"></i></div>WA</div>
-            <div class="share-item" onclick="alert('Lien Instagram copié !')"><div class="share-icon" style="background:#e1306c"><i class="fab fa-instagram"></i></div>Insta</div>
-            <div class="share-item" onclick="alert('Lien TikTok copié !')"><div class="share-icon" style="background:#000"><i class="fab fa-tiktok"></i></div>TikTok</div>
-            <div class="share-item" onclick="sh('tw')"><div class="share-icon" style="background:#1da1f2"><i class="fab fa-twitter"></i></div>Twitter</div>
-            <div class="share-item" onclick="cp()"><div class="share-icon" style="background:#6c757d"><i class="fas fa-link"></i></div>Lien</div>
-        </div>
-        <p onclick="document.getElementById('pop').style.display='none'" style="cursor:pointer; margin-top:15px; font-size:12px; opacity:0.6">Fermer</p>
+        <button class="btn-order" onclick="sendWhatsApp()">
+            <i class="fab fa-whatsapp"></i> COMMANDER SUR WHATSAPP
+        </button>
+        
+        <p onclick="closeCart()" style="margin-top:20px; cursor:pointer; font-size:12px; opacity:0.6">Continuer mes achats</p>
     </div>
 </div>
 
 <script>
-    // Force la désactivation du bloqueur de cache sw.js
-    if('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister()));
-    }
-
-    const products = Array.from({ length: 100 }, (_, i) => ({
-        id: i,
-        name: `Style #${i + 1}`,
-        price: `${(Math.random() * 80 + 20).toFixed(0)}€`,
-        img: "badg noir.JPG",
-        cat: i % 3 === 0 ? 'Homme' : (i % 3 === 1 ? 'Femme' : 'Enfant')
+    // Configuration
+    const MON_WHATSAPP = "2250000000000"; // <--- REMPLACE PAR TON NUMÉRO (ex: 225...)
+    
+    const data = Array.from({length: 40}, (_, i) => ({
+        id: i, name: "Luther Style #"+(i+1), price: 45 + i, img: "badg noir.JPG", cat: i%3==0?'Homme':(i%3==1?'Femme':'Enfant')
     }));
 
-    function render(list) {
-        const b = document.getElementById('box');
-        if(!b) return;
-        b.innerHTML = list.map(p => `
-            <div class="card" onclick="openP(${p.id})">
+    let cart = [];
+
+    function show(l) {
+        document.getElementById('out').innerHTML = l.map(p => `
+            <div class="item" onclick="openP(${p.id})">
                 <img src="${p.img}">
-                <div style="font-weight:600; margin-top:8px">${p.name}</div>
-                <div style="color:#1e3a8a; font-weight:bold">${p.price}</div>
+                <div style="font-weight:bold; margin-top:8px">${p.name}</div>
+                <div style="color:#1e3a8a; font-weight:bold">${p.price}€</div>
             </div>
         `).join('');
     }
 
+    let selectedProduct = null;
     function openP(id) {
-        const p = products[id];
-        document.getElementById('m-name').innerText = p.name;
-        document.getElementById('m-price').innerText = p.price;
-        document.getElementById('m-img').src = p.img;
+        selectedProduct = data[id];
+        document.getElementById('p-name').innerText = selectedProduct.name;
+        document.getElementById('p-price').innerText = selectedProduct.price + "€";
+        document.getElementById('p-img').src = selectedProduct.img;
         document.getElementById('pop').style.display = 'flex';
     }
 
-    function selC(el) { document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active')); el.classList.add('active'); }
-    function selS(el) { document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active')); el.classList.add('active'); }
-
-    let count = 0;
-    function add() { count++; document.getElementById('nb').innerText = count; document.getElementById('pop').style.display = 'none'; alert("Produit ajouté !"); }
-    
-    // Panier cliquable
-    function openCart() { alert("Panier : " + count + " articles. Finalisez sur WhatsApp bientôt !"); }
-
-    function filterCat(cat, el) {
-        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-        el.classList.add('active');
-        render(cat === 'Tout' ? products : products.filter(p => p.cat === cat));
+    function addToCart() {
+        cart.push(selectedProduct);
+        document.getElementById('count').innerText = cart.length;
+        closePop();
     }
 
-    function search() {
-        const q = document.getElementById('find').value.toLowerCase();
-        render(products.filter(p => p.name.toLowerCase().includes(q)));
+    function openCartView() {
+        const list = document.getElementById('cart-items-list');
+        const total = cart.reduce((sum, item) => sum + item.price, 0);
+        list.innerHTML = cart.map(item => `<div>• ${item.name} (${item.price}€)</div>`).join('');
+        document.getElementById('total-price').innerText = total + "€";
+        document.getElementById('cart-modal').style.display = 'flex';
     }
 
-    function sh(p) {
-        const u = encodeURIComponent(window.location.href);
-        if(p==='fb') window.open('https://facebook.com/sharer/sharer.php?u='+u);
-        if(p==='wa') window.open('https://api.whatsapp.com/send?text='+u);
-        if(p==='tw') window.open('https://twitter.com/intent/tweet?url='+u);
+    function sendWhatsApp() {
+        if(cart.length === 0) return alert("Le panier est vide !");
+        let message = "Bonjour Luther Fashion, je souhaite commander :\n\n";
+        cart.forEach(item => message += "- " + item.name + " (" + item.price + "€)\n");
+        message += "\nTotal : " + document.getElementById('total-price').innerText;
+        
+        const url = "https://wa.me/" + MON_WHATSAPP + "?text=" + encodeURIComponent(message);
+        window.open(url, '_blank');
     }
 
-    function cp() { navigator.clipboard.writeText(window.location.href); alert("Lien copié !"); }
+    function setCat(c, btn) {
+        document.querySelectorAll('.btn-c').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        show(c === 'Tout' ? data : data.filter(p => p.cat === c));
+    }
 
-    window.onload = () => render(products);
+    function closePop() { document.getElementById('pop').style.display = 'none'; }
+    function closeCart() { document.getElementById('cart-modal').style.display = 'none'; }
+
+    window.onload = () => {
+        show(data);
+        // Force désactivation vieux cache
+        if('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(rs => rs.forEach(r => r.unregister()));
+        }
+    };
 </script>
 </body>
 </html>
