@@ -3,54 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther Fashion</title>
+    <title>Luther Fashion Brand</title>
     <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        :root { --grad: linear-gradient(to right, #1e3a8a, #a855f7); }
-        body { font-family: 'Poppins', sans-serif; margin: 0; background: #f0f2f5; padding-bottom: 80px; }
+        :root { --gradient: linear-gradient(to right, #1e3a8a, #a855f7); --bg: #f0f2f5; }
+        body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); padding-bottom: 100px; }
         header { padding: 20px; text-align: center; }
-        .logo-text { font-family: 'Alex Brush', cursive; font-size: 50px; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .search-bar { background: #fff; margin: 10px auto; padding: 12px; border-radius: 15px; width: 85%; display: flex; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .logo-text { font-family: 'Alex Brush', cursive; font-size: 50px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .search-container { background: #fff; margin: 10px auto; padding: 12px; border-radius: 15px; width: 85%; display: flex; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .catalog { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 15px; }
         .card { background: #fff; border-radius: 15px; padding: 10px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; }
         .card img { width: 100%; border-radius: 10px; aspect-ratio: 1/1; object-fit: cover; }
-        #cart-btn { position: fixed; bottom: 20px; right: 20px; background: var(--grad); color: white; padding: 15px 20px; border-radius: 50px; font-weight: bold; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        #cart-badge { position: fixed; bottom: 20px; right: 20px; background: var(--gradient); color: white; padding: 15px; border-radius: 50px; font-weight: bold; z-index: 1000; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; align-items: center; justify-content: center; padding: 15px; }
-        .modal-box { background: #fff; border-radius: 20px; padding: 20px; width: 100%; max-width: 400px; text-align: center; max-height: 90vh; overflow-y: auto; }
-        .dot { width: 30px; height: 30px; border-radius: 50%; display: inline-block; margin: 5px; border: 2px solid #ddd; cursor: pointer; }
-        .dot.active { border: 3px solid #1e3a8a; transform: scale(1.1); }
-        .size { padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px; margin: 2px; cursor: pointer; background: #fff; font-weight: bold; }
-        .size.active { background: #1e3a8a; color: #fff; border: none; }
-        .btn-add { background: var(--grad); color: #fff; width: 100%; padding: 12px; border: none; border-radius: 25px; font-weight: bold; margin-top: 15px; cursor: pointer; }
-        .shares { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; }
-        .sh-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; margin: 0 auto 5px; font-size: 18px; }
+        .modal-content { background: white; border-radius: 20px; padding: 20px; width: 100%; max-width: 400px; text-align: center; max-height: 90vh; overflow-y: auto; }
+        .color-dot { width: 30px; height: 30px; border-radius: 50%; display: inline-block; margin: 5px; border: 2px solid #ddd; cursor: pointer; }
+        .color-dot.active { border: 3px solid #1e3a8a; transform: scale(1.1); }
+        .size-btn { padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px; margin: 2px; cursor: pointer; background: white; font-weight: bold; }
+        .size-btn.active { background: #1e3a8a; color: white; border: none; }
+        .share-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px; }
+        .share-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin: 0 auto; font-size: 18px; }
     </style>
 </head>
 <body>
 
 <header><div class="logo-text">Luther</div></header>
 
-<div class="search-bar">
-    <div style="width:25px; height:25px; border:2px solid #1e3a8a; border-radius:50%; text-align:center; line-height:22px; font-weight:bold; color:#1e3a8a; margin-right:10px">L</div>
-    <input type="text" id="find" placeholder="Rechercher..." style="border:none; outline:none; width:100%" onkeyup="goFind()">
+<div class="search-container">
+    <div style="width:25px; height:25px; border:2px solid #1e3a8a; border-radius:50%; text-align:center; font-weight:bold; color:#1e3a8a; margin-right:10px">L</div>
+    <input type="text" id="searchInput" placeholder="Rechercher..." style="border:none; outline:none; width:100%" onkeyup="filter()">
 </div>
 
-<div class="catalog" id="box"></div>
+<div class="catalog" id="productsGrid"></div>
 
-<div id="cart-btn">🛒 Panier (<span id="nb">0</span>)</div>
+<div id="cart-badge">🛒 Panier (<span id="cartCount">0</span>)</div>
 
-<div id="pop" class="modal">
-    <div class="modal-box">
-        <img id="p-img" src="" style="width:100%; border-radius:15px">
-        <h3 id="p-name"></h3>
-        <p id="p-price" style="font-weight:bold; color:#1e3a8a; font-size:20px"></p>
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <img id="m-img" src="" style="width:100%; border-radius:15px">
+        <h3 id="m-name"></h3>
+        <p id="m-price" style="font-weight:bold; color:#1e3a8a; font-size:20px"></p>
         
         <p style="font-size:12px; font-weight:bold">COULEURS :</p>
-        <div class="dot active" style="background:red" onclick="clC('Rouge', this)"></div>
-        <div class="dot" style="background:green" onclick="clC('Vert', this)"></div>
-        <div class="dot" style="background:yellow" onclick="clC('Jaune', this)"></div>
-        <div class="dot" style="background:blue" onclick="clC('Bleu', this)"></div>
+        <div class="color-dot active" style="background:red" onclick="selC(this)"></div>
+        <div class="color-dot" style="background:green" onclick="selC(this)"></div>
+        <div class="color-dot" style="background:yellow" onclick="selC(this)"></div>
+        <div class="color-dot" style="background:blue" onclick="selC(this)"></div>
 
         <p style="font-size:12px; font-weight:bold; margin-top:10px">TAILLES :</p>
-        <button class="size" onclick="clS('S
+        <button class="size-btn" onclick="selS(this)">S</button>
+        <button class="size-btn active" onclick="selS(this)">M</button>
+        <button class="size-btn" onclick="selS(this)">L</button>
+        <button class="size-btn" onclick="selS(this)">XL</button>
+
+        <button style="background:var(--gradient); color:white; width:100%; padding:12px; border:none; border-radius:25px; font-weight:bold; margin-top:15px" onclick="add()">🛒 AJOUTER AU PANIER</button>
+
+        <div class="share-grid">
+            <div onclick="window.open('https://facebook.com/sharer/sharer.php?u='+window.location.href)"><div class="share-icon" style="background:#1877f2"><i class="fab fa-facebook-f"></i></div>FB</div>
+            <div onclick="window.open('https://api.whatsapp.com/send?text='+window.location.href)"><div class="share-icon" style="background:#25d366"><i class="fab fa-whatsapp"></i></div>WA</div>
+            <div onclick="alert('Lien Instagram prêt')"><div class="share-icon" style="background:#e1306c"><i class="fab fa-instagram"></i></div>IG</div>
+            <div onclick="alert('Lien TikTok prêt')"><div class="share-icon" style="background:#000"><i class="fab fa-tiktok"></i></div>TK</div>
+            <div onclick="window.open('https://twitter.com/intent/tweet?url='+window.location.href)"><div class="share-icon" style="background:#1da1f2"><i class="fab fa-twitter"></i></div>TW</div>
+            <div onclick="navigator.clipboard.writeText(window.location.href);alert('Lien copié')"><div class="share-icon" style="background:#6c757d"><i class="fas fa-link"></i></div>Lien</div>
+        </div>
+        <p onclick="document.getElementById('modal').style.display='none'" style="cursor:pointer; margin-top:20px; font-size:12px; color:gray">Fermer</p>
+    </div>
+</div>
+
+<script>
+    // Désactivation du Service Worker qui cause l'écran blanc
+    if('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(regs => {
+            for(let reg of regs) reg.unregister();
+        });
+    }
+
+    const data = Array.from({ length: 100 }, (_, i) => ({
+        id: i,
+        name: `Style #${i + 1}`,
+        price: `${(Math.random() * 80 + 20).toFixed(0)}€`,
+        img: "badg noir.JPG"
+    }));
+
+    function render(list) {
+        document.getElementById('productsGrid').innerHTML = list.map(p => `
+            <div class="card" onclick="openP(${p.id})">
+                <img src="${p.img}">
+                <div style="font-weight:600; margin-top:5px">${p.name}</div>
+                <div style="color:#1e3a8a; font-weight:bold">${p.price}</div>
+            </div>
+        `).join('');
+    }
+
+    function openP(id) {
+        const p = data[id];
+        document.getElementById('m-name').innerText = p.name;
+        document.getElementById('m-price').innerText = p.price;
+        document.getElementById('m-img').src = p.img;
+        document.getElementById('modal').style.display = 'flex';
+    }
+
+    function selC(el) {
+        document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+        el.classList.add('active');
+    }
+
+    function selS(el) {
+        document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+    }
+
+    let count = 0;
+    function add() {
+        count++;
+        document.getElementById('cartCount').innerText = count;
+        document.getElementById('modal').style.display = 'none';
+        alert("Ajouté !");
+    }
+
+    function filter() {
+        const q = document.getElementById('searchInput').value.toLowerCase();
+        render(data.filter(p => p.name.toLowerCase().includes(q)));
+    }
+
+    window.onload = () => render(data);
+</script>
+</body>
+</html>
