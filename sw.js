@@ -1,37 +1,26 @@
-function social(platform) {
-    const shareUrl = "https://arlein015.github.io/luther-s-fashion/";
-    const shareText = "Découvrez la nouvelle collection Luxe chez Luther Fashion Brand ! 💎";
-    let finalUrl = "";
+const CACHE_NAME = 'luther-fashion-v1';
+const ASSETS = [
+  './',
+  './index.html',
+  './badg noir.JPG',
+  'https://fonts.googleapis.com/css2?family=Alex+Brush&family=Poppins:wght@300;400;600&display=swap',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css'
+];
 
-    switch(platform) {
-        case 'fb':
-            // Ouvre la fenêtre de publication Facebook
-            finalUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
-            break;
-        case 'tk':
-            // TikTok ne permet pas le partage de lien direct via URL, 
-            // On redirige vers leur plateforme pour inciter au partage
-            alert("Lien copié ! Créez votre vidéo TikTok et collez le lien dans votre bio. ✨");
-            copyToClipboard(shareUrl);
-            finalUrl = "https://www.tiktok.com/upload";
-            break;
-        case 'ig':
-            // Instagram privilégie l'app mobile, on redirige vers le fil d'actualité
-            alert("Lien copié ! Partagez votre article en Story ou sur votre profil. 📸");
-            copyToClipboard(shareUrl);
-            finalUrl = "https://www.instagram.com/";
-            break;
-        case 'copy':
-            copyToClipboard(shareUrl);
-            alert("Lien copié dans le presse-papiers ! 🔗");
-            return;
-    }
+// Installation du Service Worker et mise en cache
+self.addEventListener('install', (e) => {
+  e.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(ASSETS);
+    })
+  );
+});
 
-    if (finalUrl) {
-        window.open(finalUrl, '_blank');
-    }
-}
-
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(text);
-}
+// Mode hors-ligne : on sert les fichiers depuis le cache si possible
+self.addEventListener('fetch', (e) => {
+  e.respondWith(
+    caches.match(e.request).then((response) => {
+      return response || fetch(e.request);
+    })
+  );
+});
