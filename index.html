@@ -1,165 +1,37 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther Fashion Brand</title>
-    <meta property="og:title" content="Luther Fashion Brand - Collection Luxe">
-<meta property="og:description" content="Découvrez nos vestes et chaussures de luxe. Commandez directement sur WhatsApp.">
-<meta property="og:image" content="https://arlein015.github.io/luther-s-fashion/badg%20noir.JPG">
-<meta property="og:url" content="https://arlein015.github.io/luther-s-fashion/">
-<meta property="og:type" content="website">
+function social(platform) {
+    const shareUrl = "https://arlein015.github.io/luther-s-fashion/";
+    const shareText = "Découvrez la nouvelle collection Luxe chez Luther Fashion Brand ! 💎";
+    let finalUrl = "";
 
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://arlein015.github.io/luther-s-fashion/badg%20noir.JPG"><link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        :root { 
-            --gradient: linear-gradient(to right, #1e3a8a, #a855f7); 
-            --bg: #f0f2f5; --card-bg: #fff; --text: #333; 
-        }
-        body.dark-mode { 
-            --bg: #121212; --card-bg: #1e1e1e; --text: #ffffff; 
-        }
-        
-        body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); color: var(--text); transition: 0.3s; padding-bottom: 100px; }
-
-        /* LOGO À GAUCHE */
-        header { padding: 30px 20px; display: flex; align-items: center; justify-content: space-between; max-width: 1100px; margin: 0 auto; }
-        .logo-container { text-align: left; flex: 1; }
-        .logo-text { font-family: 'Alex Brush', cursive; font-size: 60px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; line-height: 1; }
-        .sub-logo { letter-spacing: 3px; font-size: 11px; font-weight: 600; color: var(--text); opacity: 0.8; }
-        
-        .dark-toggle { cursor: pointer; font-size: 22px; padding: 10px; }
-
-        /* RECHERCHE */
-        .search-container { background: var(--card-bg); max-width: 700px; margin: 0 auto 25px; display: flex; align-items: center; padding: 12px 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 90%; }
-        .logo-l-circle { width: 30px; height: 30px; border: 2px solid #1e3a8a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold; color: #1e3a8a; margin-right: 15px; }
-        #search-bar { border: none; background: transparent; color: var(--text); flex: 1; outline: none; font-size: 14px; }
-
-        /* CATALOGUE 4 COLONNES */
-        .catalog { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 0 20px; max-width: 1100px; margin: 0 auto; }
-        @media (max-width: 900px) { .catalog { grid-template-columns: repeat(2, 1fr); } }
-
-        .card { background: var(--card-bg); border-radius: 15px; padding: 10px; text-align: left; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
-        .badge { position: absolute; top: 10px; left: 10px; background: #ef4444; color: white; padding: 3px 7px; border-radius: 5px; font-size: 9px; font-weight: bold; z-index: 5; }
-        .card img { width: 100%; border-radius: 10px; aspect-ratio: 1/1; object-fit: cover; }
-        
-        /* PANIER À DROITE */
-        #cart-badge { position: fixed; bottom: 25px; right: 25px; background: var(--gradient); color: white; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        
-        /* MODALS */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .modal-content { background: var(--card-bg); border-radius: 25px; padding: 25px; width: 85%; max-width: 400px; color: var(--text); text-align: center; }
-        
-        .btn { background: var(--gradient); color: white; width: 100%; padding: 14px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        
-        /* SHARE ICONS */
-        .share-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 20px; }
-        .share-item { cursor: pointer; text-decoration: none; color: var(--text); font-size: 11px; }
-        .share-item i { font-size: 28px; display: block; margin-bottom: 5px; }
-        .fa-facebook { color: #1877f2; }
-        .fa-instagram { color: #e4405f; }
-        .fa-tiktok { color: #000000; }
-        body.dark-mode .fa-tiktok { color: #ffffff; }
-    </style>
-</head>
-<body>
-
-<header>
-    <div class="logo-container">
-        <div class="logo-text">Luther</div>
-        <div class="sub-logo">FASHION BRAND</div>
-    </div>
-    <div class="dark-toggle" onclick="toggleDark()">🌙</div>
-</header>
-
-<div class="search-container">
-    <div class="logo-l-circle">L</div>
-    <input type="text" id="search-bar" placeholder="Rechercher..." onkeyup="search()">
-</div>
-
-<div class="catalog" id="main-list"></div>
-
-<div id="cart-badge" onclick="showCart()">🛒 Panier (<span id="count">0</span>)</div>
-
-<div id="modal" class="modal">
-    <div class="modal-content">
-        <img id="m-img" src="" style="width:100%; border-radius:15px; margin-bottom:10px">
-        <h2 id="m-name" style="margin:5px 0"></h2>
-        <p id="m-price" style="font-weight:bold; color:#1e3a8a; font-size:18px"></p>
-        
-        <button class="btn" onclick="addToCart()">AJOUTER AU PANIER</button>
-        <button class="btn" onclick="openShare()" style="background:#444">PARTAGER</button>
-        <p onclick="closeM()" style="cursor:pointer; opacity:0.5; font-size:12px; margin-top:15px">Fermer</p>
-    </div>
-</div>
-
-<div id="share-modal" class="modal">
-    <div class="modal-content">
-        <h3>Partager Luther</h3>
-        <div class="share-grid">
-            <div class="share-item" onclick="social('fb')"><i class="fab fa-facebook"></i>Facebook</div>
-            <div class="share-item" onclick="social('tk')"><i class="fab fa-tiktok"></i>TikTok</div>
-            <div class="share-item" onclick="social('ig')"><i class="fab fa-instagram"></i>Insta</div>
-            <div class="share-item" onclick="copy()"><i class="fas fa-link"></i>Lien</div>
-        </div>
-        <button class="btn" onclick="document.getElementById('share-modal').style.display='none'" style="margin-top:20px">Retour</button>
-    </div>
-</div>
-
-<script>
-    let cart = [];
-    let selected = {};
-
-    function init() {
-        const list = document.getElementById('main-list');
-        for(let i=1; i<=20; i++) {
-            const card = document.createElement('div');
-            card.className = 'card';
-            const badge = i % 4 === 0 ? '<div class="badge">STOCK LIMITÉ</div>' : '';
-            card.innerHTML = `${badge}<img src="badg noir.JPG"><div style="font-weight:600; font-size:12px; margin-top:8px">Article #${i}</div><div style="color:#1e3a8a; font-weight:bold">$120</div>`;
-            card.onclick = () => {
-                selected = {name: "Article #"+i, price: "$120"};
-                document.getElementById('m-name').innerText = selected.name;
-                document.getElementById('m-price').innerText = selected.price;
-                document.getElementById('m-img').src = "badg noir.JPG";
-                document.getElementById('modal').style.display = 'flex';
-            };
-            list.appendChild(card);
-        }
+    switch(platform) {
+        case 'fb':
+            // Ouvre la fenêtre de publication Facebook
+            finalUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+            break;
+        case 'tk':
+            // TikTok ne permet pas le partage de lien direct via URL, 
+            // On redirige vers leur plateforme pour inciter au partage
+            alert("Lien copié ! Créez votre vidéo TikTok et collez le lien dans votre bio. ✨");
+            copyToClipboard(shareUrl);
+            finalUrl = "https://www.tiktok.com/upload";
+            break;
+        case 'ig':
+            // Instagram privilégie l'app mobile, on redirige vers le fil d'actualité
+            alert("Lien copié ! Partagez votre article en Story ou sur votre profil. 📸");
+            copyToClipboard(shareUrl);
+            finalUrl = "https://www.instagram.com/";
+            break;
+        case 'copy':
+            copyToClipboard(shareUrl);
+            alert("Lien copié dans le presse-papiers ! 🔗");
+            return;
     }
 
-    function toggleDark() {
-        document.body.classList.toggle('dark-mode');
-        document.querySelector('.dark-toggle').innerText = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    if (finalUrl) {
+        window.open(finalUrl, '_blank');
     }
+}
 
-    function openShare() { document.getElementById('share-modal').style.display = 'flex'; }
-    
-    function social(p) {
-        alert("Lien copié ! Partagez-le sur votre application " + p);
-        copy();
-    }
-
-    function copy() {
-        navigator.clipboard.writeText(window.location.href);
-        alert("Lien du site copié !");
-    }
-
-    function addToCart() {
-        cart.push({...selected});
-        document.getElementById('count').innerText = cart.length;
-        document.getElementById('modal').style.display = 'none';
-    }
-
-    function search() {
-        let v = document.getElementById('search-bar').value.toLowerCase();
-        document.querySelectorAll('.card').forEach(c => c.style.display = c.innerText.toLowerCase().includes(v) ? 'block' : 'none');
-    }
-
-    function closeM() { document.getElementById('modal').style.display = 'none'; }
-    window.onload = init;
-</script>
-</body>
-</html>
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text);
+}
