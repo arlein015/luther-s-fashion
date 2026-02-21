@@ -6,7 +6,7 @@
     <title>Luther Fashion Brand</title>
     
     <meta property="og:title" content="Luther Fashion Brand - Collection Luxe">
-    <meta property="og:description" content="Découvrez nos vestes et chaussures de luxe. Commandez directement sur WhatsApp.">
+    <meta property="og:description" content="Découvrez nos articles exclusifs. Commandez sur WhatsApp.">
     <meta property="og:image" content="https://arlein015.github.io/luther-s-fashion/badg%20noir.JPG">
     <meta property="og:url" content="https://arlein015.github.io/luther-s-fashion/">
     <meta property="og:type" content="website">
@@ -15,38 +15,54 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     <style>
-        :root { 
-            --gradient: linear-gradient(to right, #1e3a8a, #a855f7); 
-            --bg: #f0f2f5; --card-bg: #fff; --text: #333; 
-        }
-        body.dark-mode { 
-            --bg: #121212; --card-bg: #1e1e1e; --text: #ffffff; 
-        }
+        :root { --gradient: linear-gradient(to right, #1e3a8a, #a855f7); --bg: #f0f2f5; --card-bg: #fff; --text: #333; }
+        body.dark-mode { --bg: #121212; --card-bg: #1e1e1e; --text: #ffffff; }
         body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); color: var(--text); transition: 0.3s; padding-bottom: 100px; }
-        header { padding: 30px 20px; display: flex; align-items: center; justify-content: space-between; max-width: 1100px; margin: 0 auto; }
-        .logo-text { font-family: 'Alex Brush', cursive; font-size: 60px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
-        .search-container { background: var(--card-bg); max-width: 700px; margin: 0 auto 25px; display: flex; align-items: center; padding: 12px 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 90%; }
-        .catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; padding: 0 20px; max-width: 1100px; margin: 0 auto; }
-        .card { background: var(--card-bg); border-radius: 15px; padding: 10px; cursor: pointer; transition: 0.2s; }
+        
+        header { padding: 20px; display: flex; align-items: center; justify-content: space-between; max-width: 1100px; margin: 0 auto; }
+        .logo-text { font-family: 'Alex Brush', cursive; font-size: 50px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+        
+        /* Barre de recherche avec style L */
+        .search-container { background: var(--card-bg); max-width: 700px; margin: 10px auto 20px; display: flex; align-items: center; padding: 12px 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 90%; }
+        .logo-l-circle { width: 30px; height: 30px; border: 2px solid #1e3a8a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold; color: #1e3a8a; margin-right: 15px; }
+
+        /* Catégories */
+        .categories { display: flex; gap: 10px; overflow-x: auto; padding: 10px 20px; max-width: 1100px; margin: 0 auto; scrollbar-width: none; }
+        .cat-btn { background: var(--card-bg); padding: 8px 15px; border-radius: 20px; font-size: 13px; cursor: pointer; white-space: nowrap; border: 1px solid #ddd; }
+        .cat-btn.active { background: var(--gradient); color: white; border: none; }
+
+        .catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; padding: 20px; max-width: 1100px; margin: 0 auto; }
+        .card { background: var(--card-bg); border-radius: 15px; padding: 10px; cursor: pointer; position: relative; }
         .card img { width: 100%; border-radius: 10px; aspect-ratio: 1/1; object-fit: cover; }
-        #cart-badge { position: fixed; bottom: 25px; right: 25px; background: var(--gradient); color: white; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 1000; }
+        
+        #cart-badge { position: fixed; bottom: 25px; right: 25px; background: var(--gradient); color: white; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .modal-content { background: var(--card-bg); border-radius: 25px; padding: 25px; width: 85%; max-width: 400px; text-align: center; }
+        .modal-content { background: var(--card-bg); border-radius: 25px; padding: 20px; width: 90%; max-width: 400px; text-align: center; max-height: 90vh; overflow-y: auto; }
+        
+        .color-dot { width: 25px; height: 25px; border-radius: 50%; display: inline-block; margin: 5px; cursor: pointer; border: 2px solid transparent; }
+        .color-dot.active { border-color: #1e3a8a; transform: scale(1.2); }
         .btn { background: var(--gradient); color: white; width: 100%; padding: 14px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <header>
-    <div>
-        <div class="logo-text">Luther</div>
-        <div style="letter-spacing:3px; font-size:11px; opacity:0.7">FASHION BRAND</div>
-    </div>
+    <div class="logo-text">Luther</div>
     <div onclick="document.body.classList.toggle('dark-mode')" style="cursor:pointer; font-size:24px">🌙</div>
 </header>
 
 <div class="search-container">
-    <input type="text" placeholder="Rechercher un article..." style="border:none; background:transparent; width:100%; outline:none; color:inherit">
+    <div class="logo-l-circle">L</div>
+    <input type="text" id="search-input" onkeyup="filterProducts()" placeholder="Rechercher homme, enfant, accessoires..." style="border:none; background:transparent; width:100%; outline:none; color:inherit">
+</div>
+
+<div class="categories" id="cat-list">
+    <div class="cat-btn active" onclick="filterCat('Tout', this)">Tout</div>
+    <div class="cat-btn" onclick="filterCat('Homme', this)">Homme</div>
+    <div class="cat-btn" onclick="filterCat('Femme', this)">Femme</div>
+    <div class="cat-btn" onclick="filterCat('Enfant', this)">Enfant</div>
+    <div class="cat-btn" onclick="filterCat('Accessoires', this)">Accessoires</div>
 </div>
 
 <div class="catalog" id="main-list"></div>
@@ -56,77 +72,86 @@
 <div id="modal" class="modal">
     <div class="modal-content">
         <img id="m-img" src="" style="width:100%; border-radius:15px">
-        <h2 id="m-name"></h2>
-        <p id="m-price" style="font-weight:bold; color:#1e3a8a"></p>
-        <div style="margin: 15px 0;">
-            <button onclick="changeQty(-1)">-</button>
-            <span id="qty-val" style="margin:0 15px; font-weight:bold">1</span>
-            <button onclick="changeQty(1)">+</button>
+        <h2 id="m-name" style="margin:10px 0"></h2>
+        <p id="m-price" style="font-weight:bold; color:#1e3a8a; font-size:20px"></p>
+        
+        <div style="margin:10px 0">
+            <p style="font-size:12px; font-weight:bold">CHOISIR COULEUR :</p>
+            <div id="color-options"></div>
         </div>
+
         <button class="btn" onclick="addToCart()">AJOUTER AU PANIER</button>
-        <button class="btn" onclick="openShare()" style="background:#444">PARTAGER</button>
-        <p onclick="closeM()" style="cursor:pointer; margin-top:15px; font-size:12px">Fermer</p>
+        <button class="btn" onclick="socialShare()" style="background:#444"><i class="fab fa-facebook"></i> PARTAGER SUR FACEBOOK</button>
+        <p onclick="closeM()" style="cursor:pointer; margin-top:15px; font-size:12px; opacity:0.6">Fermer</p>
     </div>
 </div>
 
 <script>
-    // 1. Définition des variables au début
     let cart = [];
     let selected = {};
-    const products = [
-        { name: "Veste Luther #1", price: "$150", img: "badg noir.JPG" },
-        { name: "Chaussure Luther #6", price: "$120", img: "badg noir.JPG" },
-        { name: "Veste Luther #7", price: "$150", img: "badg noir.JPG" }
-    ];
+    let currentCat = 'Tout';
 
-    // 2. Affichage des produits
+    // Génération de 100 produits avec catégories
+    const categories = ['Homme', 'Femme', 'Enfant', 'Accessoires'];
+    const colors = ['#000', '#fff', '#ef4444', '#3b82f6', '#10b981'];
+    const products = Array.from({ length: 100 }, (_, i) => ({
+        id: i,
+        name: `Produit Luther #${i + 1}`,
+        price: `${(Math.random() * 200 + 50).toFixed(0)}€`,
+        img: "badg noir.JPG", // Utilise ton image par défaut
+        cat: categories[i % 4],
+        colors: colors
+    }));
+
     function init() {
-        const list = document.getElementById('main-list');
-        list.innerHTML = products.map(p => `
-            <div class="card" onclick="openM({name:'${p.name}', price:'${p.price}', img:'${p.img}'})">
+        renderProducts(products);
+    }
+
+    function renderProducts(list) {
+        const container = document.getElementById('main-list');
+        container.innerHTML = list.map(p => `
+            <div class="card" onclick="openM(${p.id})">
                 <img src="${p.img}">
-                <div style="font-weight:600; margin-top:8px">${p.name}</div>
+                <div style="font-size:11px; color:gray; margin-top:5px">${p.cat}</div>
+                <div style="font-weight:600; font-size:13px">${p.name}</div>
                 <div style="color:#1e3a8a; font-weight:bold">${p.price}</div>
             </div>
         `).join('');
     }
 
-    // 3. Fonction pour rendre les produits CLIQUABLES
-    function openM(p) {
-        selected = { ...p, qty: 1 };
+    function openM(id) {
+        const p = products.find(x => x.id === id);
+        selected = { ...p, color: p.colors[0] };
         document.getElementById('m-name').innerText = p.name;
         document.getElementById('m-price').innerText = p.price;
         document.getElementById('m-img').src = p.img;
-        document.getElementById('qty-val').innerText = 1;
+        
+        const colorBox = document.getElementById('color-options');
+        colorBox.innerHTML = p.colors.map(c => `
+            <div class="color-dot" style="background:${c}" onclick="selectColor('${c}', this)"></div>
+        `).join('');
+        colorBox.children[0].classList.add('active');
+        
         document.getElementById('modal').style.display = 'flex';
     }
 
-    function changeQty(v) {
-        selected.qty = Math.max(1, selected.qty + v);
-        document.getElementById('qty-val').innerText = selected.qty;
+    function selectColor(c, el) {
+        selected.color = c;
+        document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+        el.classList.add('active');
     }
 
-    function addToCart() {
-        cart.push({...selected});
-        document.getElementById('count').innerText = cart.length;
-        closeM();
+    function filterCat(cat, el) {
+        currentCat = cat;
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+        filterProducts();
     }
 
-    function closeM() { document.getElementById('modal').style.display = 'none'; }
-
-    // 4. Fonctions de partage
-    function social(platform) {
-        const shareUrl = window.location.href;
-        if(platform === 'fb') {
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank');
-        } else {
-            navigator.clipboard.writeText(shareUrl);
-            alert("Lien copié !");
-        }
-    }
-
-    window.onload = init;
-</script>
-
-</body>
-</html>
+    function filterProducts() {
+        const query = document.getElementById('search-input').value.toLowerCase();
+        const filtered = products.filter(p => 
+            (currentCat === 'Tout' || p.cat === currentCat) && 
+            (p.name.toLowerCase().includes(query) || p.cat.toLowerCase().includes(query))
+        );
+        renderProducts(filtered);
