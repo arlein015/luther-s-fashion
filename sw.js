@@ -1,4 +1,4 @@
-const CACHE_NAME = 'luther-fashion-v1';
+const CACHE_NAME = 'luther-fashion-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -7,8 +7,9 @@ const ASSETS = [
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css'
 ];
 
-// Installation du Service Worker et mise en cache
+// Installation : on force l'activation immédiate
 self.addEventListener('install', (e) => {
+  self.skipWaiting();
   e.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(ASSETS);
@@ -16,11 +17,22 @@ self.addEventListener('install', (e) => {
   );
 });
 
-// Mode hors-ligne : on sert les fichiers depuis le cache si possible
+// Activation : on supprime les anciens caches pour voir les nouveaux produits
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys.map((key) => {
+          if (key !== CACHE_NAME) return caches.delete(key);
+        })
+      );
+    })
+  );
+});
+
+// Stratégie : Network First (on cherche d'abord sur internet pour voir les 100 produits)
 self.addEventListener('fetch', (e) => {
   e.respondWith(
-    caches.match(e.request).then((response) => {
-      return response || fetch(e.request);
-    })
+    fetch(e.request).catch(() => caches.match(e.request))
   );
 });
