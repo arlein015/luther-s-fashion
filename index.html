@@ -7,33 +7,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root { --gradient: linear-gradient(to right, #1e3a8a, #a855f7); --bg: #f0f2f5; }
-        body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); text-align: center; padding-bottom: 80px; }
-        
-        /* LOGO & HEADER */
-        header { padding: 30px 20px; }
-        .logo-text { font-family: 'Alex Brush', cursive; font-size: 70px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
-        .sub-logo { letter-spacing: 4px; font-size: 12px; color: #444; text-transform: uppercase; margin-top: -10px; }
+        body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); color: #333; text-align: center; padding-bottom: 80px; }
 
-        /* CATALOGUE */
-        .catalog { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 15px; max-width: 1100px; margin: 0 auto; }
-        .card { background: #fff; border-radius: 15px; padding: 10px; text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .card img { width: 100%; border-radius: 10px; }
-        .add-btn { background: var(--gradient); color: #fff; border: none; width: 100%; padding: 8px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        header { padding: 40px 20px; }
+        .logo-text { font-family: 'Alex Brush', cursive; font-size: 85px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+        .sub-logo { letter-spacing: 4px; font-size: 13px; color: #444; text-transform: uppercase; margin-top: -10px; font-weight: 600; }
 
-        /* BARRE DE PANIER FIXE (EN BAS) */
-        .cart-bar { 
-            position: fixed; bottom: 0; left: 0; right: 0; 
-            background: #fff; padding: 15px; display: flex; 
-            justify-content: space-between; align-items: center;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.1); z-index: 1000;
+        /* PANIER FLOTTANT */
+        #cart-badge { 
+            position: fixed; bottom: 20px; right: 20px; background: var(--gradient); color: white; 
+            padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2); z-index: 1000; display: flex; align-items: center; gap: 10px;
         }
-        .order-now { background: var(--gradient); color: #fff; border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold; cursor: pointer; }
 
-        /* MODAL PANIER */
-        #modal-cart { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; }
-        .modal-content { background: #fff; border-radius: 20px; padding: 25px; width: 90%; max-width: 400px; }
-        .cart-item { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 10px 0; font-size: 14px; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; }
+        .catalog { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 20px; max-width: 1100px; margin: 0 auto; }
+        .card { background: #fff; border-radius: 15px; padding: 15px; text-align: left; box-shadow: 0 4px 15px rgba(0,0,0,0.03); cursor: pointer; }
+        .card img { width: 100%; border-radius: 10px; margin-bottom: 10px; }
+        .card-name { font-size: 13px; font-weight: 600; }
+        .card-price { font-size: 15px; font-weight: bold; color: #1e3a8a; }
+
+        /* MODAL DE SELECTION */
+        #modal, #cart-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .modal-content { background: #fff; border-radius: 25px; padding: 25px; width: 90%; max-width: 400px; }
+        .dot { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid #eee; display: inline-block; margin: 5px; }
+        .dot.active { border-color: #333; transform: scale(1.1); }
+        
+        input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #eee; box-sizing: border-box; }
+        .btn { background: var(--gradient); color: white; width: 100%; padding: 15px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -45,81 +45,101 @@
 
 <div class="catalog" id="list"></div>
 
-<div class="cart-bar">
-    <div style="text-align: left;">
-        <span id="cart-count" style="font-weight: bold; color: #1e3a8a;">0 article(s)</span><br>
-        <span id="cart-total" style="font-size: 18px; font-weight: bold;">$0</span>
-    </div>
-    <button class="order-now" onclick="openCart()">VOIR LE PANIER</button>
+<div id="cart-badge" onclick="showCart()">
+    🛒 <span id="cart-count">0</span> articles
 </div>
 
-<div id="modal-cart">
+<div id="modal">
     <div class="modal-content">
-        <h3 style="font-family: 'Alex Brush'; font-size: 30px;">Ton Panier</h3>
-        <div id="cart-items-list"></div>
-        <hr>
-        <input type="text" id="user-name" placeholder="Ton Nom Complet">
-        <input type="text" id="user-addr" placeholder="Adresse de livraison">
-        <button class="order-now" style="width: 100%;" onclick="sendWhatsApp()">COMMANDER TOUT SUR WHATSAPP</button>
-        <p onclick="closeCart()" style="cursor:pointer; color: #aaa; margin-top: 10px;">Continuer mes achats</p>
+        <h3 id="m-title"></h3>
+        <p id="m-price" style="font-weight: bold; color: #1e3a8a;"></p>
+        <p>Couleur :</p>
+        <div id="colors">
+            <div class="dot" style="background:#1e3a8a" onclick="setCol('Bleu', this)"></div>
+            <div class="dot" style="background:#000" onclick="setCol('Noir', this)"></div>
+            <div class="dot" style="background:#a855f7" onclick="setCol('Violet', this)"></div>
+        </div>
+        <button class="btn" onclick="addToCart()">AJOUTER AU PANIER</button>
+        <p onclick="closeM()" style="cursor:pointer; color: #aaa; margin-top: 15px;">Annuler</p>
+    </div>
+</div>
+
+<div id="cart-modal">
+    <div class="modal-content">
+        <h3>Mon Panier</h3>
+        <div id="cart-items" style="text-align: left; margin-bottom: 20px; max-height: 200px; overflow-y: auto;"></div>
+        <input type="text" id="c-name" placeholder="Nom Complet">
+        <input type="text" id="c-addr" placeholder="Adresse">
+        <button class="btn" onclick="sendOrder()">COMMANDER SUR WHATSAPP</button>
+        <p onclick="closeCart()" style="cursor:pointer; color: #aaa; margin-top: 15px;">Continuer mes achats</p>
     </div>
 </div>
 
 <script>
     let cart = [];
-    const products = [
-        { id: 1, name: "Veste Luxe", price: 150, img: "badg noir.JPG" },
-        { id: 2, name: "Chaussure Luther", price: 120, img: "badg bleu.JPG" },
-        { id: 3, name: "Short Été", price: 65, img: "badg rouge.JPG" }
-    ];
+    let tempItem = {};
 
-    // Générer 100 articles
-    const list = document.getElementById('list');
-    for(let i=1; i<=100; i++) {
-        let p = products[i % 3];
-        let card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-            <img src="${p.img}">
-            <div style="font-weight:600; font-size:14px; margin-top:5px;">${p.name} #${i}</div>
-            <div style="color:#1e3a8a; font-weight:bold;">$${p.price}</div>
-            <button class="add-btn" onclick="addToCart('${p.name} #${i}', ${p.price})">Ajouter</button>
-        `;
-        list.appendChild(card);
+    function load() {
+        const list = document.getElementById('list');
+        for(let i=1; i<=20; i++) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `<img src="badg noir.JPG"><div class="card-name">Article Luxe #${i}</div><div class="card-price">$85</div>`;
+            card.onclick = () => {
+                tempItem = { name: "Article Luxe #"+i, price: "$85", color: "" };
+                document.getElementById('m-title').innerText = tempItem.name;
+                document.getElementById('m-price').innerText = tempItem.price;
+                document.getElementById('modal').style.display = 'flex';
+            };
+            list.appendChild(card);
+        }
     }
 
-    function addToCart(name, price) {
-        cart.push({ name, price });
-        updateCartBar();
+    function setCol(c, el) {
+        tempItem.color = c;
+        document.querySelectorAll('.dot').forEach(d => d.classList.remove('active'));
+        el.classList.add('active');
     }
 
-    function updateCartBar() {
-        document.getElementById('cart-count').innerText = cart.length + " article(s)";
-        let total = cart.reduce((sum, item) => sum + item.price, 0);
-        document.getElementById('cart-total').innerText = "$" + total;
+    function addToCart() {
+        if(!tempItem.color) return alert("Choisis une couleur !");
+        cart.push({...tempItem});
+        updateBadge();
+        closeM();
     }
 
-    function openCart() {
-        if(cart.length === 0) return alert("Ton panier est vide !");
-        const listDiv = document.getElementById('cart-items-list');
-        listDiv.innerHTML = cart.map(item => `<div class="cart-item"><span>${item.name}</span><b>$${item.price}</b></div>`).join('');
-        document.getElementById('modal-cart').style.display = 'flex';
+    function updateBadge() {
+        document.getElementById('cart-count').innerText = cart.length;
     }
 
-    function closeCart() { document.getElementById('modal-cart').style.display = 'none'; }
+    function showCart() {
+        if(cart.length === 0) return alert("Le panier est vide !");
+        const container = document.getElementById('cart-items');
+        container.innerHTML = cart.map((item, index) => 
+            `<div style="border-bottom: 1px solid #eee; padding: 5px 0;">
+                <b>${item.name}</b> (${item.color}) - ${item.price} 
+                <span onclick="removeItem(${index})" style="color:red; float:right; cursor:pointer;">❌</span>
+            </div>`
+        ).join('');
+        document.getElementById('cart-modal').style.display = 'flex';
+    }
 
-    function sendWhatsApp() {
-        const name = document.getElementById('user-name').value;
-        const addr = document.getElementById('user-addr').value;
-        if(!name || !addr) return alert("Remplis tes infos !");
+    function removeItem(i) { cart.splice(i, 1); updateBadge(); showCart(); if(cart.length===0) closeCart(); }
 
-        let total = cart.reduce((sum, item) => sum + item.price, 0);
-        let listText = cart.map(item => "- " + item.name + " ($" + item.price + ")").join('%0A');
+    function sendOrder() {
+        const n = document.getElementById('c-name').value;
+        const a = document.getElementById('c-addr').value;
+        if(!n || !a) return alert("Remplis tes infos !");
         
-        let message = `💎 *NOUVELLE COMMANDE LUTHER*%0A%0A*Client:* ${name}%0A*Adresse:* ${addr}%0A%0A*Articles:*%0A${listText}%0A%0A*TOTAL:* $${total}`;
-        
-        window.location.href = `https://wa.me/261339622155?text=${message}`;
+        let listTxt = cart.map(i => `- ${i.name} (${i.color}) : ${i.price}`).join('%0A');
+        const msg = `💎 *NOUVELLE COMMANDE MULTIPLE*%0A%0A*Client:* ${n}%0A*Adresse:* ${a}%0A%0A*Articles:*%0A${listTxt}`;
+        window.location.href = `https://wa.me/261339622155?text=${msg}`;
     }
+
+    function closeM() { document.getElementById('modal').style.display = 'none'; }
+    function closeCart() { document.getElementById('cart-modal').style.display = 'none'; }
+    
+    window.onload = load;
 </script>
 </body>
 </html>
