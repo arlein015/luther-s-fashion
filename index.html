@@ -10,68 +10,60 @@
         :root { --gold: #c5a059; --dark: #000; --light: #f4f4f4; }
         body { font-family: 'Montserrat', sans-serif; margin: 0; padding: 0; background: #fff; color: var(--dark); overflow-x: hidden; }
 
-/* --- HEADER TOUT-EN-UN ALIGNÉ --- */
+/* HEADER RESPONSIVE FINAL */
 .header-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 8px;
     background: #fff;
-    gap: 8px;
+    padding: 10px;
     border-bottom: 1px solid #eee;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
 }
 
-.logo-brand {
-    font-weight: 900;
-    font-size: 14px; /* Plus petit pour laisser de la place aux icônes */
-    text-decoration: none;
-    color: #000;
-    white-space: nowrap;
+/* Ligne du haut : Logo uniquement */
+.header-top {
+    text-align: left;
+    margin-bottom: 10px;
 }
 
-/* Barre de recherche flexible */
-.search-box {
-    flex: 1; /* Prend tout l'espace disponible au centre */
-    position: relative;
+/* Ligne du bas : Recherche + TOUTES les icônes */
+.header-bottom {
     display: flex;
     align-items: center;
+    gap: 10px;
+}
+
+.search-box {
+    flex: 1; /* La recherche prend l'espace restant */
+    position: relative;
 }
 
 .search-box input {
     width: 100%;
-    padding: 6px 25px;
-    border-radius: 15px;
+    padding: 8px 30px;
+    border-radius: 20px;
     border: 1px solid #ddd;
-    background: #f2f2f2;
-    font-size: 11px;
+    background: #f5f5f5;
+    font-size: 13px;
 }
 
 /* Groupe d'icônes à droite */
-.icons-actions {
+.icon-group {
     display: flex;
     align-items: center;
-    gap: 8px; /* Espace serré comme sur ton image */
-    font-size: 15px;
+    gap: 12px;
+    font-size: 18px;
 }
 
-.lang-text { font-size: 10px; font-weight: bold; }
-
-.cart-wrapper {
+.cart-icon {
     position: relative;
-    cursor: pointer;
 }
 
 #cart-count {
     position: absolute;
-    top: -6px;
-    right: -6px;
+    top: -8px;
+    right: -8px;
     background: #d91818;
     color: #fff;
-    font-size: 8px;
-    padding: 1px 4px;
+    font-size: 9px;
+    padding: 2px 5px;
     border-radius: 50%;
 }
 
@@ -83,39 +75,32 @@
     LIVRAISON GRATUITE +50$
 </div>
 
-<div class="header-main" style="display:flex; align-items:center; padding:10px; gap:10px; background:#fff;">
-    <a href="#" class="logo-brand" style="font-weight:900; font-size:18px; text-decoration:none; color:#000;">LUTHERFASHION</a>
-    
-    <div class="search-wrapper" style="flex:1; position:relative;">
-        <i class="fas fa-search" style="position:absolute; left:10px; top:10px; color:#888; font-size:12px;"></i>
-        <input type="text" class="search-input" placeholder="Rechercher..." style="width:100%; padding:8px 30px; border-radius:20px; border:1px solid #ddd; background:#f5f5f5; font-size:12px;">
-        <i class="fas fa-camera" style="position:absolute; right:10px; top:10px; color:#888; font-size:12px;"></i>
+<div class="header-top">
+        <a href="#" style="font-weight:900; font-size:20px; text-decoration:none; color:#000;">LUTHERFASHION</a>
     </div>
 
-    <div class="header-actions" style="display:flex; align-items:center; gap:10px; font-size:16px;">
-        <span style="font-size:11px; font-weight:bold;">FR</span>
-        <i class="far fa-user"></i>
-        <i class="far fa-heart"></i>
-        <div class="cart-btn" id="open-cart" style="position:relative;">
-            <i class="fas fa-shopping-bag"></i>
-            <span id="cart-count" style="position:absolute; top:-7px; right:-7px; background:#d91818; color:#fff; font-size:9px; padding:2px 4px; border-radius:50%;">0</span>
+    <div class="header-bottom">
+        <div class="search-box">
+            <i class="fas fa-search" style="position:absolute; left:10px; top:10px; color:#888; font-size:12px;"></i>
+            <input type="text" placeholder="Rechercher...">
+            <i class="fas fa-camera" style="position:absolute; right:10px; top:10px; color:#888; font-size:12px;"></i>
+        </div>
+
+        <div class="icon-group">
+            <span style="font-size:12px; font-weight:bold;">FR</span>
+            <i class="far fa-user"></i> <i class="far fa-heart"></i> <div class="cart-icon" id="open-cart">
+                <i class="fas fa-shopping-bag"></i> <span id="cart-count">0</span>
+            </div>
         </div>
     </div>
-</div>
+</header>
 
-<nav style="display:flex; align-items:center; gap:15px; padding:10px; background:#fff; border-bottom:1px solid #eee; overflow-x:auto;">
-    <i class="fas fa-bars" style="font-size:20px; color:#d91818; margin-right:5px;"></i> 
-    
+<nav style="display:flex; align-items:center; gap:15px; padding:10px; border-bottom:1px solid #eee; overflow-x:auto;">
+    <i class="fas fa-bars" style="font-size:20px; color:#000;"></i> 
     <a href="#" style="text-decoration:none; color:#000; font-size:11px; font-weight:bold; white-space:nowrap;">FEMMES</a>
-    <a href="#" style="text-decoration:none; color:#000; font-size:11px; font-weight:bold; white-space:nowrap;">PLUS+CURVE</a>
     <a href="#" style="text-decoration:none; color:#000; font-size:11px; font-weight:bold; white-space:nowrap;">HOMMES</a>
-    <span style="position:relative; white-space:nowrap;">
-        <a href="#" style="text-decoration:none; color:#000; font-size:11px; font-weight:bold;">NOUVEAUTÉS</a>
-        <small style="position:absolute; top:-10px; right:-5px; background:#d91818; color:#fff; font-size:7px; padding:1px 3px; border-radius:3px;">NEW</small>
-    </span>
     <a href="#" style="text-decoration:none; color:#000; font-size:11px; font-weight:bold; white-space:nowrap;">SOLDES</a>
 </nav>
-
 
 <nav style="display:flex; justify-content:center; gap:15px; padding:10px; overflow-x:auto; font-size:11px; font-weight:bold;">
     <a href="#" style="text-decoration:none; color:#000;">FEMMES</a>
