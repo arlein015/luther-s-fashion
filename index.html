@@ -3,72 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther Fashion - Boutique Mobile</title>
+    <title>Luther Fashion - Boutique Complète</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Montserrat', sans-serif; background-color: #fff; color: #000; }
+        body { font-family: 'Montserrat', sans-serif; background-color: #fff; color: #000; overflow-x: hidden; }
 
-        /* BARRE DE LIVRAISON */
+        /* --- ÉLÉMENTS FIXES --- */
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 2000; }
+        #overlay.active { display: block; }
+
+        /* --- HEADER & NAV --- */
         .top-promo { background: #000; color: #fff; text-align: center; padding: 6px; font-size: 10px; font-weight: bold; }
-
-        /* HEADER PRINCIPAL */
         .main-header { padding: 10px 15px; border-bottom: 1px solid #eee; background: #fff; position: sticky; top: 0; z-index: 1000; }
-        
         .logo-row { margin-bottom: 10px; }
         .logo-text { font-weight: 900; font-size: 20px; text-decoration: none; color: #000; letter-spacing: -1px; }
-
         .search-icon-row { display: flex; align-items: center; gap: 10px; }
-
-        /* Barre de recherche flexible */
         .search-container { flex: 1; position: relative; }
         .search-container input { width: 100%; padding: 8px 30px; border-radius: 20px; border: 1px solid #ddd; background: #f5f5f5; font-size: 13px; }
         .search-container .fa-search { position: absolute; left: 10px; top: 10px; color: #888; font-size: 12px; }
-        .search-container .fa-camera { position: absolute; right: 10px; top: 10px; color: #888; font-size: 12px; }
-
-        /* Groupe d'icônes à droite */
         .action-icons { display: flex; align-items: center; gap: 12px; font-size: 18px; }
-        .lang { font-size: 11px; font-weight: 900; }
-        
         .cart-wrapper { position: relative; cursor: pointer; }
         #cart-count { position: absolute; top: -7px; right: -7px; background: #d91818; color: #fff; font-size: 9px; padding: 2px 5px; border-radius: 50%; font-weight: bold; }
-
-        /* NAVIGATION AVEC MENU BURGER À GAUCHE */
-        .nav-bar { display: flex; align-items: center; gap: 15px; padding: 10px 15px; border-bottom: 1px solid #eee; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
-        .nav-bar .fa-bars { font-size: 20px; cursor: pointer; }
+        
+        .nav-bar { display: flex; align-items: center; gap: 15px; padding: 10px 15px; border-bottom: 1px solid #eee; overflow-x: auto; white-space: nowrap; }
         .nav-bar a { text-decoration: none; color: #000; font-size: 11px; font-weight: 700; text-transform: uppercase; }
 
-        /* BANNIÈRE PROMO */
-        .hero-banner { width: 100%; height: auto; background: #000; color: #fff; text-align: center; padding: 40px 20px; }
-        .hero-banner h1 { font-size: 32px; font-weight: 900; line-height: 1; margin-bottom: 10px; }
-        .hero-banner p { font-size: 14px; margin-bottom: 20px; opacity: 0.9; }
-        .hero-banner .btn-shop { background: #fff; color: #000; padding: 12px 30px; border: none; font-weight: 900; font-size: 12px; text-transform: uppercase; cursor: pointer; }
+        /* --- MENU LATÉRAL (SIDEBAR) --- */
+        #sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: #fff; z-index: 2001; transition: 0.3s; padding: 20px; }
+        #sidebar.active { left: 0; }
+        .side-link { display: block; padding: 15px 0; border-bottom: 1px solid #eee; text-decoration: none; color: #000; font-weight: bold; font-size: 14px; }
 
-        /* GRILLE PRODUITS */
+        /* --- FILTRES --- */
+        .filter-bar { display: flex; justify-content: space-around; padding: 15px; border-bottom: 1px solid #eee; background: #fafafa; }
+        .filter-item { font-size: 12px; font-weight: bold; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+
+        /* --- PRODUITS & BANNIÈRE --- */
+        .hero-banner { background: #000; color: #fff; text-align: center; padding: 40px 20px; }
         .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
         .product-card { border: 1px solid #f0f0f0; }
-        .product-card img { width: 100%; display: block; }
-        .product-info { padding: 10px; text-align: left; }
-        .product-name { font-size: 11px; color: #333; margin-bottom: 5px; height: 30px; overflow: hidden; }
-        .product-price { font-weight: 900; color: #d91818; font-size: 14px; margin-bottom: 10px; }
-        .add-cart-btn { width: 100%; background: #000; color: #fff; border: none; padding: 8px; font-size: 10px; font-weight: bold; cursor: pointer; }
+        .add-cart-btn { width: 100%; background: #000; color: #fff; border: none; padding: 8px; font-weight: bold; cursor: pointer; }
 
-        /* PANIER */
-        #cart-drawer { position: fixed; top: 0; right: -100%; width: 85%; height: 100%; background: #fff; z-index: 2001; transition: 0.3s; padding: 20px; display: flex; flex-direction: column; box-shadow: -5px 0 15px rgba(0,0,0,0.1); }
+        /* --- FOOTER --- */
+        footer { background: #f9f9f9; padding: 40px 20px; border-top: 1px solid #eee; margin-top: 20px; }
+        .footer-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
+        .footer-col h4 { font-size: 14px; margin-bottom: 15px; text-transform: uppercase; }
+        .footer-col p, .footer-col a { font-size: 12px; color: #666; text-decoration: none; display: block; margin-bottom: 10px; }
+        .social-icons { display: flex; gap: 20px; font-size: 20px; margin-top: 10px; }
+
+        /* --- PANIER --- */
+        #cart-drawer { position: fixed; top: 0; right: -100%; width: 300px; height: 100%; background: #fff; z-index: 2001; transition: 0.3s; padding: 20px; box-shadow: -5px 0 15px rgba(0,0,0,0.1); }
         #cart-drawer.active { right: 0; }
-        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 2000; }
-        #overlay.active { display: block; }
-        .cart-item { display: flex; align-items: center; gap: 10px; padding-bottom: 15px; border-bottom: 1px solid #eee; margin-bottom: 15px; }
-        .cart-item img { width: 50px; height: 70px; object-fit: cover; }
-        .cart-item-details { flex: 1; font-size: 11px; }
-        .cart-item-details b { display: block; margin-bottom: 3px; }
-        .remove-icon { color: #999; cursor: pointer; font-size: 14px; }
     </style>
 </head>
 <body>
 
 <div id="overlay"></div>
+
+<div id="sidebar">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+        <h2 style="font-size:18px;">MENU</h2>
+        <i class="fas fa-times" id="close-sidebar" style="font-size:20px;"></i>
+    </div>
+    <a href="#" class="side-link">FEMMES</a>
+    <a href="#" class="side-link">HOMMES</a>
+    <a href="#" class="side-link">ACCESSOIRES</a>
+    <a href="#" class="side-link">MON COMPTE</a>
+    <a href="#" class="side-link" style="color:red;">SOLDES</a>
+</div>
 
 <div class="top-promo">LIVRAISON GRATUITE +50$</div>
 
@@ -80,13 +83,12 @@
         <div class="search-container">
             <i class="fas fa-search"></i>
             <input type="text" placeholder="Rechercher...">
-            <i class="fas fa-camera"></i>
         </div>
         <div class="action-icons">
-            <span class="lang">FR</span>
+            <span style="font-size:11px; font-weight:900;">FR</span>
             <i class="far fa-user"></i>
             <i class="far fa-heart"></i>
-            <div class="cart-wrapper" id="btn-open-cart">
+            <div class="cart-wrapper" id="open-cart">
                 <i class="fas fa-shopping-bag"></i>
                 <span id="cart-count">0</span>
             </div>
@@ -95,98 +97,84 @@
 </header>
 
 <nav class="nav-bar">
-    <i class="fas fa-bars"></i>
-    <a href="#">FEMMES</a>
+    <i class="fas fa-bars" id="burger-menu"></i> <a href="#">FEMMES</a>
     <a href="#">HOMMES</a>
-    <a href="#" style="position:relative;">NOUVEAUTÉS <small style="position:absolute; top:-8px; right:-12px; background:#d91818; color:#fff; font-size:6px; padding:1px 3px; border-radius:2px;">NEW</small></a>
     <a href="#">SOLDES</a>
 </nav>
 
+<div class="filter-bar">
+    <div class="filter-item"><i class="fas fa-sliders-h"></i> Filtrer</div>
+    <div class="filter-item">Trier par <i class="fas fa-chevron-down"></i></div>
+</div>
+
 <div class="hero-banner">
     <h1>60-80% DE RÉDUCTION</h1>
-    <p>La collection d'été est arrivée</p>
-    <button class="btn-shop">ACHETER MAINTENANT</button>
+    <button class="btn-shop">VOIR TOUT</button>
 </div>
 
 <div class="product-grid" id="grid"></div>
 
-<div id="cart-drawer">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-        <h3 style="font-size:16px;">PANIER</h3>
-        <i class="fas fa-times" id="btn-close-cart" style="font-size:20px;"></i>
-    </div>
-    <div id="cart-list" style="flex:1; overflow-y:auto;"></div>
-    <div style="border-top:2px solid #000; padding-top:15px;">
-        <div style="display:flex; justify-content:space-between; font-weight:900; margin-bottom:10px;">
-            <span>TOTAL</span>
-            <span id="total-price">0,00 $</span>
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h4>AIDE</h4>
+            <a href="#">Suivre ma commande</a>
+            <a href="#">Retours & Échanges</a>
+            <a href="#">Contactez-nous</a>
         </div>
-        <button style="width:100%; background:#000; color:#fff; padding:15px; border:none; font-weight:900; text-transform:uppercase;">Commander</button>
+        <div class="footer-col">
+            <h4>SUIVEZ-NOUS</h4>
+            <div class="social-icons">
+                <i class="fab fa-instagram"></i>
+                <i class="fab fa-tiktok"></i>
+                <i class="fab fa-facebook"></i>
+            </div>
+        </div>
     </div>
+    <p style="text-align:center; margin-top:40px; font-size:10px; color:#999;">&copy; 2024 LUTHERFASHION. TOUS DROITS RÉSERVÉS.</p>
+</footer>
+
+<div id="cart-drawer">
+    <h3 style="margin-bottom:20px;">PANIER</h3>
+    <div id="cart-list"></div>
+    <button style="width:100%; background:#000; color:#fff; padding:15px; margin-top:20px;">COMMANDER</button>
 </div>
 
 <script>
-    const inventory = [
-        { id: 1, name: "Nouée au travail ensemble jupe - Gris", price: "37,99 $", img: "badg noir.JPG" },
-        { id: 2, name: "Robe Maxi plissée Corset - Crème", price: "67,99 $", img: "badg noir.JPG" }
-    ];
-
-    let myCart = [];
-
-    // Fonctions Panier
-    const drawer = document.getElementById('cart-drawer');
+    // GESTION SIDEBAR
+    const sidebar = document.getElementById('sidebar');
+    const burger = document.getElementById('burger-menu');
+    const closeSide = document.getElementById('close-sidebar');
     const overlay = document.getElementById('overlay');
 
-    document.getElementById('btn-open-cart').onclick = () => { drawer.classList.add('active'); overlay.classList.add('active'); };
-    document.getElementById('btn-close-cart').onclick = () => { drawer.classList.remove('active'); overlay.classList.remove('active'); };
-    overlay.onclick = () => { drawer.classList.remove('active'); overlay.classList.remove('active'); };
+    burger.onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
+    closeSide.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
+    overlay.onclick = () => { 
+        sidebar.classList.remove('active'); 
+        document.getElementById('cart-drawer').classList.remove('active');
+        overlay.classList.remove('active'); 
+    };
 
-    function addItem(idx) {
-        myCart.push(inventory[idx]);
-        updateDisplay();
-        drawer.classList.add('active');
-        overlay.classList.add('active');
-    }
+    // PANIER
+    document.getElementById('open-cart').onclick = () => { 
+        document.getElementById('cart-drawer').classList.add('active'); 
+        overlay.classList.add('active'); 
+    };
 
-    function removeItem(idx) {
-        myCart.splice(idx, 1);
-        updateDisplay();
-    }
+    // PRODUITS
+    const products = [
+        { name: "Ensemble Jupe - Gris", price: "37,99 $", img: "badg noir.JPG" },
+        { name: "Robe Corset - Crème", price: "67,99 $", img: "badg noir.JPG" }
+    ];
 
-    function updateDisplay() {
-        document.getElementById('cart-count').innerText = myCart.length;
-        const list = document.getElementById('cart-list');
-        
-        if(myCart.length === 0) {
-            list.innerHTML = '<p style="text-align:center; color:#999; margin-top:30px;">Votre panier est vide</p>';
-            document.getElementById('total-price').innerText = "0,00 $";
-            return;
-        }
-
-        list.innerHTML = myCart.map((item, i) => `
-            <div class="cart-item">
-                <img src="${item.img}">
-                <div class="cart-item-details">
-                    <b>${item.name}</b>
-                    <span style="color:#d91818; font-weight:900;">${item.price}</span>
-                </div>
-                <i class="fas fa-trash-alt remove-icon" onclick="removeItem(${i})"></i>
-            </div>
-        `).join('');
-
-        let sum = myCart.reduce((a, b) => a + parseFloat(b.price.replace('$', '').replace(',', '.')), 0);
-        document.getElementById('total-price').innerText = sum.toFixed(2).replace('.', ',') + " $";
-    }
-
-    // Affichage des produits
-    document.getElementById('grid').innerHTML = inventory.map((p, i) => `
+    document.getElementById('grid').innerHTML = products.map((p, i) => `
         <div class="product-card">
-            <img src="${p.img}">
-            <div class="product-info">
-                <div class="product-name">${p.name}</div>
-                <div class="product-price">${p.price}</div>
-                <button class="add-cart-btn" onclick="addItem(${i})">AJOUTER AU PANIER</button>
+            <img src="${p.img}" style="width:100%">
+            <div style="padding:10px">
+                <p style="font-size:11px">${p.name}</p>
+                <p style="font-weight:900; color:red">${p.price}</p>
             </div>
+            <button class="add-cart-btn">AJOUTER</button>
         </div>
     `).join('');
 </script>
