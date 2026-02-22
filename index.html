@@ -9,7 +9,7 @@
     <style>
         :root { --accent: #FF0000; --bg: #ffffff; --glass: rgba(255, 255, 255, 0.8); }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: #000; }
+        body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: #000; scroll-behavior: smooth; }
 
         /* --- HEADER DESIGN --- */
         header { padding: 15px; background: var(--glass); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05); }
@@ -34,12 +34,12 @@
         .card:hover { transform: scale(1.02); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
         .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
         
-        /* Badge Stylé */
         .badge { position: absolute; top: 10px; left: 10px; background: var(--accent); color: #fff; padding: 4px 10px; font-size: 10px; font-weight: 900; border-radius: 4px; z-index: 10; }
         
         .card-body { padding: 12px; }
         .price { font-size: 18px; font-weight: 900; color: var(--accent); margin: 5px 0; }
-        .buy-btn { width: 100%; background: linear-gradient(45deg, #000, #333); color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 900; font-size: 11px; cursor: pointer; }
+        .buy-btn { width: 100%; background: linear-gradient(45deg, #000, #333); color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 900; font-size: 11px; cursor: pointer; transition: 0.3s; }
+        .buy-btn.added { background: #28a745; }
 
         /* --- POSTE PREMIUM (TOUS LES 2 RANGS) --- */
         .promo-card { grid-column: 1 / -1; background: #000; color: #fff; border-radius: 20px; padding: 25px; display: flex; align-items: center; justify-content: space-between; overflow: hidden; position: relative; }
@@ -49,6 +49,9 @@
         /* --- FOOTER --- */
         footer { background: #000; color: #fff; padding: 50px 20px; border-radius: 30px 30px 0 0; text-align: center; }
         .social { display: flex; justify-content: center; gap: 25px; margin: 30px 0; font-size: 22px; }
+
+        /* --- BACK TO TOP BUTTON --- */
+        #backToTop { position: fixed; bottom: 20px; right: 20px; background: #000; color: #fff; width: 45px; height: 45px; border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 1001; border: 2px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer; }
     </style>
 </head>
 <body>
@@ -60,9 +63,9 @@
             <i class="fas fa-search"></i>
             <input type="text" placeholder="Trouve ton style...">
         </div>
-        <div style="position:relative;">
+        <div style="position:relative; cursor:pointer;" id="cart-icon">
             <i class="fas fa-shopping-bag" style="font-size:20px;"></i>
-            <span style="position:absolute; top:-5px; right:-5px; background:red; color:white; font-size:9px; padding:2px 5px; border-radius:50%;">0</span>
+            <span id="cart-count" style="position:absolute; top:-5px; right:-5px; background:red; color:white; font-size:9px; padding:2px 5px; border-radius:50%;">0</span>
         </div>
     </div>
 </header>
@@ -71,7 +74,7 @@
     <a href="#" class="nav-item active">Nouveautés</a>
     <a href="#" class="nav-item">Femmes</a>
     <a href="#" class="nav-item">Hommes</a>
-    <a href="#" class="nav-item sale-link">Soldes</a>
+    <a href="#" class="nav-item" style="color:red;">Soldes</a>
 </div>
 
 <div class="filter-bar">
@@ -90,22 +93,24 @@
     <div style="font-size:10px; color:#555;">© 2026 LUTHER FASHION - DESIGNED FOR YOU</div>
 </footer>
 
+<div id="backToTop" onclick="window.scrollTo(0,0)"><i class="fas fa-chevron-up"></i></div>
+
 <script>
     const container = document.getElementById('shop-grid');
+    let count = 0;
     
     // Génération stylée de 30 postes
     for (let i = 1; i <= 30; i++) {
         const pPrice = (Math.random() * (99 - 25) + 25).toFixed(2);
-        const pImg = i % 2 === 0 ? 'Veste vert.jpg' : 'veste jaune.jpg'; //
+        const pImg = i % 2 === 0 ? 'Veste vert.jpg' : 'veste jaune.jpg';
         
-        // Tous les 4 produits (soit 2 rangs), on insère un poste stylé premium
         if (i % 5 === 0) {
             container.innerHTML += `
                 <div class="promo-card">
                     <div class="promo-content">
                         <span style="color:red; font-size:10px; font-weight:900;">OFFRE LIMITÉE</span>
                         <h3>LUXE STREETWEAR<br>COLLECTION #${i}</h3>
-                        <button style="padding:8px 15px; border-radius:50px; border:none; font-weight:900; font-size:10px;">SHOP NOW</button>
+                        <button style="padding:10px 20px; border-radius:50px; border:none; font-weight:900; font-size:10px; cursor:pointer;">SHOP NOW</button>
                     </div>
                     <img src="${pImg}">
                 </div>
@@ -119,12 +124,32 @@
                         <div style="font-size:11px; color:#666;">Luther Selection</div>
                         <div style="font-weight:700; font-size:13px; margin:2px 0;">Veste Edition #${i}</div>
                         <div class="price">${pPrice} $</div>
-                        <button class="buy-btn">AJOUTER AU PANIER</button>
+                        <button class="buy-btn" onclick="addToCart(this)">AJOUTER AU PANIER</button>
                     </div>
                 </div>
             `;
         }
     }
+
+    function addToCart(btn) {
+        count++;
+        document.getElementById('cart-count').innerText = count;
+        btn.innerText = "AJOUTÉ !";
+        btn.classList.add('added');
+        setTimeout(() => {
+            btn.innerText = "AJOUTER AU PANIER";
+            btn.classList.remove('added');
+        }, 1500);
+    }
+
+    window.onscroll = function() {
+        const btt = document.getElementById("backToTop");
+        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+            btt.style.display = "flex";
+        } else {
+            btt.style.display = "none";
+        }
+    };
 </script>
 
 </body>
