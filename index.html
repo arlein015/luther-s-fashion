@@ -149,16 +149,25 @@
 </div>
 
 <script>
-    // --- INVENTAIRE AVEC NOMS DE FICHIERS NETTOYÉS ---
+    // --- INVENTAIRE CORRIGÉ POUR TES FICHIERS GITHUB ---
     const products = [
-        { name: "Veste Stylée - Jaune", price: "45,00 $", img: "veste-jaune.jpg" },
-        { name: "Veste Fashion - Vert", price: "55,00 $", img: "veste-vert.jpg" }
+        { 
+            name: "Veste Stylée - Jaune", 
+            price: "45,00 $", 
+            // On utilise l'espace tel qu'il apparaît sur ta capture
+            img: "veste jaune.jpg" 
+        },
+        { 
+            name: "Veste Fashion - Vert", 
+            price: "55,00 $", 
+            // Attention : ici le "V" est en majuscule comme sur ta capture
+            img: "Veste vert.jpg" 
+        }
     ];
 
     let cart = [];
 
-    // ... (garde le reste du code identique pour la sidebar et le panier)
-    
+    // --- LE RESTE DU CODE (NE PAS CHANGER) ---
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
     const drawer = document.getElementById('cart-drawer');
@@ -204,13 +213,13 @@
                 <i class="fas fa-trash-alt" onclick="removeItem(${i})" style="cursor:pointer; color:#ccc;"></i>
             </div>
         `).join('');
-        let total = cart.reduce((s, p) => s + parseFloat(p.price), 0);
-        document.getElementById('total-price').innerText = total.toFixed(2) + " $";
+        let total = cart.reduce((s, p) => s + parseFloat(p.price.replace('$', '').replace(',', '.')), 0);
+        document.getElementById('total-price').innerText = total.toFixed(2).replace('.', ',') + " $";
     }
 
     document.getElementById('grid').innerHTML = products.map((p, i) => `
         <div class="product-card">
-            <img src="${p.img}">
+            <img src="${p.img}" onerror="this.src='https://via.placeholder.com/150?text=Image+Non+Trouvée'">
             <div style="padding:10px;">
                 <p style="font-size:11px; height:30px; overflow:hidden;">${p.name}</p>
                 <p style="font-weight:900; color:red; margin-bottom:10px;">${p.price}</p>
