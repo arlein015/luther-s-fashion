@@ -14,85 +14,70 @@
         .promo-header { background: var(--dark); color: #fff; text-align: center; padding: 10px; font-size: 11px; letter-spacing: 2px; font-weight: bold; }
         .promo-header span { color: var(--gold); }
 
-       /* --- HEADER RESPONSIVE STYLE FASHION NOVA --- */
-.header-container {
+/* --- HEADER ALIGNÉ STYLE FASHION NOVA --- */
+.header-main {
     display: flex;
-    flex-direction: column; /* On empile sur 2 lignes pour mobile */
-    background: #fff;
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-/* Première ligne : Logo et Icônes */
-.header-top-row {
-    display: flex;
-    justify-content: space-between;
     align-items: center;
-    width: 100%;
-    margin-bottom: 10px;
+    padding: 10px 15px;
+    gap: 10px;
+    background: #fff;
+    border-bottom: 1px solid #eee;
 }
 
-.logo-mobile {
+.logo-brand {
     font-weight: 900;
     font-size: 18px;
-    letter-spacing: -1px;
     text-decoration: none;
     color: #000;
+    white-space: nowrap;
 }
 
-.header-icons-group {
-    display: flex;
-    align-items: center;
-    gap: 12px; /* Espacement entre les icônes */
-    font-size: 18px;
-}
-
-.lang-selector { font-size: 12px; font-weight: bold; }
-
-/* Deuxième ligne : Menu + Recherche + Panier */
-.header-bottom-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.search-container-mobile {
+/* Barre de recherche qui s'adapte */
+.search-wrapper {
     flex: 1;
     position: relative;
+    display: flex;
+    align-items: center;
 }
 
-.search-input-mobile {
+.search-input {
     width: 100%;
-    padding: 8px 35px;
+    padding: 8px 30px;
     border-radius: 20px;
     border: 1px solid #ddd;
     background: #f5f5f5;
     font-size: 13px;
 }
 
-.search-icon-inside { position: absolute; left: 10px; top: 10px; color: #888; font-size: 14px; }
-.camera-icon-inside { position: absolute; right: 10px; top: 10px; color: #888; font-size: 14px; }
+.search-icon { position: absolute; left: 10px; color: #888; font-size: 12px; }
+.camera-icon { position: absolute; right: 10px; color: #888; font-size: 12px; }
 
-/* Badge de panier */
-.cart-wrapper-mobile {
+/* Groupe d'icônes alignées à droite */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+}
+
+.lang-fr { font-size: 11px; font-weight: bold; }
+
+.cart-btn {
     position: relative;
-    font-size: 20px;
+    cursor: pointer;
 }
 
 #cart-count {
     position: absolute;
-    top: -8px;
-    right: -8px;
+    top: -7px;
+    right: -7px;
     background: #d91818;
     color: #fff;
     font-size: 9px;
-    padding: 2px 5px;
+    padding: 2px 4px;
     border-radius: 50%;
+    font-weight: bold;
 }
-
 .search-icon-left { position: absolute; left: 15px; top: 12px; color: #888; }
 .camera-icon-right { position: absolute; right: 15px; top: 12px; color: #888; }
 
@@ -127,39 +112,36 @@
     <div class="promo-header">LIVRAISON GRATUITE <span>+50$</span></div>
 
     <header>
-    <a href="#" class="logo" style="font-family: 'Montserrat', sans-serif; font-weight: 900; letter-spacing: -1px; font-size: 24px;">LUTHER<span style="font-weight: 300;">FASHION</span></a>
-    <div class="header-top-row">
-        <a href="#" class="logo-mobile">LUTHERFASHION</a>
-        <div class="header-icons-group">
-            <span class="lang-selector">FR</span>
-            <i class="far fa-user"></i>
-            <i class="far fa-heart"></i>
-            <i class="fas fa-bars"></i> </div>
-    </div>
+    <div class="header-main">
+    <a href="#" class="logo-brand">LUTHERFASHION</a>
     
-        <div class="header-bottom-row">
-        <div class="search-container-mobile">
-            <i class="fas fa-search search-icon-inside"></i>
-            <input type="text" class="search-input-mobile" placeholder="Rechercher...">
-            <i class="fas fa-camera camera-icon-inside"></i>
-        </div>
-        
-        <div class="cart-wrapper-mobile" id="open-cart">
+    <div class="search-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" class="search-input" placeholder="Rechercher...">
+        <i class="fas fa-camera camera-icon"></i>
+    </div>
+
+    <div class="header-actions">
+        <span class="lang-fr">FR</span>
+        <i class="far fa-user"></i>
+        <i class="far fa-heart"></i>
+        <div class="cart-btn" id="open-cart">
             <i class="fas fa-shopping-bag"></i>
             <span id="cart-count">0</span>
         </div>
+        <i class="fas fa-bars"></i>
     </div>
-</header>
-        <nav>
-       <a href="#">FEMMES</a>
-    <a href="#">PLUS + CURVE</a>
-    <a href="#">HOMMES</a>
-    <span class="nav-notification">
-        <a href="#" style="color: #000;">NOUVEAUTÉS</a>
-        <span class="badge-new">NEW</span>
+</div>
+
+<nav style="display:flex; justify-content:center; gap:15px; padding:10px; overflow-x:auto; font-size:11px; font-weight:bold;">
+    <a href="#" style="text-decoration:none; color:#000;">FEMMES</a>
+    <a href="#" style="text-decoration:none; color:#000;">PLUS+CURVE</a>
+    <a href="#" style="text-decoration:none; color:#000;">HOMMES</a>
+    <span style="position:relative;">
+        <a href="#" style="text-decoration:none; color:#000;">NOUVEAUTÉS</a>
+        <small style="position:absolute; top:-10px; right:-5px; background:#d91818; color:#fff; font-size:7px; padding:1px 3px; border-radius:3px;">NEW</small>
     </span>
-    <a href="#">SOLDES</a>
-        </nav>
+</nav>
     </header>
 
     <section class="hero-sale">
