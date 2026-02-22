@@ -81,3 +81,127 @@
             <i class="fas fa-search"></i>
             <input type="text" placeholder="Rechercher des vêtements pour femmes">
             <i class="fas fa-camera"></i>
+        </div>
+        <div class="header-icons">
+            <i class="far fa-user"></i>
+            <i class="far fa-heart"></i>
+            <div class="cart-icon" id="open-cart">
+                <i class="fas fa-shopping-bag"></i>
+                <span id="cart-count">0</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<nav class="nav-scroll">
+    <i class="fas fa-bars"></i>
+    <a href="#">FEMMES</a>
+    <a href="#">HOMMES</a>
+    <a href="#">NOUVEAUTÉS</a>
+    <a href="#" class="sale">SOLDES</a>
+</nav>
+
+<div class="promo-banner">
+    <h2>60-80% DE RÉDUCTION</h2>
+    <button>VOIR TOUT</button>
+</div>
+
+<div class="section-title">ACHETEZ PAR CATÉGORIE</div>
+<div class="category-grid">
+    <div class="cat-card"><img src="veste jaune.jpg"><span>VESTES</span></div>
+    <div class="cat-card"><img src="Veste vert.jpg"><span>ENSEMBLES</span></div>
+    <div class="cat-card"><img src="veste jaune.jpg"><span>TOPS</span></div>
+    <div class="cat-card"><img src="Veste vert.jpg"><span>ACCESSOIRES</span></div>
+</div>
+
+<div class="section-title">NOS ARTICLES TENDANCES</div>
+<div class="products-grid" id="product-list"></div>
+
+<div id="cart-drawer">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
+        <h3 style="font-size:18px; font-weight:900;">MON PANIER</h3>
+        <i class="fas fa-times" id="close-cart" style="font-size:24px; cursor:pointer;"></i>
+    </div>
+    <div id="cart-content"></div>
+    <div style="border-top:2px solid #000; padding-top:20px; margin-top:20px;">
+        <div style="display:flex; justify-content:space-between; font-weight:900; font-size:18px;">
+            <span>TOTAL</span>
+            <span id="total-price">0,00 $</span>
+        </div>
+        <button style="width:100%; background:#000; color:#fff; padding:18px; border:none; margin-top:20px; font-weight:900; text-transform:uppercase;">Passer la commande</button>
+    </div>
+</div>
+
+<script>
+    // Inventaire utilisant tes fichiers GitHub
+    const products = [
+        { name: "Veste Stylée - Jaune", price: "45.00", img: "veste jaune.jpg" },
+        { name: "Veste Fashion - Vert", price: "55.00", img: "Veste vert.jpg" }
+    ];
+
+    let cart = [];
+
+    // --- LOGIQUE PANIER ---
+    function updateUI() {
+        const count = document.getElementById('cart-count');
+        const content = document.getElementById('cart-content');
+        const total = document.getElementById('total-price');
+        
+        count.innerText = cart.length;
+        
+        if(cart.length === 0) {
+            content.innerHTML = '<p style="text-align:center; color:#999; margin-top:30px;">Votre panier est vide</p>';
+            total.innerText = "0,00 $";
+            return;
+        }
+
+        content.innerHTML = cart.map((item, i) => `
+            <div class="cart-item">
+                <img src="${item.img}">
+                <div>
+                    <div style="font-size:12px; font-weight:700;">${item.name}</div>
+                    <div style="color:#d91818; font-weight:900; margin-top:5px;">${item.price} $</div>
+                </div>
+                <i class="fas fa-trash-alt remove-btn" onclick="removeFromCart(${i})"></i>
+            </div>
+        `).join('');
+
+        let sum = cart.reduce((acc, curr) => acc + parseFloat(curr.price), 0);
+        total.innerText = sum.toFixed(2).replace('.', ',') + " $";
+    }
+
+    function addToCart(idx) {
+        cart.push(products[idx]);
+        updateUI();
+        document.getElementById('cart-drawer').classList.add('active');
+        document.getElementById('overlay').classList.add('active');
+    }
+
+    function removeFromCart(idx) {
+        cart.splice(idx, 1);
+        updateUI();
+    }
+
+    // --- UI EVENTS ---
+    document.getElementById('open-cart').onclick = () => { document.getElementById('cart-drawer').classList.add('active'); document.getElementById('overlay').classList.add('active'); };
+    document.getElementById('close-cart').onclick = () => { document.getElementById('cart-drawer').classList.remove('active'); document.getElementById('overlay').classList.remove('active'); };
+    document.getElementById('overlay').onclick = () => { 
+        document.getElementById('cart-drawer').classList.remove('active'); 
+        document.getElementById('overlay').classList.remove('active'); 
+    };
+
+    // Initialisation de la liste des produits
+    document.getElementById('product-list').innerHTML = products.map((p, i) => `
+        <div class="p-card">
+            <img src="${p.img}">
+            <div class="p-details">
+                <div class="p-name">${p.name}</div>
+                <div class="p-price">${p.price} $</div>
+                <button class="add-cart-btn" onclick="addToCart(${i})">Ajouter au panier</button>
+            </div>
+        </div>
+    `).join('');
+</script>
+
+</body>
+</html>
