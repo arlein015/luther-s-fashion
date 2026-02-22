@@ -70,16 +70,43 @@
 
         /* --- BANNIÈRE PROMO --- */
         .hero-banner {
-            position: relative;
-            width: 100%;
-            height: 400px;
-            background: #000 url('badg noir.JPG') center/cover no-repeat;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: #fff;
-        }
+           /* AJUSTEMENT DE LA BANNIÈRE POUR LA LISIBILITÉ */
+.hero-banner {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    background: #000 url('badg noir.JPG') center/cover no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Aligne le contenu vers le haut au lieu du centre */
+    text-align: center;
+    color: #fff;
+    padding-top: 60px; /* Pousse le texte vers le haut */
+}
+
+.hero-content {
+    z-index: 5;
+    /* Ajoute une ombre pour que le texte ressorte sur l'image blanche */
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7); 
+}
+
+.hero-content h1 { 
+    font-size: 42px; 
+    margin-bottom: 20px; 
+    text-transform: uppercase;
+    font-weight: 800;
+}
+
+.shop-now-btn {
+    background: #fff;
+    color: #000;
+    padding: 12px 35px;
+    border: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.3);
+}
 
         .hero-content h1 { font-size: 35px; margin-bottom: 15px; text-transform: uppercase; }
         
@@ -137,6 +164,13 @@
     </style>
 </head>
 <body>
+    <div class="hero-banner">
+    <div class="hero-content">
+        <p style="font-size: 16px; margin-bottom: 5px; font-weight: 500;">La collection d'été est arrivée</p>
+        <h1>80% DE RÉDUCTION</h1>
+        <button class="shop-now-btn">ACHETER MAINTENANT</button>
+    </div>
+</div>
 
     <div id="cart-overlay"></div>
 
