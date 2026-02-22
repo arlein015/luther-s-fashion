@@ -3,17 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther Fashion | Boutique</title>
+    <title>Luther Fashion | Boutique Officielle</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Montserrat', sans-serif; background: #fff; color: #000; }
 
-        /* --- TOP PROMO --- */
-        .top-promo { background: #000; color: #fff; text-align: center; padding: 8px; font-size: 11px; font-weight: 700; }
-
         /* --- HEADER & NAV --- */
+        .top-promo { background: #000; color: #fff; text-align: center; padding: 8px; font-size: 11px; font-weight: 700; }
         header { padding: 10px 15px; background: #fff; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 1000; }
         .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
         .logo { font-weight: 900; font-size: 20px; text-decoration: none; color: #000; letter-spacing: -1px; }
@@ -23,154 +21,47 @@
         .search-container .fa-camera { position: absolute; right: 10px; top: 10px; color: #888; }
         .right-icons { display: flex; align-items: center; gap: 12px; font-size: 16px; }
         .notif-badge { position: absolute; top: -6px; right: -6px; background: #FF0000; color: #fff; font-size: 9px; padding: 2px 5px; border-radius: 50%; font-weight: 900; }
+        
         .nav-bar { display: flex; align-items: center; gap: 15px; padding: 10px 15px; border-bottom: 1px solid #eee; overflow-x: auto; white-space: nowrap; }
         .nav-bar a { text-decoration: none; color: #000; font-size: 11px; font-weight: 700; text-transform: uppercase; }
         .sale-link { color: #FF0000 !important; font-weight: 900; }
 
-        /* --- HERO BANNER --- */
-        .hero-banner { position: relative; width: 100%; height: 300px; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        /* --- BANNIÈRE --- */
+        .hero-banner { position: relative; width: 100%; height: 250px; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .hero-img { position: absolute; width: 100%; height: 100%; background: url('Veste vert.jpg') center/cover; opacity: 0.6; filter: blur(2px); }
         .hero-text { position: relative; z-index: 2; text-align: center; color: #fff; }
-        .hero-text h2 { font-size: 28px; font-weight: 900; margin-bottom: 15px; }
+        .hero-text h2 { font-size: 28px; font-weight: 900; margin-bottom: 10px; }
         .hero-text button { background: #fff; color: #000; border: none; padding: 10px 20px; font-weight: 900; text-transform: uppercase; }
 
         /* --- CATEGORIES --- */
-        .cat-section { padding: 15px; }
-        .cat-title { font-weight: 900; font-size: 14px; margin-bottom: 15px; text-transform: uppercase; }
-        .cat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; row-gap: 15px; }
+        .section-title { padding: 20px 15px 10px; font-weight: 900; font-size: 14px; text-transform: uppercase; }
+        .cat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 0 15px; margin-bottom: 20px; }
         .cat-card { text-align: center; font-size: 10px; font-weight: 700; text-transform: uppercase; }
         .cat-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 4px; margin-bottom: 5px; }
 
+        /* --- GRILLE DE 30 PRODUITS --- */
+        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
+        .p-card { border: 1px solid #f2f2f2; border-radius: 4px; overflow: hidden; background: #fff; }
+        .p-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
+        .p-info { padding: 10px; text-align: left; }
+        .p-name { font-size: 11px; color: #333; margin-bottom: 5px; height: 28px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .p-price { font-weight: 900; color: #FF0000; font-size: 15px; }
+        .add-btn { width: 100%; background: #000; color: #fff; border: none; padding: 10px; font-weight: 900; font-size: 10px; margin-top: 10px; text-transform: uppercase; cursor: pointer; }
+
         /* --- FOOTER --- */
         footer { background: #000; color: #fff; padding: 40px 20px; margin-top: 40px; }
-        .footer-menu { border-bottom: 1px solid #333; padding: 15px 0; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .footer-menu span { font-weight: 700; font-size: 13px; text-transform: uppercase; }
+        .footer-menu { border-bottom: 1px solid #333; padding: 15px 0; display: flex; justify-content: space-between; align-items: center; }
         .footer-newsletter { margin: 30px 0; }
-        .footer-newsletter h4 { font-size: 14px; font-weight: 900; margin-bottom: 15px; text-transform: uppercase; }
-        .input-group { position: relative; display: flex; }
-        .input-group input { width: 100%; padding: 15px; border: none; border-radius: 4px; font-size: 14px; }
-        .input-group button { position: absolute; right: 5px; top: 5px; height: 40px; width: 40px; border-radius: 50%; background: #f0f0f0; border: none; }
-        .social-icons { display: flex; gap: 20px; margin-top: 30px; font-size: 20px; justify-content: center; color: #ccc; }
-        .legal-text { font-size: 11px; color: #888; margin-top: 30px; line-height: 1.6; text-align: center; }
-        .copyright { font-size: 11px; color: #888; text-align: center; margin-top: 40px; }
+        .input-group { position: relative; display: flex; margin-top: 15px; }
+        .input-group input { width: 100%; padding: 15px; border-radius: 4px; border: none; }
+        .input-group button { position: absolute; right: 5px; top: 5px; height: 40px; width: 40px; border-radius: 50%; background: #eee; border: none; }
+        .social-icons { display: flex; gap: 20px; justify-content: center; margin-top: 30px; font-size: 20px; color: #888; }
+        .copyright { text-align: center; font-size: 10px; color: #666; margin-top: 40px; }
 
         /* --- PANIER --- */
-        #cart-drawer { position: fixed; top: 0; right: -100%; width: 85%; height: 100%; background: #fff; z-index: 2000; transition: 0.3s; padding: 20px; box-shadow: -5px 0 15px rgba(0,0,0,0.1); }
+        #cart-drawer { position: fixed; top: 0; right: -100%; width: 85%; height: 100%; background: #fff; z-index: 2000; transition: 0.3s; padding: 20px; }
         #cart-drawer.active { right: 0; }
         #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 1999; }
         #overlay.active { display: block; }
     </style>
-</head>
-<body>
-
-<div id="overlay"></div>
-<div class="top-promo">LIVRAISON GRATUITE +50$</div>
-
-<header>
-    <div class="header-top">
-        <a href="#" class="logo">LUTHERFASHION</a>
-        <div class="search-container">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Rechercher...">
-            <i class="fas fa-camera"></i>
-        </div>
-        <div class="right-icons">
-            <span class="lang-select">FR</span>
-            <i class="far fa-user"></i>
-            <div class="cart-wrapper" id="cart-open">
-                <i class="fas fa-shopping-bag"></i>
-                <span class="notif-badge" id="notif-count">0</span>
-            </div>
-        </div>
-    </div>
-</header>
-
-<nav class="nav-bar">
-    <i class="fas fa-bars"></i>
-    <a href="#">FEMMES</a>
-    <a href="#">HOMMES</a>
-    <a href="#" class="sale-link">SOLDES</a>
-</nav>
-
-<div class="hero-banner">
-    <div class="hero-img"></div>
-    <div class="hero-text">
-        <h2>60-80% DE RÉDUCTION</h2>
-        <button>VOIR TOUT</button>
-    </div>
-</div>
-
-<div class="cat-section">
-    <div class="cat-title">Achetez par Catégorie</div>
-    <div class="cat-grid">
-        <div class="cat-card"><img src="veste jaune.jpg"><span>Vestes</span></div>
-        <div class="cat-card"><img src="Veste vert.jpg"><span>Ensembles</span></div>
-        <div class="cat-card"><img src="veste jaune.jpg"><span>Tops</span></div>
-        <div class="cat-card"><img src="Veste vert.jpg"><span>Bottoms</span></div>
-        <div class="cat-card"><img src="veste jaune.jpg"><span>Swim</span></div>
-        <div class="cat-card"><img src="Veste vert.jpg"><span>Accessories</span></div>
-        <div class="cat-card"><img src="veste jaune.jpg"><span>Shoes</span></div>
-        <div class="cat-card"><img src="Veste vert.jpg"><span>Jeans</span></div>
-    </div>
-</div>
-
-<footer>
-    <div class="footer-menu"><span>Get Help</span><i class="fas fa-plus"></i></div>
-    <div class="footer-menu"><span>Company</span><i class="fas fa-plus"></i></div>
-    <div class="footer-menu"><span>Quick Links</span><i class="fas fa-plus"></i></div>
-    <div class="footer-menu"><span>Legal</span><i class="fas fa-plus"></i></div>
-
-    <div class="footer-newsletter">
-        <h4>Sign up for discounts + updates</h4>
-        <div class="input-group">
-            <input type="text" placeholder="Phone Number or Email">
-            <button><i class="fas fa-chevron-right"></i></button>
-        </div>
-        <p class="legal-text">
-            By signing up for email, you agree to Fashion Nova's <span style="text-decoration: underline;">Terms of Service</span> and <span style="text-decoration: underline;">Privacy Policy</span>.
-        </p>
-    </div>
-
-    <div class="social-icons">
-        <i class="fab fa-instagram"></i>
-        <i class="fab fa-tiktok"></i>
-        <i class="fab fa-youtube"></i>
-        <i class="fab fa-snapchat"></i>
-        <i class="fab fa-facebook"></i>
-        <i class="fab fa-pinterest"></i>
-    </div>
-
-    <div class="copyright">
-        © 2026 Fashion Nova, LLC All Rights Reserved
-    </div>
-</footer>
-
-<div id="cart-drawer">
-    <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-        <h3 style="font-weight:900;">MON PANIER</h3>
-        <i class="fas fa-times" id="cart-close" style="font-size:22px; cursor:pointer;"></i>
-    </div>
-    <div id="cart-items"></div>
-    <div style="border-top:2px solid #000; padding-top:15px; margin-top:20px;">
-        <div style="display:flex; justify-content:space-between; font-weight:900;">
-            <span>TOTAL</span>
-            <span id="total-price">0,00 $</span>
-        </div>
-        <button style="width:100%; background:#000; color:#fff; padding:15px; border:none; margin-top:20px; font-weight:900;">PAYER</button>
-    </div>
-</div>
-
-<script>
-    let cart = [];
-    function updateCart() {
-        document.getElementById('notif-count').innerText = cart.length;
-        const total = cart.reduce((acc, curr) => acc + 45.00, 0); // Exemple prix fixe
-        document.getElementById('total-price').innerText = total.toFixed(2).replace('.', ',') + " $";
-    }
-    document.getElementById('cart-open').onclick = () => { document.getElementById('cart-drawer').classList.add('active'); document.getElementById('overlay').classList.add('active'); };
-    document.getElementById('cart-close').onclick = () => { document.getElementById('cart-drawer').classList.remove('active'); document.getElementById('overlay').classList.remove('active'); };
-    document.getElementById('overlay').onclick = () => { document.getElementById('cart-drawer').classList.remove('active'); document.getElementById('overlay').classList.remove('active'); };
-</script>
-
-</body>
-</html>
+</
