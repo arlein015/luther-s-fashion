@@ -64,4 +64,153 @@
         #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 1999; }
         #overlay.active { display: block; }
     </style>
-</
+</head>
+<body>
+
+<div id="overlay"></div>
+<div class="top-promo">LIVRAISON GRATUITE +50$</div>
+
+<header>
+    <div class="header-top">
+        <a href="#" class="logo">LUTHERFASHION</a>
+        <div class="search-container">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Rechercher...">
+            <i class="fas fa-camera"></i>
+        </div>
+        <div class="right-icons">
+            <span class="lang-select">FR</span>
+            <i class="far fa-user"></i>
+            <div class="cart-wrapper" id="cart-open">
+                <i class="fas fa-shopping-bag"></i>
+                <span class="notif-badge" id="notif-count">0</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<nav class="nav-bar">
+    <i class="fas fa-bars"></i>
+    <a href="#">FEMMES</a>
+    <a href="#">HOMMES</a>
+    <a href="#" class="sale-link">SOLDES</a>
+</nav>
+
+<div class="hero-banner">
+    <div class="hero-img"></div>
+    <div class="hero-text">
+        <h2>60-80% DE RÉDUCTION</h2>
+        <button>VOIR TOUT</button>
+    </div>
+</div>
+
+<div class="section-title">Achetez par Catégorie</div>
+<div class="cat-grid">
+    <div class="cat-card"><img src="veste jaune.jpg"><span>Vestes</span></div>
+    <div class="cat-card"><img src="Veste vert.jpg"><span>Ensembles</span></div>
+    <div class="cat-card"><img src="veste jaune.jpg"><span>Tops</span></div>
+    <div class="cat-card"><img src="Veste vert.jpg"><span>Bottoms</span></div>
+</div>
+
+<div class="section-title">Tendances Actuelles</div>
+<div class="product-grid" id="product-list"></div>
+
+<footer>
+    <div class="footer-menu"><span>Get Help</span><i class="fas fa-plus"></i></div>
+    <div class="footer-menu"><span>Legal</span><i class="fas fa-plus"></i></div>
+    <div class="footer-newsletter">
+        <h4 style="font-size: 13px;">SIGN UP FOR DISCOUNTS + UPDATES</h4>
+        <div class="input-group">
+            <input type="text" placeholder="Email ou Numéro">
+            <button><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+    <div class="social-icons">
+        <i class="fab fa-instagram"></i><i class="fab fa-tiktok"></i><i class="fab fa-facebook"></i>
+    </div>
+    <div class="copyright">© 2026 Luther Fashion. All Rights Reserved</div>
+</footer>
+
+<div id="cart-drawer">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h3 style="font-weight:900;">MON PANIER</h3>
+        <i class="fas fa-times" id="cart-close" style="font-size:24px; cursor:pointer;"></i>
+    </div>
+    <div id="cart-items"></div>
+    <div style="border-top:2px solid #000; padding-top:20px; margin-top:20px;">
+        <div style="display:flex; justify-content:space-between; font-weight:900;">
+            <span>TOTAL</span><span id="total-price">0,00 $</span>
+        </div>
+        <button style="width:100%; background:#000; color:#fff; padding:15px; border:none; margin-top:20px; font-weight:900;">PAYER</button>
+    </div>
+</div>
+
+<script>
+    // GÉNÉRATION DE 30 PRODUITS AVEC PRIX PERSONNALISÉS
+    const products = [];
+    const names = ["Veste Bomber", "Ensemble Été", "Veste Cargo", "Veste Oversize", "Ensemble Chic", "Veste Streetwear"];
+    
+    for (let i = 1; i <= 30; i++) {
+        products.push({
+            id: i,
+            name: names[i % names.length] + " #" + i,
+            price: (Math.random() * (85 - 15) + 15).toFixed(2), // Prix entre 15$ et 85$
+            img: i % 2 === 0 ? "Veste vert.jpg" : "veste jaune.jpg" //
+        });
+    }
+
+    let cart = [];
+
+    function updateCart() {
+        const notif = document.getElementById('notif-count');
+        const list = document.getElementById('cart-items');
+        const total = document.getElementById('total-price');
+        notif.innerText = cart.length;
+        
+        list.innerHTML = cart.map((item, i) => `
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px;">
+                <img src="${item.img}" style="width:50px; height:65px; object-fit:cover;">
+                <div style="flex:1;">
+                    <div style="font-size:11px; font-weight:700;">${item.name}</div>
+                    <div style="color:#FF0000; font-weight:900;">${item.price} $</div>
+                </div>
+                <i class="fas fa-trash-alt" style="color:#888;" onclick="removeItem(${i})"></i>
+            </div>
+        `).join('');
+
+        let sum = cart.reduce((acc, curr) => acc + parseFloat(curr.price), 0);
+        total.innerText = sum.toFixed(2).replace('.', ',') + " $";
+    }
+
+    function addItem(idx) {
+        cart.push(products[idx]);
+        updateCart();
+        document.getElementById('cart-drawer').classList.add('active');
+        document.getElementById('overlay').classList.add('active');
+    }
+
+    function removeItem(idx) {
+        cart.splice(idx, 1);
+        updateCart();
+    }
+
+    // Affichage des produits
+    document.getElementById('product-list').innerHTML = products.map((p, i) => `
+        <div class="p-card">
+            <img src="${p.img}">
+            <div class="p-info">
+                <div class="p-name">${p.name}</div>
+                <div class="p-price">${p.price} $</div>
+                <button class="add-btn" onclick="addItem(${i})">Ajouter au panier</button>
+            </div>
+        </div>
+    `).join('');
+
+    // Events panier
+    document.getElementById('cart-open').onclick = () => { document.getElementById('cart-drawer').classList.add('active'); document.getElementById('overlay').classList.add('active'); };
+    document.getElementById('cart-close').onclick = () => { document.getElementById('cart-drawer').classList.remove('active'); document.getElementById('overlay').classList.remove('active'); };
+    document.getElementById('overlay').onclick = () => { document.getElementById('cart-drawer').classList.remove('active'); document.getElementById('overlay').classList.remove('active'); };
+</script>
+
+</body>
+</html>
