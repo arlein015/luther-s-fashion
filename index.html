@@ -3,225 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther Fashion Brand</title>
-    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Luther Fashion | Premium Collection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        :root {
-            --primary: #000000;
-            --accent: #1e3a8a;
-            --bg: #ffffff;
-            --light-gray: #f8f8f8;
+        :root { --gold: #c5a059; --dark: #000; --light: #f4f4f4; }
+        body { font-family: 'Montserrat', sans-serif; margin: 0; padding: 0; background: #fff; color: var(--dark); overflow-x: hidden; }
+
+        /* BANDEAU PROMO DYNAMIQUE */
+        .promo-header { background: var(--dark); color: #fff; text-align: center; padding: 10px; font-size: 11px; letter-spacing: 2px; font-weight: bold; }
+        .promo-header span { color: var(--gold); }
+
+        /* HEADER & NAV */
+        header { border-bottom: 1px solid #eee; sticky; top: 0; background: #fff; z-index: 1000; }
+        .nav-main { display: flex; justify-content: space-between; align-items: center; padding: 15px 4%; }
+        .logo { font-family: 'Alex Brush', cursive; font-size: 45px; color: var(--dark); text-decoration: none; }
+        
+        nav { display: flex; justify-content: center; gap: 30px; padding-bottom: 15px; text-transform: uppercase; font-size: 12px; font-weight: 700; }
+        nav a { text-decoration: none; color: var(--dark); }
+
+        /* BANNIÈRE HÉRO (PROMOTION) */
+        .hero-sale { 
+            position: relative; height: 70vh; background: url('badg noir.JPG') center/cover; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; color: #fff; text-align: center;
         }
+        .hero-sale::after { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.3); z-index: 1; }
+        .hero-content { z-index: 2; }
+        .hero-content h1 { font-size: 50px; margin: 0; text-transform: uppercase; letter-spacing: 5px; }
+        .hero-content p { font-size: 20px; margin: 10px 0; }
+        .btn-shop { background: #fff; color: #000; padding: 15px 40px; text-decoration: none; font-weight: bold; text-transform: uppercase; margin-top: 20px; display: inline-block; }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            background: var(--bg);
-        }
+        /* SECTION COLLAGE ÉLÉGANT (CATÉGORIES) */
+        .collage-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 300px); gap: 10px; padding: 10px; }
+        .collage-item { position: relative; overflow: hidden; background: #eee; cursor: pointer; }
+        .collage-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .collage-item:hover img { transform: scale(1.1); }
+        .collage-label { position: absolute; bottom: 20px; left: 20px; color: #fff; font-weight: bold; text-transform: uppercase; z-index: 2; font-size: 18px; }
+        
+        /* Layout spécifique collage style Fashion Nova */
+        .item-1 { grid-column: 1 / 3; grid-row: 1 / 3; } /* Grande photo gauche */
 
-        /* BARRE DE PROMO (Haut de page) */
-        .promo-bar {
-            background: var(--primary);
-            color: white;
-            text-align: center;
-            padding: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
+        /* SECTION TENDANCES (PRODUITS) */
+        .section-title { text-align: center; padding: 50px 0 20px; font-size: 24px; text-transform: uppercase; letter-spacing: 3px; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; padding: 0 4%; }
+        .p-card { position: relative; margin-bottom: 30px; }
+        .p-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
+        .p-badge { position: absolute; top: 10px; left: 10px; background: red; color: #fff; padding: 5px 10px; font-size: 10px; font-weight: bold; }
+        .p-info { padding: 10px 0; font-size: 13px; }
+        .p-price { font-weight: bold; margin-top: 5px; }
+        .old-price { text-decoration: line-through; color: #888; margin-right: 5px; font-size: 11px; }
 
-        /* HEADER STYLE PRO */
-        header {
-            border-bottom: 1px solid #eee;
-            position: sticky;
-            top: 0;
-            background: white;
-            z-index: 1000;
-        }
-
-        .header-main {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px 5%;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .logo {
-            font-family: 'Alex Brush', cursive;
-            font-size: 40px;
-            text-decoration: none;
-            color: var(--primary);
-        }
-
-        /* MENU DE NAVIGATION */
-        nav {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            padding: 10px 0;
-            background: white;
-            border-top: 1px solid #f9f9f9;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: var(--primary);
-            font-weight: 600;
-            font-size: 13px;
-            text-transform: uppercase;
-            transition: 0.3s;
-        }
-
-        nav a:hover { color: var(--accent); }
-
-        /* BARRE DE RECHERCHE PRO */
-        .search-section {
-            padding: 20px 5%;
-            background: var(--light-gray);
-            display: flex;
-            justify-content: center;
-        }
-
-        .search-box {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 12px 45px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            font-family: inherit;
-        }
-
-        .search-box i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #888;
-        }
-
-        /* GRILLE DE PRODUITS */
-        .catalog {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 40px 5%;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .product-card {
-            background: white;
-            transition: transform 0.3s;
-            cursor: pointer;
-            text-align: left;
-        }
-
-        .product-card:hover { transform: translateY(-5px); }
-
-        .product-card img {
-            width: 100%;
-            aspect-ratio: 3/4;
-            object-fit: cover;
-            border-radius: 4px;
-        }
-
-        .product-info { padding: 10px 0; }
-        .product-name { font-weight: 600; font-size: 14px; margin: 5px 0; }
-        .product-price { color: var(--accent); font-weight: bold; }
-
-        /* BOUTON PANIER FIXE */
-        #cart-button {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: var(--primary);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 50px;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            z-index: 2000;
-        }
-
-        /* RESPONSIVE MOBILE */
-        @media (max-width: 768px) {
-            .catalog { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            nav { display: none; } /* On pourra faire un menu burger plus tard */
-            .logo { font-size: 30px; }
-        }
+        /* FOOTER PANIER */
+        #cart-float { position: fixed; bottom: 20px; right: 20px; background: var(--dark); color: #fff; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.3); z-index: 1000; }
     </style>
 </head>
 <body>
 
-    <div class="promo-bar">Livraison gratuite sur toutes les commandes Luther !</div>
+    <div class="promo-header">LIVRAISON GRATUITE SUR TOUT LE SITE <span>CODE: LUTHER2026</span></div>
 
     <header>
-        <div class="header-main">
-            <a href="#" class="logo">Luther</a>
-            <div class="header-icons">
-                <i class="far fa-user" style="margin-right: 15px; cursor: pointer;"></i>
-                <i class="far fa-heart" style="cursor: pointer;"></i>
-            </div>
+        <div class="nav-main">
+            <div class="logo">Luther</div>
+            <div class="icons"><i class="fas fa-search"></i> <i class="far fa-user" style="margin-left:20px"></i></div>
         </div>
         <nav>
-            <a href="#">Nouvelle Entrée</a>
+            <a href="#">Nouveautés</a>
             <a href="#">Vêtements</a>
+            <a href="#">Robes</a>
             <a href="#">Hommes</a>
-            <a href="#">Femmes</a>
-            <a href="#">Enfants</a>
-            <a href="#">Accessoires</a>
+            <a href="#">Soldes</a>
         </nav>
     </header>
 
-    <div class="search-section">
-        <div class="search-box">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Rechercher dans la collection Luther...">
+    <section class="hero-sale">
+        <div class="hero-content">
+            <h1>60-80% DE RÉDUCTION</h1>
+            <p>La collection d'été est arrivée</p>
+            <a href="#shop" class="btn-shop">Acheter maintenant</a>
+        </div>
+    </section>
+
+    <div class="section-title">Achetez par Catégorie</div>
+    <div class="collage-grid">
+        <div class="collage-item item-1">
+            <img src="badg noir.JPG">
+            <div class="collage-label">Ensembles correspondants</div>
+        </div>
+        <div class="collage-item">
+            <img src="badg noir.JPG">
+            <div class="collage-label">Tops</div>
+        </div>
+        <div class="collage-item">
+            <img src="badg noir.JPG">
+            <div class="collage-label">Jeans</div>
+        </div>
+        <div class="collage-item">
+            <img src="badg noir.JPG">
+            <div class="collage-label">Chaussures</div>
+        </div>
+        <div class="collage-item">
+            <img src="badg noir.JPG">
+            <div class="collage-label">Accessoires</div>
         </div>
     </div>
 
-    <div class="catalog" id="box">
+    <div class="section-title" id="shop">Le Rapport sur les Tendances</div>
+    <div class="product-grid" id="out">
         </div>
 
-    <button id="cart-button">
-        <i class="fas fa-shopping-bag"></i> PANIER (0)
-    </button>
+    <div id="cart-float">
+        <i class="fas fa-shopping-bag"></i>
+    </div>
 
     <script>
-        // On simule tes produits comme sur tes photos
         const products = [
-            { name: "Luther Classic Style #1", price: "78€", img: "badg noir.JPG" },
-            { name: "Luther Modern Style #2", price: "40€", img: "badg noir.JPG" },
-            { name: "Luther Urban Style #3", price: "55€", img: "badg noir.JPG" },
-            { name: "Luther Chic Style #4", price: "88€", img: "badg noir.JPG" }
+            { name: "Robe de Soirée Luther", price: 29.99, old: 89.99, img: "badg noir.JPG", sale: true },
+            { name: "Veste Urban Chic", price: 45.00, old: 110.00, img: "badg noir.JPG", sale: true },
+            { name: "Ensemble Satin Luxe", price: 35.50, old: 75.00, img: "badg noir.JPG", sale: false },
+            { name: "Accessoires Gold Edition", price: 15.00, old: 40.00, img: "badg noir.JPG", sale: true }
         ];
 
-        function displayProducts() {
-            const container = document.getElementById('box');
-            container.innerHTML = products.map(p => `
-                <div class="product-card">
-                    <img src="${p.img}" alt="${p.name}">
-                    <div class="product-info">
-                        <div class="product-name">${p.name}</div>
-                        <div class="product-price">${p.price}</div>
+        function draw() {
+            document.getElementById('out').innerHTML = products.map(p => `
+                <div class="p-card">
+                    ${p.sale ? '<div class="p-badge">SALE</div>' : ''}
+                    <img src="${p.img}">
+                    <div class="p-info">
+                        <div>${p.name}</div>
+                        <div class="p-price">
+                            <span class="old-price">${p.old}€</span>
+                            <span style="color:red">${p.price}€</span>
+                        </div>
                     </div>
                 </div>
             `).join('');
         }
-
-        window.onload = displayProducts;
+        window.onload = draw;
     </script>
 </body>
 </html>
