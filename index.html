@@ -61,4 +61,135 @@
         #overlay.active { display: block; }
         .cart-item { display: flex; align-items: center; gap: 10px; padding-bottom: 15px; border-bottom: 1px solid #eee; margin-bottom: 15px; }
         .cart-item img { width: 50px; height: 70px; object-fit: cover; }
-        .cart-item-details { flex: 1; font-size: 11
+        .cart-item-details { flex: 1; font-size: 11px; }
+        .cart-item-details b { display: block; margin-bottom: 3px; }
+        .remove-icon { color: #999; cursor: pointer; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<div id="overlay"></div>
+
+<div class="top-promo">LIVRAISON GRATUITE +50$</div>
+
+<header class="main-header">
+    <div class="logo-row">
+        <a href="#" class="logo-text">LUTHERFASHION</a>
+    </div>
+    <div class="search-icon-row">
+        <div class="search-container">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Rechercher...">
+            <i class="fas fa-camera"></i>
+        </div>
+        <div class="action-icons">
+            <span class="lang">FR</span>
+            <i class="far fa-user"></i>
+            <i class="far fa-heart"></i>
+            <div class="cart-wrapper" id="btn-open-cart">
+                <i class="fas fa-shopping-bag"></i>
+                <span id="cart-count">0</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<nav class="nav-bar">
+    <i class="fas fa-bars"></i>
+    <a href="#">FEMMES</a>
+    <a href="#">HOMMES</a>
+    <a href="#" style="position:relative;">NOUVEAUTÉS <small style="position:absolute; top:-8px; right:-12px; background:#d91818; color:#fff; font-size:6px; padding:1px 3px; border-radius:2px;">NEW</small></a>
+    <a href="#">SOLDES</a>
+</nav>
+
+<div class="hero-banner">
+    <h1>60-80% DE RÉDUCTION</h1>
+    <p>La collection d'été est arrivée</p>
+    <button class="btn-shop">ACHETER MAINTENANT</button>
+</div>
+
+<div class="product-grid" id="grid"></div>
+
+<div id="cart-drawer">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h3 style="font-size:16px;">PANIER</h3>
+        <i class="fas fa-times" id="btn-close-cart" style="font-size:20px;"></i>
+    </div>
+    <div id="cart-list" style="flex:1; overflow-y:auto;"></div>
+    <div style="border-top:2px solid #000; padding-top:15px;">
+        <div style="display:flex; justify-content:space-between; font-weight:900; margin-bottom:10px;">
+            <span>TOTAL</span>
+            <span id="total-price">0,00 $</span>
+        </div>
+        <button style="width:100%; background:#000; color:#fff; padding:15px; border:none; font-weight:900; text-transform:uppercase;">Commander</button>
+    </div>
+</div>
+
+<script>
+    const inventory = [
+        { id: 1, name: "Nouée au travail ensemble jupe - Gris", price: "37,99 $", img: "badg noir.JPG" },
+        { id: 2, name: "Robe Maxi plissée Corset - Crème", price: "67,99 $", img: "badg noir.JPG" }
+    ];
+
+    let myCart = [];
+
+    // Fonctions Panier
+    const drawer = document.getElementById('cart-drawer');
+    const overlay = document.getElementById('overlay');
+
+    document.getElementById('btn-open-cart').onclick = () => { drawer.classList.add('active'); overlay.classList.add('active'); };
+    document.getElementById('btn-close-cart').onclick = () => { drawer.classList.remove('active'); overlay.classList.remove('active'); };
+    overlay.onclick = () => { drawer.classList.remove('active'); overlay.classList.remove('active'); };
+
+    function addItem(idx) {
+        myCart.push(inventory[idx]);
+        updateDisplay();
+        drawer.classList.add('active');
+        overlay.classList.add('active');
+    }
+
+    function removeItem(idx) {
+        myCart.splice(idx, 1);
+        updateDisplay();
+    }
+
+    function updateDisplay() {
+        document.getElementById('cart-count').innerText = myCart.length;
+        const list = document.getElementById('cart-list');
+        
+        if(myCart.length === 0) {
+            list.innerHTML = '<p style="text-align:center; color:#999; margin-top:30px;">Votre panier est vide</p>';
+            document.getElementById('total-price').innerText = "0,00 $";
+            return;
+        }
+
+        list.innerHTML = myCart.map((item, i) => `
+            <div class="cart-item">
+                <img src="${item.img}">
+                <div class="cart-item-details">
+                    <b>${item.name}</b>
+                    <span style="color:#d91818; font-weight:900;">${item.price}</span>
+                </div>
+                <i class="fas fa-trash-alt remove-icon" onclick="removeItem(${i})"></i>
+            </div>
+        `).join('');
+
+        let sum = myCart.reduce((a, b) => a + parseFloat(b.price.replace('$', '').replace(',', '.')), 0);
+        document.getElementById('total-price').innerText = sum.toFixed(2).replace('.', ',') + " $";
+    }
+
+    // Affichage des produits
+    document.getElementById('grid').innerHTML = inventory.map((p, i) => `
+        <div class="product-card">
+            <img src="${p.img}">
+            <div class="product-info">
+                <div class="product-name">${p.name}</div>
+                <div class="product-price">${p.price}</div>
+                <button class="add-cart-btn" onclick="addItem(${i})">AJOUTER AU PANIER</button>
+            </div>
+        </div>
+    `).join('');
+</script>
+
+</body>
+</html>
