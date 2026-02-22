@@ -222,7 +222,30 @@
     font-weight: bold;
     cursor: pointer;
 }
-</style> ```
+/* LE PANIER COULISSANT */
+#cart-drawer {
+    position: fixed;
+    top: 0; right: -100%; /* Caché par défaut */
+    width: 350px; height: 100%;
+    background: #fff;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+    z-index: 1000;
+    transition: 0.4s;
+    padding: 20px;
+    display: flex; flex-direction: column;
+}
+
+#cart-drawer.active { right: 0; } /* S'affiche quand on clique */
+
+.cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+.cart-items { flex: 1; overflow-y: auto; margin-top: 20px; }
+.cart-footer { border-top: 1px solid #eee; padding-top: 15px; }
+
+.checkout-btn {
+    background: #000; color: #fff; width: 100%; padding: 15px;
+    text-align: center; font-weight: bold; border: none; margin-top: 10px;
+}
+    </style>
 
 <header>
     <a href="#" class="logo">Luther</a>
@@ -240,10 +263,6 @@
     <a href="#">SOLDES</a>
 </nav>
 
-<div class="promo-bar">
-    LIVRAISON GRATUITE SUR TOUT LE SITE <span>CODE: LUTHER2026</span>
-</div>
-
 <div class="hero-banner">
     <div class="hero-content">
         <p>La collection d'été est arrivée</p>
@@ -257,13 +276,32 @@
   </style>
 </head>
 <body>
-
+ <div id="cart-drawer">
+    <div class="cart-header">
+        <h3>VOTRE PANIER</h3>
+        <i class="fas fa-times" id="close-cart" style="cursor:pointer;"></i>
+    </div>
+    <div class="cart-items" id="cart-content">
+        <p style="text-align:center; color:#888;">Votre panier est vide.</p>
+    </div>
+    <div class="cart-footer">
+        <div style="display:flex; justify-content:space-between; font-weight:bold;">
+            <span>TOTAL</span>
+            <span id="cart-total">0,00 $</span>
+        </div>
+        <button class="checkout-btn">COMMANDER</button>
+    </div>
+</div>
     <header>
         <a href="#" class="logo">Luther</a>
         <div class="icons-right">
-            <i class="fas fa-search"></i>
-            <i class="far fa-user" style="margin-left: 10px;"></i>
-        </div>
+    <i class="fas fa-search"></i>
+    <i class="far fa-user" style="margin-left: 10px;"></i>
+    <div id="cart-icon" style="position: relative; cursor: pointer; margin-left: 10px;">
+        <i class="fas fa-shopping-bag"></i>
+        <span id="cart-count" style="position: absolute; top: -10px; right: -10px; background: #d91818; color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 50%;">0</span>
+    </div>
+</div>
     </header>
 
     <nav>
@@ -273,10 +311,6 @@
         <a href="#">HOMMES</a>
         <a href="#">SOLDES</a>
     </nav>
-
-    <div class="promo-bar">
-        LIVRAISON GRATUITE SUR TOUT LE SITE <span>CODE: LUTHER2026</span>
-    </div>
 
     <div class="product-grid" id="out">
         </div>
@@ -310,34 +344,59 @@
             }
         ];
 
-        function draw() {
-            const container = document.getElementById('out');
-            container.innerHTML = products.map(p => `
-                <div class="p-card">
-                    <div class="p-img-container">
-                        ${p.isNew ? '<div class="badge-new">NOUVEAU !</div>' : ''}
-                        <img src="${p.img}">
-                        <div class="quick-add">Quick Add</div>
-                    </div>
-                    <div class="p-details">
-                        <div class="p-title">${p.name}</div>
-                        <div class="price-row">
-                            <span class="current-price">${p.price}</span>
-                            <span class="old-price">${p.old}</span>
-                        </div>
-                        <div class="promo-red">Obtenez 20 $ de réduction avec code : FREE20</div>
-                        <div class="swatches">
-                            ${p.colors.map(c => `<div class="dot" style="background:${c}"></div>`).join('')}
-                            ${p.colors.length > 3 ? '<span style="font-size:10px; color:#777;">+3</span>' : ''}
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
+       let cart = [];
 
-        // Lancement au chargement
-        window.onload = draw;
-    </script>
+// Ouvrir/Fermer le panier
+document.getElementById('cart-icon').onclick = () => document.getElementById('cart-drawer').classList.add('active');
+document.getElementById('close-cart').onclick = () => document.getElementById('cart-drawer').classList.remove('active');
 
-</body>
-</html>
+function addToCart(index) {
+    const product = products[index];
+    cart.push(product);
+    updateCart();
+    document.getElementById('cart-drawer').classList.add('active'); // Ouvre le panier auto
+}
+
+function updateCart() {
+    const count = document.getElementById('cart-count');
+    const content = document.getElementById('cart-content');
+    const totalEl = document.getElementById('cart-total');
+    
+    count.innerText = cart.length;
+    
+    if (cart.length === 0) {
+        content.innerHTML = '<p style="text-align:center; color:#888;">Votre panier est vide.</p>';
+        totalEl.innerText = "0,00 $";
+        return;
+    }
+
+    content.innerHTML = cart.map((item, i) => `
+        <div style="display:flex; gap:10px; margin-bottom:15px;">
+            <img src="${item.img}" style="width:60px; height:80px; object-fit:cover;">
+            <div style="flex:1;">
+                <div style="font-size:12px; font-weight:bold;">${item.name}</div>
+                <div style="color:#d91818; font-size:13px;">${item.price}</div>
+            </div>
+        </div>
+    `).join('');
+    
+    // Calcul simple du total
+    let total = cart.reduce((sum, item) => sum + parseFloat(item.price.replace('$', '').replace(',', '.')), 0);
+    totalEl.innerText = total.toFixed(2) + " $";
+}
+
+// Modifie ta fonction draw pour que le bouton "Quick Add" fonctionne
+function draw() {
+    document.getElementById('out').innerHTML = products.map((p, index) => `
+        <div class="p-card">
+            <div class="p-img-container">
+                <img src="${p.img}">
+                <div class="quick-add" onclick="addToCart(${index})">Quick Add</div>
+            </div>
+            <div class="p-details">
+                <div class="p-title">${p.name}</div>
+                <div class="current-price">${p.price}</div>
+            </div>
+        </div>
+    `).join('');
+}
