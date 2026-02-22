@@ -55,83 +55,7 @@
 
         /* FOOTER PANIER */
         #cart-float { position: fixed; bottom: 20px; right: 20px; background: var(--dark); color: #fff; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.3); z-index: 1000; }
-    </style><style>
-    /* STYLE DES LETTRES ET DÉTAILS SOUS LE PRODUIT */
-    .p-details {
-        text-align: left;
-        padding: 10px 5px;
-        font-family: 'Montserrat', sans-serif;
-    }
-    
-    .p-title {
-        font-size: 13px;
-        font-weight: 500;
-        color: #000;
-        margin-bottom: 5px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .p-price-row {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 4px;
-    }
-
-    .current-price {
-        color: #d91818; /* Rouge comme sur ton image */
-        font-weight: bold;
-        font-size: 15px;
-    }
-
-    .old-price {
-        color: #888;
-        text-decoration: line-through;
-        font-size: 12px;
-    }
-
-    .promo-text {
-        color: #b22222;
-        font-size: 11px;
-        font-weight: 600;
-        margin-bottom: 8px;
-    }
-
-    /* PASTILLES DE COULEURS */
-    .color-swatches {
-        display: flex;
-        gap: 6px;
-    }
-
-    .swatch {
-        width: 14px;
-        height: 14px;
-        border-radius: 50%;
-        border: 1px solid #ddd;
-    }
-</style>
-
-<div class="p-card">
-    <div class="p-badge">SALE</div>
-    <img src="badg noir.JPG">
-    
-    <div class="p-details">
-        <div class="p-title">Ensemble de soirée Luther - Collection Luxe</div>
-        
-        <div class="p-price-row">
-            <span class="current-price">37,99 $</span>
-            <span class="old-price">54,99 $</span>
-        </div>
-        
-        <div class="promo-text">Obtenez 20 $ de réduction avec code : FREE20</div>
-        
-        <div class="color-swatches">
-            <div class="swatch" style="background: #8B4513;"></div> <div class="swatch" style="background: #fff;"></div>    <div class="swatch" style="background: #000;"></div>    <span style="font-size: 11px; color: #555;">+3</span>
-        </div>
-    </div>
-</div>
+    </style>
 </head>
 <body>
 
@@ -192,49 +116,29 @@
     </div>
 
     <script>
-    const products = [
-    { 
-        name: "Robe Maxi plissée Corset Daniella - Crème", 
-        price: "67,99 $", 
-        old: "84,99 $", 
-        img: "badg noir.JPG", 
-        promo: "Obtenez 20 $ de réduction avec code : FREE20",
-        colors: ["#8B4513", "#ffffff", "#000000", "#B0C4DE"] 
-    },
-    { 
-        name: "Ensemble jupe longue à carreaux - Gris", 
-        price: "37,99 $", 
-        old: "54,99 $", 
-        img: "badg noir.JPG", 
-        promo: "Obtenez 20 $ de réduction avec code : FREE20",
-        colors: ["#555555", "#000000"] 
-    }
-    // Ajoute tes autres produits ici de la même façon
-];
+        const products = [
+            { name: "Robe de Soirée Luther", price: 29.99, old: 89.99, img: "badg noir.JPG", sale: true },
+            { name: "Veste Urban Chic", price: 45.00, old: 110.00, img: "badg noir.JPG", sale: true },
+            { name: "Ensemble Satin Luxe", price: 35.50, old: 75.00, img: "badg noir.JPG", sale: false },
+            { name: "Accessoires Gold Edition", price: 15.00, old: 40.00, img: "badg noir.JPG", sale: true }
+        ];
 
-function draw() {
-    document.getElementById('out').innerHTML = products.map(p => `
-        <div class="p-card">
-            <div class="p-image-container">
-                <img src="${p.img}">
-                <div class="quick-add">Quick Add</div>
-            </div>
-            
-            <div class="p-details">
-                <div class="p-title">${p.name}</div>
-                
-                <div class="p-price-row">
-                    <span class="current-price">${p.price}</span>
-                    <span class="old-price">${p.old}</span>
+        function draw() {
+            document.getElementById('out').innerHTML = products.map(p => `
+                <div class="p-card">
+                    ${p.sale ? '<div class="p-badge">SALE</div>' : ''}
+                    <img src="${p.img}">
+                    <div class="p-info">
+                        <div>${p.name}</div>
+                        <div class="p-price">
+                            <span class="old-price">${p.old}€</span>
+                            <span style="color:red">${p.price}€</span>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="promo-line">${p.promo}</div>
-                
-                <div class="swatches">
-                    ${p.colors.map(color => `<div class="dot" style="background: ${color};"></div>`).join('')}
-                    ${p.colors.length > 3 ? '<span style="font-size: 11px; color: #777;">+3</span>' : ''}
-                </div>
-            </div>
-        </div>
-    `).join('');
-}
+            `).join('');
+        }
+        window.onload = draw;
+    </script>
+</body>
+</html>
