@@ -13,32 +13,29 @@
         /* --- BARRE DE LIVRAISON --- */
         .top-promo { background: #000; color: #fff; text-align: center; padding: 8px; font-size: 11px; font-weight: 700; }
 
-        /* --- HEADER COMPLET --- */
+        /* --- HEADER --- */
         header { padding: 10px 15px; background: #fff; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 1000; }
-        
         .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
         .logo { font-weight: 900; font-size: 20px; text-decoration: none; color: #000; letter-spacing: -1px; }
         
-        /* Barre de recherche avec Appareil Photo */
         .search-container { flex: 1; position: relative; margin: 0 10px; }
         .search-container input { width: 100%; padding: 8px 35px; border: 1px solid #ddd; border-radius: 4px; background: #f8f8f8; font-size: 13px; }
-        .search-container .fa-search { position: absolute; left: 10px; top: 10px; color: #888; font-size: 14px; }
-        .search-container .fa-camera { position: absolute; right: 10px; top: 10px; color: #888; font-size: 14px; }
+        .search-container .fa-search { position: absolute; left: 10px; top: 10px; color: #888; }
+        .search-container .fa-camera { position: absolute; right: 10px; top: 10px; color: #888; }
 
-        /* Icônes de droite avec FR et Notification */
         .right-icons { display: flex; align-items: center; gap: 12px; font-size: 16px; }
         .lang-select { font-weight: 700; font-size: 12px; }
         .cart-wrapper { position: relative; cursor: pointer; }
-        .notif-badge { position: absolute; top: -6px; right: -6px; background: #d91818; color: #fff; font-size: 9px; padding: 2px 5px; border-radius: 50%; font-weight: 900; }
+        .notif-badge { position: absolute; top: -6px; right: -6px; background: #FF0000; color: #fff; font-size: 9px; padding: 2px 5px; border-radius: 50%; font-weight: 900; }
 
-        /* --- NAVIGATION & MENU BURGER --- */
+        /* --- NAVIGATION --- */
         .nav-bar { display: flex; align-items: center; gap: 15px; padding: 10px 15px; border-bottom: 1px solid #eee; overflow-x: auto; white-space: nowrap; }
-        .burger-menu { font-size: 20px; color: #000; cursor: pointer; }
+        .burger-menu { font-size: 20px; cursor: pointer; }
         .nav-bar a { text-decoration: none; color: #000; font-size: 11px; font-weight: 700; text-transform: uppercase; }
-        .nav-bar a.new-badge { position: relative; }
-        .nav-bar a.new-badge::after { content: 'NEW'; position: absolute; top: -12px; right: -5px; background: #d91818; color: #fff; font-size: 7px; padding: 1px 3px; border-radius: 2px; }
+        /* Couleur de Soldes mise à jour */
+        .nav-bar a.sale-link { color: #FF0000; font-weight: 900; }
 
-        /* --- BANNIÈRE NOIRE IMPOSANTE --- */
+        /* --- BANNIÈRE --- */
         .hero-banner {
             position: relative;
             width: 100%;
@@ -52,27 +49,28 @@
         .hero-img {
             position: absolute;
             width: 100%; height: 100%;
-            background: url('Veste vert.jpg') center/cover; /* */
+            background: url('Veste vert.jpg') center/cover;
             opacity: 0.6;
             filter: blur(2px);
         }
         .hero-text { position: relative; z-index: 2; text-align: center; color: #fff; }
         .hero-text h2 { font-size: 28px; font-weight: 900; margin-bottom: 15px; }
-        .hero-text button { background: #fff; color: #000; border: none; padding: 10px 20px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
+        .hero-text button { background: #fff; color: #000; border: none; padding: 10px 20px; font-weight: 900; text-transform: uppercase; }
 
-        /* --- CATEGORIES --- */
+        /* --- NOUVELLES CATÉGORIES --- */
         .cat-section { padding: 15px; }
         .cat-title { font-weight: 900; font-size: 14px; margin-bottom: 15px; text-transform: uppercase; }
-        .cat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-        .cat-card { text-align: center; font-size: 10px; font-weight: 700; }
+        .cat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; row-gap: 15px; }
+        .cat-card { text-align: center; font-size: 10px; font-weight: 700; text-transform: uppercase; }
         .cat-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 4px; margin-bottom: 5px; }
 
         /* --- PRODUITS --- */
         .product-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
-        .p-card { border: 1px solid #eee; padding-bottom: 10px; text-align: center; }
+        .p-card { border: 1px solid #eee; padding-bottom: 10px; text-align: center; border-radius: 4px; }
         .p-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
-        .p-price { color: #d91818; font-weight: 900; margin: 5px 0; }
-        .add-btn { background: #000; color: #fff; border: none; width: 90%; padding: 8px; font-size: 10px; font-weight: 900; }
+        /* Prix mis à jour */
+        .p-price { color: #FF0000; font-weight: 900; margin: 8px 0; font-size: 16px; }
+        .add-btn { background: #000; color: #fff; border: none; width: 90%; padding: 10px; font-size: 10px; font-weight: 900; text-transform: uppercase; }
 
         /* --- PANIER --- */
         #cart-drawer { position: fixed; top: 0; right: -100%; width: 85%; height: 100%; background: #fff; z-index: 2000; transition: 0.3s; padding: 20px; box-shadow: -5px 0 15px rgba(0,0,0,0.1); }
@@ -92,40 +90,47 @@
         <div class="search-container">
             <i class="fas fa-search"></i>
             <input type="text" placeholder="Rechercher...">
-            <i class="fas fa-camera"></i> </div>
+            <i class="fas fa-camera"></i>
+        </div>
         <div class="right-icons">
-            <span class="lang-select">FR</span> <i class="far fa-user"></i>
-            <i class="far fa-heart"></i>
+            <span class="lang-select">FR</span>
+            <i class="far fa-user"></i>
             <div class="cart-wrapper" id="cart-open">
                 <i class="fas fa-shopping-bag"></i>
-                <span class="notif-badge" id="notif-count">0</span> </div>
+                <span class="notif-badge" id="notif-count">0</span>
+            </div>
         </div>
     </div>
 </header>
 
 <nav class="nav-bar">
-    <i class="fas fa-bars burger-menu"></i> <a href="#">FEMMES</a>
-    <a href="#">PLUS+CURVE</a>
+    <i class="fas fa-bars burger-menu"></i>
+    <a href="#">FEMMES</a>
     <a href="#">HOMMES</a>
-    <a href="#" class="new-badge">NOUVEAUTÉS</a>
-    <a href="#" style="color:red;">SOLDES</a>
-</nav>
+    <a href="#">PLUS+CURVE</a>
+    <a href="#" class="sale-link">SOLDES</a> </nav>
 
 <div class="hero-banner">
     <div class="hero-img"></div>
-    <div class="hero-text">
-        <h2>60-80% DE RÉDUCTION</h2>
-        <button>VOIR TOUT</button>
+    <div class="hero-content">
+        <div class="hero-text">
+            <h2>60-80% DE RÉDUCTION</h2>
+            <button>VOIR TOUT</button>
+        </div>
     </div>
 </div>
 
 <div class="cat-section">
     <div class="cat-title">Achetez par Catégorie</div>
     <div class="cat-grid">
-        <div class="cat-card"><img src="veste jaune.jpg"><span>VESTES</span></div>
-        <div class="cat-card"><img src="Veste vert.jpg"><span>ENSEMBLES</span></div>
-        <div class="cat-card"><img src="veste jaune.jpg"><span>TOPS</span></div>
-        <div class="cat-card"><img src="Veste vert.jpg"><span>ACCESSOIRES</span></div>
+        <div class="cat-card"><img src="veste jaune.jpg"><span>Vestes</span></div>
+        <div class="cat-card"><img src="Veste vert.jpg"><span>Ensembles</span></div>
+        <div class="cat-card"><img src="veste jaune.jpg"><span>Tops</span></div>
+        <div class="cat-card"><img src="Veste vert.jpg"><span>Bottoms</span></div>
+        <div class="cat-card"><img src="veste jaune.jpg"><span>Swim</span></div>
+        <div class="cat-card"><img src="Veste vert.jpg"><span>Accessories</span></div>
+        <div class="cat-card"><img src="veste jaune.jpg"><span>Shoes</span></div>
+        <div class="cat-card"><img src="Veste vert.jpg"><span>Jeans</span></div>
     </div>
 </div>
 
@@ -142,14 +147,17 @@
             <span>TOTAL</span>
             <span id="total-price">0,00 $</span>
         </div>
-        <button style="width:100%; background:#000; color:#fff; padding:15px; border:none; margin-top:20px; font-weight:900;">PAYER</button>
+        <button style="width:100%; background:#000; color:#fff; padding:15px; border:none; margin-top:20px; font-weight:900; text-transform:uppercase;">Payer</button>
     </div>
 </div>
 
 <script>
+    // Inventaire avec prix mis à jour
     const products = [
         { name: "Veste Stylée - Jaune", price: "45.00", img: "veste jaune.jpg" },
-        { name: "Veste Fashion - Vert", price: "55.00", img: "Veste vert.jpg" }
+        { name: "Veste Fashion - Vert", price: "55.00", img: "Veste vert.jpg" },
+        { name: "Ensemble Tendance", price: "39.99", img: "Veste vert.jpg" },
+        { name: "Top Élégant", price: "24.50", img: "veste jaune.jpg" }
     ];
 
     let cart = [];
@@ -161,7 +169,7 @@
         notif.innerText = cart.length;
         
         if(cart.length === 0) {
-            list.innerHTML = '<p style="text-align:center; color:#999;">Vide</p>';
+            list.innerHTML = '<p style="text-align:center; color:#999; margin-top:20px;">Votre panier est vide</p>';
             total.innerText = "0,00 $";
             return;
         }
@@ -171,7 +179,7 @@
                 <img src="${item.img}" style="width:50px; height:70px; object-fit:cover;">
                 <div style="flex:1;">
                     <div style="font-size:11px; font-weight:700;">${item.name}</div>
-                    <div style="color:#d91818; font-weight:900;">${item.price} $</div>
+                    <div style="color:#FF0000; font-weight:900;">${item.price} $</div>
                 </div>
                 <i class="fas fa-trash-alt" style="color:#888; cursor:pointer;" onclick="removeItem(${i})"></i>
             </div>
@@ -201,9 +209,9 @@
         <div class="p-card">
             <img src="${p.img}">
             <div style="padding:10px;">
-                <div style="font-size:11px; margin-bottom:5px;">${p.name}</div>
+                <div style="font-size:11px; margin-bottom:5px; height:30px; overflow:hidden;">${p.name}</div>
                 <div class="p-price">${p.price} $</div>
-                <button class="add-btn" onclick="addItem(${i})">AJOUTER</button>
+                <button class="add-btn" onclick="addItem(${i})">Ajouter au panier</button>
             </div>
         </div>
     `).join('');
