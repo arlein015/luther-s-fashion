@@ -3,95 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther Fashion - Boutique Officielle</title>
+    <title>Luther Fashion - Boutique Mobile</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Montserrat', sans-serif; background-color: #fff; color: #000; overflow-x: hidden; }
+        body { font-family: 'Montserrat', sans-serif; background-color: #fff; color: #000; }
 
-        /* --- BARRE DE LIVRAISON --- */
-        .top-bar { background: #000; color: #fff; text-align: center; padding: 8px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        /* BARRE DE LIVRAISON */
+        .top-promo { background: #000; color: #fff; text-align: center; padding: 6px; font-size: 10px; font-weight: bold; }
 
-        /* --- HEADER PRINCIPAL --- */
-        .header-container { padding: 10px 15px; border-bottom: 1px solid #eee; background: #fff; position: sticky; top: 0; z-index: 1000; }
+        /* HEADER PRINCIPAL */
+        .main-header { padding: 10px 15px; border-bottom: 1px solid #eee; background: #fff; position: sticky; top: 0; z-index: 1000; }
         
-        .header-top { margin-bottom: 10px; }
-        .logo-brand { font-weight: 900; font-size: 22px; text-decoration: none; color: #000; letter-spacing: -1px; }
+        .logo-row { margin-bottom: 10px; }
+        .logo-text { font-weight: 900; font-size: 20px; text-decoration: none; color: #000; letter-spacing: -1px; }
 
-        .header-bottom { display: flex; align-items: center; gap: 12px; }
+        .search-icon-row { display: flex; align-items: center; gap: 10px; }
 
-        /* Barre de recherche */
-        .search-wrapper { flex: 1; position: relative; }
-        .search-wrapper input { width: 100%; padding: 10px 35px; border-radius: 25px; border: 1px solid #ddd; background: #f5f5f5; font-size: 14px; }
-        .search-wrapper i.fa-search { position: absolute; left: 12px; top: 12px; color: #888; }
-        .search-wrapper i.fa-camera { position: absolute; right: 12px; top: 12px; color: #888; }
+        /* Barre de recherche flexible */
+        .search-container { flex: 1; position: relative; }
+        .search-container input { width: 100%; padding: 8px 30px; border-radius: 20px; border: 1px solid #ddd; background: #f5f5f5; font-size: 13px; }
+        .search-container .fa-search { position: absolute; left: 10px; top: 10px; color: #888; font-size: 12px; }
+        .search-container .fa-camera { position: absolute; right: 10px; top: 10px; color: #888; font-size: 12px; }
 
-        /* Groupe d'icônes alignées à droite */
-        .header-actions { display: flex; align-items: center; gap: 15px; font-size: 18px; }
-        .lang-fr { font-size: 12px; font-weight: bold; }
+        /* Groupe d'icônes à droite */
+        .action-icons { display: flex; align-items: center; gap: 12px; font-size: 18px; }
+        .lang { font-size: 11px; font-weight: 900; }
+        
+        .cart-wrapper { position: relative; cursor: pointer; }
+        #cart-count { position: absolute; top: -7px; right: -7px; background: #d91818; color: #fff; font-size: 9px; padding: 2px 5px; border-radius: 50%; font-weight: bold; }
 
-        .cart-icon-wrapper { position: relative; cursor: pointer; }
-        #cart-count { position: absolute; top: -8px; right: -8px; background: #d91818; color: #fff; font-size: 10px; padding: 2px 5px; border-radius: 50%; font-weight: bold; }
+        /* NAVIGATION AVEC MENU BURGER À GAUCHE */
+        .nav-bar { display: flex; align-items: center; gap: 15px; padding: 10px 15px; border-bottom: 1px solid #eee; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+        .nav-bar .fa-bars { font-size: 20px; cursor: pointer; }
+        .nav-bar a { text-decoration: none; color: #000; font-size: 11px; font-weight: 700; text-transform: uppercase; }
 
-        /* --- NAVIGATION AVEC MENU BURGER À GAUCHE --- */
-        nav { display: flex; align-items: center; gap: 20px; padding: 12px 15px; border-bottom: 1px solid #eee; overflow-x: auto; white-space: nowrap; }
-        nav i.fa-bars { font-size: 20px; cursor: pointer; margin-right: 5px; }
-        nav a { text-decoration: none; color: #000; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+        /* BANNIÈRE PROMO */
+        .hero-banner { width: 100%; height: auto; background: #000; color: #fff; text-align: center; padding: 40px 20px; }
+        .hero-banner h1 { font-size: 32px; font-weight: 900; line-height: 1; margin-bottom: 10px; }
+        .hero-banner p { font-size: 14px; margin-bottom: 20px; opacity: 0.9; }
+        .hero-banner .btn-shop { background: #fff; color: #000; padding: 12px 30px; border: none; font-weight: 900; font-size: 12px; text-transform: uppercase; cursor: pointer; }
 
-        /* --- BANNIÈRE --- */
-        .hero { position: relative; width: 100%; height: 450px; background: #000 url('badg noir.JPG') center/cover no-repeat; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #fff; text-align: center; }
-        .hero h1 { font-size: 40px; font-weight: 900; margin-bottom: 10px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
-        .hero p { font-size: 16px; margin-bottom: 20px; }
-        .hero button { background: #fff; color: #000; padding: 15px 40px; border: none; font-weight: bold; text-transform: uppercase; cursor: pointer; }
+        /* GRILLE PRODUITS */
+        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
+        .product-card { border: 1px solid #f0f0f0; }
+        .product-card img { width: 100%; display: block; }
+        .product-info { padding: 10px; text-align: left; }
+        .product-name { font-size: 11px; color: #333; margin-bottom: 5px; height: 30px; overflow: hidden; }
+        .product-price { font-weight: 900; color: #d91818; font-size: 14px; margin-bottom: 10px; }
+        .add-cart-btn { width: 100%; background: #000; color: #fff; border: none; padding: 8px; font-size: 10px; font-weight: bold; cursor: pointer; }
 
-        /* --- PANIER COULISSANT --- */
-        #cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 1999; }
-        #cart-overlay.active { display: block; }
-        #cart-drawer { position: fixed; top: 0; right: -100%; width: 320px; height: 100%; background: #fff; z-index: 2000; transition: 0.4s; padding: 20px; display: flex; flex-direction: column; }
+        /* PANIER */
+        #cart-drawer { position: fixed; top: 0; right: -100%; width: 85%; height: 100%; background: #fff; z-index: 2001; transition: 0.3s; padding: 20px; display: flex; flex-direction: column; box-shadow: -5px 0 15px rgba(0,0,0,0.1); }
         #cart-drawer.active { right: 0; }
-        .cart-item { display: flex; align-items: center; gap: 10px; padding: 15px 0; border-bottom: 1px solid #eee; }
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 2000; }
+        #overlay.active { display: block; }
+        .cart-item { display: flex; align-items: center; gap: 10px; padding-bottom: 15px; border-bottom: 1px solid #eee; margin-bottom: 15px; }
         .cart-item img { width: 50px; height: 70px; object-fit: cover; }
-        .remove-btn { margin-left: auto; color: #888; cursor: pointer; }
-
-        /* --- GRILLE PRODUITS --- */
-        .products { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px 15px; }
-        .p-card { border: 1px solid #eee; padding-bottom: 10px; }
-        .p-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
-        .p-info { padding: 10px; text-align: center; }
-        .add-btn { background: #000; color: #fff; width: 90%; padding: 10px; border: none; font-weight: bold; margin: 5px 5%; cursor: pointer; }
-    </style>
-</head>
-<body>
-
-<div id="cart-overlay"></div>
-
-<div class="top-bar">LIVRAISON GRATUITE +50$</div>
-
-<header class="header-container">
-    <div class="header-top">
-        <a href="#" class="logo-brand">LUTHERFASHION</a>
-    </div>
-    <div class="header-bottom">
-        <div class="search-wrapper">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Rechercher...">
-            <i class="fas fa-camera"></i>
-        </div>
-        <div class="header-actions">
-            <span class="lang-fr">FR</span>
-            <i class="far fa-user"></i>
-            <i class="far fa-heart"></i>
-            <div class="cart-icon-wrapper" id="open-cart">
-                <i class="fas fa-shopping-bag"></i>
-                <span id="cart-count">0</span>
-            </div>
-        </div>
-    </div>
-</header>
-
-<nav>
-    <i class="fas fa-bars"></i>
-    <a href="#">FEMMES</a>
-    <a href="#">HOMMES</a>
-    <a href="#">NOUVEAUTÉS</a>
+        .cart-item-details { flex: 1; font-size: 11
