@@ -11,18 +11,18 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Montserrat', sans-serif; background-color: #fff; color: #000; }
 
-        /* HEADER : LOGO À GAUCHE, ICÔNES À DROITE */
+        /* NOUVEAU HEADER (VERSION VERTE) */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 4%;
+            padding: 20px 4%;
             background: #fff;
         }
 
         .logo {
             font-family: 'Alex Brush', cursive;
-            font-size: 38px; /* Taille élégante */
+            font-size: 38px;
             color: #000;
             text-decoration: none;
         }
@@ -31,6 +31,24 @@
             display: flex;
             gap: 20px;
             font-size: 20px;
+            align-items: center;
+        }
+
+        .cart-icon-wrapper {
+            position: relative;
+            cursor: pointer;
+        }
+
+        #cart-count {
+            position: absolute;
+            top: -8px;
+            right: -10px;
+            background: #d91818; /* Rouge comme demandé */
+            color: #fff;
+            font-size: 10px;
+            padding: 2px 5px;
+            border-radius: 50%;
+            font-weight: bold;
         }
 
         /* NAVIGATION CENTRÉE */
@@ -38,270 +56,100 @@
             display: flex;
             justify-content: center;
             gap: 25px;
-            padding: 10px 0 20px 0;
+            padding-bottom: 20px;
         }
 
         nav a {
             text-decoration: none;
             color: #000;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        /* BARRE DE PROMOTION NOIRE */
-        .promo-bar {
-            background: #000;
-            color: #fff;
+        /* BANNIÈRE PROMO */
+        .hero-banner {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: #000 url('badg noir.JPG') center/cover no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             text-align: center;
-            padding: 12px;
-            font-size: 11px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            color: #fff;
         }
 
-        .promo-bar span { color: #c5a059; margin-left: 10px; } /* Code promo doré ou blanc */
+        .hero-content h1 { font-size: 35px; margin-bottom: 15px; }
+        
+        .shop-now-btn {
+            background: #fff;
+            color: #000;
+            padding: 10px 25px;
+            border: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
 
-        /* GRILLE DE PRODUITS */
+        /* PANIER COULISSANT */
+        #cart-drawer {
+            position: fixed;
+            top: 0; right: -100%;
+            width: 350px; height: 100%;
+            background: #fff;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            z-index: 1000;
+            transition: 0.4s;
+            padding: 20px;
+            display: flex; flex-direction: column;
+        }
+
+        #cart-drawer.active { right: 0; }
+
+        .cart-item-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .remove-item { color: #888; cursor: pointer; margin-left: auto; }
+        .remove-item:hover { color: #d91818; }
+
+        /* GRILLE PRODUITS */
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2 colonnes comme sur mobile */
+            grid-template-columns: repeat(2, 1fr);
             gap: 15px;
             padding: 15px;
         }
 
-        .p-card {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .p-img-container {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .p-card img {
-            width: 100%;
-            aspect-ratio: 2/3;
-            object-fit: cover;
-            display: block;
-        }
-
-        /* BADGE NOUVEAU */
-        .badge-new {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: #000;
-            color: #fff;
-            padding: 4px 8px;
-            font-size: 9px;
-            font-weight: bold;
-            border-radius: 15px;
-            z-index: 2;
-        }
-
-        /* BOUTON QUICK ADD NOIR */
+        .p-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
         .quick-add {
-            position: absolute;
-            bottom: 12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #000;
-            color: #fff;
-            width: 90%;
-            padding: 10px 0;
-            text-align: center;
-            font-weight: bold;
-            font-size: 12px;
-            border-radius: 25px;
-            opacity: 0.9;
-            cursor: pointer;
+            background: #000; color: #fff; text-align: center;
+            padding: 10px; border-radius: 20px; margin-top: -40px;
+            position: relative; z-index: 5; cursor: pointer; width: 80%; margin-left: 10%;
         }
 
-        /* DÉTAILS DU PRODUIT (ALIGNÉS À GAUCHE) */
-        .p-details {
-            padding: 10px 0;
-            text-align: left;
-        }
-
-        .p-title {
-            font-size: 12px;
-            font-weight: 500;
-            margin-bottom: 5px;
-            color: #000;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .price-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .current-price {
-            color: #d91818; /* Rouge vif */
-            font-weight: bold;
-            font-size: 15px;
-        }
-
-        .old-price {
-            color: #888;
-            text-decoration: line-through;
-            font-size: 11px;
-        }
-
-        .promo-red {
-            color: #b22222; /* Rouge sombre pour le code promo */
-            font-size: 10px;
-            font-weight: 600;
-            margin-top: 5px;
-        }
-
-        /* COULEURS */
-        .swatches {
-            display: flex;
-            gap: 6px;
-            margin-top: 8px;
-            align-items: center;
-        }
-
-        .dot {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            border: 1px solid #ddd;
-        }
-   /* SECTION BANNIÈRE PROMO */
-.hero-banner {
-    position: relative;
-    width: 100%;
-    height: 450px; /* Ajuste la hauteur selon tes envies */
-    background: url('badg noir.JPG') center/cover no-repeat;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
-    text-align: center;
-}
-
-.hero-banner::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.2); /* Ombre légère pour lire le texte */
-}
-
-.hero-content {
-    z-index: 2;
-}
-
-.hero-content h1 {
-    font-size: 40px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-}
-
-.hero-content p {
-    font-size: 18px;
-    margin-bottom: 20px;
-}
-
-.shop-now-btn {
-    border: 1px solid #fff;
-    background: transparent;
-    color: #fff;
-    padding: 10px 30px;
-    text-transform: uppercase;
-    font-weight: bold;
-    cursor: pointer;
-}
-/* LE PANIER COULISSANT */
-#cart-drawer {
-    position: fixed;
-    top: 0; right: -100%; /* Caché par défaut */
-    width: 350px; height: 100%;
-    background: #fff;
-    box-shadow: -5px 0 15px rgba(0,0,0,0.1);
-    z-index: 1000;
-    transition: 0.4s;
-    padding: 20px;
-    display: flex; flex-direction: column;
-}
-
-#cart-drawer.active { right: 0; } /* S'affiche quand on clique */
-
-.cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 15px; }
-.cart-items { flex: 1; overflow-y: auto; margin-top: 20px; }
-.cart-footer { border-top: 1px solid #eee; padding-top: 15px; }
-
-.checkout-btn {
-    background: #000; color: #fff; width: 100%; padding: 15px;
-    text-align: center; font-weight: bold; border: none; margin-top: 10px;
-}
+        .price-red { color: #d91818; font-weight: bold; }
     </style>
-
-<header>
-    <a href="#" class="logo">Luther</a>
-    <div class="icons-right">
-        <i class="fas fa-search"></i>
-        <i class="far fa-user" style="margin-left: 10px;"></i>
-    </div>
-</header>
-
-<nav>
-    <a href="#">NOUVEAUTÉS</a>
-    <a href="#">VÊTEMENTS</a>
-    <a href="#">ROBES</a>
-    <a href="#">HOMMES</a>
-    <a href="#">SOLDES</a>
-</nav>
-
-<div class="hero-banner">
-    <div class="hero-content">
-        <p>La collection d'été est arrivée</p>
-        <h1>60-80% DE RÉDUCTION</h1>
-        <button class="shop-now-btn">ACHETER MAINTENANT</button>
-    </div>
-</div>
-
-<div class="product-grid" id="out"></div>
-}
-  </style>
 </head>
 <body>
- <div id="cart-drawer">
-    <div class="cart-header">
-        <h3>VOTRE PANIER</h3>
-        <i class="fas fa-times" id="close-cart" style="cursor:pointer;"></i>
-    </div>
-    <div class="cart-items" id="cart-content">
-        <p style="text-align:center; color:#888;">Votre panier est vide.</p>
-    </div>
-    <div class="cart-footer">
-        <div style="display:flex; justify-content:space-between; font-weight:bold;">
-            <span>TOTAL</span>
-            <span id="cart-total">0,00 $</span>
-        </div>
-        <button class="checkout-btn">COMMANDER</button>
-    </div>
-</div>
+
     <header>
         <a href="#" class="logo">Luther</a>
         <div class="icons-right">
-    <i class="fas fa-search"></i>
-    <i class="far fa-user" style="margin-left: 10px;"></i>
-    <div id="cart-icon" style="position: relative; cursor: pointer; margin-left: 10px;">
-        <i class="fas fa-shopping-bag"></i>
-        <span id="cart-count" style="position: absolute; top: -10px; right: -10px; background: #d91818; color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 50%;">0</span>
-    </div>
-</div>
+            <i class="fas fa-search"></i>
+            <i class="far fa-user"></i>
+            <div class="cart-icon-wrapper" id="open-cart">
+                <i class="fas fa-shopping-bag"></i>
+                <span id="cart-count">0</span>
+            </div>
+        </div>
     </header>
 
     <nav>
@@ -312,91 +160,91 @@
         <a href="#">SOLDES</a>
     </nav>
 
-    <div class="product-grid" id="out">
+    <div class="hero-banner">
+        <div class="hero-content">
+            <p>La collection d'été est arrivée</p>
+            <h1>60-80% DE RÉDUCTION</h1>
+            <button class="shop-now-btn">ACHETER MAINTENANT</button>
         </div>
+    </div>
+
+    <div class="product-grid" id="out"></div>
+
+    <div id="cart-drawer">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h3>VOTRE PANIER</h3>
+            <i class="fas fa-times" id="close-cart" style="cursor:pointer;"></i>
+        </div>
+        <div id="cart-content" style="flex:1; overflow-y:auto;"></div>
+        <div style="border-top:1px solid #eee; padding-top:15px;">
+            <div style="display:flex; justify-content:space-between; font-weight:bold;">
+                <span>TOTAL</span>
+                <span id="cart-total">0,00 $</span>
+            </div>
+            <button style="background:#000; color:#fff; width:100%; padding:15px; border:none; margin-top:10px; font-weight:bold;">COMMANDER</button>
+        </div>
+    </div>
 
     <script>
-        // TES DONNÉES PRODUITS
         const products = [
-            {
-                name: "Nouée au travail ensemble jupe longue à carreaux - Gris",
-                price: "37,99 $",
-                old: "54,99 $",
-                img: "badg noir.JPG",
-                isNew: false,
-                colors: ["#8B4513", "#ffffff", "#000000", "#B0C4DE"]
-            },
-            {
-                name: "Robe Maxi plissée Corset Daniella Lace - Crème",
-                price: "67,99 $",
-                old: "84,99 $",
-                img: "badg noir.JPG",
-                isNew: true,
-                colors: ["#8B4513", "#ffffff", "#000000"]
-            },
-            {
-                name: "Robe Maxi plissée Corset - Bleu clair",
-                price: "58,99 $",
-                old: "84,99 $",
-                img: "badg noir.JPG",
-                isNew: false,
-                colors: ["#ADD8E6", "#000000"]
-            }
+            { name: "Nouée au travail ensemble jupe - Gris", price: "37,99 $", img: "badg noir.JPG" },
+            { name: "Robe Maxi plissée Corset - Crème", price: "67,99 $", img: "badg noir.JPG" }
         ];
 
-       let cart = [];
+        let cart = [];
 
-// Ouvrir/Fermer le panier
-document.getElementById('cart-icon').onclick = () => document.getElementById('cart-drawer').classList.add('active');
-document.getElementById('close-cart').onclick = () => document.getElementById('cart-drawer').classList.remove('active');
+        document.getElementById('open-cart').onclick = () => document.getElementById('cart-drawer').classList.add('active');
+        document.getElementById('close-cart').onclick = () => document.getElementById('cart-drawer').classList.remove('active');
 
-function addToCart(index) {
-    const product = products[index];
-    cart.push(product);
-    updateCart();
-    document.getElementById('cart-drawer').classList.add('active'); // Ouvre le panier auto
-}
+        function addToCart(index) {
+            cart.push(products[index]);
+            updateCart();
+            document.getElementById('cart-drawer').classList.add('active');
+        }
 
-function updateCart() {
-    const count = document.getElementById('cart-count');
-    const content = document.getElementById('cart-content');
-    const totalEl = document.getElementById('cart-total');
-    
-    count.innerText = cart.length;
-    
-    if (cart.length === 0) {
-        content.innerHTML = '<p style="text-align:center; color:#888;">Votre panier est vide.</p>';
-        totalEl.innerText = "0,00 $";
-        return;
-    }
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
 
-    content.innerHTML = cart.map((item, i) => `
-        <div style="display:flex; gap:10px; margin-bottom:15px;">
-            <img src="${item.img}" style="width:60px; height:80px; object-fit:cover;">
-            <div style="flex:1;">
-                <div style="font-size:12px; font-weight:bold;">${item.name}</div>
-                <div style="color:#d91818; font-size:13px;">${item.price}</div>
-            </div>
-        </div>
-    `).join('');
-    
-    // Calcul simple du total
-    let total = cart.reduce((sum, item) => sum + parseFloat(item.price.replace('$', '').replace(',', '.')), 0);
-    totalEl.innerText = total.toFixed(2) + " $";
-}
+        function updateCart() {
+            const content = document.getElementById('cart-content');
+            document.getElementById('cart-count').innerText = cart.length;
+            
+            if(cart.length === 0) {
+                content.innerHTML = '<p style="text-align:center; color:#888; margin-top:20px;">Vide</p>';
+                document.getElementById('cart-total').innerText = "0,00 $";
+                return;
+            }
 
-// Modifie ta fonction draw pour que le bouton "Quick Add" fonctionne
-function draw() {
-    document.getElementById('out').innerHTML = products.map((p, index) => `
-        <div class="p-card">
-            <div class="p-img-container">
-                <img src="${p.img}">
-                <div class="quick-add" onclick="addToCart(${index})">Quick Add</div>
-            </div>
-            <div class="p-details">
-                <div class="p-title">${p.name}</div>
-                <div class="current-price">${p.price}</div>
-            </div>
-        </div>
-    `).join('');
-}
+            content.innerHTML = cart.map((item, i) => `
+                <div class="cart-item-row">
+                    <img src="${item.img}" style="width:50px; height:70px; object-fit:cover;">
+                    <div>
+                        <div style="font-size:11px; font-weight:bold;">${item.name}</div>
+                        <div class="price-red">${item.price}</div>
+                    </div>
+                    <i class="fas fa-trash-alt remove-item" onclick="removeFromCart(${i})"></i>
+                </div>
+            `).join('');
+            
+            let total = cart.reduce((sum, item) => sum + parseFloat(item.price.replace('$', '').replace(',', '.')), 0);
+            document.getElementById('cart-total').innerText = total.toFixed(2) + " $";
+        }
+
+        function draw() {
+            document.getElementById('out').innerHTML = products.map((p, i) => `
+                <div class="p-card">
+                    <img src="${p.img}">
+                    <div class="quick-add" onclick="addToCart(${i})">Quick Add</div>
+                    <div style="padding:10px;">
+                        <div style="font-size:12px;">${p.name}</div>
+                        <div class="price-red">${p.price}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        window.onload = draw;
+    </script>
+</body>
+</html>
