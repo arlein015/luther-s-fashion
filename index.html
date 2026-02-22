@@ -88,6 +88,59 @@
     padding: 10px 0;
     border-bottom: 1px solid #eee;
 }
+   /* DESIGN STYLE FASHION NOVA */
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    border-bottom: 1px solid #eee;
+    background: #fff;
+    gap: 15px;
+}
+
+.search-bar-container {
+    flex: 1;
+    position: relative;
+    max-width: 600px;
+}
+
+.search-bar {
+    width: 100%;
+    padding: 10px 40px;
+    border-radius: 25px;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+    font-size: 14px;
+}
+
+.search-icon-left { position: absolute; left: 15px; top: 12px; color: #888; }
+.camera-icon-right { position: absolute; right: 15px; top: 12px; color: #888; }
+
+.nav-notification {
+    position: relative;
+    display: inline-block;
+}
+
+/* Pastille "NEW" animée */
+.badge-new {
+    position: absolute;
+    top: -12px;
+    right: -5px;
+    background: #d91818;
+    color: #fff;
+    font-size: 8px;
+    font-weight: bold;
+    padding: 2px 4px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
     </style>
 </head>
 <body>
@@ -95,16 +148,33 @@
     <div class="promo-header">LIVRAISON GRATUITE <span>+50$</span></div>
 
     <header>
-        <div class="nav-main">
-            <div class="logo">Luther</div>
-            <div class="icons"><i class="fas fa-search"></i> <i class="far fa-user" style="margin-left:20px"></i></div>
+       class="header-container">
+    <a href="#" class="logo" style="font-family: 'Montserrat', sans-serif; font-weight: 900; letter-spacing: -1px; font-size: 24px;">LUTHER<span style="font-weight: 300;">FASHION</span></a>
+    
+    <div class="search-bar-container">
+        <i class="fas fa-search search-icon-left"></i>
+        <input type="text" class="search-bar" placeholder="Rechercher des vêtements pour femmes...">
+        <i class="fas fa-camera camera-icon-right"></i>
+    </div>
+        <div class="icons-right">
+        <span style="font-size: 12px; font-weight: bold; margin-right: 10px;">FR</span>
+        <i class="far fa-user"></i>
+        <i class="far fa-heart" style="margin: 0 15px;"></i>
+        <div class="cart-icon-wrapper" id="open-cart">
+            <i class="fas fa-shopping-bag"></i>
+            <span id="cart-count">0</span>
         </div>
+    </div>
+</header>
         <nav>
-            <a href="#">Nouveautés</a>
-            <a href="#">Vêtements</a>
-            <a href="#">Robes</a>
-            <a href="#">Hommes</a>
-            <a href="#">Soldes</a>
+       <a href="#">FEMMES</a>
+    <a href="#">PLUS + CURVE</a>
+    <a href="#">HOMMES</a>
+    <span class="nav-notification">
+        <a href="#" style="color: #000;">NOUVEAUTÉS</a>
+        <span class="badge-new">NEW</span>
+    </span>
+    <a href="#">SOLDES</a>
         </nav>
     </header>
 
