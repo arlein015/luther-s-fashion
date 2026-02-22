@@ -3,205 +3,263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther Fashion | Premium Collection</title>
-    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Luther - Boutique Officielle</title>
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-      /* HEADER & LOGO */
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 4%;
-    background: #fff;
-}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Montserrat', sans-serif; background-color: #fff; color: #000; }
 
-.logo {
-    font-family: 'Alex Brush', cursive;
-    font-size: 35px; /* Taille réduite pour être élégante */
-    color: #000;
-    text-decoration: none;
-}
+        /* HEADER : LOGO À GAUCHE, ICÔNES À DROITE */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 4%;
+            background: #fff;
+        }
 
-.icons-right {
-    display: flex;
-    gap: 15px;
-    font-size: 18px;
-}
+        .logo {
+            font-family: 'Alex Brush', cursive;
+            font-size: 38px; /* Taille élégante */
+            color: #000;
+            text-decoration: none;
+        }
 
-/* NAVIGATION */
-nav {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    padding: 10px 0;
-    border-bottom: 1px solid #eee;
-}
+        .icons-right {
+            display: flex;
+            gap: 20px;
+            font-size: 20px;
+        }
 
-nav a {
-    text-decoration: none;
-    color: #000;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-}
+        /* NAVIGATION CENTRÉE */
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            padding: 10px 0 20px 0;
+        }
 
-/* PRODUITS STYLE FASHION NOVA */
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    padding: 15px;
-}
+        nav a {
+            text-decoration: none;
+            color: #000;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-.p-card {
-    position: relative;
-    text-align: left;
-}
+        /* BARRE DE PROMOTION NOIRE */
+        .promo-bar {
+            background: #000;
+            color: #fff;
+            text-align: center;
+            padding: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
 
-.p-img-container {
-    position: relative;
-}
+        .promo-bar span { color: #c5a059; margin-left: 10px; } /* Code promo doré ou blanc */
 
-.p-card img {
-    width: 100%;
-    aspect-ratio: 2/3;
-    object-fit: cover;
-}
+        /* GRILLE DE PRODUITS */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2 colonnes comme sur mobile */
+            gap: 15px;
+            padding: 15px;
+        }
 
-.quick-add {
-    position: absolute;
-    bottom: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #000;
-    color: #fff;
-    width: 85%;
-    padding: 10px;
-    text-align: center;
-    border-radius: 20px;
-    font-weight: bold;
-    font-size: 12px;
-}
+        .p-card {
+            position: relative;
+            margin-bottom: 20px;
+        }
 
-.current-price { color: #d91818; font-weight: bold; font-size: 15px; }
-.old-price { color: #888; text-decoration: line-through; font-size: 11px; margin-left: 5px; }
-.promo-red { color: #b22222; font-size: 10px; font-weight: 600; margin-top: 5px; } 
+        .p-img-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .p-card img {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* BADGE NOUVEAU */
+        .badge-new {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #000;
+            color: #fff;
+            padding: 4px 8px;
+            font-size: 9px;
+            font-weight: bold;
+            border-radius: 15px;
+            z-index: 2;
+        }
+
+        /* BOUTON QUICK ADD NOIR */
+        .quick-add {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #000;
+            color: #fff;
+            width: 90%;
+            padding: 10px 0;
+            text-align: center;
+            font-weight: bold;
+            font-size: 12px;
+            border-radius: 25px;
+            opacity: 0.9;
+            cursor: pointer;
+        }
+
+        /* DÉTAILS DU PRODUIT (ALIGNÉS À GAUCHE) */
+        .p-details {
+            padding: 10px 0;
+            text-align: left;
+        }
+
+        .p-title {
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: #000;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .price-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .current-price {
+            color: #d91818; /* Rouge vif */
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .old-price {
+            color: #888;
+            text-decoration: line-through;
+            font-size: 11px;
+        }
+
+        .promo-red {
+            color: #b22222; /* Rouge sombre pour le code promo */
+            font-size: 10px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        /* COULEURS */
+        .swatches {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            align-items: center;
+        }
+
+        .dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+        }
     </style>
 </head>
 <body>
-<header>
-    <a href="#" class="logo">Luther</a>
-    <div class="icons-right">
-        <i class="fas fa-search"></i>
-        <i class="far fa-user"></i>
-    </div>
-</header>
-
-<nav>
-    <a href="#">NOUVEAUTÉS</a>
-    <a href="#">VÊTEMENTS</a>
-    <a href="#">ROBES</a>
-    <a href="#">HOMMES</a>
-    <a href="#">SOLDES</a>
-</nav>
-
-<div class="promo-header" style="background:#000; color:#fff; text-align:center; padding:10px; font-size:11px; font-weight:bold;">
-    LIVRAISON GRATUITE SUR TOUT LE SITE CODE: LUTHER2026
-</div>
-
-<div class="product-grid" id="out">
-    </div>
-    <div class="promo-header">LIVRAISON GRATUITE SUR TOUT LE SITE <span>CODE: LUTHER2026</span></div>
 
     <header>
-        <div class="nav-main">
-            <div class="logo">Luther</div>
-            <div class="icons"><i class="fas fa-search"></i> <i class="far fa-user" style="margin-left:20px"></i></div>
+        <a href="#" class="logo">Luther</a>
+        <div class="icons-right">
+            <i class="fas fa-search"></i>
+            <i class="far fa-user" style="margin-left: 10px;"></i>
         </div>
-        <nav>
-            <a href="#">Nouveautés</a>
-            <a href="#">Vêtements</a>
-            <a href="#">Robes</a>
-            <a href="#">Hommes</a>
-            <a href="#">Soldes</a>
-        </nav>
     </header>
 
-    <section class="hero-sale">
-        <div class="hero-content">
-            <h1>60-80% DE RÉDUCTION</h1>
-            <p>La collection d'été est arrivée</p>
-            <a href="#shop" class="btn-shop">Acheter maintenant</a>
-        </div>
-    </section>
+    <nav>
+        <a href="#">NOUVEAUTÉS</a>
+        <a href="#">VÊTEMENTS</a>
+        <a href="#">ROBES</a>
+        <a href="#">HOMMES</a>
+        <a href="#">SOLDES</a>
+    </nav>
 
-    <div class="section-title">Achetez par Catégorie</div>
-    <div class="collage-grid">
-        <div class="collage-item item-1">
-            <img src="badg noir.JPG">
-            <div class="collage-label">Ensembles correspondants</div>
-        </div>
-        <div class="collage-item">
-            <img src="badg noir.JPG">
-            <div class="collage-label">Tops</div>
-        </div>
-        <div class="collage-item">
-            <img src="badg noir.JPG">
-            <div class="collage-label">Jeans</div>
-        </div>
-        <div class="collage-item">
-            <img src="badg noir.JPG">
-            <div class="collage-label">Chaussures</div>
-        </div>
-        <div class="collage-item">
-            <img src="badg noir.JPG">
-            <div class="collage-label">Accessoires</div>
-        </div>
+    <div class="promo-bar">
+        LIVRAISON GRATUITE SUR TOUT LE SITE <span>CODE: LUTHER2026</span>
     </div>
 
-    <div class="section-title" id="shop">Le Rapport sur les Tendances</div>
     <div class="product-grid" id="out">
         </div>
 
-    <div id="cart-float">
-        <i class="fas fa-shopping-bag"></i>
-    </div>
-
     <script>
+        // TES DONNÉES PRODUITS
         const products = [
-    {
-        name: "Nouée au travail ensemble jupe - Gris",
-        price: "37,99 $",
-        old: "54,99 $",
-        img: "badg noir.JPG",
-        colors: ["#8B4513", "#fff", "#000"]
-    },
-    {
-        name: "Robe Maxi plissée Corset - Bleu clair",
-        price: "58,99 $",
-        old: "84,99 $",
-        img: "badg noir.JPG",
-        colors: ["#ADD8E6", "#000"]
-    }
-];
+            {
+                name: "Nouée au travail ensemble jupe longue à carreaux - Gris",
+                price: "37,99 $",
+                old: "54,99 $",
+                img: "badg noir.JPG",
+                isNew: false,
+                colors: ["#8B4513", "#ffffff", "#000000", "#B0C4DE"]
+            },
+            {
+                name: "Robe Maxi plissée Corset Daniella Lace - Crème",
+                price: "67,99 $",
+                old: "84,99 $",
+                img: "badg noir.JPG",
+                isNew: true,
+                colors: ["#8B4513", "#ffffff", "#000000"]
+            },
+            {
+                name: "Robe Maxi plissée Corset - Bleu clair",
+                price: "58,99 $",
+                old: "84,99 $",
+                img: "badg noir.JPG",
+                isNew: false,
+                colors: ["#ADD8E6", "#000000"]
+            }
+        ];
 
-function draw() {
-    document.getElementById('out').innerHTML = products.map(p => `
-        <div class="p-card">
-            <div class="p-img-container">
-                <img src="${p.img}">
-                <div class="quick-add">Quick Add</div>
-            </div>
-            <div style="padding:10px 0;">
-                <div style="font-size:12px; font-weight:500;">${p.name}</div>
-                <div><span class="current-price">${p.price}</span> <span class="old-price">${p.old}</span></div>
-                <div class="promo-red">Obtenez 20 $ de réduction avec code : FREE20</div>
-                <div style="display:flex; gap:5px; margin-top:8px;">
-                    ${p.colors.map(c => `<div style="width:12px; height:12px; border-radius:50%; background:${c}; border:1px solid #ddd;"></div>`).join('')}
+        function draw() {
+            const container = document.getElementById('out');
+            container.innerHTML = products.map(p => `
+                <div class="p-card">
+                    <div class="p-img-container">
+                        ${p.isNew ? '<div class="badge-new">NOUVEAU !</div>' : ''}
+                        <img src="${p.img}">
+                        <div class="quick-add">Quick Add</div>
+                    </div>
+                    <div class="p-details">
+                        <div class="p-title">${p.name}</div>
+                        <div class="price-row">
+                            <span class="current-price">${p.price}</span>
+                            <span class="old-price">${p.old}</span>
+                        </div>
+                        <div class="promo-red">Obtenez 20 $ de réduction avec code : FREE20</div>
+                        <div class="swatches">
+                            ${p.colors.map(c => `<div class="dot" style="background:${c}"></div>`).join('')}
+                            ${p.colors.length > 3 ? '<span style="font-size:10px; color:#777;">+3</span>' : ''}
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    `).join('');
-}
-window.onload = draw;
+            `).join('');
+        }
+
+        // Lancement au chargement
+        window.onload = draw;
+    </script>
+
+</body>
+</html>
