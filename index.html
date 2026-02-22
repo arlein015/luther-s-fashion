@@ -7,71 +7,86 @@
     <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        :root { --gold: #c5a059; --dark: #000; --light: #f4f4f4; }
-        body { font-family: 'Montserrat', sans-serif; margin: 0; padding: 0; background: #fff; color: var(--dark); overflow-x: hidden; }
+      /* HEADER & LOGO */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 4%;
+    background: #fff;
+}
 
-        /* BANDEAU PROMO DYNAMIQUE */
-        .promo-header { background: var(--dark); color: #fff; text-align: center; padding: 10px; font-size: 11px; letter-spacing: 2px; font-weight: bold; }
-        .promo-header span { color: var(--gold); }
-
-        /* HEADER & NAV */
-        header { border-bottom: 1px solid #eee; sticky; top: 0; background: #fff; z-index: 1000; }
-        .nav-main { display: flex; justify-content: space-between; align-items: center; padding: 15px 4%; }
-        ..logo { 
-    font-family: 'Alex Brush', cursive; 
-    font-size: 65px; /* On passe de 45px à 65px pour qu'il soit bien imposant */
-    color: var(--dark); 
+.logo {
+    font-family: 'Alex Brush', cursive;
+    font-size: 35px; /* Taille réduite pour être élégante */
+    color: #000;
     text-decoration: none;
-    display: block;
-    text-align: center; /* Pour bien le centrer au-dessus du menu */
-    margin: 10px 0;
-    transition: 0.3s;
 }
 
-/* On ajuste aussi la nav-main pour laisser de la place au grand logo */
-.nav-main { 
-    display: flex; 
-    flex-direction: column; /* On empile le logo et les icônes si besoin */
-    align-items: center; 
-    padding: 20px 4%; 
+.icons-right {
+    display: flex;
+    gap: 15px;
+    font-size: 18px;
 }
-        
-        nav { display: flex; justify-content: center; gap: 30px; padding-bottom: 15px; text-transform: uppercase; font-size: 12px; font-weight: 700; }
-        nav a { text-decoration: none; color: var(--dark); }
 
-        /* BANNIÈRE HÉRO (PROMOTION) */
-        .hero-sale { 
-            position: relative; height: 70vh; background: url('badg noir.JPG') center/cover; 
-            display: flex; flex-direction: column; justify-content: center; align-items: center; color: #fff; text-align: center;
-        }
-        .hero-sale::after { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.3); z-index: 1; }
-        .hero-content { z-index: 2; }
-        .hero-content h1 { font-size: 50px; margin: 0; text-transform: uppercase; letter-spacing: 5px; }
-        .hero-content p { font-size: 20px; margin: 10px 0; }
-        .btn-shop { background: #fff; color: #000; padding: 15px 40px; text-decoration: none; font-weight: bold; text-transform: uppercase; margin-top: 20px; display: inline-block; }
+/* NAVIGATION */
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
 
-        /* SECTION COLLAGE ÉLÉGANT (CATÉGORIES) */
-        .collage-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 300px); gap: 10px; padding: 10px; }
-        .collage-item { position: relative; overflow: hidden; background: #eee; cursor: pointer; }
-        .collage-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-        .collage-item:hover img { transform: scale(1.1); }
-        .collage-label { position: absolute; bottom: 20px; left: 20px; color: #fff; font-weight: bold; text-transform: uppercase; z-index: 2; font-size: 18px; }
-        
-        /* Layout spécifique collage style Fashion Nova */
-        .item-1 { grid-column: 1 / 3; grid-row: 1 / 3; } /* Grande photo gauche */
+nav a {
+    text-decoration: none;
+    color: #000;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
 
-        /* SECTION TENDANCES (PRODUITS) */
-        .section-title { text-align: center; padding: 50px 0 20px; font-size: 24px; text-transform: uppercase; letter-spacing: 3px; }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; padding: 0 4%; }
-        .p-card { position: relative; margin-bottom: 30px; }
-        .p-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
-        .p-badge { position: absolute; top: 10px; left: 10px; background: red; color: #fff; padding: 5px 10px; font-size: 10px; font-weight: bold; }
-        .p-info { padding: 10px 0; font-size: 13px; }
-        .p-price { font-weight: bold; margin-top: 5px; }
-        .old-price { text-decoration: line-through; color: #888; margin-right: 5px; font-size: 11px; }
+/* PRODUITS STYLE FASHION NOVA */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding: 15px;
+}
 
-        /* FOOTER PANIER */
-        #cart-float { position: fixed; bottom: 20px; right: 20px; background: var(--dark); color: #fff; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.3); z-index: 1000; }
+.p-card {
+    position: relative;
+    text-align: left;
+}
+
+.p-img-container {
+    position: relative;
+}
+
+.p-card img {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+}
+
+.quick-add {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #000;
+    color: #fff;
+    width: 85%;
+    padding: 10px;
+    text-align: center;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.current-price { color: #d91818; font-weight: bold; font-size: 15px; }
+.old-price { color: #888; text-decoration: line-through; font-size: 11px; margin-left: 5px; }
+.promo-red { color: #b22222; font-size: 10px; font-weight: 600; margin-top: 5px; } 
     </style>
 </head>
 <body>
