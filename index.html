@@ -192,29 +192,49 @@
     </div>
 
     <script>
-        const products = [
-            { name: "Robe de Soirée Luther", price: 29.99, old: 89.99, img: "badg noir.JPG", sale: true },
-            { name: "Veste Urban Chic", price: 45.00, old: 110.00, img: "badg noir.JPG", sale: true },
-            { name: "Ensemble Satin Luxe", price: 35.50, old: 75.00, img: "badg noir.JPG", sale: false },
-            { name: "Accessoires Gold Edition", price: 15.00, old: 40.00, img: "badg noir.JPG", sale: true }
-        ];
+    const products = [
+    { 
+        name: "Robe Maxi plissée Corset Daniella - Crème", 
+        price: "67,99 $", 
+        old: "84,99 $", 
+        img: "badg noir.JPG", 
+        promo: "Obtenez 20 $ de réduction avec code : FREE20",
+        colors: ["#8B4513", "#ffffff", "#000000", "#B0C4DE"] 
+    },
+    { 
+        name: "Ensemble jupe longue à carreaux - Gris", 
+        price: "37,99 $", 
+        old: "54,99 $", 
+        img: "badg noir.JPG", 
+        promo: "Obtenez 20 $ de réduction avec code : FREE20",
+        colors: ["#555555", "#000000"] 
+    }
+    // Ajoute tes autres produits ici de la même façon
+];
 
-        function draw() {
-            document.getElementById('out').innerHTML = products.map(p => `
-                <div class="p-card">
-                    ${p.sale ? '<div class="p-badge">SALE</div>' : ''}
-                    <img src="${p.img}">
-                    <div class="p-info">
-                        <div>${p.name}</div>
-                        <div class="p-price">
-                            <span class="old-price">${p.old}€</span>
-                            <span style="color:red">${p.price}€</span>
-                        </div>
-                    </div>
+function draw() {
+    document.getElementById('out').innerHTML = products.map(p => `
+        <div class="p-card">
+            <div class="p-image-container">
+                <img src="${p.img}">
+                <div class="quick-add">Quick Add</div>
+            </div>
+            
+            <div class="p-details">
+                <div class="p-title">${p.name}</div>
+                
+                <div class="p-price-row">
+                    <span class="current-price">${p.price}</span>
+                    <span class="old-price">${p.old}</span>
                 </div>
-            `).join('');
-        }
-        window.onload = draw;
-    </script>
-</body>
-</html>
+                
+                <div class="promo-line">${p.promo}</div>
+                
+                <div class="swatches">
+                    ${p.colors.map(color => `<div class="dot" style="background: ${color};"></div>`).join('')}
+                    ${p.colors.length > 3 ? '<span style="font-size: 11px; color: #777;">+3</span>' : ''}
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
