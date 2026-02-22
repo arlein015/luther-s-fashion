@@ -14,25 +14,40 @@
         .promo-header { background: var(--dark); color: #fff; text-align: center; padding: 10px; font-size: 11px; letter-spacing: 2px; font-weight: bold; }
         .promo-header span { color: var(--gold); }
 
-/* --- HEADER ALIGNÉ STYLE FASHION NOVA --- */
+/* BARRE DE MENU NOIRE (CATÉGORIES) */
+.category-bar {
+    background: #000;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px;
+}
+
+.category-bar a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* HEADER PRINCIPAL */
 .header-main {
     display: flex;
     align-items: center;
     padding: 10px 15px;
-    gap: 10px;
+    gap: 15px;
     background: #fff;
     border-bottom: 1px solid #eee;
 }
 
 .logo-brand {
     font-weight: 900;
-    font-size: 18px;
+    font-size: 20px;
     text-decoration: none;
     color: #000;
-    white-space: nowrap;
 }
 
-/* Barre de recherche qui s'adapte */
 .search-wrapper {
     flex: 1;
     position: relative;
@@ -42,41 +57,16 @@
 
 .search-input {
     width: 100%;
-    padding: 8px 30px;
+    padding: 8px 35px;
     border-radius: 20px;
     border: 1px solid #ddd;
     background: #f5f5f5;
-    font-size: 13px;
 }
 
-.search-icon { position: absolute; left: 10px; color: #888; font-size: 12px; }
-.camera-icon { position: absolute; right: 10px; color: #888; font-size: 12px; }
-
-/* Groupe d'icônes alignées à droite */
 .header-actions {
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-size: 16px;
-}
-
-.lang-fr { font-size: 11px; font-weight: bold; }
-
-.cart-btn {
-    position: relative;
-    cursor: pointer;
-}
-
-#cart-count {
-    position: absolute;
-    top: -7px;
-    right: -7px;
-    background: #d91818;
-    color: #fff;
-    font-size: 9px;
-    padding: 2px 4px;
-    border-radius: 50%;
-    font-weight: bold;
+    gap: 15px;
 }
 .search-icon-left { position: absolute; left: 15px; top: 12px; color: #888; }
 .camera-icon-right { position: absolute; right: 15px; top: 12px; color: #888; }
@@ -112,20 +102,28 @@
     <div class="promo-header">LIVRAISON GRATUITE <span>+50$</span></div>
 
     <header>
-    <div class="header-main">
+    <div class="category-bar">
+    <a href="#">FEMMES</a>
+    <a href="#">PLUS+CURVE</a>
+    <a href="#">HOMMES</a>
+    <a href="#">NOUVEAUTÉS</a>
+    <a href="#">SOLDES</a>
+</div>
+
+<div class="header-main">
     <a href="#" class="logo-brand">LUTHERFASHION</a>
     
     <div class="search-wrapper">
-        <i class="fas fa-search search-icon"></i>
+        <i class="fas fa-search" style="position:absolute; left:12px; color:#888;"></i>
         <input type="text" class="search-input" placeholder="Rechercher...">
-        <i class="fas fa-camera camera-icon"></i>
+        <i class="fas fa-camera" style="position:absolute; right:12px; color:#888;"></i>
     </div>
 
     <div class="header-actions">
-        <span class="lang-fr">FR</span>
+        <span style="font-size:12px; font-weight:bold;">FR</span>
         <i class="far fa-user"></i>
         <i class="far fa-heart"></i>
-        <div class="cart-btn" id="open-cart">
+        <div class="cart-btn" id="open-cart" style="position:relative; cursor:pointer;">
             <i class="fas fa-shopping-bag"></i>
             <span id="cart-count">0</span>
         </div>
