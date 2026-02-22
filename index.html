@@ -222,7 +222,43 @@
     font-weight: bold;
     cursor: pointer;
 }
-    </style>
+</style> ```
+
+### 2. Place la promotion au bon endroit dans le `<body>`
+Le code de la photo de promotion doit être placé **après** la barre de promo noire pour qu'il soit visible. Voici l'ordre exact à suivre dans ton `<body>` :
+
+```html
+<header>
+    <a href="#" class="logo">Luther</a>
+    <div class="icons-right">
+        <i class="fas fa-search"></i>
+        <i class="far fa-user" style="margin-left: 10px;"></i>
+    </div>
+</header>
+
+<nav>
+    <a href="#">NOUVEAUTÉS</a>
+    <a href="#">VÊTEMENTS</a>
+    <a href="#">ROBES</a>
+    <a href="#">HOMMES</a>
+    <a href="#">SOLDES</a>
+</nav>
+
+<div class="promo-bar">
+    LIVRAISON GRATUITE SUR TOUT LE SITE <span>CODE: LUTHER2026</span>
+</div>
+
+<div class="hero-banner">
+    <div class="hero-content">
+        <p>La collection d'été est arrivée</p>
+        <h1>60-80% DE RÉDUCTION</h1>
+        <button class="shop-now-btn">ACHETER MAINTENANT</button>
+    </div>
+</div>
+
+<div class="product-grid" id="out"></div>
+}
+  </style>
 </head>
 <body>
 
