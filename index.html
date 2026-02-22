@@ -8,171 +8,220 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
-            --gradient: linear-gradient(to right, #1e3a8a, #a855f7);
-            --bg-color: #f0f2f5;
-            --card-bg: #ffffff;
-            --text-color: #333;
-        }
-
-        body.dark-mode {
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --text-color: #ffffff;
+            --primary: #000000;
+            --accent: #1e3a8a;
+            --bg: #ffffff;
+            --light-gray: #f8f8f8;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            padding-bottom: 80px;
-            transition: 0.3s;
+            padding: 0;
+            box-sizing: border-box;
+            background: var(--bg);
         }
 
+        /* BARRE DE PROMO (Haut de page) */
+        .promo-bar {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* HEADER STYLE PRO */
         header {
-            padding: 20px;
+            border-bottom: 1px solid #eee;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 1000;
+        }
+
+        .header-main {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            max-width: 1100px;
+            padding: 15px 5%;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
-        .logo-text {
+        .logo {
             font-family: 'Alex Brush', cursive;
-            font-size: 50px;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: 0;
+            font-size: 40px;
+            text-decoration: none;
+            color: var(--primary);
         }
 
-        .search-container {
-            background: var(--card-bg);
-            max-width: 700px;
-            margin: 10px auto 20px;
+        /* MENU DE NAVIGATION */
+        nav {
             display: flex;
-            align-items: center;
-            padding: 12px 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            width: 85%;
+            justify-content: center;
+            gap: 25px;
+            padding: 10px 0;
+            background: white;
+            border-top: 1px solid #f9f9f9;
         }
 
-        .categories {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding: 10px 20px;
-            max-width: 1100px;
-            margin: 0 auto;
-            scrollbar-width: none;
-        }
-
-        .cat-btn {
-            background: var(--card-bg);
-            padding: 8px 15px;
-            border-radius: 20px;
+        nav a {
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 600;
             font-size: 13px;
-            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        nav a:hover { color: var(--accent); }
+
+        /* BARRE DE RECHERCHE PRO */
+        .search-section {
+            padding: 20px 5%;
+            background: var(--light-gray);
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-box {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 45px;
+            border-radius: 5px;
             border: 1px solid #ddd;
-            white-space: nowrap;
-            color: var(--text-color);
+            font-family: inherit;
         }
 
-        .cat-btn.active {
-            background: var(--gradient);
-            color: white;
-            border: none;
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
         }
 
+        /* GRILLE DE PRODUITS */
         .catalog {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            padding: 20px;
-            max-width: 1100px;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 40px 5%;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
-        .card {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 10px;
+        .product-card {
+            background: white;
+            transition: transform 0.3s;
             cursor: pointer;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            text-align: left;
         }
 
-        .card img {
+        .product-card:hover { transform: translateY(-5px); }
+
+        .product-card img {
             width: 100%;
-            border-radius: 10px;
-            aspect-ratio: 1/1;
+            aspect-ratio: 3/4;
             object-fit: cover;
+            border-radius: 4px;
         }
 
-        #cart-badge {
+        .product-info { padding: 10px 0; }
+        .product-name { font-weight: 600; font-size: 14px; margin: 5px 0; }
+        .product-price { color: var(--accent); font-weight: bold; }
+
+        /* BOUTON PANIER FIXE */
+        #cart-button {
             position: fixed;
-            bottom: 25px;
-            right: 25px;
-            background: var(--gradient);
+            bottom: 30px;
+            right: 30px;
+            background: var(--primary);
             color: white;
             padding: 15px 25px;
             border-radius: 50px;
             font-weight: bold;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            border: none;
             cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 2000;
+        }
+
+        /* RESPONSIVE MOBILE */
+        @media (max-width: 768px) {
+            .catalog { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            nav { display: none; } /* On pourra faire un menu burger plus tard */
+            .logo { font-size: 30px; }
         }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="logo-text">Luther</div>
-    <div onclick="document.body.classList.toggle('dark-mode')" style="cursor:pointer; font-size: 24px;">🌙</div>
-</header>
+    <div class="promo-bar">Livraison gratuite sur toutes les commandes Luther !</div>
 
-<div class="search-container">
-    <div style="width: 25px; height: 25px; border: 2px solid #1e3a8a; border-radius: 50%; text-align: center; line-height: 22px; font-weight: bold; color: #1e3a8a; margin-right: 10px;">L</div>
-    <input type="text" placeholder="Rechercher homme, enfant, accessoires..." style="border: none; outline: none; width: 100%; background: transparent; color: inherit;">
-</div>
+    <header>
+        <div class="header-main">
+            <a href="#" class="logo">Luther</a>
+            <div class="header-icons">
+                <i class="far fa-user" style="margin-right: 15px; cursor: pointer;"></i>
+                <i class="far fa-heart" style="cursor: pointer;"></i>
+            </div>
+        </div>
+        <nav>
+            <a href="#">Nouvelle Entrée</a>
+            <a href="#">Vêtements</a>
+            <a href="#">Hommes</a>
+            <a href="#">Femmes</a>
+            <a href="#">Enfants</a>
+            <a href="#">Accessoires</a>
+        </nav>
+    </header>
 
-<div class="categories">
-    <div class="cat-btn active">Tout</div>
-    <div class="cat-btn">Homme</div>
-    <div class="cat-btn">Femme</div>
-    <div class="cat-btn">Enfant</div>
-    <div class="cat-btn">Accessoires</div>
-</div>
-
-<div class="catalog" id="box">
-    <div class="card">
-        <img src="badg noir.JPG">
-        <div style="font-weight: 600; margin-top: 8px;">Style #1</div>
-        <div style="color: #1e3a8a; font-weight: bold;">78€</div>
+    <div class="search-section">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Rechercher dans la collection Luther...">
+        </div>
     </div>
-    <div class="card">
-        <img src="badg noir.JPG">
-        <div style="font-weight: 600; margin-top: 8px;">Style #2</div>
-        <div style="color: #1e3a8a; font-weight: bold;">40€</div>
-    </div>
-</div>
 
-<div id="cart-badge">
-    <i class="fas fa-shopping-cart"></i>
-    <span>Panier (0)</span>
-</div>
+    <div class="catalog" id="box">
+        </div>
 
-<script>
-    // Enregistrement du sw.js
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js');
-    }
-</script>
+    <button id="cart-button">
+        <i class="fas fa-shopping-bag"></i> PANIER (0)
+    </button>
 
+    <script>
+        // On simule tes produits comme sur tes photos
+        const products = [
+            { name: "Luther Classic Style #1", price: "78€", img: "badg noir.JPG" },
+            { name: "Luther Modern Style #2", price: "40€", img: "badg noir.JPG" },
+            { name: "Luther Urban Style #3", price: "55€", img: "badg noir.JPG" },
+            { name: "Luther Chic Style #4", price: "88€", img: "badg noir.JPG" }
+        ];
+
+        function displayProducts() {
+            const container = document.getElementById('box');
+            container.innerHTML = products.map(p => `
+                <div class="product-card">
+                    <img src="${p.img}" alt="${p.name}">
+                    <div class="product-info">
+                        <div class="product-name">${p.name}</div>
+                        <div class="product-price">${p.price}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.onload = displayProducts;
+    </script>
 </body>
 </html>
