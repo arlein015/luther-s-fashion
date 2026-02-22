@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther Fashion - Boutique Complète</title>
+    <title>Luther Fashion - Boutique Mobile</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -43,18 +43,20 @@
         .hero-banner { background: #000; color: #fff; text-align: center; padding: 40px 20px; }
         .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
         .product-card { border: 1px solid #f0f0f0; }
-        .add-cart-btn { width: 100%; background: #000; color: #fff; border: none; padding: 8px; font-weight: bold; cursor: pointer; }
+        .add-cart-btn { width: 100%; background: #000; color: #fff; border: none; padding: 10px; font-weight: bold; cursor: pointer; font-size: 10px; }
 
         /* --- FOOTER --- */
         footer { background: #f9f9f9; padding: 40px 20px; border-top: 1px solid #eee; margin-top: 20px; }
         .footer-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
         .footer-col h4 { font-size: 14px; margin-bottom: 15px; text-transform: uppercase; }
-        .footer-col p, .footer-col a { font-size: 12px; color: #666; text-decoration: none; display: block; margin-bottom: 10px; }
+        .footer-col a { font-size: 12px; color: #666; text-decoration: none; display: block; margin-bottom: 10px; }
         .social-icons { display: flex; gap: 20px; font-size: 20px; margin-top: 10px; }
 
         /* --- PANIER --- */
         #cart-drawer { position: fixed; top: 0; right: -100%; width: 300px; height: 100%; background: #fff; z-index: 2001; transition: 0.3s; padding: 20px; box-shadow: -5px 0 15px rgba(0,0,0,0.1); }
         #cart-drawer.active { right: 0; }
+        .cart-item { display: flex; align-items: center; gap: 10px; padding-bottom: 15px; border-bottom: 1px solid #eee; margin-bottom: 15px; }
+        .cart-item img { width: 50px; height: 70px; object-fit: cover; }
     </style>
 </head>
 <body>
@@ -68,8 +70,7 @@
     </div>
     <a href="#" class="side-link">FEMMES</a>
     <a href="#" class="side-link">HOMMES</a>
-    <a href="#" class="side-link">ACCESSOIRES</a>
-    <a href="#" class="side-link">MON COMPTE</a>
+    <a href="#" class="side-link">NOUVEAUTÉS</a>
     <a href="#" class="side-link" style="color:red;">SOLDES</a>
 </div>
 
@@ -97,7 +98,8 @@
 </header>
 
 <nav class="nav-bar">
-    <i class="fas fa-bars" id="burger-menu"></i> <a href="#">FEMMES</a>
+    <i class="fas fa-bars" id="burger-menu"></i>
+    <a href="#">FEMMES</a>
     <a href="#">HOMMES</a>
     <a href="#">SOLDES</a>
 </nav>
@@ -109,7 +111,7 @@
 
 <div class="hero-banner">
     <h1>60-80% DE RÉDUCTION</h1>
-    <button class="btn-shop">VOIR TOUT</button>
+    <button style="background:#fff; color:#000; padding:12px 25px; border:none; font-weight:900; font-size:12px;">VOIR TOUT</button>
 </div>
 
 <div class="product-grid" id="grid"></div>
@@ -120,64 +122,95 @@
             <h4>AIDE</h4>
             <a href="#">Suivre ma commande</a>
             <a href="#">Retours & Échanges</a>
-            <a href="#">Contactez-nous</a>
         </div>
         <div class="footer-col">
             <h4>SUIVEZ-NOUS</h4>
             <div class="social-icons">
                 <i class="fab fa-instagram"></i>
                 <i class="fab fa-tiktok"></i>
-                <i class="fab fa-facebook"></i>
             </div>
         </div>
     </div>
-    <p style="text-align:center; margin-top:40px; font-size:10px; color:#999;">&copy; 2024 LUTHERFASHION. TOUS DROITS RÉSERVÉS.</p>
 </footer>
 
 <div id="cart-drawer">
-    <h3 style="margin-bottom:20px;">PANIER</h3>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h3>MON PANIER</h3>
+        <i class="fas fa-times" id="close-cart" style="cursor:pointer;"></i>
+    </div>
     <div id="cart-list"></div>
-    <button style="width:100%; background:#000; color:#fff; padding:15px; margin-top:20px;">COMMANDER</button>
+    <div style="border-top:2px solid #000; padding-top:15px; margin-top:20px;">
+        <div style="display:flex; justify-content:space-between; font-weight:900;">
+            <span>TOTAL</span>
+            <span id="total-price">0,00 $</span>
+        </div>
+        <button style="width:100%; background:#000; color:#fff; padding:15px; border:none; font-weight:900; margin-top:15px;">PAYER</button>
+    </div>
 </div>
 
 <script>
-    // GESTION SIDEBAR
-    const sidebar = document.getElementById('sidebar');
-    const burger = document.getElementById('burger-menu');
-    const closeSide = document.getElementById('close-sidebar');
-    const overlay = document.getElementById('overlay');
+    // --- INVENTAIRE MODIFIÉ (Veste Jaune et Veste Vert) ---
+    const products = [
+        { name: "Veste Stylée - Jaune", price: "45,00 $", img: "veste jaune.JPG" },
+        { name: "Veste Fashion - Vert", price: "55,00 $", img: "veste vert.JPG" }
+    ];
 
-    burger.onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
-    closeSide.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
+    let cart = [];
+
+    // Sidebar & Panier Logic
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const drawer = document.getElementById('cart-drawer');
+
+    document.getElementById('burger-menu').onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
+    document.getElementById('close-sidebar').onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
+    document.getElementById('open-cart').onclick = () => { drawer.classList.add('active'); overlay.classList.add('active'); };
+    document.getElementById('close-cart').onclick = () => { drawer.classList.remove('active'); overlay.classList.remove('active'); };
+    
     overlay.onclick = () => { 
         sidebar.classList.remove('active'); 
-        document.getElementById('cart-drawer').classList.remove('active');
+        drawer.classList.remove('active');
         overlay.classList.remove('active'); 
     };
 
-    // PANIER
-    document.getElementById('open-cart').onclick = () => { 
-        document.getElementById('cart-drawer').classList.add('active'); 
-        overlay.classList.add('active'); 
-    };
+    function addToCart(i) {
+        cart.push(products[i]);
+        updateUI();
+        drawer.classList.add('active');
+        overlay.classList.add('active');
+    }
 
-    // PRODUITS
-    const products = [
-        { name: "Ensemble Jupe - Gris", price: "37,99 $", img: "badg noir.JPG" },
-        { name: "Robe Corset - Crème", price: "67,99 $", img: "badg noir.JPG" }
-    ];
+    function removeItem(i) {
+        cart.splice(i, 1);
+        updateUI();
+    }
 
+    function updateUI() {
+        document.getElementById('cart-count').innerText = cart.length;
+        const list = document.getElementById('cart-list');
+        if(cart.length === 0) {
+            list.innerHTML = '<p style="text-align:center; color:#999;">Vide</p>';
+            document.getElementById('total-price').innerText = "0,00 $";
+            return;
+        }
+        list.innerHTML = cart.map((item, i) => `
+            <div class="cart-item">
+                <img src="${item.img}">
+                <div style="flex:1; font-size:12px;">
+                    <b>${item.name}</b><br>
+                    <span style="color:red;">${item.price}</span>
+                </div>
+                <i class="fas fa-trash-alt" onclick="removeItem(${i})" style="cursor:pointer; color:#ccc;"></i>
+            </div>
+        `).join('');
+        let total = cart.reduce((s, p) => s + parseFloat(p.price), 0);
+        document.getElementById('total-price').innerText = total.toFixed(2) + " $";
+    }
+
+    // Affichage initial des produits
     document.getElementById('grid').innerHTML = products.map((p, i) => `
         <div class="product-card">
-            <img src="${p.img}" style="width:100%">
-            <div style="padding:10px">
-                <p style="font-size:11px">${p.name}</p>
-                <p style="font-weight:900; color:red">${p.price}</p>
-            </div>
-            <button class="add-cart-btn">AJOUTER</button>
-        </div>
-    `).join('');
-</script>
-
-</body>
-</html>
+            <img src="${p.img}">
+            <div style="padding:10px;">
+                <p style="font-size:11px; height:30px; overflow:hidden;">${p.name}</p>
+                <p style="font-weight:900; color:red; margin-bottom:
