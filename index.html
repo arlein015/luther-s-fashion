@@ -149,14 +149,17 @@
 </div>
 
 <script>
-    // --- INVENTAIRE MODIFIÉ (Veste Jaune et Veste Vert) ---
-const products = [
-    { name: "Veste Stylée - Jaune", price: "45,00 $", img: "veste-jaune.jpg" },
-    { name: "Veste Fashion - Vert", price: "55,00 $", img: "veste-vert.jpg" }
-];
+<script>
+    // --- INVENTAIRE AVEC NOMS DE FICHIERS NETTOYÉS ---
+    const products = [
+        { name: "Veste Stylée - Jaune", price: "45,00 $", img: "veste-jaune.jpg" },
+        { name: "Veste Fashion - Vert", price: "55,00 $", img: "veste-vert.jpg" }
+    ];
+
     let cart = [];
 
-    // Sidebar & Panier Logic
+    // ... (garde le reste du code identique pour la sidebar et le panier)
+    
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
     const drawer = document.getElementById('cart-drawer');
@@ -206,7 +209,6 @@ const products = [
         document.getElementById('total-price').innerText = total.toFixed(2) + " $";
     }
 
-    // Affichage initial des produits
     document.getElementById('grid').innerHTML = products.map((p, i) => `
         <div class="product-card">
             <img src="${p.img}">
@@ -218,6 +220,3 @@ const products = [
         </div>
     `).join('');
 </script>
-
-</body>
-</html>
