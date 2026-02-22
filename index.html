@@ -7,89 +7,87 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        /* --- STYLE DE BASE --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Montserrat', sans-serif; background-color: #fff; color: #000; overflow-x: hidden; }
+        body { font-family: 'Montserrat', sans-serif; background: #fff; color: #000; overflow-x: hidden; }
 
-        /* --- ÉLÉMENTS FIXES --- */
-        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 2000; }
-        #overlay.active { display: block; }
+        /* --- BANNIÈRE FLOU (BLUR) --- */
+        .hero-section {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .hero-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('Veste vert.jpg') center/cover; /* Image de fond */
+            filter: blur(8px); /* Effet flou demandé */
+            transform: scale(1.1);
+            z-index: 1;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: #fff;
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            width: 100%;
+        }
+        .hero-content h1 { font-size: 28px; font-weight: 900; }
 
         /* --- HEADER & NAV --- */
-        .top-promo { background: #000; color: #fff; text-align: center; padding: 6px; font-size: 10px; font-weight: bold; }
         .main-header { padding: 10px 15px; border-bottom: 1px solid #eee; background: #fff; position: sticky; top: 0; z-index: 1000; }
-        .logo-row { margin-bottom: 10px; }
-        .logo-text { font-weight: 900; font-size: 20px; text-decoration: none; color: #000; letter-spacing: -1px; }
-        .search-icon-row { display: flex; align-items: center; gap: 10px; }
-        .search-container { flex: 1; position: relative; }
-        .search-container input { width: 100%; padding: 8px 30px; border-radius: 20px; border: 1px solid #ddd; background: #f5f5f5; font-size: 13px; }
-        .search-container .fa-search { position: absolute; left: 10px; top: 10px; color: #888; font-size: 12px; }
-        .action-icons { display: flex; align-items: center; gap: 12px; font-size: 18px; }
-        .cart-wrapper { position: relative; cursor: pointer; }
-        #cart-count { position: absolute; top: -7px; right: -7px; background: #d91818; color: #fff; font-size: 9px; padding: 2px 5px; border-radius: 50%; font-weight: bold; }
+        .logo-text { font-weight: 900; font-size: 20px; text-decoration: none; color: #000; display: block; margin-bottom: 10px; }
+        .header-row { display: flex; align-items: center; gap: 10px; }
+        .search-box { flex: 1; position: relative; }
+        .search-box input { width: 100%; padding: 8px 35px; border-radius: 20px; border: 1px solid #ddd; background: #f5f5f5; font-size: 13px; }
+        .search-box .fa-search { position: absolute; left: 12px; top: 10px; color: #888; }
         
-        .nav-bar { display: flex; align-items: center; gap: 15px; padding: 10px 15px; border-bottom: 1px solid #eee; overflow-x: auto; white-space: nowrap; }
-        .nav-bar a { text-decoration: none; color: #000; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        .action-icons { display: flex; gap: 15px; font-size: 18px; align-items: center; }
+        .cart-btn { position: relative; cursor: pointer; }
+        #cart-count { position: absolute; top: -8px; right: -8px; background: #d91818; color: #fff; font-size: 10px; padding: 2px 5px; border-radius: 50%; }
 
-        /* --- MENU LATÉRAL (SIDEBAR) --- */
-        #sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: #fff; z-index: 2001; transition: 0.3s; padding: 20px; }
-        #sidebar.active { left: 0; }
-        .side-link { display: block; padding: 15px 0; border-bottom: 1px solid #eee; text-decoration: none; color: #000; font-weight: bold; font-size: 14px; }
+        .nav-bar { display: flex; align-items: center; gap: 15px; padding: 10px 15px; border-bottom: 1px solid #eee; overflow-x: auto; }
+        .nav-bar i.fa-bars { font-size: 20px; cursor: pointer; }
+        .nav-bar a { text-decoration: none; color: #000; font-size: 11px; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
 
-        /* --- FILTRES --- */
-        .filter-bar { display: flex; justify-content: space-around; padding: 15px; border-bottom: 1px solid #eee; background: #fafafa; }
-        .filter-item { font-size: 12px; font-weight: bold; display: flex; align-items: center; gap: 5px; cursor: pointer; }
-
-        /* --- PRODUITS & BANNIÈRE --- */
-        .hero-banner { background: #000; color: #fff; text-align: center; padding: 40px 20px; }
+        /* --- GRILLE PRODUITS --- */
         .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
-        .product-card { border: 1px solid #f0f0f0; }
-        .add-cart-btn { width: 100%; background: #000; color: #fff; border: none; padding: 10px; font-weight: bold; cursor: pointer; font-size: 10px; }
-
-        /* --- FOOTER --- */
-        footer { background: #f9f9f9; padding: 40px 20px; border-top: 1px solid #eee; margin-top: 20px; }
-        .footer-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
-        .footer-col h4 { font-size: 14px; margin-bottom: 15px; text-transform: uppercase; }
-        .footer-col a { font-size: 12px; color: #666; text-decoration: none; display: block; margin-bottom: 10px; }
-        .social-icons { display: flex; gap: 20px; font-size: 20px; margin-top: 10px; }
+        .p-card { border: 1px solid #f0f0f0; text-align: center; padding-bottom: 10px; }
+        .p-card img { width: 100%; height: 200px; object-fit: cover; }
+        .add-btn { background: #000; color: #fff; border: none; padding: 10px; width: 90%; font-weight: bold; font-size: 10px; margin-top: 10px; }
 
         /* --- PANIER --- */
         #cart-drawer { position: fixed; top: 0; right: -100%; width: 300px; height: 100%; background: #fff; z-index: 2001; transition: 0.3s; padding: 20px; box-shadow: -5px 0 15px rgba(0,0,0,0.1); }
         #cart-drawer.active { right: 0; }
-        .cart-item { display: flex; align-items: center; gap: 10px; padding-bottom: 15px; border-bottom: 1px solid #eee; margin-bottom: 15px; }
-        .cart-item img { width: 50px; height: 70px; object-fit: cover; }
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 2000; }
+        #overlay.active { display: block; }
+        .cart-item { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+        .cart-item img { width: 50px; height: 60px; object-fit: cover; }
+        .remove-icon { color: #d91818; cursor: pointer; margin-left: auto; }
     </style>
 </head>
 <body>
 
 <div id="overlay"></div>
 
-<div id="sidebar">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-        <h2 style="font-size:18px;">MENU</h2>
-        <i class="fas fa-times" id="close-sidebar" style="font-size:20px;"></i>
-    </div>
-    <a href="#" class="side-link">FEMMES</a>
-    <a href="#" class="side-link">HOMMES</a>
-    <a href="#" class="side-link">NOUVEAUTÉS</a>
-    <a href="#" class="side-link" style="color:red;">SOLDES</a>
-</div>
-
-<div class="top-promo">LIVRAISON GRATUITE +50$</div>
-
 <header class="main-header">
-    <div class="logo-row">
-        <a href="#" class="logo-text">LUTHERFASHION</a>
-    </div>
-    <div class="search-icon-row">
-        <div class="search-container">
+    <a href="#" class="logo-text">LUTHERFASHION</a>
+    <div class="header-row">
+        <div class="search-box">
             <i class="fas fa-search"></i>
             <input type="text" placeholder="Rechercher...">
         </div>
         <div class="action-icons">
-            <span style="font-size:11px; font-weight:900;">FR</span>
             <i class="far fa-user"></i>
             <i class="far fa-heart"></i>
-            <div class="cart-wrapper" id="open-cart">
+            <div class="cart-btn" id="open-cart">
                 <i class="fas fa-shopping-bag"></i>
                 <span id="cart-count">0</span>
             </div>
@@ -98,133 +96,110 @@
 </header>
 
 <nav class="nav-bar">
-    <i class="fas fa-bars" id="burger-menu"></i>
+    <i class="fas fa-bars"></i>
     <a href="#">FEMMES</a>
     <a href="#">HOMMES</a>
+    <a href="#">NOUVEAUTÉS</a>
     <a href="#">SOLDES</a>
 </nav>
 
-<div class="filter-bar">
-    <div class="filter-item"><i class="fas fa-sliders-h"></i> Filtrer</div>
-    <div class="filter-item">Trier par <i class="fas fa-chevron-down"></i></div>
-</div>
-
-<div class="hero-banner">
-    <h1>60-80% DE RÉDUCTION</h1>
-    <button style="background:#fff; color:#000; padding:12px 25px; border:none; font-weight:900; font-size:12px;">VOIR TOUT</button>
-</div>
-
-<div class="product-grid" id="grid"></div>
-
-<footer>
-    <div class="footer-grid">
-        <div class="footer-col">
-            <h4>AIDE</h4>
-            <a href="#">Suivre ma commande</a>
-            <a href="#">Retours & Échanges</a>
-        </div>
-        <div class="footer-col">
-            <h4>SUIVEZ-NOUS</h4>
-            <div class="social-icons">
-                <i class="fab fa-instagram"></i>
-                <i class="fab fa-tiktok"></i>
-            </div>
-        </div>
+<div class="hero-section">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+        <h1>60-80% DE RÉDUCTION</h1>
+        <p>OFFRE LIMITÉE</p>
     </div>
-</footer>
+</div>
+
+<div class="product-grid" id="product-grid"></div>
 
 <div id="cart-drawer">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+    <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
         <h3>MON PANIER</h3>
-        <i class="fas fa-times" id="close-cart" style="cursor:pointer;"></i>
+        <i class="fas fa-times" id="close-cart" style="cursor:pointer; font-size:20px;"></i>
     </div>
-    <div id="cart-list"></div>
-    <div style="border-top:2px solid #000; padding-top:15px; margin-top:20px;">
+    <div id="cart-items"></div>
+    <div style="margin-top:20px; border-top:2px solid #000; padding-top:15px;">
         <div style="display:flex; justify-content:space-between; font-weight:900;">
             <span>TOTAL</span>
             <span id="total-price">0,00 $</span>
         </div>
-        <button style="width:100%; background:#000; color:#fff; padding:15px; border:none; font-weight:900; margin-top:15px;">PAYER</button>
+        <button style="width:100%; background:#000; color:#fff; padding:15px; border:none; margin-top:15px; font-weight:bold;">PAYER</button>
     </div>
 </div>
 
 <script>
-    // --- INVENTAIRE CORRIGÉ POUR TES FICHIERS GITHUB ---
+    // Inventaire basé sur tes fichiers GitHub
     const products = [
-        { 
-            name: "Veste Stylée - Jaune", 
-            price: "45,00 $", 
-            // On utilise l'espace tel qu'il apparaît sur ta capture
-            img: "veste jaune.jpg" 
-        },
-        { 
-            name: "Veste Fashion - Vert", 
-            price: "55,00 $", 
-            // Attention : ici le "V" est en majuscule comme sur ta capture
-            img: "Veste vert.jpg" 
-        }
+        { name: "Veste Stylée - Jaune", price: "45.00", img: "veste jaune.jpg" },
+        { name: "Veste Fashion - Vert", price: "55.00", img: "Veste vert.jpg" }
     ];
 
     let cart = [];
 
-    // --- LE RESTE DU CODE (NE PAS CHANGER) ---
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('overlay');
-    const drawer = document.getElementById('cart-drawer');
-
-    document.getElementById('burger-menu').onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
-    document.getElementById('close-sidebar').onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
-    document.getElementById('open-cart').onclick = () => { drawer.classList.add('active'); overlay.classList.add('active'); };
-    document.getElementById('close-cart').onclick = () => { drawer.classList.remove('active'); overlay.classList.remove('active'); };
-    
-    overlay.onclick = () => { 
-        sidebar.classList.remove('active'); 
-        drawer.classList.remove('active');
-        overlay.classList.remove('active'); 
-    };
-
-    function addToCart(i) {
-        cart.push(products[i]);
-        updateUI();
-        drawer.classList.add('active');
-        overlay.classList.add('active');
-    }
-
-    function removeItem(i) {
-        cart.splice(i, 1);
-        updateUI();
-    }
-
-    function updateUI() {
-        document.getElementById('cart-count').innerText = cart.length;
-        const list = document.getElementById('cart-list');
-        if(cart.length === 0) {
-            list.innerHTML = '<p style="text-align:center; color:#999;">Vide</p>';
-            document.getElementById('total-price').innerText = "0,00 $";
+    // Fonctions Panier
+    function updateCart() {
+        const cartList = document.getElementById('cart-items');
+        const count = document.getElementById('cart-count');
+        const total = document.getElementById('total-price');
+        
+        count.innerText = cart.length;
+        
+        if (cart.length === 0) {
+            cartList.innerHTML = '<p style="text-align:center; color:#999; margin-top:20px;">Panier vide</p>';
+            total.innerText = "0,00 $";
             return;
         }
-        list.innerHTML = cart.map((item, i) => `
+
+        cartList.innerHTML = cart.map((item, index) => `
             <div class="cart-item">
                 <img src="${item.img}">
-                <div style="flex:1; font-size:12px;">
-                    <b>${item.name}</b><br>
-                    <span style="color:red;">${item.price}</span>
+                <div>
+                    <div style="font-size:11px; font-weight:bold;">${item.name}</div>
+                    <div style="color:red; font-weight:bold;">${item.price} $</div>
                 </div>
-                <i class="fas fa-trash-alt" onclick="removeItem(${i})" style="cursor:pointer; color:#ccc;"></i>
+                <i class="fas fa-trash-alt remove-icon" onclick="removeFromCart(${index})"></i>
             </div>
         `).join('');
-        let total = cart.reduce((s, p) => s + parseFloat(p.price.replace('$', '').replace(',', '.')), 0);
-        document.getElementById('total-price').innerText = total.toFixed(2).replace('.', ',') + " $";
+
+        let sum = cart.reduce((acc, curr) => acc + parseFloat(curr.price), 0);
+        total.innerText = sum.toFixed(2).replace('.', ',') + " $";
     }
 
-    document.getElementById('grid').innerHTML = products.map((p, i) => `
-        <div class="product-card">
-            <img src="${p.img}" onerror="this.src='https://via.placeholder.com/150?text=Image+Non+Trouvée'">
+    function addToCart(index) {
+        cart.push(products[index]);
+        updateCart();
+        document.getElementById('cart-drawer').classList.add('active');
+        document.getElementById('overlay').classList.add('active');
+    }
+
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCart();
+    }
+
+    // UI Events
+    document.getElementById('open-cart').onclick = () => {
+        document.getElementById('cart-drawer').classList.add('active');
+        document.getElementById('overlay').classList.add('active');
+    };
+    document.getElementById('close-cart').onclick = () => {
+        document.getElementById('cart-drawer').classList.remove('active');
+        document.getElementById('overlay').classList.remove('active');
+    };
+
+    // Render Products
+    document.getElementById('product-grid').innerHTML = products.map((p, i) => `
+        <div class="p-card">
+            <img src="${p.img}">
             <div style="padding:10px;">
-                <p style="font-size:11px; height:30px; overflow:hidden;">${p.name}</p>
-                <p style="font-weight:900; color:red; margin-bottom:10px;">${p.price}</p>
-                <button class="add-cart-btn" onclick="addToCart(${i})">AJOUTER AU PANIER</button>
+                <p style="font-size:11px;">${p.name}</p>
+                <p style="font-weight:900; color:red;">${p.price} $</p>
+                <button class="add-btn" onclick="addToCart(${i})">AJOUTER</button>
             </div>
         </div>
     `).join('');
 </script>
+
+</body>
+</html>
