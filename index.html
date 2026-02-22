@@ -56,6 +56,39 @@
         /* FOOTER PANIER */
         #cart-float { position: fixed; bottom: 20px; right: 20px; background: var(--dark); color: #fff; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.3); z-index: 1000; }
     </style>
+    /* Bouton Ajouter sur la carte produit */
+.add-to-cart-btn {
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* Bouton Supprimer dans le panier */
+.remove-item {
+    color: #888;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: auto; /* Aligne la poubelle à droite */
+}
+
+.remove-item:hover {
+    color: #d91818; /* Rouge au survol */
+}
+
+/* Structure d'une ligne dans le panier */
+.cart-item-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
 </head>
 <body>
 
@@ -116,29 +149,62 @@
     </div>
 
     <script>
-        const products = [
-            { name: "Robe de Soirée Luther", price: 29.99, old: 89.99, img: "badg noir.JPG", sale: true },
-            { name: "Veste Urban Chic", price: 45.00, old: 110.00, img: "badg noir.JPG", sale: true },
-            { name: "Ensemble Satin Luxe", price: 35.50, old: 75.00, img: "badg noir.JPG", sale: false },
-            { name: "Accessoires Gold Edition", price: 15.00, old: 40.00, img: "badg noir.JPG", sale: true }
-        ];
+       // Fonction pour ajouter un produit
+function addToCart(index) {
+    const product = products[index];
+    cart.push(product);
+    updateCart();
+    // Ouvre le panier automatiquement à l'ajout
+    document.getElementById('cart-drawer').classList.add('active');
+    document.getElementById('cart-overlay').classList.add('active');
+}
 
-        function draw() {
-            document.getElementById('out').innerHTML = products.map(p => `
-                <div class="p-card">
-                    ${p.sale ? '<div class="p-badge">SALE</div>' : ''}
-                    <img src="${p.img}">
-                    <div class="p-info">
-                        <div>${p.name}</div>
-                        <div class="p-price">
-                            <span class="old-price">${p.old}€</span>
-                            <span style="color:red">${p.price}€</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-        window.onload = draw;
-    </script>
-</body>
-</html>
+// Fonction pour supprimer un produit
+function removeFromCart(index) {
+    cart.splice(index, 1); // Retire 1 élément à la position index
+    updateCart();
+}
+
+// Mise à jour de l'affichage du panier
+function updateCart() {
+    const content = document.getElementById('cart-content');
+    const count = document.getElementById('cart-count');
+    const totalEl = document.getElementById('cart-total');
+    
+    count.innerText = cart.length;
+    
+    if (cart.length === 0) {
+        content.innerHTML = '<p style="text-align:center; color:#888;">Votre panier est vide.</p>';
+        totalEl.innerText = "0,00 $";
+        return;
+    }
+
+    content.innerHTML = cart.map((item, i) => `
+        <div class="cart-item-row">
+            <img src="${item.img}" style="width:50px; height:65px; object-fit:cover;">
+            <div>
+                <div style="font-size:12px; font-weight:bold;">${item.name}</div>
+                <div style="color:#d91818; font-weight:bold;">${item.price}</div>
+            </div>
+            <i class="fas fa-trash-alt remove-item" onclick="removeFromCart(${i})"></i>
+        </div>
+    `).join('');
+    
+    // Calcul du total
+    let total = cart.reduce((sum, item) => sum + parseFloat(item.price.replace('$', '').replace(',', '.')), 0);
+    totalEl.innerText = total.toFixed(2).replace('.', ',') + " $";
+}
+
+// Mise à jour de la fonction draw pour inclure le bouton
+function draw() {
+    document.getElementById('out').innerHTML = products.map((p, i) => `
+        <div class="p-card">
+            <img src="${p.img}">
+            <div style="padding:10px;">
+                <div style="font-size:13px;">${p.name}</div>
+                <div style="font-weight:bold;">${p.price}</div>
+                <button class="add-to-cart-btn" onclick="addToCart(${i})">Ajouter au panier</button>
+            </div>
+        </div>
+    `).join('');
+}
