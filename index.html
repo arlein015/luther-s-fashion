@@ -90,7 +90,28 @@ nav a {
     </style>
 </head>
 <body>
+<header>
+    <a href="#" class="logo">Luther</a>
+    <div class="icons-right">
+        <i class="fas fa-search"></i>
+        <i class="far fa-user"></i>
+    </div>
+</header>
 
+<nav>
+    <a href="#">NOUVEAUTÉS</a>
+    <a href="#">VÊTEMENTS</a>
+    <a href="#">ROBES</a>
+    <a href="#">HOMMES</a>
+    <a href="#">SOLDES</a>
+</nav>
+
+<div class="promo-header" style="background:#000; color:#fff; text-align:center; padding:10px; font-size:11px; font-weight:bold;">
+    LIVRAISON GRATUITE SUR TOUT LE SITE CODE: LUTHER2026
+</div>
+
+<div class="product-grid" id="out">
+    </div>
     <div class="promo-header">LIVRAISON GRATUITE SUR TOUT LE SITE <span>CODE: LUTHER2026</span></div>
 
     <header>
@@ -149,29 +170,38 @@ nav a {
 
     <script>
         const products = [
-            { name: "Robe de Soirée Luther", price: 29.99, old: 89.99, img: "badg noir.JPG", sale: true },
-            { name: "Veste Urban Chic", price: 45.00, old: 110.00, img: "badg noir.JPG", sale: true },
-            { name: "Ensemble Satin Luxe", price: 35.50, old: 75.00, img: "badg noir.JPG", sale: false },
-            { name: "Accessoires Gold Edition", price: 15.00, old: 40.00, img: "badg noir.JPG", sale: true }
-        ];
+    {
+        name: "Nouée au travail ensemble jupe - Gris",
+        price: "37,99 $",
+        old: "54,99 $",
+        img: "badg noir.JPG",
+        colors: ["#8B4513", "#fff", "#000"]
+    },
+    {
+        name: "Robe Maxi plissée Corset - Bleu clair",
+        price: "58,99 $",
+        old: "84,99 $",
+        img: "badg noir.JPG",
+        colors: ["#ADD8E6", "#000"]
+    }
+];
 
-        function draw() {
-            document.getElementById('out').innerHTML = products.map(p => `
-                <div class="p-card">
-                    ${p.sale ? '<div class="p-badge">SALE</div>' : ''}
-                    <img src="${p.img}">
-                    <div class="p-info">
-                        <div>${p.name}</div>
-                        <div class="p-price">
-                            <span class="old-price">${p.old}€</span>
-                            <span style="color:red">${p.price}€</span>
-                        </div>
-                    </div>
+function draw() {
+    document.getElementById('out').innerHTML = products.map(p => `
+        <div class="p-card">
+            <div class="p-img-container">
+                <img src="${p.img}">
+                <div class="quick-add">Quick Add</div>
+            </div>
+            <div style="padding:10px 0;">
+                <div style="font-size:12px; font-weight:500;">${p.name}</div>
+                <div><span class="current-price">${p.price}</span> <span class="old-price">${p.old}</span></div>
+                <div class="promo-red">Obtenez 20 $ de réduction avec code : FREE20</div>
+                <div style="display:flex; gap:5px; margin-top:8px;">
+                    ${p.colors.map(c => `<div style="width:12px; height:12px; border-radius:50%; background:${c}; border:1px solid #ddd;"></div>`).join('')}
                 </div>
-            `).join('');
-        }
-        window.onload = draw;
-    </script>
-</body>
-</html>
-
+            </div>
+        </div>
+    `).join('');
+}
+window.onload = draw;
