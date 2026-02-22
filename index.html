@@ -136,10 +136,24 @@
         }
 
         .price-red { color: #d91818; font-weight: bold; }
+  /* L'EFFET D'ASSOMBRISSEMENT DU FOND */
+#cart-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Noir transparent */
+    display: none; /* Caché par défaut */
+    z-index: 999; /* Juste en dessous du panier */
+    transition: 0.3s;
+}
+
+#cart-overlay.active {
+    display: block;
+}
     </style>
 </head>
+    <div id="cart-overlay"></div>
 <body>
-
     <header>
         <a href="#" class="logo">Luther</a>
         <div class="icons-right">
@@ -186,16 +200,19 @@
     </div>
 
     <script>
-        const products = [
-            { name: "Nouée au travail ensemble jupe - Gris", price: "37,99 $", img: "badg noir.JPG" },
-            { name: "Robe Maxi plissée Corset - Crème", price: "67,99 $", img: "badg noir.JPG" }
-        ];
+        const overlay = document.getElementById('cart-overlay');
+        const drawer = document.getElementById('cart-drawer');
 
         let cart = [];
 
-        document.getElementById('open-cart').onclick = () => document.getElementById('cart-drawer').classList.add('active');
-        document.getElementById('close-cart').onclick = () => document.getElementById('cart-drawer').classList.remove('active');
-
+        document.getElementById('open-cart').onclick = () => {
+    drawer.classList.add('active');
+    overlay.classList.add('active'); // Ajoute cette ligne
+};
+        document.getElementById('close-cart').onclick = () => {
+    drawer.classList.remove('active');
+    overlay.classList.remove('active'); // Ajoute cette ligne
+};
         function addToCart(index) {
             cart.push(products[index]);
             updateCart();
