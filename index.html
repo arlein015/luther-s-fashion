@@ -3,78 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther Fashion | Boutique Interactive</title>
+    <title>Luther Fashion | Inscription & Store</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --accent: #FF0000; --bg: #ffffff; --glass: rgba(255, 255, 255, 0.9); }
+        :root { --accent: #FF0000; --bg: #ffffff; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: #000; padding-bottom: 70px; }
+        body { font-family: 'Montserrat', sans-serif; background: var(--bg); padding-bottom: 70px; }
 
-        /* --- HEADER --- */
-        header { padding: 12px 15px; background: var(--glass); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid #eee; }
+        /* --- HEADER & NAV --- */
+        header { padding: 12px 15px; background: #fff; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid #eee; }
         .header-main { display: flex; align-items: center; justify-content: space-between; }
         .logo { font-weight: 900; font-size: 22px; text-decoration: none; color: #000; letter-spacing: -1.5px; }
-        .header-right { display: flex; align-items: center; gap: 15px; }
-        .clickable { cursor: pointer; transition: opacity 0.2s; }
-        .clickable:active { opacity: 0.5; }
+        .clickable { cursor: pointer; }
 
-        /* --- NAV TABS --- */
-        .nav-scroll { display: flex; gap: 20px; padding: 10px 15px; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid #eee; }
-        .nav-item { font-size: 12px; font-weight: 900; text-decoration: none; color: #888; text-transform: uppercase; padding-bottom: 5px; border-bottom: 2px solid transparent; }
-        .nav-item.active { color: #000; border-bottom-color: #000; }
+        /* --- MODAL INSCRIPTION (SIGN UP) --- */
+        #auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 3000; display: none; padding: 30px 20px; }
+        .auth-title { font-weight: 900; font-size: 18px; text-transform: uppercase; margin-bottom: 20px; }
+        .input-group { position: relative; margin-top: 15px; }
+        .input-group input { width: 100%; padding: 18px; border: 1px solid #ddd; font-size: 14px; border-radius: 4px; }
+        .input-arrow { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: #000; color: #fff; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; }
+        .auth-terms { font-size: 10px; color: #666; line-height: 1.5; margin-top: 20px; }
+        .auth-terms a { color: #000; text-decoration: underline; }
 
-        /* --- GRID & CARDS --- */
+        /* --- PRODUIT & GRILLE --- */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
-        .card { border-radius: 10px; overflow: hidden; background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; }
+        .card { border-radius: 10px; overflow: hidden; background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
-        .card-body { padding: 10px; }
-        .price { font-weight: 900; color: var(--accent); font-size: 16px; }
+        .price { font-weight: 900; color: var(--accent); }
 
         /* --- PAGE DÉTAIL --- */
-        #product-detail { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 2000; display: none; overflow-y: auto; padding-bottom: 100px; }
-        .detail-header { padding: 15px; display: flex; justify-content: space-between; position: sticky; top: 0; background: #fff; }
-        .size-grid { display: flex; gap: 8px; margin: 15px 0; overflow-x: auto; }
-        .size-box { border: 1px solid #ddd; padding: 12px; font-size: 12px; font-weight: 700; border-radius: 4px; min-width: 55px; text-align: center; cursor: pointer; }
-        .size-box.selected { border: 2px solid #000; background: #f0f0f0; }
-        .add-to-bag { width: 100%; background: #000; color: #fff; padding: 18px; border: none; font-weight: 900; border-radius: 50px; font-size: 14px; cursor: pointer; margin-top: 15px; }
+        #product-detail { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 2000; display: none; overflow-y: auto; }
+        .add-to-bag { width: 100%; background: #000; color: #fff; padding: 18px; border: none; font-weight: 900; border-radius: 50px; cursor: pointer; }
 
         /* --- BOTTOM NAV --- */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 1001; }
-        .bottom-nav-item { display: flex; flex-direction: column; align-items: center; color: #000; text-decoration: none; font-size: 10px; font-weight: 700; gap: 4px; cursor: pointer; }
+        .bottom-nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; font-weight: 700; color: #000; text-decoration: none; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div id="product-detail">
-    <div class="detail-header">
-        <i class="fas fa-chevron-left clickable" onclick="closeDetail()" style="font-size: 22px;"></i>
-        <i class="fas fa-share-alt clickable"></i>
+<div id="auth-modal">
+    <div style="text-align: right;"><i class="fas fa-times clickable" onclick="toggleAuth()" style="font-size: 24px;"></i></div>
+    <div class="auth-title">SIGN UP FOR DISCOUNTS + UPDATES</div>
+    <div class="input-group">
+        <input type="text" id="user-contact" placeholder="Phone Number or Email">
+        <button class="input-arrow" onclick="handleAuth()"><i class="fas fa-chevron-right"></i></button>
     </div>
-    <img id="d-img" style="width:100%; aspect-ratio:1/1.2; object-fit:cover;" src="">
-    <div style="padding: 20px;">
-        <h2 id="d-name" style="font-size:18px; margin-bottom:10px;"></h2>
-        <div id="d-price" style="font-size:22px; font-weight:900; color:red; margin-bottom:20px;"></div>
-        <p style="font-size:12px; font-weight:900;">SÉLECTIONNER LA TAILLE</p>
-        <div class="size-grid">
-            <div class="size-box" onclick="selectSize(this)">XS</div>
-            <div class="size-box" onclick="selectSize(this)">S</div>
-            <div class="size-box" onclick="selectSize(this)">M</div>
-            <div class="size-box" onclick="selectSize(this)">L</div>
-            <div class="size-box" onclick="selectSize(this)">XL</div>
-        </div>
-        <button class="add-to-bag clickable" onclick="addToBag()">ADD TO BAG</button>
+    <div class="auth-terms">
+        By signing up for email, you agree to Fashion Nova's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>. <br><br>
+        By submitting your phone number, you agree to receive recurring automated promotional and personalized marketing text messages.
+    </div>
+</div>
+
+<div id="product-detail">
+    <div style="padding:15px;"><i class="fas fa-chevron-left clickable" onclick="closeDetail()" style="font-size: 22px;"></i></div>
+    <img id="d-img" style="width:100%;" src="">
+    <div style="padding:20px;">
+        <h2 id="d-name"></h2>
+        <div id="d-price" class="price" style="font-size:22px; margin:15px 0;"></div>
+        <button class="add-to-bag" onclick="addToBag()">ADD TO BAG</button>
     </div>
 </div>
 
 <header>
     <div class="header-main">
-        <i class="fas fa-bars clickable" onclick="alert('Menu ouvert')"></i>
+        <i class="fas fa-bars clickable"></i>
         <a href="#" class="logo">LutherFashion</a>
         <div class="header-right">
-            <span class="lang-link clickable" onclick="toggleLang(this)">FR</span>
-            <i class="far fa-user clickable" onclick="alert('Espace Profil')"></i>
-            <div style="position:relative;" class="clickable" onclick="alert('Panier')">
+            <span class="lang-link clickable">FR</span>
+            <i class="far fa-user clickable" onclick="toggleAuth()"></i> <div style="position:relative;">
                 <i class="fas fa-shopping-bag"></i>
                 <span id="cart-count" style="position:absolute; top:-8px; right:-8px; background:red; color:white; font-size:9px; padding:2px 5px; border-radius:50%;">0</span>
             </div>
@@ -82,43 +80,48 @@
     </div>
 </header>
 
-<div class="nav-scroll">
-    <a href="#" class="nav-item active" onclick="setActive(this)">Femmes</a>
-    <a href="#" class="nav-item" onclick="setActive(this)">Hommes</a>
-    <a href="#" class="nav-item" onclick="setActive(this)">Nouveautés</a>
-    <a href="#" class="nav-item" style="color:red;" onclick="setActive(this)">Soldes</a>
-</div>
-
 <div class="grid" id="shop-grid"></div>
 
 <div class="bottom-nav">
     <div class="bottom-nav-item" onclick="window.scrollTo(0,0)"><i class="fas fa-home"></i>Accueil</div>
-    <div class="bottom-nav-item" onclick="alert('Recherche')"><i class="fas fa-search"></i>Explorer</div>
-    <div class="bottom-nav-item" onclick="alert('Mes Favoris')"><i class="far fa-heart"></i>Favoris</div>
-    <div class="bottom-nav-item" onclick="alert('Compte')"><i class="far fa-user"></i>Profil</div>
+    <div class="bottom-nav-item" onclick="toggleAuth()"><i class="far fa-user"></i>S'inscrire</div> <div class="bottom-nav-item"><i class="far fa-heart"></i>Favoris</div>
 </div>
 
 <script>
     const container = document.getElementById('shop-grid');
     const products = [];
-    let cartCount = 0;
-
+    
+    // Génération des produits
     for (let i = 1; i <= 30; i++) {
         const item = {
-            id: i,
-            name: "Sweater Edition Limitée #" + i,
-            price: (Math.random() * (95 - 25) + 25).toFixed(2),
+            name: "Veste Edition #" + i,
+            price: (Math.random() * 80 + 20).toFixed(2),
             img: i % 2 === 0 ? 'Veste vert.jpg' : 'veste jaune.jpg'
         };
         products.push(item);
         container.innerHTML += `
             <div class="card clickable" onclick="openDetail(${i-1})">
                 <img src="${item.img}">
-                <div class="card-body">
-                    <div style="font-weight:700; font-size:12px;">${item.name}</div>
+                <div style="padding:10px;">
+                    <div style="font-size:12px; font-weight:700;">${item.name}</div>
                     <div class="price">${item.price} $</div>
                 </div>
             </div>`;
+    }
+
+    function toggleAuth() {
+        const modal = document.getElementById('auth-modal');
+        modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function handleAuth() {
+        const val = document.getElementById('user-contact').value;
+        if(val) {
+            alert("Merci ! Un code de validation a été envoyé à : " + val);
+            toggleAuth();
+        } else {
+            alert("Veuillez entrer un email ou numéro valide.");
+        }
     }
 
     function openDetail(idx) {
@@ -130,26 +133,12 @@
     }
 
     function closeDetail() { document.getElementById('product-detail').style.display = 'none'; }
-
-    function selectSize(el) {
-        document.querySelectorAll('.size-box').forEach(b => b.classList.remove('selected'));
-        el.classList.add('selected');
-    }
-
+    
+    let cart = 0;
     function addToBag() {
-        cartCount++;
-        document.getElementById('cart-count').innerText = cartCount;
-        alert("Produit ajouté !");
+        cart++;
+        document.getElementById('cart-count').innerText = cart;
         closeDetail();
-    }
-
-    function setActive(el) {
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        el.classList.add('active');
-    }
-
-    function toggleLang(el) {
-        el.innerText = el.innerText === "FR" ? "EN" : "FR";
     }
 </script>
 </body>
