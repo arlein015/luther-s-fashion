@@ -107,7 +107,7 @@
         </div>
     </div>
     <div class="card" onclick="openDetail('Veste Edition #2', '48.68 $', 'Veste vert.jpg')">
-        <div class="badge">-20%</div>
+        <div class="badge">-15%</div>
         <img src="Veste vert.jpg">
         <div style="padding:10px 0;">
             <div style="font-size:11px; color:#666;">Luther Selection</div>
@@ -144,10 +144,12 @@
 
 <script>
     // Liste de vos produits
-    let mesProduits = [
-        { nom: "Veste Edition #1", prix: "73.45 $", image: "veste jaune.jpg", promo: "-20%" },
-        { nom: "Veste Edition #2", prix: "48.68 $", image: "Veste vert.jpg", promo: "-20%" }
-    ];
+  let mesProduits = [
+    { nom: "Veste Edition #1", prix: "73.45 $", image: "veste jaune.jpg", promo: "-20%" },
+    { nom: "Veste Edition #2", prix: "48.68 $", image: "Veste vert.jpg", promo: "-20%" },
+    // AJOUTE TES NOUVEAUX PRODUITS ICI COMME ÇA :
+    { nom: "NOM_DE_TA_NOUVEAUTÉ", prix: "00.00 $", image: "NOM_PHOTO.jpg", promo: "NEW" }
+];
 
     // Fonction pour afficher la grille
     function afficherBoutique() {
