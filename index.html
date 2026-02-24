@@ -154,7 +154,8 @@
         const grid = document.getElementById('main-grid');
         grid.innerHTML = ""; // On vide pour actualiser
         mesProduits.forEach((p, index) => {
-            grid.innerHTML += `
+         { nom: "NOM DE TON PRODUIT", prix: "00.00 $", image: "TON_IMAGE.jpg", promo: "NEW" },
+                grid.innerHTML += `
                 <div class="card" onclick="openDetail(${index})">
                     <div class="badge">${p.promo || 'NEW'}</div>
                     <img src="${p.image}">
