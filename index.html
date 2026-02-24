@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther Fashion | Boutique Officielle</title>
+    <title>Luther Fashion | Boutique Exclusive</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -15,177 +15,57 @@
         header { padding: 12px 15px; background: #fff; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid #eee; }
         .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
         .logo { font-weight: 900; font-size: 24px; text-decoration: none; color: #000; }
-        .search-container { position: relative; flex: 1; margin: 0 15px; }
+        .search-container { position: relative; margin: 10px 0; }
         .search-container input { width: 100%; padding: 10px 40px; border: none; background: #f0f0f0; border-radius: 50px; font-size: 14px; }
         .search-container i { position: absolute; left: 15px; top: 12px; color: #888; }
         
-        /* --- NAVIGATION & FILTRES --- */
-        .nav-tabs { display: flex; gap: 20px; padding: 10px 15px; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid #eee; }
-        .nav-item { font-size: 12px; font-weight: 900; text-decoration: none; color: #888; text-transform: uppercase; cursor: pointer; }
+        /* --- FILTRES --- */
+        .nav-tabs { display: flex; gap: 20px; padding: 10px 15px; overflow-x: auto; scrollbar-width: none; }
+        .nav-item { font-size: 12px; font-weight: 900; color: #888; text-transform: uppercase; cursor: pointer; }
         .nav-item.active { color: #000; border-bottom: 2px solid #000; padding-bottom: 5px; }
-        
-        .filter-bar { display: flex; gap: 10px; padding: 15px; overflow-x: auto; }
-        .chip { padding: 8px 20px; border: 2px solid #000; border-radius: 50px; font-size: 11px; font-weight: 700; cursor: pointer; white-space: nowrap; }
-        .chip.active { background: #000; color: #fff; }
 
-        /* --- GRILLE DE PRODUITS --- */
+        /* --- GRILLE RÉDUITE (2 PRODUITS) --- */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
         .card { border-radius: 10px; overflow: hidden; position: relative; cursor: pointer; }
         .card img { width: 100%; aspect-ratio: 4/5; object-fit: cover; border-radius: 12px; }
-        .badge { position: absolute; top: 10px; left: 10px; background: var(--accent); color: #fff; padding: 3px 8px; font-size: 10px; font-weight: 900; border-radius: 3px; }
-        .card-info { padding: 10px 0; }
         .price { font-weight: 900; color: var(--accent); font-size: 18px; margin: 5px 0; }
         .add-btn { width: 100%; background: #222; color: #fff; border: none; padding: 12px; border-radius: 6px; font-weight: 900; font-size: 11px; cursor: pointer; }
 
-        /* --- PAGE DÉTAIL --- */
-        #product-detail { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 2000; display: none; overflow-y: auto; }
-        .size-grid { display: flex; gap: 8px; margin: 15px 0; overflow-x: auto; }
+        /* --- MODALS & PAGES --- */
+        #product-detail, #auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 2000; display: none; overflow-y: auto; padding: 20px; }
         .size-box { border: 1px solid #ddd; padding: 12px; font-size: 11px; font-weight: 700; border-radius: 5px; min-width: 50px; text-align: center; cursor: pointer; }
-        .size-box.selected { border: 2px solid #000; background: #f9f9f9; }
+        .size-box.selected { border: 2px solid #000; }
         .add-bag-big { width: 100%; background: #000; color: #fff; padding: 20px; border: none; font-weight: 900; border-radius: 50px; margin: 20px 0; cursor: pointer; }
-
-        /* --- MODAL INSCRIPTION --- */
-        #auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 3000; display: none; padding: 40px 20px; }
         .auth-input { width: 100%; padding: 18px; border: 1px solid #ddd; border-radius: 5px; margin: 20px 0; }
-        .auth-btn { position: absolute; right: 30px; top: 118px; background: #000; color: #fff; width: 40px; height: 40px; border-radius: 50%; border: none; cursor: pointer; }
 
         /* --- NAVIGATION BASSE --- */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee; z-index: 1001; }
-        .bottom-nav-item { display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 10px; font-weight: 700; cursor: pointer; }
-        .bottom-nav-item i { font-size: 20px; }
+        .bottom-nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; font-weight: 700; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div id="auth-modal">
     <div style="text-align: right;"><i class="fas fa-times" onclick="closeAuth()" style="font-size: 24px;"></i></div>
-    <h2 style="font-weight: 900; margin-top: 20px;">SIGN UP FOR DISCOUNTS + UPDATES</h2>
-    <div style="position: relative;">
-        <input type="text" class="auth-input" placeholder="Phone Number or Email">
-        <button class="auth-btn" onclick="alert('Bienvenue !')"><i class="fas fa-chevron-right"></i></button>
-    </div>
-    <p style="font-size: 11px; color: #666;">By signing up, you agree to our Terms and Privacy Policy.</p>
+    <h2 style="font-weight: 900; margin-top: 20px;">SIGN UP FOR DISCOUNTS</h2>
+    <input type="text" class="auth-input" placeholder="Phone Number or Email">
+    <button class="add-bag-big" onclick="alert('Inscription réussie !')">JOIN NOW</button>
 </div>
 
 <div id="product-detail">
-    <div style="padding: 15px;"><i class="fas fa-chevron-left" onclick="closeDetail()" style="font-size: 22px; cursor: pointer;"></i></div>
-    <img id="detail-img" style="width: 100%;" src="">
-    <div style="padding: 20px;">
-        <h2 id="detail-name" style="font-size: 18px; font-weight: 700;"></h2>
-        <div id="detail-price" class="price" style="font-size: 24px;"></div>
-        <div style="font-size: 12px; font-weight: 700; margin-top: 20px;">SIZE | <span style="text-decoration: underline;">SIZE GUIDE</span></div>
-        <div class="size-grid">
-            <div class="size-box" onclick="selectSize(this)">XS</div>
-            <div class="size-box" onclick="selectSize(this)">S</div>
-            <div class="size-box" onclick="selectSize(this)">M</div>
-            <div class="size-box" onclick="selectSize(this)">L</div>
-            <div class="size-box" onclick="selectSize(this)">XL</div>
-        </div>
-        <button class="add-bag-big" onclick="addToBag()">ADD TO BAG</button>
+    <i class="fas fa-chevron-left" onclick="closeDetail()" style="font-size: 22px; cursor: pointer;"></i>
+    <img id="detail-img" style="width: 100%; margin-top:15px; border-radius:15px;" src="">
+    <h2 id="detail-name" style="margin-top:20px;"></h2>
+    <div id="detail-price" class="price" style="font-size: 24px;"></div>
+    <div style="display:flex; gap:10px; margin-top:15px;">
+        <div class="size-box" onclick="selectSize(this)">S</div>
+        <div class="size-box" onclick="selectSize(this)">M</div>
+        <div class="size-box" onclick="selectSize(this)">L</div>
     </div>
+    <button class="add-bag-big" onclick="addToBag()">ADD TO BAG</button>
 </div>
 
 <header>
     <div class="header-top">
         <i class="fas fa-bars" onclick="openAuth()"></i>
-        <a href="#" class="logo">LUTHER</a>
-        <div style="display: flex; gap: 15px; align-items: center;">
-            <i class="far fa-user" onclick="openAuth()"></i>
-            <div style="position: relative;">
-                <i class="fas fa-shopping-bag"></i>
-                <span id="cart-count" style="position: absolute; top: -8px; right: -8px; background: red; color: #fff; font-size: 9px; padding: 2px 5px; border-radius: 50%;">0</span>
-            </div>
-        </div>
-    </div>
-    <div class="search-container">
-        <i class="fas fa-search"></i>
-        <input type="text" placeholder="Trouve ton style...">
-    </div>
-</header>
-
-<div class="nav-tabs">
-    <div class="nav-item active" onclick="setNav(this)">NOUVEAUTÉS</div>
-    <div class="nav-item" onclick="setNav(this)">FEMMES</div>
-    <div class="nav-item" onclick="setNav(this)">HOMMES</div>
-    <div class="nav-item" style="color: red;" onclick="setNav(this)">SOLDES</div>
-</div>
-
-<div class="filter-bar">
-    <div class="chip active" onclick="setFilter(this)">✨ Pour toi</div>
-    <div class="chip" onclick="setFilter(this)">Vestes</div>
-    <div class="chip" onclick="setFilter(this)">Ensembles</div>
-    <div class="chip" onclick="setFilter(this)">Accessoires</div>
-</div>
-
-<div class="grid" id="main-grid"></div>
-
-<div class="bottom-nav">
-    <div class="bottom-nav-item" onclick="window.scrollTo(0,0)"><i class="fas fa-home"></i>Accueil</div>
-    <div class="bottom-nav-item" onclick="alert('Recherche active')"><i class="fas fa-search"></i>Explorer</div>
-    <div class="bottom-nav-item" onclick="alert('Favoris vides')"><i class="far fa-heart"></i>Favoris</div>
-    <div class="bottom-nav-item" onclick="openAuth()"><i class="far fa-user"></i>Profil</div>
-</div>
-
-<script>
-    const grid = document.getElementById('main-grid');
-    const products = [];
-    let cart = 0;
-
-    // Données des vestes
-    for (let i = 1; i <= 20; i++) {
-        const p = {
-            id: i,
-            name: "Veste Edition #" + i,
-            price: (Math.random() * 50 + 40).toFixed(2) + " $",
-            img: i % 2 === 0 ? "https://bit.ly/veste-verte" : "https://bit.ly/veste-beige" 
-        };
-        products.push(p);
-        grid.innerHTML += `
-            <div class="card" onclick="openDetail(${i-1})">
-                <div class="badge">-20%</div>
-                <img src="${p.img}">
-                <div class="card-info">
-                    <div style="font-size: 11px; color: #666;">Luther Selection</div>
-                    <div style="font-weight: 700; font-size: 14px;">${p.name}</div>
-                    <div class="price">${p.price}</div>
-                    <button class="add-btn" onclick="event.stopPropagation(); addToBag()">AJOUTER AU PANIER</button>
-                </div>
-            </div>`;
-    }
-
-    // Fonctions Interactives
-    function openDetail(idx) {
-        const p = products[idx];
-        document.getElementById('detail-img').src = p.img;
-        document.getElementById('detail-name').innerText = p.name;
-        document.getElementById('detail-price').innerText = p.price;
-        document.getElementById('product-detail').style.display = 'block';
-    }
-
-    function closeDetail() { document.getElementById('product-detail').style.display = 'none'; }
-    function openAuth() { document.getElementById('auth-modal').style.display = 'block'; }
-    function closeAuth() { document.getElementById('auth-modal').style.display = 'none'; }
-    
-    function selectSize(el) {
-        document.querySelectorAll('.size-box').forEach(b => b.classList.remove('selected'));
-        el.classList.add('selected');
-    }
-
-    function addToBag() {
-        cart++;
-        document.getElementById('cart-count').innerText = cart;
-        alert("Ajouté au panier !");
-    }
-
-    function setNav(el) {
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        el.classList.add('active');
-    }
-
-    function setFilter(el) {
-        document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-        el.classList.add('active');
-    }
-</script>
-</body>
-</html>
+        <a href="#" class="logo">
