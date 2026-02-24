@@ -134,54 +134,68 @@
     <div class="bottom-nav-item" onclick="alert('Favoris')"><i class="far fa-heart"></i>Favoris</div>
     <div class="bottom-nav-item" onclick="openAuth()"><i class="far fa-user"></i>Profil</div>
 </div>
+<div id="admin-panel" style="display:none; background:#f9f9f9; padding:20px; border:2px dashed #000; margin:15px; border-radius:10px;">
+    <h3 style="font-weight:900; margin-bottom:15px;">🛠 PANNEAU PROPRIÉTAIRE</h3>
+    <input type="text" id="new-name" placeholder="Nom du produit" style="width:100%; padding:10px; margin-bottom:10px;">
+    <input type="text" id="new-price" placeholder="Prix (ex: 50.00 $)" style="width:100%; padding:10px; margin-bottom:10px;">
+    <input type="text" id="new-img" placeholder="Nom de l'image (ex: veste.jpg)" style="width:100%; padding:10px; margin-bottom:10px;">
+    <button onclick="ajouterNouveauProduit()" style="width:100%; background:#000; color:#fff; padding:15px; font-weight:900; border:none; border-radius:5px; cursor:pointer;">POSTER LE PRODUIT</button>
+</div>
 
 <script>
-    // ==========================================
-    // ZONE PROPRIÉTAIRE : AJOUTE TES PRODUITS ICI
-    // ==========================================
-    const mesProduits = [
-        {
-            nom: "Veste Edition #1",
-            prix: "73.45 $",
-            image: "veste jaune.jpg",
-            promo: "-20%"
-        },
-        {
-            nom: "Veste Edition #2",
-            prix: "48.68 $",
-            image: "Veste vert.jpg",
-            promo: "-20%"
-        },
-        // Pour ajouter un 3ème produit, retire les "//" ci-dessous et complète :
-        // { nom: "Nouveau Style", prix: "55.00 $", image: "photo.jpg", promo: "NEW" },
+    // Liste de vos produits
+    let mesProduits = [
+        { nom: "Veste Edition #1", prix: "73.45 $", image: "veste jaune.jpg", promo: "-20%" },
+        { nom: "Veste Edition #2", prix: "48.68 $", image: "Veste vert.jpg", promo: "-20%" }
     ];
 
-    // ==========================================
-    // LE SYSTÈME AUTOMATIQUE (NE PAS TOUCHER)
-    // ==========================================
-    const grid = document.getElementById('main-grid');
-    
-    mesProduits.forEach((p, index) => {
-        grid.innerHTML += `
-            <div class="card" onclick="openDetail(${index})">
-                <div class="badge">${p.promo}</div>
-                <img src="${p.image}">
-                <div style="padding:10px 0;">
-                    <div style="font-size:11px; color:#666;">Luther Selection</div>
-                    <div style="font-weight: 700;">${p.nom}</div>
-                    <div class="price">${p.prix}</div>
-                    <button class="add-btn">AJOUTER AU PANIER</button>
-                </div>
-            </div>`;
-    });
-
-    function openDetail(idx) {
-        const p = mesProduits[idx];
-        document.getElementById('detail-img').src = p.image;
-        document.getElementById('detail-name').innerText = p.nom;
-        document.getElementById('detail-price').innerText = p.prix;
-        document.getElementById('product-detail').style.display = 'block';
-        window.scrollTo(0,0);
+    // Fonction pour afficher la grille
+    function afficherBoutique() {
+        const grid = document.getElementById('main-grid');
+        grid.innerHTML = ""; // On vide pour actualiser
+        mesProduits.forEach((p, index) => {
+            grid.innerHTML += `
+                <div class="card" onclick="openDetail(${index})">
+                    <div class="badge">${p.promo || 'NEW'}</div>
+                    <img src="${p.image}">
+                    <div style="padding:10px 0;">
+                        <div style="font-size:11px; color:#666;">Luther Selection</div>
+                        <div style="font-weight: 700;">${p.nom}</div>
+                        <div class="price">${p.prix}</div>
+                        <button class="add-btn">AJOUTER AU PANIER</button>
+                    </div>
+                </div>`;
+        });
     }
-    // ... reste des fonctions (closeDetail, addToBag, etc.)
+
+    // --- SÉCURITÉ PROPRIÉTAIRE ---
+    // Cliquez sur le logo "LUTHER" pour faire apparaître/disparaître le bouton d'ajout
+    document.querySelector('.logo').onclick = function() {
+        const panel = document.getElementById('admin-panel');
+        panel.style.display = (panel.style.display === 'none') ? 'block' : 'none';
+        alert("Mode Propriétaire activé 🔐");
+    };
+
+    // Fonction pour ajouter un produit en direct
+    function ajouterNouveauProduit() {
+        const n = document.getElementById('new-name').value;
+        const p = document.getElementById('new-price').value;
+        const i = document.getElementById('new-img').value;
+
+        if(n && p && i) {
+            mesProduits.push({ nom: n, prix: p, image: i, promo: "NEW" });
+            afficherBoutique(); // Recharge la grille instantanément
+            alert("Produit posté avec succès !");
+            
+            // On vide les champs
+            document.getElementById('new-name').value = "";
+            document.getElementById('new-price').value = "";
+            document.getElementById('new-img').value = "";
+        } else {
+            alert("Veuillez remplir tous les champs.");
+        }
+    }
+
+    // Lancement initial
+    afficherBoutique();
 </script>
