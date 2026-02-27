@@ -3,162 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MonRéseau PRO - Full Interactive</title>
+    <title>MonRéseau PRO - Notifications</title>
     <style>
+        /* ... (Garder le style précédent) ... */
         :root {
             --violet-premium: #9c27b0;
             --violet-clair: #ce85f2;
             --rouge-fb: #f02849;
             --blanc: #ffffff;
+            --rouge-notif: #ff3b30;
         }
 
-        body, html {
-            margin: 0; padding: 0; height: 100%;
-            background-color: #000;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            overflow: hidden; color: var(--blanc);
+        body, html { margin: 0; padding: 0; height: 100%; background: #000; font-family: sans-serif; overflow: hidden; color: white; }
+
+        /* --- STYLE DES BULLES DE NOTIFICATION --- */
+        .notif-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--rouge-notif);
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 10px;
+            border: 2px solid white;
+            display: none; /* Caché par défaut */
+            animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* --- BARRE DE RECHERCHE ANIMÉE --- */
-        .header-search {
-            position: fixed; top: 0; width: 100%; padding: 15px 0;
-            display: flex; justify-content: center; z-index: 100;
-            animation: slideDown 0.5s ease-out;
-        }
-        @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
-
-        .search-input {
-            width: 85%; padding: 10px 15px; border-radius: 20px;
-            border: none; background: rgba(255, 255, 255, 0.2);
-            color: white; backdrop-filter: blur(10px); outline: none;
+        @keyframes pop {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
         }
 
-        /* --- LECTEUR ET CONTENU --- */
-        .post-container {
-            height: 100vh; width: 100%; display: flex;
-            align-items: center; justify-content: center;
-            position: relative; background-color: var(--rouge-fb);
-        }
+        /* --- ELEMENTS EXISTANTS ADAPTÉS --- */
+        .post-container { height: 100vh; width: 100%; display: flex; align-items: center; justify-content: center; background: var(--rouge-fb); position: relative; }
+        .side-actions { position: absolute; right: 15px; bottom: 120px; display: flex; flex-direction: column; gap: 20px; }
+        .action-item { position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .circle { width: 50px; height: 50px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        
+        .footer-nav { position: fixed; bottom: 0; width: 100%; height: 60px; background: white; display: flex; justify-content: space-around; align-items: center; }
+        .nav-icon { position: relative; color: #555; font-size: 11px; text-align: center; flex: 1; }
+        .btn-add { background: linear-gradient(90deg, #ce85f2, #9c27b0); width: 50px; height: 32px; border-radius: 10px; color: white; display: flex; align-items: center; justify-content: center; font-size: 24px; }
 
-        #mediaPreview, #imagePreview {
-            position: absolute; width: 100%; height: 100%; object-fit: cover; display: none;
-        }
-
-        .main-text {
-            font-size: 38px; font-weight: bold; text-align: center;
-            z-index: 5; padding: 20px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
-        }
-
-        /* --- TOUCHES D'INTERACTION (DROITE) --- */
-        .side-actions {
-            position: absolute; right: 15px; bottom: 120px;
-            display: flex; flex-direction: column; gap: 18px; z-index: 10;
-        }
-        .action-btn {
-            display: flex; flex-direction: column; align-items: center; cursor: pointer;
-        }
-        .icon-circle {
-            width: 50px; height: 50px; background: rgba(255,255,255,0.2);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 24px; transition: 0.2s;
-        }
-        .icon-circle:active { transform: scale(0.9); background: var(--violet-premium); }
-
-        /* --- INFOS ET BADGE --- */
-        .user-info { position: absolute; bottom: 80px; left: 15px; z-index: 10; }
-        .badge-24 {
-            width: 20px; height: 20px; display: inline-flex; position: relative;
-            margin-left: 5px; filter: drop-shadow(0 0 2px var(--violet-clair));
-        }
-        .badge-24::before {
-            content: ''; position: absolute; width: 100%; height: 100%;
-            background: linear-gradient(135deg, var(--violet-clair), var(--violet-premium));
-            clip-path: polygon(50% 0%, 53% 5%, 60% 3%, 63% 9%, 70% 8%, 73% 14%, 80% 15%, 82% 21%, 88% 23%, 89% 30%, 94% 33%, 94% 40%, 98% 45%, 96% 52%, 99% 59%, 95% 65%, 96% 72%, 91% 77%, 90% 84%, 84% 87%, 81% 93%, 74% 94%, 70% 99%, 63% 97%, 57% 100%, 50% 96%, 43% 100%, 37% 97%, 30% 99%, 26% 94%, 19% 93%, 16% 87%, 10% 84%, 9% 77%, 4% 72%, 5% 65%, 1% 59%, 4% 52%, 2% 45%, 6% 40%, 6% 33%, 11% 30%, 12% 23%, 18% 21%, 20% 15%, 27% 14%, 30% 8%, 37% 9%, 40% 3%, 47% 5%);
-            border-radius: 50%;
-        }
-        .badge-24::after {
-            content: ''; position: absolute; width: 5px; height: 9px;
-            border: solid white; border-width: 0 2.5px 2.5px 0; transform: rotate(45deg); margin-top: -1px;
-        }
-
-        /* --- BARRE DE NAVIGATION (BAS) --- */
-        .nav-bar {
-            position: fixed; bottom: 0; width: 100%; height: 60px;
-            background: white; display: flex; justify-content: space-around; align-items: center; z-index: 100;
-        }
-        .nav-btn { color: black; font-size: 11px; text-align: center; cursor: pointer; }
-        .add-btn {
-            background: linear-gradient(90deg, #ce85f2, #9c27b0);
-            width: 45px; height: 30px; border-radius: 8px; color: white;
-            display: flex; align-items: center; justify-content: center; font-size: 24px;
-        }
+        /* Fenêtre de chat (simple pour le test) */
+        #chatBox { position: fixed; bottom: -100%; left: 0; width: 100%; height: 70%; background: white; border-radius: 20px 20px 0 0; z-index: 200; transition: 0.4s; color: black; }
     </style>
 </head>
 <body>
 
-    <div class="header-search">
-        <input type="text" class="search-input" placeholder="🔍 Rechercher un créateur...">
-    </div>
-
-    <div class="post-container" id="postArea">
-        <img id="imgView">
-        <video id="vidView" loop></video> <div class="main-text" id="postTxt">zah zalaah ty aiiii</div>
+    <div class="post-container">
+        <div style="font-size: 40px; font-weight: bold;">zah zalaah ty aiiii</div>
 
         <div class="side-actions">
-            <div class="action-btn" onclick="alert('❤️ Liké !')"><div class="icon-circle">❤️</div><span>12K</span></div>
-            <div class="action-btn" onclick="alert('💬 Commentaires...')"><div class="icon-circle">💬</div><span>45</span></div>
-            <div class="action-btn" onclick="alert('🔗 Lien copié !')"><div class="icon-circle">🔗</div><span>Partage</span></div>
-        </div>
-
-        <div class="user-info" id="userInfo">
+            <div class="action-item">
+                <div class="circle">❤️</div>
             </div>
+            <div class="action-item" onclick="openChat()">
+                <div class="circle">💬</div>
+                <div class="notif-badge" id="sideNotif">1</div>
+            </div>
+        </div>
     </div>
 
-    <div class="nav-bar">
-        <div class="nav-btn" onclick="location.reload()">🏠<br>Accueil</div>
-        <div class="add-btn" onclick="triggerUpload()">+</div>
-        <div class="nav-btn" onclick="openStripeVisa()">💳<br>Visa PRO</div>
+    <div class="footer-nav">
+        <div class="nav-icon">🏠<br>Accueil</div>
+        <div class="btn-add">+</div>
+        <div class="nav-icon" onclick="openChat()">
+            💬<br>Messages
+            <div class="notif-badge" id="bottomNotif">1</div>
+        </div>
+        <div class="nav-icon">👤<br>Profil</div>
     </div>
 
-    <input type="file" id="mediaInput" style="display:none" onchange="handleMedia(event)">
+    <div id="chatBox">
+        <div style="padding: 20px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between;">
+            <b style="color: black;">Messages</b>
+            <span onclick="closeChat()" style="cursor: pointer; color: black;">✕</span>
+        </div>
+        <div style="padding: 20px; color: black;">
+            <p><b>Ami :</b> Alors, ce badge 24 pointes ? 🚀</p>
+        </div>
+    </div>
 
     <script>
-        // Configuration utilisateur
-        const user = { name: "Moi (Proprio)", isPremium: true };
-
-        function initApp() {
-            const badge = user.isPremium ? '<div class="badge-24"></div>' : '';
-            document.getElementById('userInfo').innerHTML = `
-                <div style="font-weight:bold; display:flex; align-items:center;">
-                    ${user.name} ${badge}
-                </div>
-                <div style="font-size:14px;">#Premium #Verified</div>
-            `;
+        // Fonction pour ouvrir le chat et effacer les notifs
+        function openChat() {
+            document.getElementById('chatBox').style.bottom = "0";
+            // On cache les bulles quand on lit les messages
+            document.getElementById('sideNotif').style.display = "none";
+            document.getElementById('bottomNotif').style.display = "none";
         }
 
-        function triggerUpload() { document.getElementById('mediaInput').click(); }
-
-        function handleMedia(e) {
-            const file = e.target.files[0];
-            const vid = document.getElementById('vidView');
-            const img = document.getElementById('imgView');
-            const txt = document.getElementById('postTxt');
-            const url = URL.createObjectURL(file);
-
-            txt.style.display = "none";
-            if(file.type.startsWith('video/')) {
-                vid.src = url; vid.style.display="block"; img.style.display="none";
-                vid.muted = false; vid.play(); // ACTIVE LE SON
-            } else {
-                img.src = url; img.style.display="block"; vid.style.display="none";
-            }
+        function closeChat() {
+            document.getElementById('chatBox').style.bottom = "-100%";
         }
 
-        function openStripeVisa() {
-            alert("✨ Redirection vers Stripe ✨\nPréparez votre carte Visa Crédit pour activer votre badge !");
-        }
-
-        window.onload = initApp;
+        // Simulation d'une notification qui arrive après 3 secondes
+        setTimeout(() => {
+            const sideNotif = document.getElementById('sideNotif');
+            const bottomNotif = document.getElementById('bottomNotif');
+            
+            sideNotif.innerText = "1";
+            bottomNotif.innerText = "1";
+            
+            sideNotif.style.display = "block";
+            bottomNotif.style.display = "block";
+            
+            // Petit son de notification (optionnel)
+            console.log("Nouvelle notification reçue !");
+        }, 3000);
     </script>
 </body>
 </html>
