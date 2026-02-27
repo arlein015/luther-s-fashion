@@ -132,36 +132,51 @@
     </div>
 
     <input type="file" id="fileInput" accept="image/*,video/*" onchange="loadMedia(event)">
+<video id="videoPreview" class="media-preview" 
+       style="display:none; position:absolute; width:100%; height:100%; object-fit:cover;" 
+       autoplay loop>
+       </video>
 
-    <div class="footer-nav">
-        <div class="nav-item">🏠<br>Accueil</div>
-        <div class="add-btn" onclick="document.getElementById('fileInput').click()">+</div>
-        <div class="nav-item">👤<br>Profil</div>
-    </div>
+<script>
+    // Système de gestion des badges
+    const currentUser = {
+        name: "Moi (Propriétaire)",
+        isOwner: true,
+        isPremium: true
+    };
 
-    <script>
-        function loadMedia(event) {
-            const file = event.target.files[0];
-            const imgPreview = document.getElementById('imagePreview');
-            const vidPreview = document.getElementById('videoPreview');
-            const displayText = document.getElementById('displayText');
+    function generateUserHTML(user) {
+        // Le badge ne s'affiche que pour le proprio ou les abonnés
+        const badgeHTML = (user.isOwner || user.isPremium) ? '<div class="badge-24"></div>' : '';
+        
+        return `
+            <div class="user-row">
+                ${user.name} ${badgeHTML}
+            </div>
+            <div style="font-size:14px;">${user.isOwner ? '#Admin' : '#AbonnéPremium'}</div>
+        `;
+    }
 
-            if (file) {
-                const url = URL.createObjectURL(file);
-                displayText.style.display = "none"; // On cache le texte pour voir le média
+    // Application au démarrage
+    document.querySelector('.bottom-user-info').innerHTML = generateUserHTML(currentUser);
 
-                if (file.type.startsWith('image/')) {
-                    imgPreview.src = url;
-                    imgPreview.style.display = "block";
-                    vidPreview.style.display = "none";
-                } else if (file.type.startsWith('video/')) {
-                    vidPreview.src = url;
-                    vidPreview.style.display = "block";
-                    imgPreview.style.display = "none";
-                }
+    function loadMedia(event) {
+        const file = event.target.files[0];
+        const vidPreview = document.getElementById('videoPreview');
+        const imgPreview = document.getElementById('imagePreview');
+
+        if (file) {
+            const url = URL.createObjectURL(file);
+            if (file.type.startsWith('video/')) {
+                vidPreview.src = url;
+                vidPreview.style.display = "block";
+                vidPreview.muted = false; // Force l'activation du son
+                vidPreview.play(); 
             }
+            // ... reste du code pour l'image
         }
-    </script>
+    }
+</script>
 
 </body>
 </html>
