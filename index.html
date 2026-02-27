@@ -4,186 +4,84 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Luther's Fashion - Réseau Social Premium</title>
-    <style>
-        :root {
-            --violet-p: #9c27b0;
-            --violet-c: #ce85f2;
-            --blanc: #ffffff;
-            --bg-modal: #ffffff;
-            --text-modal: #000000;
-            --input-bg: #f1f1f1;
-        }
+<style>
+    /* --- TRANSITION DE PAGE --- */
+    .page {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        display: none; flex-direction: column;
+        animation: fadeIn 0.4s ease-in-out;
+        background: linear-gradient(180deg, #1a0121 0%, #4a0e5c 100%); /* Fond le plus stylé */
+    }
+    .page.active { display: flex; }
 
-        .dark-mode {
-            --bg-modal: #121212;
-            --text-modal: #ffffff;
-            --input-bg: #2a2a2a;
-        }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 
-        body, html { margin: 0; padding: 0; height: 100%; background: #000; font-family: sans-serif; overflow: hidden; color: white; }
+    /* --- BOUTON NAV BASSE ACTIF --- */
+    .nav-btn { cursor: pointer; transition: 0.3s; opacity: 0.6; }
+    .nav-btn.active { opacity: 1; color: var(--violet-c); transform: scale(1.1); }
 
-        /* --- HEADER : RECHERCHE & MENUS --- */
-        .top-header {
-            position: fixed; top: 0; width: 100%; z-index: 100;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
-            padding: 10px 0; text-align: center;
-        }
-        .search-row { display: flex; align-items: center; padding: 0 15px; margin-bottom: 10px; }
-        .search-box { flex: 1; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 8px 15px; display: flex; margin: 0 10px; }
-        .search-box input { background: none; border: none; color: white; width: 100%; outline: none; }
-        .feed-menu { display: flex; justify-content: center; gap: 20px; font-weight: bold; }
-        .menu-item.active { border-bottom: 3px solid white; padding-bottom: 5px; }
+    /* --- STYLE DU BADGE SUR TOUTES LES PAGES --- */
+    .badge-24 {
+        width: 18px; height: 18px; background: white; margin-left: 5px;
+        clip-path: polygon(50% 0%, 53% 5%, 60% 3%, 63% 9%, 70% 8%, 73% 14%, 80% 15%, 82% 21%, 88% 23%, 89% 30%, 94% 33%, 94% 40%, 98% 45%, 96% 52%, 99% 59%, 95% 65%, 96% 72%, 91% 77%, 90% 84%, 84% 87%, 81% 93%, 74% 94%, 70% 99%, 63% 97%, 57% 100%, 50% 96%, 43% 100%, 37% 97%, 30% 99%, 26% 94%, 19% 93%, 16% 87%, 10% 84%, 9% 77%, 4% 72%, 5% 65%, 1% 59%, 4% 52%, 2% 45%, 6% 40%, 6% 33%, 11% 30%, 12% 23%, 18% 21%, 20% 15%, 27% 14%, 30% 8%, 37% 9%, 40% 3%, 47% 5%);
+        display: inline-flex; align-items: center; justify-content: center;
+    }
+    .badge-24::after { content: '✓'; color: #9c27b0; font-size: 10px; font-weight: bold; }
+</style>
 
-        /* --- STORIES --- */
-        .stories-container {
-            display: flex; gap: 15px; padding: 10px 15px; overflow-x: auto;
-            margin-top: 100px; scrollbar-width: none;
-        }
-        .story-item { display: flex; flex-direction: column; align-items: center; min-width: 65px; position: relative; }
-        .story-ring { width: 60px; height: 60px; border-radius: 50%; padding: 3px; background: linear-gradient(45deg, #f09433, #bc1888); display: flex; align-items: center; justify-content: center; }
-        .story-pic { width: 54px; height: 54px; border-radius: 50%; background: #333; border: 2px solid black; object-fit: cover; }
-        .add-plus { position: absolute; bottom: 20px; right: 5px; background: var(--violet-p); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 12px; border: 2px solid black; }
-
-        /* --- POST & ACTIONS --- */
-        .post-area { height: 100vh; background: #f02849; display: flex; align-items: center; justify-content: center; position: relative; }
-        .side-bar { position: absolute; right: 12px; bottom: 100px; display: flex; flex-direction: column; align-items: center; gap: 20px; }
-        .pfp-main { width: 48px; height: 48px; border-radius: 50%; border: 2px solid white; position: relative; cursor: pointer; }
-        .pfp-main img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .action-btn { display: flex; flex-direction: column; align-items: center; font-size: 30px; cursor: pointer; }
-        .action-btn span { font-size: 12px; font-weight: bold; }
-        .disc { width: 45px; height: 45px; border-radius: 50%; background: radial-gradient(circle, #444, #000); border: 8px solid rgba(255,255,255,0.1); animation: rotate 3s linear infinite; }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        /* --- INFOS BAS GAUCHE --- */
-        .video-info { position: absolute; bottom: 85px; left: 15px; max-width: 70%; }
-        .badge-24 {
-            width: 18px; height: 18px; background: white; margin-left: 5px;
-            clip-path: polygon(50% 0%, 53% 5%, 60% 3%, 63% 9%, 70% 8%, 73% 14%, 80% 15%, 82% 21%, 88% 23%, 89% 30%, 94% 33%, 94% 40%, 98% 45%, 96% 52%, 99% 59%, 95% 65%, 96% 72%, 91% 77%, 90% 84%, 84% 87%, 81% 93%, 74% 94%, 70% 99%, 63% 97%, 57% 100%, 50% 96%, 43% 100%, 37% 97%, 30% 99%, 26% 94%, 19% 93%, 16% 87%, 10% 84%, 9% 77%, 4% 72%, 5% 65%, 1% 59%, 4% 52%, 2% 45%, 6% 40%, 6% 33%, 11% 30%, 12% 23%, 18% 21%, 20% 15%, 27% 14%, 30% 8%, 37% 9%, 40% 3%, 47% 5%);
-            display: inline-flex; align-items: center; justify-content: center;
-        }
-        .badge-24::after { content: '✓'; color: var(--violet-p); font-size: 10px; font-weight: bold; }
-
-        /* --- MODAL EDIT & AUTH --- */
-        .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--bg-modal); color: var(--text-modal); padding: 25px; border-radius: 20px; width: 85%; z-index: 2000; display: none; }
-        .modal input, .modal textarea { width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 10px; background: var(--input-bg); color: var(--text-modal); box-sizing: border-box; }
-        .social-btn { display: flex; align-items: center; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 8px; cursor: pointer; color: black; background: white; }
-
-        /* --- NAV BASSE --- */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 60px; background: black; display: flex; justify-content: space-around; align-items: center; border-top: 0.5px solid #333; }
-        .plus-p { background: linear-gradient(90deg, var(--violet-c), var(--violet-p)); width: 45px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-    </style>
-</head>
 <body id="mainBody">
 
-    <div class="top-header">
-        <div class="search-row">
-            <span onclick="openAuth()" style="cursor:pointer">👤</span>
-            <div class="search-box"><input type="text" placeholder="Rechercher..."></div>
-            <span onclick="toggleSettings()">⚙️</span>
-        </div>
-        <div class="feed-menu">
-            <div class="menu-item">Suivis</div>
-            <div class="menu-item active">Pour toi</div>
+    <div id="homePage" class="page active">
+        <h1 style="margin-top:250px; text-align:center; font-size:40px; text-shadow: 0 0 20px #ce85f2;">zah zalaah ty aiiii</h1>
+        <div class="video-info" style="position:absolute; bottom:80px; left:20px;">
+            <h3 style="display:flex; align-items:center;">Luther (Proprio) <div class="badge-24"></div></h3>
+            <p>Découvre la nouvelle collection 2026 ✨</p>
         </div>
     </div>
 
-    <div class="stories-container">
-        <div class="story-item">
-            <div class="story-ring" style="background:none; border:2px solid #555">
-                <img src="https://via.placeholder.com/60" class="story-pic" id="storyPfp">
-            </div>
-            <div class="add-plus" onclick="document.getElementById('pfpInput').click()">+</div>
-            <span class="story-name">Ta story</span>
+    <div id="friendsPage" class="page">
+        <h2 style="padding:80px 20px;">Tes Amis</h2>
+        <div style="padding:0 20px; opacity:0.7;">Aucune nouvelle activité pour le moment.</div>
+    </div>
+
+    <div id="messagesPage" class="page">
+        <h2 style="padding:80px 20px;">Messages</h2>
+        <div class="welcome-chat-box" style="margin:20px; border:1px dashed #ce85f2; padding:20px; border-radius:15px; text-align:center;">
+            <b>Bienvenue dans ton chat privé ! 👋</b><br>
+            <span style="font-size:12px;">Tu peux maintenant discuter avec tes contacts.</span>
         </div>
     </div>
 
-    <div class="post-area">
-        <h1 style="font-size: 40px;">zah zalaah ty aiiii</h1>
-        
-        <div class="video-info">
-            <h3 style="display:flex; align-items:center; margin:0;">
-                <span id="userName">Luther (Proprio)</span> <div class="badge-24"></div>
-            </h3>
-            <p id="userBio">#LuthersFashion #Premium #2026</p>
-            <a href="#" id="userLink" style="color:var(--violet-c); text-decoration:none; font-size:13px;">🌐 Ajouter un lien</a>
+    <div id="profilePage" class="page">
+        <div style="text-align:center; padding-top:100px;">
+            <img id="profileDisplayPfp" src="https://via.placeholder.com/100" style="width:100px; height:100px; border-radius:50%; border:3px solid white;">
+            <h2 style="display:flex; align-items:center; justify-content:center;">Luther <div class="badge-24"></div></h2>
+            <button onclick="toggleSettings()" style="background:white; color:black; border:none; padding:8px 20px; border-radius:20px; font-weight:bold;">Modifier le profil</button>
         </div>
-
-        <div class="side-bar">
-            <div class="pfp-main" onclick="document.getElementById('pfpInput').click()">
-                <img id="mainPfp" src="https://via.placeholder.com/60">
-                <div style="position:absolute; bottom:-5px; left:50%; transform:translateX(-50%); background:#fe2c55; border-radius:50%; width:16px; height:16px; display:flex; align-items:center; justify-content:center; font-size:12px;">+</div>
-            </div>
-            <div class="action-btn" onclick="this.querySelector('span').innerText='❤️'">🤍<span>150K</span></div>
-            <div class="action-btn" onclick="alert('Commentaires...')">💬<span>274</span></div>
-            <div class="action-btn" onclick="alert('Partager...')">➥<span>250</span></div>
-            <div class="disc"></div>
-        </div>
-    </div>
-
-    <div id="editModal" class="modal">
-        <h2 style="color:var(--violet-p)">Paramètres</h2>
-        <div style="display:flex; justify-content:space-between; background:var(--input-bg); padding:10px; border-radius:10px; margin-bottom:10px;" onclick="toggleDark()">
-            <span>Mode Sombre</span> <span id="darkLabel">OFF</span>
-        </div>
-        <input type="text" id="editName" placeholder="Nom d'utilisateur">
-        <textarea id="editBio" placeholder="Ta Bio"></textarea>
-        <input type="text" id="editLink" placeholder="Ton lien">
-        <button onclick="saveProfile()" style="width:100%; background:var(--violet-p); color:white; border:none; padding:12px; border-radius:10px; font-weight:bold;">Enregistrer</button>
-        <p onclick="toggleSettings()" style="text-align:center; opacity:0.6; cursor:pointer;">Fermer</p>
-    </div>
-
-    <div id="authModal" class="modal" style="color:black; background:white;">
-        <h2>Se connecter</h2>
-        <div class="social-btn" onclick="socialLogin('Google')">🌐 Continuer avec Google</div>
-        <div class="social-btn" onclick="socialLogin('Apple')">🍎 Continuer avec Apple ID</div>
-        <div class="social-btn" onclick="socialLogin('Facebook')">🔵 Continuer avec Facebook</div>
-        <div class="social-btn" onclick="socialLogin('Téléphone')">📞 Numéro de téléphone</div>
-        <p onclick="document.getElementById('authModal').style.display='none'" style="text-align:center; cursor:pointer;">Annuler</p>
     </div>
 
     <div class="bottom-nav">
-        <div style="font-size:11px; text-align:center;">🏠<br>Accueil</div>
-        <div style="font-size:11px; text-align:center;">👥<br>Amis</div>
-        <div class="plus-p">+</div>
-        <div style="font-size:11px; text-align:center;" onclick="alert('Bienvenue ! Vous vous suivez mutuellement 👋')">💬<br>Messages</div>
-        <div style="font-size:11px; text-align:center;">👤<br>Profil</div>
+        <div class="nav-btn active" onclick="showPage('homePage', this)">🏠<br>Accueil</div>
+        <div class="nav-btn" onclick="showPage('friendsPage', this)">👥<br>Amis</div>
+        <div class="plus-p" onclick="openAuth()">+</div>
+        <div class="nav-btn" onclick="showPage('messagesPage', this)">💬<br>Messages</div>
+        <div class="nav-btn" onclick="showPage('profilePage', this)">👤<br>Profil</div>
     </div>
 
-    <input type="file" id="pfpInput" style="display:none" accept="image/*" onchange="loadPfp(event)">
-
     <script>
-        function toggleSettings() {
-            const m = document.getElementById('editModal');
-            m.style.display = m.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function toggleDark() {
-            document.getElementById('mainBody').classList.toggle('dark-mode');
-            const isDark = document.getElementById('mainBody').classList.contains('dark-mode');
-            document.getElementById('darkLabel').innerText = isDark ? "ON" : "OFF";
-        }
-
-        function saveProfile() {
-            document.getElementById('userName').innerText = document.getElementById('editName').value || "Utilisateur";
-            document.getElementById('userBio').innerText = document.getElementById('editBio').value;
-            document.getElementById('userLink').innerText = document.getElementById('editLink').value || "Lien ajouté";
-            toggleSettings();
-        }
-
-        function loadPfp(event) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('mainPfp').src = e.target.result;
-                document.getElementById('storyPfp').src = e.target.result;
-            }
-            reader.readAsDataURL(event.target.files[0]);
-        }
-
-        function openAuth() { document.getElementById('authModal').style.display = 'block'; }
-
-        function socialLogin(p) {
-            alert("Connexion via " + p + " réussie !");
-            document.getElementById('authModal').style.display = 'none';
+        function showPage(pageId, btn) {
+            // Cache toutes les pages
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            // Désactive tous les boutons
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            // Affiche la page demandée
+            document.getElementById(pageId).classList.add('active');
+            // Active le bouton cliqué
+            btn.classList.add('active');
         }
     </script>
 </body>
