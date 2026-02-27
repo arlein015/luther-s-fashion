@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MonRéseau PRO - Test Média & Animation</title>
+    <title>MonRéseau PRO - Full Interactive</title>
     <style>
         :root {
             --violet-premium: #9c27b0;
@@ -14,65 +14,61 @@
 
         body, html {
             margin: 0; padding: 0; height: 100%;
-            background-color: var(--fond-sombre);
-            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+            background-color: #000;
+            font-family: 'Segoe UI', Arial, sans-serif;
             overflow: hidden; color: var(--blanc);
         }
 
-        /* --- ANIMATION BARRE DE RECHERCHE --- */
-        @keyframes slideIn {
-            from { transform: translateY(-100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
+        /* --- BARRE DE RECHERCHE ANIMÉE --- */
         .header-search {
             position: fixed; top: 0; width: 100%; padding: 15px 0;
             display: flex; justify-content: center; z-index: 100;
-            animation: slideIn 0.8s ease-out; /* L'animation demandée */
+            animation: slideDown 0.5s ease-out;
         }
+        @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
 
-        .search-container { width: 90%; max-width: 400px; position: relative; }
         .search-input {
-            width: 100%; padding: 10px 15px 10px 40px; border-radius: 20px;
+            width: 85%; padding: 10px 15px; border-radius: 20px;
             border: none; background: rgba(255, 255, 255, 0.2);
-            color: white; outline: none; backdrop-filter: blur(5px);
+            color: white; backdrop-filter: blur(10px); outline: none;
         }
 
-        /* --- LECTEUR MÉDIA (PHOTO/VIDÉO) --- */
+        /* --- LECTEUR ET CONTENU --- */
         .post-container {
             height: 100vh; width: 100%; display: flex;
             align-items: center; justify-content: center;
-            position: relative; background-color: var(--rouge-fb); /* Fond par défaut */
-            overflow: hidden;
+            position: relative; background-color: var(--rouge-fb);
         }
 
-        #mediaPreview {
-            position: absolute; top: 0; left: 0;
-            width: 100%; height: 100%; object-fit: cover;
-            display: none; /* Caché tant qu'on n'a pas choisi de fichier */
+        #mediaPreview, #imagePreview {
+            position: absolute; width: 100%; height: 100%; object-fit: cover; display: none;
         }
 
         .main-text {
-            font-size: 42px; font-weight: bold; text-align: center;
-            z-index: 5; padding: 0 20px; text-shadow: 0px 2px 10px rgba(0,0,0,0.5);
+            font-size: 38px; font-weight: bold; text-align: center;
+            z-index: 5; padding: 20px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
         }
 
-        /* --- ACTIONS & BADGE --- */
-        .right-sidebar {
+        /* --- TOUCHES D'INTERACTION (DROITE) --- */
+        .side-actions {
             position: absolute; right: 15px; bottom: 120px;
-            display: flex; flex-direction: column; gap: 20px; z-index: 10;
+            display: flex; flex-direction: column; gap: 18px; z-index: 10;
         }
-        .circle-bg {
-            width: 45px; height: 45px; background: rgba(255, 255, 255, 0.2);
+        .action-btn {
+            display: flex; flex-direction: column; align-items: center; cursor: pointer;
+        }
+        .icon-circle {
+            width: 50px; height: 50px; background: rgba(255,255,255,0.2);
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 22px; cursor: pointer;
+            font-size: 24px; transition: 0.2s;
         }
+        .icon-circle:active { transform: scale(0.9); background: var(--violet-premium); }
 
-        .bottom-user-info { position: absolute; bottom: 80px; left: 15px; z-index: 10; }
+        /* --- INFOS ET BADGE --- */
+        .user-info { position: absolute; bottom: 80px; left: 15px; z-index: 10; }
         .badge-24 {
-            width: 20px; height: 20px; position: relative; margin-left: 8px;
-            display: inline-flex; align-items: center; justify-content: center;
-            filter: drop-shadow(0 0 2px var(--violet-clair));
+            width: 20px; height: 20px; display: inline-flex; position: relative;
+            margin-left: 5px; filter: drop-shadow(0 0 2px var(--violet-clair));
         }
         .badge-24::before {
             content: ''; position: absolute; width: 100%; height: 100%;
@@ -82,101 +78,87 @@
         }
         .badge-24::after {
             content: ''; position: absolute; width: 5px; height: 9px;
-            border: solid white; border-width: 0 2.5px 2.5px 0;
-            transform: rotate(45deg); margin-top: -1.5px;
+            border: solid white; border-width: 0 2.5px 2.5px 0; transform: rotate(45deg); margin-top: -1px;
         }
 
-        /* --- BARRE BASSE --- */
-        .footer-nav {
+        /* --- BARRE DE NAVIGATION (BAS) --- */
+        .nav-bar {
             position: fixed; bottom: 0; width: 100%; height: 60px;
-            background: white; display: flex; justify-content: space-around;
-            align-items: center; border-top: 1px solid #ddd; z-index: 100;
+            background: white; display: flex; justify-content: space-around; align-items: center; z-index: 100;
         }
-        .nav-item { color: black; font-size: 11px; text-align: center; cursor: pointer; }
+        .nav-btn { color: black; font-size: 11px; text-align: center; cursor: pointer; }
         .add-btn {
             background: linear-gradient(90deg, #ce85f2, #9c27b0);
-            width: 46px; height: 30px; border-radius: 8px; color: white;
+            width: 45px; height: 30px; border-radius: 8px; color: white;
             display: flex; align-items: center; justify-content: center; font-size: 24px;
         }
-
-        /* Input caché pour le test photo/vidéo */
-        #fileInput { display: none; }
     </style>
 </head>
 <body>
 
     <div class="header-search">
-        <div class="search-container">
-            <input type="text" class="search-input" placeholder="🔍 Rechercher...">
-        </div>
+        <input type="text" class="search-input" placeholder="🔍 Rechercher un créateur...">
     </div>
 
-    <div class="post-container">
-        <img id="imagePreview" class="media-preview" style="display:none; position:absolute; width:100%; height:100%; object-fit:cover;">
-        <video id="videoPreview" class="media-preview" style="display:none; position:absolute; width:100%; height:100%; object-fit:cover;" autoplay loop muted></video>
+    <div class="post-container" id="postArea">
+        <img id="imgView">
+        <video id="vidView" loop></video> <div class="main-text" id="postTxt">zah zalaah ty aiiii</div>
 
-        <div class="main-text" id="displayText">zah zalaah ty aiiii</div>
-
-        <div class="right-sidebar">
-            <div class="circle-bg">❤️</div>
-            <div class="circle-bg">💬</div>
-            <div class="circle-bg">🔗</div>
+        <div class="side-actions">
+            <div class="action-btn" onclick="alert('❤️ Liké !')"><div class="icon-circle">❤️</div><span>12K</span></div>
+            <div class="action-btn" onclick="alert('💬 Commentaires...')"><div class="icon-circle">💬</div><span>45</span></div>
+            <div class="action-btn" onclick="alert('🔗 Lien copié !')"><div class="icon-circle">🔗</div><span>Partage</span></div>
         </div>
 
-        <div class="bottom-user-info">
-            <div style="font-weight:bold; display:flex; align-items:center;">
-                Moi (Premium) <div class="badge-24"></div>
+        <div class="user-info" id="userInfo">
             </div>
-            <div style="font-size:14px;">#TestMedia #Premium</div>
-        </div>
     </div>
 
-    <input type="file" id="fileInput" accept="image/*,video/*" onchange="loadMedia(event)">
-<video id="videoPreview" class="media-preview" 
-       style="display:none; position:absolute; width:100%; height:100%; object-fit:cover;" 
-       autoplay loop>
-       </video>
+    <div class="nav-bar">
+        <div class="nav-btn" onclick="location.reload()">🏠<br>Accueil</div>
+        <div class="add-btn" onclick="triggerUpload()">+</div>
+        <div class="nav-btn" onclick="openStripeVisa()">💳<br>Visa PRO</div>
+    </div>
 
-<script>
-    // Système de gestion des badges
-    const currentUser = {
-        name: "Moi (Propriétaire)",
-        isOwner: true,
-        isPremium: true
-    };
+    <input type="file" id="mediaInput" style="display:none" onchange="handleMedia(event)">
 
-    function generateUserHTML(user) {
-        // Le badge ne s'affiche que pour le proprio ou les abonnés
-        const badgeHTML = (user.isOwner || user.isPremium) ? '<div class="badge-24"></div>' : '';
-        
-        return `
-            <div class="user-row">
-                ${user.name} ${badgeHTML}
-            </div>
-            <div style="font-size:14px;">${user.isOwner ? '#Admin' : '#AbonnéPremium'}</div>
-        `;
-    }
+    <script>
+        // Configuration utilisateur
+        const user = { name: "Moi (Proprio)", isPremium: true };
 
-    // Application au démarrage
-    document.querySelector('.bottom-user-info').innerHTML = generateUserHTML(currentUser);
-
-    function loadMedia(event) {
-        const file = event.target.files[0];
-        const vidPreview = document.getElementById('videoPreview');
-        const imgPreview = document.getElementById('imagePreview');
-
-        if (file) {
-            const url = URL.createObjectURL(file);
-            if (file.type.startsWith('video/')) {
-                vidPreview.src = url;
-                vidPreview.style.display = "block";
-                vidPreview.muted = false; // Force l'activation du son
-                vidPreview.play(); 
-            }
-            // ... reste du code pour l'image
+        function initApp() {
+            const badge = user.isPremium ? '<div class="badge-24"></div>' : '';
+            document.getElementById('userInfo').innerHTML = `
+                <div style="font-weight:bold; display:flex; align-items:center;">
+                    ${user.name} ${badge}
+                </div>
+                <div style="font-size:14px;">#Premium #Verified</div>
+            `;
         }
-    }
-</script>
 
+        function triggerUpload() { document.getElementById('mediaInput').click(); }
+
+        function handleMedia(e) {
+            const file = e.target.files[0];
+            const vid = document.getElementById('vidView');
+            const img = document.getElementById('imgView');
+            const txt = document.getElementById('postTxt');
+            const url = URL.createObjectURL(file);
+
+            txt.style.display = "none";
+            if(file.type.startsWith('video/')) {
+                vid.src = url; vid.style.display="block"; img.style.display="none";
+                vid.muted = false; vid.play(); // ACTIVE LE SON
+            } else {
+                img.src = url; img.style.display="block"; vid.style.display="none";
+            }
+        }
+
+        function openStripeVisa() {
+            alert("✨ Redirection vers Stripe ✨\nPréparez votre carte Visa Crédit pour activer votre badge !");
+        }
+
+        window.onload = initApp;
+    </script>
 </body>
 </html>
