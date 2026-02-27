@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther's Fashion - Plateforme Interactive</title>
+    <title>Luther's Fashion - 2026 Premium</title>
     <style>
         :root {
             --violet-p: #9c27b0;
@@ -18,7 +18,7 @@
             font-family: 'Segoe UI', sans-serif; overflow: hidden; color: white; 
         }
 
-        /* --- NAVIGATION HAUTE (RECHERCHE & LIVE) --- */
+        /* --- NAVIGATION HAUTE --- */
         .header { position: fixed; top: 0; width: 100%; z-index: 1000; background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent); padding: 10px 0; }
         .top-row { display: flex; align-items: center; padding: 0 15px; gap: 12px; }
         .search-container { flex: 1; background: var(--glass); border-radius: 20px; padding: 8px 15px; display: flex; border: 0.5px solid rgba(255,255,255,0.2); }
@@ -27,67 +27,65 @@
         .tab { cursor: pointer; opacity: 0.6; transition: 0.3s; }
         .tab.active { opacity: 1; border-bottom: 2px solid white; }
 
-        /* --- STORIES (DÉFILEMENT DROITE) --- */
+        /* --- STORIES --- */
         .stories-area { display: flex; gap: 15px; padding: 15px; overflow-x: auto; margin-top: 90px; scrollbar-width: none; }
         .story-unit { min-width: 65px; text-align: center; cursor: pointer; }
         .ring-p { width: 60px; height: 60px; border-radius: 50%; padding: 2px; background: linear-gradient(45deg, #f09433, #bc1888); display: flex; align-items: center; justify-content: center; }
         .story-img { width: 56px; height: 56px; border-radius: 50%; border: 2px solid black; object-fit: cover; }
 
-        /* --- BARRE LATÉRALE ACTIONS --- */
+        /* --- ACTIONS LATÉRALES --- */
         .side-bar { position: fixed; right: 12px; bottom: 100px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-        .pfp-wrap { position: relative; margin-bottom: 10px; cursor: pointer; }
+        .pfp-wrap { position: relative; margin-bottom: 10px; }
         .pfp-main { width: 48px; height: 48px; border-radius: 50%; border: 2px solid white; }
         .plus-pink { position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); background: var(--pink-tiktok); width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; font-size: 14px; }
-        .act-btn { text-align: center; cursor: pointer; transition: 0.2s; }
-        .act-btn:active { transform: scale(0.9); }
+        .act-btn { text-align: center; cursor: pointer; }
         .act-icon { font-size: 26px; }
-        .act-num { font-size: 11px; font-weight: bold; margin-top: 2px; }
+        .act-num { font-size: 11px; font-weight: bold; }
 
-        /* --- BADGE VIOLET --- */
+        /* --- BADGE VIOLET PROPRIO --- */
         .badge-v { width: 16px; height: 16px; background: var(--violet-p); margin-left: 5px; clip-path: polygon(50% 0%, 53% 5%, 60% 3%, 63% 9%, 70% 8%, 73% 14%, 80% 15%, 82% 21%, 88% 23%, 89% 30%, 94% 33%, 94% 40%, 98% 45%, 96% 52%, 99% 59%, 95% 65%, 96% 72%, 91% 77%, 90% 84%, 84% 87%, 81% 93%, 74% 94%, 70% 99%, 63% 97%, 57% 100%, 50% 96%, 43% 100%, 37% 97%, 30% 99%, 26% 94%, 19% 93%, 16% 87%, 10% 84%, 9% 77%, 4% 72%, 5% 65%, 1% 59%, 4% 52%, 2% 45%, 6% 40%, 6% 33%, 11% 30%, 12% 23%, 18% 21%, 20% 15%, 27% 14%, 30% 8%, 37% 9%, 40% 3%, 47% 5%); display: inline-flex; align-items: center; justify-content: center; }
         .badge-v::after { content: '✓'; color: white; font-size: 9px; }
 
-        /* --- DISQUE & MODALS --- */
-        .disc-rot { width: 42px; height: 42px; border-radius: 50%; background: radial-gradient(circle, #444, #000); border: 8px solid rgba(255,255,255,0.1); animation: rotate 3s linear infinite; cursor: pointer; }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 5000; padding: 20px; box-sizing: border-box; }
-        .card { background: white; color: black; width: 100%; max-width: 400px; padding: 25px; border-radius: 20px; text-align: center; }
-        .btn-social { display: flex; align-items: center; padding: 12px; border: 1px solid #ddd; border-radius: 10px; margin-bottom: 10px; cursor: pointer; font-weight: 600; }
+        /* --- MODALS & OVERLAYS --- */
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 5000; padding: 20px; }
+        .card { background: white; color: black; width: 100%; max-width: 380px; padding: 25px; border-radius: 20px; text-align: center; }
+        .share-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 20px; }
+        .share-item { font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; }
+        .share-icon { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-        /* --- NAV BASSE --- */
+        /* --- NAVIGATION BASSE --- */
         .bottom-bar { position: fixed; bottom: 0; width: 100%; height: 70px; background: black; display: flex; justify-content: space-around; align-items: center; border-top: 0.5px solid #222; }
         .nav-link { display: flex; flex-direction: column; align-items: center; opacity: 0.6; cursor: pointer; font-size: 10px; }
         .nav-link.active { opacity: 1; color: var(--violet-c); }
-        .plus-btn-c { background: linear-gradient(90deg, #ce85f2, #9c27b0); width: 46px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
+        .plus-btn-c { background: linear-gradient(90deg, #ce85f2, #9c27b0); width: 46px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <div class="top-row">
-            <span style="font-size:22px; cursor:pointer;" onclick="alert('Lancer un Live ?')">📺</span>
+            <span style="font-size:22px;" onclick="alert('Lancer un Live?')">📺</span>
             <div class="search-container">
-                <input type="text" placeholder="Rechercher..." id="searchInp">
-                <span onclick="alert('Recherche de : ' + document.getElementById('searchInp').value)">🔍</span>
+                <input type="text" placeholder="Rechercher..." id="searchBox">
+                <span onclick="alert('Recherche : ' + document.getElementById('searchBox').value)">🔍</span>
             </div>
-            <span style="font-size:22px; cursor:pointer;" onclick="alert('Aucune nouvelle notification')">🔔</span>
+            <span style="font-size:22px;" onclick="alert('Notifications vides')">🔔</span>
         </div>
         <div class="feed-tabs">
             <div class="tab" onclick="changeTab(this)">Suivi</div>
             <div class="tab active" onclick="changeTab(this)">Pour toi</div>
-            <div class="tab" onclick="alert('Aucun Live en cours')">Live</div>
         </div>
     </div>
 
     <div class="stories-area">
-        <div class="story-unit" onclick="alert('Ouvrir l\'appareil photo pour la story')">
+        <div class="story-unit" onclick="alert('Prendre une photo')">
             <div class="ring-p" style="background:none; border:2px solid #555"><img src="https://via.placeholder.com/60" class="story-img"></div>
             <p style="font-size:10px; margin-top:4px;">Ta story</p>
         </div>
-        <div class="story-unit" onclick="alert('Visionnage de la story d\'Ami 1')"><div class="ring-p"><img src="https://via.placeholder.com/60/9c27b0/fff" class="story-img"></div><p style="font-size:10px; margin-top:4px;">Ami 1</p></div>
+        <div class="story-unit" onclick="alert('Story Ami 1')"><div class="ring-p"><img src="https://via.placeholder.com/60/9c27b0/fff" class="story-img"></div><p style="font-size:10px; margin-top:4px;">Ami 1</p></div>
     </div>
 
-    <div style="height: 45vh; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+    <div style="height: 40vh; display: flex; align-items: center; justify-content: center; flex-direction: column;">
         <h1 style="font-size:38px; text-shadow: 0 0 25px var(--violet-c); text-align:center;">zah zalaah ty aiiii</h1>
         <div style="position:fixed; bottom:90px; left:15px;">
             <h3 style="display:flex; align-items:center; margin:0;">Luther <div class="badge-v"></div></h3>
@@ -100,62 +98,76 @@
             <img src="https://via.placeholder.com/50" class="pfp-main">
             <div class="plus-pink">+</div>
         </div>
-        <div class="act-btn" onclick="toggleVal(this, '❤️')"><div class="act-icon">🤍</div><div class="act-num">150.6K</div></div>
+        <div class="act-btn" onclick="toggleHeart(this)"><div class="act-icon">🤍</div><div class="act-num">150.6K</div></div>
         <div class="act-btn" onclick="openModal('commModal')"><div class="act-icon">💬</div><div class="act-num">274</div></div>
-        <div class="act-btn" onclick="toggleVal(this, '🔖')"><div class="act-icon">🏳️</div><div class="act-num">7286</div></div>
+        <div class="act-btn" onclick="toggleSave(this)"><div class="act-icon">🏳️</div><div class="act-num">7286</div></div>
         <div class="act-btn" onclick="openModal('shareModal')"><div class="act-icon">➥</div><div class="act-num">2570</div></div>
-        <div class="disc-rot" onclick="alert('Chanson : Luther - Fashion Mix 2026')"></div>
+        <div style="width:40px; height:40px; border-radius:50%; background:black; border:8px solid #333; animation: rotate 3s linear infinite;" onclick="alert('Musique : Luther Original Mix')"></div>
     </div>
 
     <div class="bottom-bar">
         <div class="nav-link active"><span>🏠</span><span>Accueil</span></div>
-        <div class="nav-link" onclick="alert('Menu Découvrir')"><span>🔍</span><span>Découvrir</span></div>
-        <div class="plus-btn-c" onclick="alert('Publier un nouveau post')">+</div>
-        <div class="nav-link" onclick="alert('Tes amis connectés')"><span>👥</span><span>Amis</span></div>
+        <div class="nav-link" onclick="alert('Découvrir')"><span>🔍</span><span>Découvrir</span></div>
+        <div class="plus-btn-c" onclick="alert('Nouveau Post')">+</div>
+        <div class="nav-link" onclick="alert('Tes Amis')"><span>👥</span><span>Amis</span></div>
         <div class="nav-link" onclick="openModal('authModal')"><span>👤</span><span>Profil</span></div>
     </div>
 
-    <div id="authModal" class="overlay" onclick="closeModal(this)"><div class="card" onclick="event.stopPropagation()">
-        <h2>S'inscrire</h2>
-        <div class="btn-social">🌐 Continuer avec Google</div>
-        <div class="btn-social">🍎 Continuer avec Apple</div>
-        <div class="btn-social">🔵 Continuer avec Facebook</div>
-        <div class="btn-social">📞 Numéro de téléphone</div>
-        <p onclick="closeModal(document.getElementById('authModal'))" style="color:gray; cursor:pointer;">Annuler</p>
+    <div id="shareModal" class="overlay" onclick="closeModal(this)"><div class="card" onclick="event.stopPropagation()">
+        <h3>Partager à</h3>
+        <div class="share-grid">
+            <div class="share-item" onclick="alert('Lien copié!')">
+                <div class="share-icon" style="background:#f1f1f1">🔗</div><span>Copier le lien</span>
+            </div>
+            <div class="share-item">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="45"><span>WhatsApp</span>
+            </div>
+            <div class="share-item">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/be/Facebook_Messenger_logo_2020.svg" width="45"><span>Messenger</span>
+            </div>
+            <div class="share-item">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_2023.svg" width="45"><span>Facebook</span>
+            </div>
+        </div>
+        <button onclick="closeModal(document.getElementById('shareModal'))" style="margin-top:20px; width:100%; padding:10px; border-radius:10px; border:none; background:#eee; font-weight:bold;">Annuler</button>
     </div></div>
 
-    <div id="shareModal" class="overlay" onclick="closeModal(this)"><div class="card" onclick="event.stopPropagation()">
-        <h2>Partager sur</h2>
-        <div class="btn-social">🟢 WhatsApp</div>
-        <div class="btn-social">🔵 Messenger</div>
-        <div class="btn-social">🟦 Facebook</div>
-        <div class="btn-social" onclick="alert('Lien copié !')">🔗 Copier le lien</div>
+    <div id="authModal" class="overlay" onclick="closeModal(this)"><div class="card" onclick="event.stopPropagation()">
+        <h2>Rejoindre Luther's</h2>
+        <div style="background:#f1f1f1; padding:12px; border-radius:10px; margin-bottom:10px; font-weight:bold;">Continuer avec Google</div>
+        <div style="background:#000; color:white; padding:12px; border-radius:10px; margin-bottom:10px; font-weight:bold;">Continuer avec Apple</div>
+        <div style="background:#1877F2; color:white; padding:12px; border-radius:10px; margin-bottom:10px; font-weight:bold;">Continuer avec Facebook</div>
+        <p onclick="closeModal(document.getElementById('authModal'))" style="cursor:pointer; color:gray;">Fermer</p>
     </div></div>
 
     <div id="commModal" class="overlay" onclick="closeModal(this)"><div class="card" onclick="event.stopPropagation()">
-        <h2>Commentaires</h2>
-        <div style="height:150px; overflow-y:auto; text-align:left; font-size:13px; border-bottom:1px solid #eee;">
-            <p><b>Fan_01:</b> Incroyable ce style ! 🔥</p>
-            <p><b>Model_Pro:</b> Le badge violet est trop beau.</p>
+        <h3>Commentaires</h3>
+        <div style="height:200px; overflow-y:auto; border-bottom:1px solid #eee; text-align:left; font-size:14px;">
+            <p><b>User_99:</b> Trop stylé le dégradé ! 🔥</p>
+            <p><b>Arlein:</b> 2026 s'annonce bien.</p>
         </div>
-        <input type="text" placeholder="Ajouter un commentaire..." style="width:100%; padding:10px; margin-top:10px; border-radius:5px; border:1px solid #ddd;">
+        <input type="text" placeholder="Ajouter un commentaire..." style="width:100%; padding:10px; margin-top:10px; border-radius:10px; border:1px solid #ddd;">
     </div></div>
 
     <script>
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(el) { el.style.display = 'none'; }
         
+        function toggleHeart(el) {
+            let icon = el.querySelector('.act-icon');
+            icon.innerText = (icon.innerText === '🤍') ? '❤️' : '🤍';
+            icon.style.color = (icon.innerText === '❤️') ? '#ff0050' : 'white';
+        }
+
+        function toggleSave(el) {
+            let icon = el.querySelector('.act-icon');
+            icon.innerText = (icon.innerText === '🏳️') ? '🔖' : '🏳️';
+            icon.style.color = (icon.innerText === '🔖') ? '#face15' : 'white';
+        }
+
         function changeTab(el) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             el.classList.add('active');
-        }
-
-        function toggleVal(el, icon) {
-            let iconDiv = el.querySelector('.act-icon');
-            if(icon === '❤️') iconDiv.innerText = (iconDiv.innerText === '🤍') ? '❤️' : '🤍';
-            if(icon === '🔖') iconDiv.innerText = (iconDiv.innerText === '🏳️') ? '🔖' : '🏳️';
-            let numDiv = el.querySelector('.act-num');
-            numDiv.innerText = (parseFloat(numDiv.innerText) + 0.1).toFixed(1) + "K";
         }
     </script>
 </body>
