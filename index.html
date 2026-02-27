@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MonRéseau PRO - Création Complète</title>
+    <title>MonRéseau PRO - TikTok Center Text</title>
     <style>
         :root {
             --violet-premium: #9c27b0;
@@ -15,7 +15,7 @@
         body, html {
             margin: 0; padding: 0; height: 100%;
             background-color: var(--fond-sombre);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             overflow: hidden; color: var(--blanc);
         }
 
@@ -24,15 +24,39 @@
             overflow-y: scroll; scroll-behavior: smooth;
         }
 
+        /* POST PLEIN ÉCRAN */
         .post-card {
             height: 100vh; width: 100%; scroll-snap-align: start;
             position: relative; display: flex; align-items: center; justify-content: center;
         }
 
-        /* BADGE PRO 24 POINTES "BIEN ROND" */
+        /* TEXTE GRAND AU CENTRE */
+        .center-content {
+            font-size: 32px; font-weight: bold; text-align: center;
+            max-width: 80%; line-height: 1.2; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* BARRE D'INTERACTIONS À DROITE */
+        .side-actions {
+            position: absolute; right: 15px; bottom: 120px;
+            display: flex; flex-direction: column; gap: 20px; align-items: center;
+        }
+        .action-item { text-align: center; cursor: pointer; }
+        .action-icon {
+            width: 45px; height: 45px; background: rgba(255,255,255,0.2);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 22px; margin-bottom: 5px; transition: transform 0.1s;
+        }
+        .action-item span { font-size: 12px; font-weight: bold; }
+
+        /* INFOS UTILISATEUR EN BAS */
+        .user-info { position: absolute; bottom: 80px; left: 15px; }
+        .username { font-weight: bold; font-size: 18px; display: flex; align-items: center; }
+
+        /* BADGE 24 POINTES "BIEN ROND" */
         .verified-badge-24 {
-            width: 18px; height: 18px; position: relative; display: inline-flex;
-            align-items: center; justify-content: center; margin-left: 5px;
+            width: 20px; height: 20px; position: relative; display: inline-flex;
+            align-items: center; justify-content: center; margin-left: 6px;
         }
         .verified-badge-24::before {
             content: ''; position: absolute; width: 100%; height: 100%;
@@ -41,147 +65,49 @@
             border-radius: 50%;
         }
         .verified-badge-24::after {
-            content: ''; position: absolute; width: 4px; height: 7px;
-            border: solid white; border-width: 0 2px 2px 0;
-            transform: rotate(45deg); margin-top: -1px;
+            content: ''; position: absolute; width: 5px; height: 9px;
+            border: solid white; border-width: 0 2.5px 2.5px 0;
+            transform: rotate(45deg); margin-top: -1.5px;
         }
 
-        .user-details { position: absolute; bottom: 90px; left: 15px; z-index: 10; }
-        .username { font-weight: bold; display: flex; align-items: center; margin-bottom: 5px; }
-
-        /* MODAL DE PUBLICATION STYLE PROFESSIONNEL */
-        #postModal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); z-index: 200; justify-content: center; align-items: center;
-        }
-        .modal-content {
-            background: white; color: black; width: 90%; max-width: 450px;
-            border-radius: 12px; overflow: hidden;
-        }
-        .modal-header {
-            padding: 15px; border-bottom: 1px solid #eee; display: flex; align-items: center;
-        }
-        .back-btn { cursor: pointer; font-size: 20px; margin-right: 15px; color: #606770; }
-        
-        .modal-body { padding: 15px; }
-        .modal-body textarea {
-            width: 100%; height: 80px; border: none; font-size: 18px; outline: none; resize: none;
-        }
-
-        /* SÉLECTEUR DE COULEURS */
-        .color-picker { display: flex; gap: 8px; margin: 10px 0; }
-        .color-dot { width: 25px; height: 25px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
-        .color-dot.active { border-color: black; }
-
-        /* MENU OPTIONS */
-        .options-grid {
-            border: 1px solid #ddd; border-radius: 8px; margin-top: 15px; padding: 10px;
-            display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-        }
-        .option-item {
-            display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 500;
-            cursor: pointer; padding: 5px;
-        }
-        .option-item:hover { background: #f2f2f2; border-radius: 5px; }
-
-        .btn-post {
-            background: #1877f2; color: white; border: none; width: 100%;
-            padding: 10px; border-radius: 6px; font-weight: bold; margin-top: 15px; cursor: pointer;
-        }
-
-        .bottom-navbar {
-            position: fixed; bottom: 0; width: 100%; height: 65px;
+        /* BARRE DE NAVIGATION BLANCHE */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; height: 60px;
             background: white; display: flex; justify-content: space-around; align-items: center;
         }
-        .publish-btn {
+        .nav-icon { color: black; font-size: 11px; text-align: center; flex: 1; cursor: pointer; }
+        .btn-plus {
             background: linear-gradient(90deg, #ce85f2, #9c27b0);
-            width: 50px; height: 32px; border-radius: 8px; color: white;
-            display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer;
+            width: 45px; height: 30px; border-radius: 8px; color: white;
+            display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-    <div class="app-container" id="mainFeed">
-        <div class="post-card" style="background: linear-gradient(180deg, #2c003e 0%, #000000 100%);">
-            <div class="user-details">
-                <div class="username">Paris Models <div class="verified-badge-24"></div></div>
-                <div class="description">Clique sur "+" pour tester le menu de publication !</div>
+    <div class="app-container">
+        <div class="post-card" style="background-color: #f02849;">
+            
+            <div class="center-content">zah zalaah ty aiiii</div>
+
+            <div class="side-actions">
+                <div class="action-item" onclick="this.style.color='#ff3b5c'"><div class="action-icon">❤️</div><span>12.4K</span></div>
+                <div class="action-item"><div class="action-icon">💬</div><span>856</span></div>
+                <div class="action-item"><div class="action-icon">🔗</div><span>Partager</span></div>
+            </div>
+
+            <div class="user-info">
+                <div class="username">Moi (Premium) <div class="verified-badge-24"></div></div>
+                <div style="font-size: 14px; opacity: 0.9;">Statut actuel : Verifed Emojis ✨</div>
             </div>
         </div>
     </div>
 
-    <div class="bottom-navbar">
-        <div style="color: black; font-size: 11px; text-align: center;">🏠<br>Accueil</div>
-        <div class="publish-btn" onclick="openModal()">+</div>
-        <div style="color: black; font-size: 11px; text-align: center;">👤<br>Profil</div>
+    <div class="bottom-nav">
+        <div class="nav-icon">🏠<br>Accueil</div>
+        <div class="btn-plus">+</div>
+        <div class="nav-icon">👤<br>Profil</div>
     </div>
 
-    <div id="postModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="back-btn" onclick="closeModal()">←</span>
-                <span style="font-weight: bold; font-size: 18px;">Ajouter à votre publication</span>
-            </div>
-            <div class="modal-body">
-                <textarea id="postText" placeholder="Que voulez-vous dire ?"></textarea>
-                
-                <p style="font-size: 12px; font-weight: bold; margin-bottom: 5px;">Couleur de fond :</p>
-                <div class="color-picker" id="colorPicker">
-                    <div class="color-dot active" style="background: linear-gradient(135deg, #2c003e, #000)" data-color="linear-gradient(180deg, #2c003e 0%, #000000 100%)"></div>
-                    <div class="color-dot" style="background: #1877f2" data-color="#1877f2"></div>
-                    <div class="color-dot" style="background: #f02849" data-color="#f02849"></div>
-                    <div class="color-dot" style="background: #45bd62" data-color="#45bd62"></div>
-                    <div class="color-dot" style="background: #f7b928" data-color="#f7b928"></div>
-                </div>
-
-                <div class="options-grid">
-                    <div class="option-item">🖼️ <span style="color:#45bd62">Photo/Vidéo</span></div>
-                    <div class="option-item">👤 <span style="color:#1877f2">Identifier</span></div>
-                    <div class="option-item">😊 <span style="color:#f7b928">Humeur</span></div>
-                    <div class="option-item">📍 <span style="color:#f02849">Je suis là</span></div>
-                    <div class="option-item">🎥 <span style="color:#f02849">Vidéo en direct</span></div>
-                    <div class="option-item">🚩 <span style="color:#1877f2">Événement</span></div>
-                </div>
-
-                <button class="btn-post" onclick="addNewPost()">Publier</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        let selectedColor = "linear-gradient(180deg, #2c003e 0%, #000000 100%)";
-
-        // Gestion du choix de couleur
-        document.querySelectorAll('.color-dot').forEach(dot => {
-            dot.addEventListener('click', function() {
-                document.querySelector('.color-dot.active').classList.remove('active');
-                this.classList.add('active');
-                selectedColor = this.dataset.color;
-            });
-        });
-
-        function openModal() { document.getElementById("postModal").style.display = "flex"; }
-        function closeModal() { document.getElementById("postModal").style.display = "none"; }
-
-        function addNewPost() {
-            const text = document.getElementById("postText").value;
-            if (!text.trim()) return alert("Écrivez un texte !");
-
-            const newPost = document.createElement("div");
-            newPost.className = "post-card";
-            newPost.style.background = selectedColor;
-            newPost.innerHTML = `
-                <div class="user-details">
-                    <div class="username">Moi (Premium) <div class="verified-badge-24"></div></div>
-                    <div class="description">${text}</div>
-                </div>`;
-
-            document.getElementById("mainFeed").prepend(newPost);
-            document.getElementById("postText").value = "";
-            closeModal();
-            newPost.scrollIntoView({ behavior: 'smooth' });
-        }
-    </script>
 </body>
 </html>
