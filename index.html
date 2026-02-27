@@ -3,194 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MonRéseau PRO - Vidéo & Chat</title>
+    <title>MonRéseau PRO - Séparé</title>
     <style>
         :root {
-            --violet-premium: #9c27b0;
-            --violet-clair: #ce85f2;
-            --rouge-fb: #f02849;
-            --blanc: #ffffff;
-            --fond-chat: #f4f4f4;
+            --violet: #9c27b0;
+            --rouge: #f02849; /* */
         }
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: sans-serif; background: black; color: white; }
 
-        body, html {
-            margin: 0; padding: 0; height: 100%;
-            background-color: #000;
-            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
-            overflow: hidden; color: var(--blanc);
-        }
+        /* --- POST --- */
+        .post-container { height: 100vh; width: 100%; position: relative; background: var(--rouge); display: flex; align-items: center; justify-content: center; }
+        .main-text { font-size: 35px; font-weight: bold; text-align: center; z-index: 5; }
 
-        /* --- BARRE DE RECHERCHE --- */
-        .header-search {
-            position: fixed; top: 0; width: 100%; padding: 15px 0;
-            display: flex; justify-content: center; z-index: 100;
-            animation: slideDown 0.5s ease-out;
-        }
-        @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
-        .search-input {
-            width: 85%; padding: 12px 20px; border-radius: 25px;
-            border: none; background: rgba(255, 255, 255, 0.25);
-            color: white; backdrop-filter: blur(15px); outline: none;
-        }
+        /* --- ACTIONS (DROITE) --- */
+        .side-actions { position: absolute; right: 15px; bottom: 120px; display: flex; flex-direction: column; gap: 15px; z-index: 10; }
+        .btn-action { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .icon { width: 50px; height: 50px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; position: relative; }
+        .notif { position: absolute; top: -2px; right: -2px; background: red; border: 2px solid white; border-radius: 10px; font-size: 10px; padding: 2px 5px; }
 
-        /* --- ZONE DE CONTENU (VIDEO/PHOTO) --- */
-        .post-container {
-            height: 100vh; width: 100%; display: flex;
-            align-items: center; justify-content: center;
-            position: relative; background-color: var(--rouge-fb);
-        }
-        #mediaDisplay { position: absolute; width: 100%; height: 100%; object-fit: cover; display: none; }
-        .main-text { font-size: 40px; font-weight: bold; text-align: center; z-index: 5; text-shadow: 2px 2px 15px rgba(0,0,0,0.6); }
+        /* --- PANNEAUX (COMMENTAIRES VS MESSAGES) --- */
+        .panel { position: fixed; bottom: -100%; left: 0; width: 100%; height: 60%; background: white; border-radius: 20px 20px 0 0; z-index: 1000; transition: 0.4s; color: black; display: flex; flex-direction: column; }
+        .panel-header { padding: 15px; border-bottom: 1px solid #ddd; font-weight: bold; display: flex; justify-content: space-between; }
+        .content-list { flex: 1; overflow-y: auto; padding: 15px; }
+        .active { bottom: 0 !important; }
 
-        /* --- ACTIONS À DROITE --- */
-        .side-actions {
-            position: absolute; right: 15px; bottom: 120px;
-            display: flex; flex-direction: column; gap: 20px; z-index: 10;
-        }
-        .action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-        .circle {
-            width: 52px; height: 52px; background: rgba(255,255,255,0.2);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 26px; transition: 0.3s;
-        }
-        .circle:active { transform: scale(0.8); background: var(--violet-premium); }
-
-        /* --- BADGE PRO 24 POINTES --- */
-        .badge-24 {
-            width: 20px; height: 20px; position: relative; display: inline-flex;
-            margin-left: 6px; filter: drop-shadow(0 0 2px var(--violet-clair));
-        }
-        .badge-24::before {
-            content: ''; position: absolute; width: 100%; height: 100%;
-            background: linear-gradient(135deg, var(--violet-clair), var(--violet-premium));
-            clip-path: polygon(50% 0%, 53% 5%, 60% 3%, 63% 9%, 70% 8%, 73% 14%, 80% 15%, 82% 21%, 88% 23%, 89% 30%, 94% 33%, 94% 40%, 98% 45%, 96% 52%, 99% 59%, 95% 65%, 96% 72%, 91% 77%, 90% 84%, 84% 87%, 81% 93%, 74% 94%, 70% 99%, 63% 97%, 57% 100%, 50% 96%, 43% 100%, 37% 97%, 30% 99%, 26% 94%, 19% 93%, 16% 87%, 10% 84%, 9% 77%, 4% 72%, 5% 65%, 1% 59%, 4% 52%, 2% 45%, 6% 40%, 6% 33%, 11% 30%, 12% 23%, 18% 21%, 20% 15%, 27% 14%, 30% 8%, 37% 9%, 40% 3%, 47% 5%);
-            border-radius: 50%;
-        }
-        .badge-24::after {
-            content: ''; position: absolute; width: 5px; height: 8px; border: solid white;
-            border-width: 0 2px 2px 0; transform: rotate(45deg); margin-top: -1px;
-        }
-
-        /* --- INTERFACE DE CHAT (MESSAGES) --- */
-        #chatBox {
-            position: fixed; bottom: -100%; left: 0; width: 100%; height: 70%;
-            background: white; border-radius: 20px 20px 0 0; z-index: 200;
-            transition: 0.4s ease; color: black; display: flex; flex-direction: column;
-        }
-        .chat-header { padding: 15px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; font-weight: bold; }
-        .chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .msg { padding: 10px; border-radius: 15px; max-width: 70%; font-size: 14px; }
-        .msg.received { background: #eee; align-self: flex-start; }
-        .msg.sent { background: var(--violet-premium); color: white; align-self: flex-end; }
-        .chat-input-area { padding: 10px; border-top: 1px solid #ddd; display: flex; gap: 10px; }
-        .chat-input-area input { flex: 1; padding: 10px; border-radius: 20px; border: 1px solid #ddd; outline: none; }
-
-        /* --- BARRE DE NAVIGATION --- */
-        .footer-nav {
-            position: fixed; bottom: 0; width: 100%; height: 60px;
-            background: white; display: flex; justify-content: space-around; align-items: center; z-index: 150;
-        }
-        .nav-icon { color: #555; font-size: 11px; text-align: center; cursor: pointer; flex: 1; }
-        .btn-add {
-            background: linear-gradient(90deg, #ce85f2, #9c27b0);
-            width: 50px; height: 32px; border-radius: 10px; color: white;
-            display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold;
-        }
+        /* --- NAV BASSE --- */
+        .nav { position: fixed; bottom: 0; width: 100%; height: 60px; background: white; display: flex; justify-content: space-around; align-items: center; z-index: 500; }
+        .nav-item { color: #333; font-size: 11px; text-align: center; position: relative; }
+        .btn-plus { background: linear-gradient(90deg, #ce85f2, var(--violet)); width: 45px; height: 30px; border-radius: 8px; color: white; display: flex; align-items: center; justify-content: center; font-size: 20px; }
     </style>
 </head>
 <body>
 
-    <div class="header-search">
-        <input type="text" class="search-input" placeholder="🔍 Rechercher sur MonRéseau...">
-    </div>
-
     <div class="post-container">
-        <video id="vidPlayer" loop style="position:absolute; width:100%; height:100%; object-fit:cover; display:none;"></video>
-        <img id="imgPlayer" style="position:absolute; width:100%; height:100%; object-fit:cover; display:none;">
-        
-        <div class="main-text" id="postTxt">zah zalaah ty aiiii</div>
+        <div class="main-text">zah zalaah ty aiiii</div>
 
         <div class="side-actions">
-            <div class="action-item" onclick="toggleLike(this)"><div class="circle">❤️</div><span id="likeCount">12.4K</span></div>
-            <div class="action-item" onclick="openChat()"><div class="circle">💬</div><span>428</span></div>
-            <div class="action-item" onclick="shareContent()"><div class="circle">🔗</div><span>Partage</span></div>
-        </div>
-
-        <div style="position:absolute; bottom:80px; left:15px; z-index:10;">
-            <div style="font-weight:bold; font-size:18px; display:flex; align-items:center;">
-                Moi (Proprio) <div class="badge-24"></div>
+            <div class="btn-action">
+                <div class="icon">❤️</div>
+                <span style="font-size:12px">12K</span>
             </div>
-            <div style="font-size:14px; opacity:0.9;">#Verified #PremiumLife</div>
+            <div class="btn-action" onclick="openPanel('commentsPanel')">
+                <div class="icon">💬</div>
+                <span style="font-size:12px">45</span>
+            </div>
         </div>
     </div>
 
-    <div id="chatBox">
-        <div class="chat-header">
-            <span>Discussions</span>
-            <span onclick="closeChat()" style="cursor:pointer;">✕</span>
-        </div>
-        <div class="chat-messages" id="msgList">
-            <div class="msg received">Hé ! J'adore ton nouveau badge 24 pointes ! 🔥</div>
-            <div class="msg sent">Merci ! C'est le statut Premium.</div>
-        </div>
-        <div class="chat-input-area">
-            <input type="text" id="chatInput" placeholder="Écris un message...">
-            <button onclick="sendMessage()" style="border:none; background:none; font-weight:bold; color:var(--violet-premium);">Envoyer</button>
+    <div id="commentsPanel" class="panel">
+        <div class="panel-header"><span>Commentaires</span><span onclick="closeAll()">✕</span></div>
+        <div class="content-list">
+            <p><b>User1:</b> Trop cool la couleur ! 🔥</p>
+            <p><b>User2:</b> Zah zalaah ! ✨</p>
         </div>
     </div>
 
-    <div class="footer-nav">
-        <div class="nav-icon" onclick="location.reload()">🏠<br>Accueil</div>
-        <div class="btn-add" onclick="document.getElementById('fileIn').click()">+</div>
-        <div class="nav-icon" onclick="openChat()">💬<br>Messages</div>
-        <div class="nav-icon" onclick="alert('Profil de Moi (Proprio)')">👤<br>Profil</div>
+    <div id="messagesPanel" class="panel">
+        <div class="panel-header"><span>Ma Messagerie Privée</span><span onclick="closeAll()">✕</span></div>
+        <div class="content-list">
+            <p style="color:var(--violet)"><b>Admin:</b> Bienvenue dans ton espace Premium !</p>
+        </div>
     </div>
 
-    <input type="file" id="fileIn" style="display:none" onchange="loadMedia(event)">
+    <div class="nav">
+        <div class="nav-item">🏠<br>Accueil</div>
+        <div class="btn-plus" onclick="alert('Menu Ajouter activé')">+</div>
+        <div class="nav-item" onclick="openPanel('messagesPanel')">
+            💬<br>Messages
+            <div class="notif" id="notif">1</div>
+        </div>
+        <div class="nav-item">👤<br>Profil</div>
+    </div>
 
     <script>
-        // --- GESTION MEDIA ---
-        function loadMedia(e) {
-            const file = e.target.files[0];
-            const vid = document.getElementById('vidPlayer');
-            const img = document.getElementById('imgPlayer');
-            const txt = document.getElementById('postTxt');
-            const url = URL.createObjectURL(file);
-
-            txt.style.display = "none";
-            if(file.type.startsWith('video/')) {
-                vid.src = url; vid.style.display = "block"; img.style.display = "none";
-                vid.muted = false; vid.play();
-            } else {
-                img.src = url; img.style.display = "block"; vid.style.display = "none";
-            }
+        function openPanel(id) {
+            closeAll();
+            document.getElementById(id).classList.add('active');
+            if(id === 'messagesPanel') document.getElementById('notif').style.display = 'none';
         }
-
-        // --- GESTION CHAT ---
-        function openChat() { document.getElementById('chatBox').style.bottom = "0"; }
-        function closeChat() { document.getElementById('chatBox').style.bottom = "-100%"; }
-        
-        function sendMessage() {
-            const input = document.getElementById('chatInput');
-            if(input.value.trim() === "") return;
-            const msgList = document.getElementById('msgList');
-            const newMsg = document.createElement('div');
-            newMsg.className = "msg sent";
-            newMsg.innerText = input.value;
-            msgList.appendChild(newMsg);
-            input.value = "";
-            msgList.scrollTop = msgList.scrollHeight;
-        }
-
-        // --- AUTRES TOUCHES ---
-        function toggleLike(el) {
-            const circle = el.querySelector('.circle');
-            circle.style.color = circle.style.color === 'red' ? 'white' : 'red';
-            circle.style.background = circle.style.color === 'red' ? 'rgba(255,0,0,0.2)' : 'rgba(255,255,255,0.2)';
-        }
-
-        function shareContent() {
-            alert("✨ MonRéseau PRO ✨\nLien copié ! Partage ton badge avec tes amis.");
+        function closeAll() {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
         }
     </script>
 </body>
