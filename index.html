@@ -3,211 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MonRéseau PRO - TikTok Style avec Recherche</title>
+    <title>MonRéseau PRO - Test Média & Animation</title>
     <style>
         :root {
             --violet-premium: #9c27b0;
             --violet-clair: #ce85f2;
-            --rouge-fb: #f02849; /* */
+            --rouge-fb: #f02849;
             --blanc: #ffffff;
         }
 
         body, html {
             margin: 0; padding: 0; height: 100%;
-            background-color: var(--rouge-fb);
+            background-color: var(--fond-sombre);
             font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
             overflow: hidden; color: var(--blanc);
         }
 
-        /* --- BARRE DE RECHERCHE (HAUT) --- */
+        /* --- ANIMATION BARRE DE RECHERCHE --- */
+        @keyframes slideIn {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
         .header-search {
-            position: fixed;
-            top: 0; width: 100%;
-            padding: 15px 0;
-            display: flex;
-            justify-content: center;
-            z-index: 100;
+            position: fixed; top: 0; width: 100%; padding: 15px 0;
+            display: flex; justify-content: center; z-index: 100;
+            animation: slideIn 0.8s ease-out; /* L'animation demandée */
         }
 
-        .search-container {
-            width: 90%;
-            max-width: 400px;
-            position: relative;
-        }
-
+        .search-container { width: 90%; max-width: 400px; position: relative; }
         .search-input {
-            width: 100%;
-            padding: 10px 15px 10px 40px;
-            border-radius: 20px;
-            border: none;
-            background: rgba(255, 255, 255, 0.2); /* Semi-transparent */
-            color: white;
-            font-size: 14px;
-            outline: none;
-            backdrop-filter: blur(5px);
+            width: 100%; padding: 10px 15px 10px 40px; border-radius: 20px;
+            border: none; background: rgba(255, 255, 255, 0.2);
+            color: white; outline: none; backdrop-filter: blur(5px);
         }
 
-        .search-input::placeholder { color: rgba(255, 255, 255, 0.7); }
-
-        .search-icon {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 16px;
-            opacity: 0.8;
-        }
-
-        /* --- CONTENEUR PRINCIPAL --- */
+        /* --- LECTEUR MÉDIA (PHOTO/VIDÉO) --- */
         .post-container {
-            height: 100vh;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
+            height: 100vh; width: 100%; display: flex;
+            align-items: center; justify-content: center;
+            position: relative; background-color: var(--rouge-fb); /* Fond par défaut */
+            overflow: hidden;
         }
 
-        /* --- TEXTE GRAND AU CENTRE --- */
+        #mediaPreview {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%; object-fit: cover;
+            display: none; /* Caché tant qu'on n'a pas choisi de fichier */
+        }
+
         .main-text {
-            font-size: 42px;
-            font-weight: bold;
-            text-align: center;
-            padding: 0 20px;
-            word-wrap: break-word;
-            text-shadow: 0px 2px 4px rgba(0,0,0,0.2);
+            font-size: 42px; font-weight: bold; text-align: center;
+            z-index: 5; padding: 0 20px; text-shadow: 0px 2px 10px rgba(0,0,0,0.5);
         }
 
-        /* --- ACTIONS À DROITE --- */
+        /* --- ACTIONS & BADGE --- */
         .right-sidebar {
-            position: absolute;
-            right: 15px;
-            bottom: 120px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            align-items: center;
+            position: absolute; right: 15px; bottom: 120px;
+            display: flex; flex-direction: column; gap: 20px; z-index: 10;
         }
-
-        .action-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-        }
-
         .circle-bg {
-            width: 45px;
-            height: 45px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            margin-bottom: 5px;
+            width: 45px; height: 45px; background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 22px; cursor: pointer;
         }
 
-        .action-label { font-size: 12px; font-weight: 600; }
-
-        /* --- INFOS UTILISATEUR BAS GAUCHE --- */
-        .bottom-user-info {
-            position: absolute;
-            bottom: 80px;
-            left: 15px;
-        }
-
-        .user-row {
-            display: flex;
-            align-items: center;
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
-
-        /* --- LE BADGE PRO 24 POINTES --- */
+        .bottom-user-info { position: absolute; bottom: 80px; left: 15px; z-index: 10; }
         .badge-24 {
-            width: 20px; height: 20px;
-            position: relative; margin-left: 8px;
-            display: flex; align-items: center; justify-content: center;
+            width: 20px; height: 20px; position: relative; margin-left: 8px;
+            display: inline-flex; align-items: center; justify-content: center;
             filter: drop-shadow(0 0 2px var(--violet-clair));
         }
-
         .badge-24::before {
             content: ''; position: absolute; width: 100%; height: 100%;
             background: linear-gradient(135deg, var(--violet-clair), var(--violet-premium));
             clip-path: polygon(50% 0%, 53% 5%, 60% 3%, 63% 9%, 70% 8%, 73% 14%, 80% 15%, 82% 21%, 88% 23%, 89% 30%, 94% 33%, 94% 40%, 98% 45%, 96% 52%, 99% 59%, 95% 65%, 96% 72%, 91% 77%, 90% 84%, 84% 87%, 81% 93%, 74% 94%, 70% 99%, 63% 97%, 57% 100%, 50% 96%, 43% 100%, 37% 97%, 30% 99%, 26% 94%, 19% 93%, 16% 87%, 10% 84%, 9% 77%, 4% 72%, 5% 65%, 1% 59%, 4% 52%, 2% 45%, 6% 40%, 6% 33%, 11% 30%, 12% 23%, 18% 21%, 20% 15%, 27% 14%, 30% 8%, 37% 9%, 40% 3%, 47% 5%);
             border-radius: 50%;
         }
-
         .badge-24::after {
             content: ''; position: absolute; width: 5px; height: 9px;
             border: solid white; border-width: 0 2.5px 2.5px 0;
             transform: rotate(45deg); margin-top: -1.5px;
         }
 
-        /* --- BARRE DE NAVIGATION BLANCHE --- */
+        /* --- BARRE BASSE --- */
         .footer-nav {
             position: fixed; bottom: 0; width: 100%; height: 60px;
             background: white; display: flex; justify-content: space-around;
-            align-items: center; border-top: 1px solid #ddd;
+            align-items: center; border-top: 1px solid #ddd; z-index: 100;
         }
-
-        .nav-item { color: #555; font-size: 11px; text-align: center; cursor: pointer; }
-        .nav-item.active { color: black; font-weight: bold; }
-
+        .nav-item { color: black; font-size: 11px; text-align: center; cursor: pointer; }
         .add-btn {
             background: linear-gradient(90deg, #ce85f2, #9c27b0);
             width: 46px; height: 30px; border-radius: 8px; color: white;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px; font-weight: bold;
+            display: flex; align-items: center; justify-content: center; font-size: 24px;
         }
 
+        /* Input caché pour le test photo/vidéo */
+        #fileInput { display: none; }
     </style>
 </head>
 <body>
 
     <div class="header-search">
         <div class="search-container">
-            <span class="search-icon">🔍</span>
-            <input type="text" class="search-input" placeholder="Rechercher sur MonRéseau...">
+            <input type="text" class="search-input" placeholder="🔍 Rechercher...">
         </div>
     </div>
 
     <div class="post-container">
-        <div class="main-text">zah zalaah ty aiiii</div>
+        <img id="imagePreview" class="media-preview" style="display:none; position:absolute; width:100%; height:100%; object-fit:cover;">
+        <video id="videoPreview" class="media-preview" style="display:none; position:absolute; width:100%; height:100%; object-fit:cover;" autoplay loop muted></video>
+
+        <div class="main-text" id="displayText">zah zalaah ty aiiii</div>
 
         <div class="right-sidebar">
-            <div class="action-btn">
-                <div class="circle-bg">❤️</div>
-                <span class="action-label">15.2K</span>
-            </div>
-            <div class="action-btn">
-                <div class="circle-bg">💬</div>
-                <span class="action-label">428</span>
-            </div>
-            <div class="action-btn">
-                <div class="circle-bg">🔗</div>
-                <span class="action-label">Partager</span>
-            </div>
+            <div class="circle-bg">❤️</div>
+            <div class="circle-bg">💬</div>
+            <div class="circle-bg">🔗</div>
         </div>
 
         <div class="bottom-user-info">
-            <div class="user-row">
+            <div style="font-weight:bold; display:flex; align-items:center;">
                 Moi (Premium) <div class="badge-24"></div>
             </div>
-            <div style="font-size: 14px; opacity: 0.9;">#ZahZalaah #Premium</div>
+            <div style="font-size:14px;">#TestMedia #Premium</div>
         </div>
     </div>
 
+    <input type="file" id="fileInput" accept="image/*,video/*" onchange="loadMedia(event)">
+
     <div class="footer-nav">
-        <div class="nav-item active">🏠<br>Accueil</div>
-        <div class="nav-item">👥<br>Amis</div>
-        <div class="add-btn">+</div>
-        <div class="nav-item">💬<br>Boîte</div>
+        <div class="nav-item">🏠<br>Accueil</div>
+        <div class="add-btn" onclick="document.getElementById('fileInput').click()">+</div>
         <div class="nav-item">👤<br>Profil</div>
     </div>
+
+    <script>
+        function loadMedia(event) {
+            const file = event.target.files[0];
+            const imgPreview = document.getElementById('imagePreview');
+            const vidPreview = document.getElementById('videoPreview');
+            const displayText = document.getElementById('displayText');
+
+            if (file) {
+                const url = URL.createObjectURL(file);
+                displayText.style.display = "none"; // On cache le texte pour voir le média
+
+                if (file.type.startsWith('image/')) {
+                    imgPreview.src = url;
+                    imgPreview.style.display = "block";
+                    vidPreview.style.display = "none";
+                } else if (file.type.startsWith('video/')) {
+                    vidPreview.src = url;
+                    vidPreview.style.display = "block";
+                    imgPreview.style.display = "none";
+                }
+            }
+        }
+    </script>
 
 </body>
 </html>
