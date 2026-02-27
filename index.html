@@ -2,43 +2,57 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>MonRéseau - Badge Pro 24 Pointes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MonRéseau PRO - Style TikTok</title>
     <style>
+        /* CONFIGURATION DES COULEURS VIOLETTES */
         :root {
             --violet-premium: #9c27b0;
             --violet-clair: #ce85f2;
+            --fond-sombre: #010101;
             --blanc: #ffffff;
+            --gris-clair: rgba(255, 255, 255, 0.2);
         }
 
-        body {
-            background-color: #010101; /* Fond style TikTok */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        body, html {
             margin: 0;
-            font-family: Arial, sans-serif;
+            padding: 0;
+            height: 100%;
+            background-color: var(--fond-sombre);
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            color: var(--blanc);
         }
 
-        .user-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
+        /* CONTENEUR DE SCROLL VERTICAL (TIKTOK STYLE) */
+        .app-container {
+            height: 100vh;
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
         }
 
-        /* --- LE BADGE PRO 24 POINTES --- */
-        .verified-badge-24 {
-            width: 26px;
-            height: 26px;
+        /* CHAQUE POST PLEIN ÉCRAN */
+        .post-card {
+            height: 100vh;
+            width: 100%;
+            scroll-snap-align: start;
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            /* Animation de brillance discrète */
+            background: linear-gradient(180deg, #2c003e 0%, #000000 100%);
+        }
+
+        /* BADGE PRO 24 POINTES "BIEN ROND" */
+        .verified-badge-24 {
+            width: 20px;
+            height: 20px;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             filter: drop-shadow(0 0 2px var(--violet-clair));
+            margin-left: 5px;
         }
 
         .verified-badge-24::before {
@@ -47,35 +61,151 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(135deg, var(--violet-clair), var(--violet-premium));
-            
             /* Forme à 24 pointes ultra-lisse */
             clip-path: polygon(
                 50% 0%, 53% 5%, 60% 3%, 63% 9%, 70% 8%, 73% 14%, 80% 15%, 82% 21%, 88% 23%, 89% 30%, 94% 33%, 94% 40%, 98% 45%, 96% 52%, 99% 59%, 95% 65%, 96% 72%, 91% 77%, 90% 84%, 84% 87%, 81% 93%, 74% 94%, 70% 99%, 63% 97%, 57% 100%, 50% 96%, 43% 100%, 37% 97%, 30% 99%, 26% 94%, 19% 93%, 16% 87%, 10% 84%, 9% 77%, 4% 72%, 5% 65%, 1% 59%, 4% 52%, 2% 45%, 6% 40%, 6% 33%, 11% 30%, 12% 23%, 18% 21%, 20% 15%, 27% 14%, 30% 8%, 37% 9%, 40% 3%, 47% 5%
             );
-            border-radius: 50%; /* Arrondit les pointes pour le côté "bien rond" */
+            border-radius: 50%; /* Arrondi pour l'effet circulaire parfait */
         }
 
-        /* La coche blanche */
         .verified-badge-24::after {
             content: '';
             position: absolute;
-            width: 6px;
-            height: 11px;
+            width: 5px;
+            height: 9px;
             border: solid white;
-            border-width: 0 3px 3px 0;
+            border-width: 0 2.5px 2.5px 0;
             transform: rotate(45deg);
-            margin-top: -2px;
+            margin-top: -1.5px;
         }
 
-        /* ------------------------------- */
+        /* INFOS BAS DE PAGE (GAUCHE) */
+        .user-details {
+            position: absolute;
+            bottom: 80px;
+            left: 15px;
+            z-index: 10;
+        }
 
+        .username {
+            font-weight: bold;
+            font-size: 17px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .description {
+            font-size: 14px;
+            opacity: 0.9;
+            max-width: 280px;
+        }
+
+        /* BOUTONS ACTIONS (DROITE) */
+        .actions-sidebar {
+            position: absolute;
+            right: 12px;
+            bottom: 120px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            align-items: center;
+        }
+
+        .action-icon {
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .icon-bg {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        /* BARRE DE NAVIGATION (BAS) */
+        .bottom-navbar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 62px;
+            background-color: var(--blanc);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #ddd;
+            z-index: 100;
+        }
+
+        .nav-link {
+            text-align: center;
+            font-size: 11px;
+            color: #000;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .publish-btn {
+            background: linear-gradient(90deg, var(--violet-clair), var(--violet-premium));
+            width: 44px;
+            height: 28px;
+            border-radius: 7px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 22px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="user-container">
-        Paris Models 
-        <div class="verified-badge-24" title="Badge Pro 24 pointes"></div>
+    <div class="app-container">
+        
+        <div class="post-card">
+            <div class="user-details">
+                <div class="username">
+                    Paris Models <div class="verified-badge-24"></div>
+                </div>
+                <div class="description">Bienvenue sur mon réseau TikTok PRO ! Profitez de vos emojis premium.</div>
+            </div>
+            
+            <div class="actions-sidebar">
+                <div class="action-icon"><div class="icon-bg">❤️</div><span>8.5k</span></div>
+                <div class="action-icon"><div class="icon-bg">💬</div><span>122</span></div>
+                <div class="action-icon"><div class="icon-bg">🔗</div><span>Partager</span></div>
+            </div>
+        </div>
+
+        <div class="post-card" style="background: linear-gradient(180deg, #4a148c 0%, #000000 100%);">
+            <div class="user-details">
+                <div class="username">
+                    Admin VIP <div class="verified-badge-24"></div>
+                </div>
+                <div class="description">Design violet et blanc activé avec succès.</div>
+            </div>
+            
+            <div class="actions-sidebar">
+                <div class="action-icon"><div class="icon-bg">❤️</div><span>25k</span></div>
+                <div class="action-icon"><div class="icon-bg">💬</div><span>900</span></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="bottom-navbar">
+        <a href="#" class="nav-link">🏠<br>Accueil</a>
+        <a href="#" class="nav-link">👥<br>Amis</a>
+        <div class="publish-btn">+</div>
+        <a href="#" class="nav-link">💬<br>Boîte</a>
+        <a href="#" class="nav-link">👤<br>Profil</a>
     </div>
 
 </body>
