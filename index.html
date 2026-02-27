@@ -5,6 +5,99 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MonRéseau PRO - Style TikTok Violet</title>
     <style>
+        :root {
+            --violet-main: #9c27b0;
+            --violet-clair: #ce85f2;
+            --blanc: #ffffff;
+        }
+
+        body, html {
+            margin: 0; padding: 0; height: 100%;
+            background-color: #000;
+            font-family: 'SofiaPro', sans-serif;
+            overflow: hidden; color: var(--blanc);
+        }
+
+        /* --- BARRE DE RECHERCHE & LIVE (HAUT) --- */
+        .top-nav {
+            position: fixed; top: 0; width: 100%; padding: 15px 15px;
+            display: flex; align-items: center; justify-content: space-between;
+            z-index: 100; background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
+        }
+        .live-btn {
+            font-size: 24px; cursor: pointer; filter: drop-shadow(0 0 5px var(--violet-clair));
+        }
+        .search-bar {
+            flex: 1; margin: 0 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 25px; padding: 8px 15px;
+            display: flex; align-items: center; border: 1px solid rgba(255,255,255,0.1);
+        }
+        .search-bar input {
+            background: none; border: none; color: white; width: 100%; outline: none;
+        }
+
+        /* --- CONTENEUR VIDÉO (STYLE TIKTOK) --- */
+        .video-container {
+            height: 100vh; width: 100%; position: relative;
+            background-color: var(--violet-main); /* Fond violet par défaut */
+            display: flex; align-items: center; justify-content: center;
+        }
+        .video-overlay {
+            position: absolute; bottom: 80px; left: 15px; z-index: 10;
+            max-width: 70%;
+        }
+
+        /* --- BADGE 24 POINTES VIOLET & BLANC --- */
+        .badge-24 {
+            width: 20px; height: 20px; display: inline-block; position: relative;
+            margin-left: 6px; vertical-align: middle;
+        }
+        .badge-24::before {
+            content: ''; position: absolute; width: 100%; height: 100%;
+            background: var(--blanc); /* Fond blanc pour le badge */
+            clip-path: polygon(50% 0%, 53% 5%, 60% 3%, 63% 9%, 70% 8%, 73% 14%, 80% 15%, 82% 21%, 88% 23%, 89% 30%, 94% 33%, 94% 40%, 98% 45%, 96% 52%, 99% 59%, 95% 65%, 96% 72%, 91% 77%, 90% 84%, 84% 87%, 81% 93%, 74% 94%, 70% 99%, 63% 97%, 57% 100%, 50% 96%, 43% 100%, 37% 97%, 30% 99%, 26% 94%, 19% 93%, 16% 87%, 10% 84%, 9% 77%, 4% 72%, 5% 65%, 1% 59%, 4% 52%, 2% 45%, 6% 40%, 6% 33%, 11% 30%, 12% 23%, 18% 21%, 20% 15%, 27% 14%, 30% 8%, 37% 9%, 40% 3%, 47% 5%);
+        }
+        .badge-24::after {
+            content: ''; position: absolute; width: 5px; height: 9px;
+            border: solid var(--violet-main); border-width: 0 2.5px 2.5px 0;
+            transform: rotate(45deg); left: 7px; top: 4px;
+        }
+
+        /* --- ACTIONS LATÉRALES (DROITE) --- */
+        .side-bar {
+            position: absolute; right: 12px; bottom: 100px;
+            display: flex; flex-direction: column; align-items: center; gap: 20px; z-index: 20;
+        }
+        .profile-pic {
+            width: 48px; height: 48px; border-radius: 50%;
+            border: 2px solid var(--blanc); background: #eee;
+            position: relative; margin-bottom: 10px;
+        }
+        .profile-pic::after {
+            content: '+'; position: absolute; bottom: -8px; left: 50%;
+            transform: translateX(-50%); background: #fe2c55;
+            width: 18px; height: 18px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 14px;
+        }
+        .action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .action-item span { font-size: 12px; font-weight: bold; margin-top: 4px; }
+
+        /* --- NAVIGATION BASSE --- */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; height: 60px;
+            background: black; border-top: 0.5px solid rgba(255,255,255,0.2);
+            display: flex; justify-content: space-around; align-items: center; z-index: 100;
+        }
+        .nav-icon { text-align: center; font-size: 11px; flex: 1; cursor: pointer; }
+        .plus-container {
+            background: linear-gradient(90deg, #ce85f2, #9c27b0);
+            width: 45px; height: 30px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px; font-weight: bold;
+        }
+    </style>
+    <style>
     /* 1. L'animation du disque de musique */
     @keyframes rotateDisc {
         from { transform: rotate(0deg); }
