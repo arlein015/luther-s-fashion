@@ -3,140 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther's Fashion - Réseau Premium</title>
+    <title>Luther's Fashion - Premium</title>
     <style>
         :root {
             --violet-p: #9c27b0;
             --violet-c: #ce85f2;
-            --bg-dark: #1a0121;
-            --bg-modal: #ffffff;
-            --text-modal: #000000;
-        }
-
-        .dark-mode {
-            --bg-modal: #121212;
-            --text-modal: #ffffff;
+            --glass: rgba(255, 255, 255, 0.1);
         }
 
         body, html { 
             margin: 0; padding: 0; height: 100%; 
             background: linear-gradient(180deg, #1a0121 0%, #4a0e5c 100%); 
-            font-family: sans-serif; overflow: hidden; color: white; 
+            font-family: 'Segoe UI', sans-serif; overflow: hidden; color: white; 
         }
 
-        /* --- NAVIGATION ENTRE LES PAGES --- */
-        .page {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            display: none; flex-direction: column;
-            animation: fadeIn 0.4s ease-in-out;
+        /* --- HEADER : RECHERCHE & FLUX --- */
+        .header-container {
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+            padding-top: 10px;
         }
-        .page.active { display: flex; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .search-bar-row {
+            display: flex; align-items: center; padding: 0 15px; gap: 10px;
+        }
 
-        /* --- HEADER & STORIES --- */
-        .top-header {
-            position: fixed; top: 0; width: 100%; z-index: 100;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
-            padding: 10px 0;
+        .search-input-wrap {
+            flex: 1; background: var(--glass); border-radius: 25px;
+            padding: 8px 15px; display: flex; align-items: center;
+            border: 0.5px solid rgba(255,255,255,0.2);
         }
-        .stories-container {
-            display: flex; gap: 15px; padding: 60px 15px 10px; overflow-x: auto;
-            scrollbar-width: none;
+
+        .search-input-wrap input {
+            background: none; border: none; color: white; width: 100%; outline: none; font-size: 14px;
         }
-        .story-ring {
-            width: 60px; height: 60px; border-radius: 50%; padding: 3px;
-            background: linear-gradient(45deg, #f09433, #bc1888);
+
+        .top-menu {
+            display: flex; justify-content: center; gap: 25px; 
+            margin-top: 15px; font-weight: 600; font-size: 16px; opacity: 0.8;
+        }
+
+        .menu-link { cursor: pointer; position: relative; padding-bottom: 5px; }
+        .menu-link.active { opacity: 1; }
+        .menu-link.active::after {
+            content: ''; position: absolute; bottom: 0; left: 25%; width: 50%;
+            height: 3px; background: white; border-radius: 2px;
+        }
+
+        /* --- STORIES RANGÉES VERS LA DROITE --- */
+        .stories-scroll {
+            display: flex; gap: 15px; padding: 15px;
+            overflow-x: auto; scrollbar-width: none; /* Cache scrollbar */
+            margin-top: 90px;
+        }
+        .stories-scroll::-webkit-scrollbar { display: none; }
+
+        .story-circle {
+            min-width: 65px; display: flex; flex-direction: column; align-items: center;
+        }
+
+        .ring {
+            width: 62px; height: 62px; border-radius: 50%; padding: 3px;
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
             display: flex; align-items: center; justify-content: center;
         }
-        .story-pic { width: 54px; height: 54px; border-radius: 50%; object-fit: cover; border: 2px solid black; }
 
-        /* --- BADGE 24 POINTES --- */
+        .pfp { width: 56px; height: 56px; border-radius: 50%; border: 2px solid black; object-fit: cover; }
+
+        /* --- BADGE PROPRIO --- */
         .badge-24 {
-            width: 18px; height: 18px; background: white; margin-left: 5px;
+            width: 16px; height: 16px; background: white; margin-left: 6px;
             clip-path: polygon(50% 0%, 53% 5%, 60% 3%, 63% 9%, 70% 8%, 73% 14%, 80% 15%, 82% 21%, 88% 23%, 89% 30%, 94% 33%, 94% 40%, 98% 45%, 96% 52%, 99% 59%, 95% 65%, 96% 72%, 91% 77%, 90% 84%, 84% 87%, 81% 93%, 74% 94%, 70% 99%, 63% 97%, 57% 100%, 50% 96%, 43% 100%, 37% 97%, 30% 99%, 26% 94%, 19% 93%, 16% 87%, 10% 84%, 9% 77%, 4% 72%, 5% 65%, 1% 59%, 4% 52%, 2% 45%, 6% 40%, 6% 33%, 11% 30%, 12% 23%, 18% 21%, 20% 15%, 27% 14%, 30% 8%, 37% 9%, 40% 3%, 47% 5%);
             display: inline-flex; align-items: center; justify-content: center;
         }
-        .badge-24::after { content: '✓'; color: var(--violet-p); font-size: 10px; font-weight: bold; }
-
-        /* --- MODAL CONNEXION --- */
-        .modal-auth {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: white; color: black; padding: 30px; border-radius: 20px;
-            width: 85%; max-width: 400px; z-index: 2000; display: none; text-align: center;
-        }
-        .social-btn {
-            display: flex; align-items: center; padding: 12px; border: 1px solid #ddd;
-            border-radius: 8px; margin-bottom: 10px; cursor: pointer; font-weight: 500;
-        }
+        .badge-24::after { content: '✓'; color: var(--violet-p); font-size: 9px; font-weight: bold; }
 
         /* --- NAV BASSE --- */
         .bottom-nav {
-            position: fixed; bottom: 0; width: 100%; height: 65px;
-            background: black; display: flex; justify-content: space-around; 
-            align-items: center; border-top: 0.5px solid #333;
+            position: fixed; bottom: 0; width: 100%; height: 70px;
+            background: rgba(0,0,0,0.9); display: flex; justify-content: space-around; 
+            align-items: center; border-top: 0.5px solid rgba(255,255,255,0.1);
         }
-        .nav-item { text-align: center; font-size: 11px; opacity: 0.6; cursor: pointer; }
-        .nav-item.active { opacity: 1; color: var(--violet-c); }
+        .nav-icon { text-align: center; font-size: 11px; opacity: 0.6; cursor: pointer; transition: 0.3s; }
+        .nav-icon.active { opacity: 1; color: var(--violet-c); }
     </style>
 </head>
-<body id="mainBody">
+<body>
 
-    <div id="homePage" class="page active">
-        <div class="top-header">
-            <div class="stories-container">
-                <div class="story-item" onclick="openAuth()">
-                    <div class="story-ring"><img src="https://via.placeholder.com/60" class="story-pic"></div>
-                    <p style="font-size:10px; text-align:center;">Ta story</p>
-                </div>
+    <div class="header-container">
+        <div class="search-bar-row">
+            <span style="font-size: 20px;">📺</span>
+            <div class="search-input-wrap">
+                <input type="text" placeholder="Rechercher des créateurs...">
             </div>
+            <span style="font-size: 20px;">🔔</span>
         </div>
-        <div style="flex:1; display:flex; align-items:center; justify-content:center; flex-direction:column;">
-            <h1 style="font-size:35px; text-shadow: 0 0 15px var(--violet-c);">zah zalaah ty aiiii</h1>
-            <div style="position:absolute; bottom:80px; left:20px;">
-                <h3 style="display:flex; align-items:center;">Luther <div class="badge-24"></div></h3>
-                <p>#LuthersFashion #2026</p>
-            </div>
+
+        <div class="top-menu">
+            <div class="menu-link">Live</div>
+            <div class="menu-link">Suivi</div>
+            <div class="menu-link active">Pour toi</div>
         </div>
     </div>
 
-    <div id="profilePage" class="page">
-        <div style="text-align:center; padding-top:100px;">
-            <div style="width:100px; height:100px; border:2px solid white; border-radius:50%; margin:0 auto; overflow:hidden;">
-                <img src="https://via.placeholder.com/100" style="width:100%; height:100%;">
+    <div class="stories-scroll">
+        <div class="story-circle">
+            <div class="ring" style="background:none; border: 2px solid #666;">
+                <img src="https://via.placeholder.com/60" class="pfp">
             </div>
-            <h2 style="display:flex; align-items:center; justify-content:center;">Luther <div class="badge-24"></div></h2>
-            <button onclick="openAuth()" style="background:white; color:black; border:none; padding:10px 25px; border-radius:20px; font-weight:bold; cursor:pointer;">Modifier le profil</button>
+            <p style="font-size:10px; margin-top:5px;">Ta story</p>
         </div>
+        <div class="story-circle"><div class="ring"><img src="https://via.placeholder.com/60/9c27b0/fff" class="pfp"></div><p style="font-size:10px; margin-top:5px;">Ami 1</p></div>
+        <div class="story-circle"><div class="ring"><img src="https://via.placeholder.com/60/ce85f2/fff" class="pfp"></div><p style="font-size:10px; margin-top:5px;">Ami 2</p></div>
+        <div class="story-circle"><div class="ring"><img src="https://via.placeholder.com/60/ffffff/000" class="pfp"></div><p style="font-size:10px; margin-top:5px;">Ami 3</p></div>
     </div>
 
-    <div id="authModal" class="modal-auth">
-        <h2 style="margin-top:0;">Se connecter</h2>
-        <div class="social-btn" onclick="closeAuth()">🌐 Continuer avec Google</div>
-        <div class="social-btn" onclick="closeAuth()">🍎 Continuer avec Apple ID</div>
-        <div class="social-btn" onclick="closeAuth()">🔵 Continuer avec Facebook</div>
-        <div class="social-btn" onclick="closeAuth()">📞 Numéro de téléphone</div>
-        <p onclick="closeAuth()" style="color:gray; cursor:pointer;">Annuler</p>
+    <div style="flex:1; display:flex; align-items:center; justify-content:center; flex-direction:column; height: 50vh;">
+        <h1 style="font-size:35px; text-shadow: 0 0 20px var(--violet-c); text-align:center;">zah zalaah ty aiiii</h1>
+        
+        <div style="position:absolute; bottom:100px; left:20px;">
+            <h3 style="display:flex; align-items:center; margin:0;">Luther <div class="badge-24"></div></h3>
+            <p style="margin:5px 0; opacity:0.8;">#LuthersFashion #2026 #Stylé</p>
+        </div>
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="showPage('homePage', this)">🏠<br>Accueil</div>
-        <div class="nav-item" onclick="showPage('friendsPage', this)">👥<br>Amis</div>
-        <div style="background:linear-gradient(90deg, #ce85f2, #9c27b0); width:45px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:bold;" onclick="openAuth()">+</div>
-        <div class="nav-item" onclick="showPage('msgPage', this)">💬<br>Messages</div>
-        <div class="nav-item" onclick="showPage('profilePage', this)">👤<br>Profil</div>
+        <div class="nav-icon active">🏠<br>Accueil</div>
+        <div class="nav-icon">👥<br>Amis</div>
+        <div style="background:linear-gradient(90deg, #ce85f2, #9c27b0); width:45px; height:30px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-weight:bold;">+</div>
+        <div class="nav-icon">💬<br>Messages</div>
+        <div class="nav-icon">👤<br>Profil</div>
     </div>
 
-    <script>
-        function showPage(pageId, btn) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            btn.classList.add('active');
-        }
-
-        function openAuth() { document.getElementById('authModal').style.display = 'block'; }
-        function closeAuth() { document.getElementById('authModal').style.display = 'none'; }
-    </script>
 </body>
 </html>
