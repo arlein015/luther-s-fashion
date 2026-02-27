@@ -2,203 +2,80 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MonRéseau - Style TikTok</title>
+    <title>MonRéseau - Badge Pro 24 Pointes</title>
     <style>
         :root {
             --violet-premium: #9c27b0;
             --violet-clair: #ce85f2;
-            --fond-noir: #010101; /* TikTok utilise souvent du noir pour les vidéos */
             --blanc: #ffffff;
         }
 
-        body, html {
+        body {
+            background-color: #010101; /* Fond style TikTok */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             margin: 0;
-            padding: 0;
-            height: 100%;
-            background-color: var(--fond-noir);
-            font-family: 'Proxima Nova', Arial, sans-serif;
-            overflow: hidden;
+            font-family: Arial, sans-serif;
         }
 
-        /* CONTENEUR PRINCIPAL (SCROLL VERTICAL) */
-        .app-container {
-            height: 100vh;
-            scroll-snap-type: y mandatory;
-            overflow-y: scroll;
-        }
-
-        /* CHAQUE POST (PLEIN ÉCRAN) */
-        .video-card {
-            height: 100vh;
-            width: 100%;
-            scroll-snap-align: start;
-            position: relative;
-            background: linear-gradient(180deg, #2c003e 0%, #000000 100%);
+        .user-container {
             display: flex;
             align-items: center;
-            justify-content: center;
-        }
-
-        /* INFOS UTILISATEUR (EN BAS À GAUCHE) */
-        .post-info {
-            position: absolute;
-            bottom: 80px;
-            left: 15px;
-            color: var(--blanc);
-            z-index: 10;
-        }
-
-        .user-name {
+            gap: 10px;
+            color: white;
+            font-size: 24px;
             font-weight: bold;
-            font-size: 18px;
+        }
+
+        /* --- LE BADGE PRO 24 POINTES --- */
+        .verified-badge-24 {
+            width: 26px;
+            height: 26px;
+            position: relative;
             display: flex;
             align-items: center;
-            gap: 5px;
-            margin-bottom: 8px;
-        }
-
-        /* BADGE PREMIUM EXACT */
-        .verified-badge {
-            width: 18px;
-            height: 18px;
-            position: relative;
-            display: inline-flex;
-            align-items: center;
             justify-content: center;
-            filter: drop-shadow(0 0 2px rgba(206, 133, 242, 0.5));
+            /* Animation de brillance discrète */
+            filter: drop-shadow(0 0 2px var(--violet-clair));
         }
 
-        .verified-badge::before {
+        .verified-badge-24::before {
             content: '';
             position: absolute;
             width: 100%;
             height: 100%;
             background: linear-gradient(135deg, var(--violet-clair), var(--violet-premium));
-            clip-path: polygon(50% 0%, 61% 7%, 75% 1%, 82% 13%, 95% 13%, 93% 27%, 100% 38%, 93% 52%, 98% 65%, 88% 75%, 88% 88%, 75% 88%, 65% 98%, 50% 92%, 35% 98%, 25% 88%, 12% 88%, 12% 75%, 2% 65%, 7% 52%, 0% 38%, 7% 27%, 5% 13%, 18% 13%, 25% 1%, 39% 7%);
-            border-radius: 50%; /* Pour l'effet "bien rond" */
+            
+            /* Forme à 24 pointes ultra-lisse */
+            clip-path: polygon(
+                50% 0%, 53% 5%, 60% 3%, 63% 9%, 70% 8%, 73% 14%, 80% 15%, 82% 21%, 88% 23%, 89% 30%, 94% 33%, 94% 40%, 98% 45%, 96% 52%, 99% 59%, 95% 65%, 96% 72%, 91% 77%, 90% 84%, 84% 87%, 81% 93%, 74% 94%, 70% 99%, 63% 97%, 57% 100%, 50% 96%, 43% 100%, 37% 97%, 30% 99%, 26% 94%, 19% 93%, 16% 87%, 10% 84%, 9% 77%, 4% 72%, 5% 65%, 1% 59%, 4% 52%, 2% 45%, 6% 40%, 6% 33%, 11% 30%, 12% 23%, 18% 21%, 20% 15%, 27% 14%, 30% 8%, 37% 9%, 40% 3%, 47% 5%
+            );
+            border-radius: 50%; /* Arrondit les pointes pour le côté "bien rond" */
         }
 
-        .verified-badge::after {
-            content: 'L'; /* Utilisation d'un symbole proche de la coche */
-            transform: scaleX(-1) rotate(-45deg);
-            color: white;
-            font-size: 10px;
-            font-weight: bold;
+        /* La coche blanche */
+        .verified-badge-24::after {
+            content: '';
             position: absolute;
-            top: 3px;
+            width: 6px;
+            height: 11px;
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            transform: rotate(45deg);
+            margin-top: -2px;
         }
 
-        .post-desc {
-            font-size: 14px;
-            max-width: 80%;
-        }
+        /* ------------------------------- */
 
-        /* BARRE D'INTERACTION (À DROITE) */
-        .side-bar {
-            position: absolute;
-            right: 10px;
-            bottom: 100px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .icon-btn {
-            color: var(--blanc);
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .icon-circle {
-            width: 45px;
-            height: 45px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            margin-bottom: 5px;
-        }
-
-        /* BARRE DE NAVIGATION (EN BAS) */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            height: 60px;
-            background: var(--blanc);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 100;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 10px;
-            color: #1c1e21;
-        }
-
-        .btn-plus {
-            background: linear-gradient(90deg, #ce85f2, #9c27b0);
-            width: 45px;
-            height: 30px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 20px;
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
 
-    <div class="app-container">
-        
-        <div class="video-card">
-            <div class="post-info">
-                <div class="user-name">
-                    Paris Models <div class="verified-badge"></div>
-                </div>
-                <div class="post-desc">Bienvenue sur mon réseau style TikTok ! Regardez ce badge premium violet ! 🚀 #Premium #Style</div>
-            </div>
-            
-            <div class="side-bar">
-                <div class="icon-btn"><div class="icon-circle">❤️</div><span>12k</span></div>
-                <div class="icon-btn"><div class="icon-circle">💬</div><span>450</span></div>
-                <div class="icon-btn"><div class="icon-circle">🔗</div><span>Partager</span></div>
-            </div>
-        </div>
-
-        <div class="video-card" style="background: linear-gradient(180deg, #673ab7 0%, #000000 100%);">
-            <div class="post-info">
-                <div class="user-name">
-                    Admin <div class="verified-badge"></div>
-                </div>
-                <div class="post-desc">Le scroll vertical fonctionne. Glisse vers le haut ! ⚡</div>
-            </div>
-            
-            <div class="side-bar">
-                <div class="icon-btn"><div class="icon-circle">❤️</div><span>5k</span></div>
-                <div class="icon-btn"><div class="icon-circle">💬</div><span>120</span></div>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="bottom-nav">
-        <div class="nav-item">🏠<br>Accueil</div>
-        <div class="nav-item">👥<br>Amis</div>
-        <div class="btn-plus">+</div>
-        <div class="nav-item">💬<br>Boîte</div>
-        <div class="nav-item">👤<br>Profil</div>
+    <div class="user-container">
+        Paris Models 
+        <div class="verified-badge-24" title="Badge Pro 24 pointes"></div>
     </div>
 
 </body>
