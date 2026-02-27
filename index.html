@@ -3,202 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MonRéseau PRO - Style TikTok Violet</title>
+    <title>Luther's Fashion - Réseau Social Premium</title>
     <style>
         :root {
-            --violet-main: #9c27b0;
-            --violet-clair: #ce85f2;
+            --violet-p: #9c27b0;
+            --violet-c: #ce85f2;
             --blanc: #ffffff;
+            --bg-modal: #ffffff;
+            --text-modal: #000000;
+            --input-bg: #f1f1f1;
         }
 
-        body, html {
-            margin: 0; padding: 0; height: 100%;
-            background-color: #000;
-            font-family: 'SofiaPro', sans-serif;
-            overflow: hidden; color: var(--blanc);
+        .dark-mode {
+            --bg-modal: #121212;
+            --text-modal: #ffffff;
+            --input-bg: #2a2a2a;
         }
 
-        /* --- BARRE DE RECHERCHE & LIVE (HAUT) --- */
-        .top-nav {
-            position: fixed; top: 0; width: 100%; padding: 15px 15px;
-            display: flex; align-items: center; justify-content: space-between;
-            z-index: 100; background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
-        }
-        .live-btn {
-            font-size: 24px; cursor: pointer; filter: drop-shadow(0 0 5px var(--violet-clair));
-        }
-        .search-bar {
-            flex: 1; margin: 0 20px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 25px; padding: 8px 15px;
-            display: flex; align-items: center; border: 1px solid rgba(255,255,255,0.1);
-        }
-        .search-bar input {
-            background: none; border: none; color: white; width: 100%; outline: none;
-        }
+        body, html { margin: 0; padding: 0; height: 100%; background: #000; font-family: sans-serif; overflow: hidden; color: white; }
 
-        /* --- CONTENEUR VIDÉO (STYLE TIKTOK) --- */
-        .video-container {
-            height: 100vh; width: 100%; position: relative;
-            background-color: var(--violet-main); /* Fond violet par défaut */
-            display: flex; align-items: center; justify-content: center;
+        /* --- HEADER : RECHERCHE & MENUS --- */
+        .top-header {
+            position: fixed; top: 0; width: 100%; z-index: 100;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+            padding: 10px 0; text-align: center;
         }
-        .video-overlay {
-            position: absolute; bottom: 80px; left: 15px; z-index: 10;
-            max-width: 70%;
-        }
+        .search-row { display: flex; align-items: center; padding: 0 15px; margin-bottom: 10px; }
+        .search-box { flex: 1; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 8px 15px; display: flex; margin: 0 10px; }
+        .search-box input { background: none; border: none; color: white; width: 100%; outline: none; }
+        .feed-menu { display: flex; justify-content: center; gap: 20px; font-weight: bold; }
+        .menu-item.active { border-bottom: 3px solid white; padding-bottom: 5px; }
 
-        /* --- BADGE 24 POINTES VIOLET & BLANC --- */
+        /* --- STORIES --- */
+        .stories-container {
+            display: flex; gap: 15px; padding: 10px 15px; overflow-x: auto;
+            margin-top: 100px; scrollbar-width: none;
+        }
+        .story-item { display: flex; flex-direction: column; align-items: center; min-width: 65px; position: relative; }
+        .story-ring { width: 60px; height: 60px; border-radius: 50%; padding: 3px; background: linear-gradient(45deg, #f09433, #bc1888); display: flex; align-items: center; justify-content: center; }
+        .story-pic { width: 54px; height: 54px; border-radius: 50%; background: #333; border: 2px solid black; object-fit: cover; }
+        .add-plus { position: absolute; bottom: 20px; right: 5px; background: var(--violet-p); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 12px; border: 2px solid black; }
+
+        /* --- POST & ACTIONS --- */
+        .post-area { height: 100vh; background: #f02849; display: flex; align-items: center; justify-content: center; position: relative; }
+        .side-bar { position: absolute; right: 12px; bottom: 100px; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+        .pfp-main { width: 48px; height: 48px; border-radius: 50%; border: 2px solid white; position: relative; cursor: pointer; }
+        .pfp-main img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .action-btn { display: flex; flex-direction: column; align-items: center; font-size: 30px; cursor: pointer; }
+        .action-btn span { font-size: 12px; font-weight: bold; }
+        .disc { width: 45px; height: 45px; border-radius: 50%; background: radial-gradient(circle, #444, #000); border: 8px solid rgba(255,255,255,0.1); animation: rotate 3s linear infinite; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* --- INFOS BAS GAUCHE --- */
+        .video-info { position: absolute; bottom: 85px; left: 15px; max-width: 70%; }
         .badge-24 {
-            width: 20px; height: 20px; display: inline-block; position: relative;
-            margin-left: 6px; vertical-align: middle;
-        }
-        .badge-24::before {
-            content: ''; position: absolute; width: 100%; height: 100%;
-            background: var(--blanc); /* Fond blanc pour le badge */
+            width: 18px; height: 18px; background: white; margin-left: 5px;
             clip-path: polygon(50% 0%, 53% 5%, 60% 3%, 63% 9%, 70% 8%, 73% 14%, 80% 15%, 82% 21%, 88% 23%, 89% 30%, 94% 33%, 94% 40%, 98% 45%, 96% 52%, 99% 59%, 95% 65%, 96% 72%, 91% 77%, 90% 84%, 84% 87%, 81% 93%, 74% 94%, 70% 99%, 63% 97%, 57% 100%, 50% 96%, 43% 100%, 37% 97%, 30% 99%, 26% 94%, 19% 93%, 16% 87%, 10% 84%, 9% 77%, 4% 72%, 5% 65%, 1% 59%, 4% 52%, 2% 45%, 6% 40%, 6% 33%, 11% 30%, 12% 23%, 18% 21%, 20% 15%, 27% 14%, 30% 8%, 37% 9%, 40% 3%, 47% 5%);
+            display: inline-flex; align-items: center; justify-content: center;
         }
-        .badge-24::after {
-            content: ''; position: absolute; width: 5px; height: 9px;
-            border: solid var(--violet-main); border-width: 0 2.5px 2.5px 0;
-            transform: rotate(45deg); left: 7px; top: 4px;
-        }
+        .badge-24::after { content: '✓'; color: var(--violet-p); font-size: 10px; font-weight: bold; }
 
-        /* --- ACTIONS LATÉRALES (DROITE) --- */
-        .side-bar {
-            position: absolute; right: 12px; bottom: 100px;
-            display: flex; flex-direction: column; align-items: center; gap: 20px; z-index: 20;
-        }
-        .profile-pic {
-            width: 48px; height: 48px; border-radius: 50%;
-            border: 2px solid var(--blanc); background: #eee;
-            position: relative; margin-bottom: 10px;
-        }
-        .profile-pic::after {
-            content: '+'; position: absolute; bottom: -8px; left: 50%;
-            transform: translateX(-50%); background: #fe2c55;
-            width: 18px; height: 18px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-size: 14px;
-        }
-        .action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-        .action-item span { font-size: 12px; font-weight: bold; margin-top: 4px; }
+        /* --- MODAL EDIT & AUTH --- */
+        .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--bg-modal); color: var(--text-modal); padding: 25px; border-radius: 20px; width: 85%; z-index: 2000; display: none; }
+        .modal input, .modal textarea { width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 10px; background: var(--input-bg); color: var(--text-modal); box-sizing: border-box; }
+        .social-btn { display: flex; align-items: center; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 8px; cursor: pointer; color: black; background: white; }
 
-        /* --- NAVIGATION BASSE --- */
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%; height: 60px;
-            background: black; border-top: 0.5px solid rgba(255,255,255,0.2);
-            display: flex; justify-content: space-around; align-items: center; z-index: 100;
-        }
-        .nav-icon { text-align: center; font-size: 11px; flex: 1; cursor: pointer; }
-        .plus-container {
-            background: linear-gradient(90deg, #ce85f2, #9c27b0);
-            width: 45px; height: 30px; border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 22px; font-weight: bold;
-        }
+        /* --- NAV BASSE --- */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 60px; background: black; display: flex; justify-content: space-around; align-items: center; border-top: 0.5px solid #333; }
+        .plus-p { background: linear-gradient(90deg, var(--violet-c), var(--violet-p)); width: 45px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
     </style>
-    <style>
-    /* 1. L'animation du disque de musique */
-    @keyframes rotateDisc {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-    }
-    .music-disc {
-        width: 40px; height: 40px; border-radius: 50%;
-        background: radial-gradient(circle, #333 30%, #111 100%);
-        border: 4px solid rgba(255,255,255,0.2);
-        animation: rotateDisc 3s linear infinite;
-        position: absolute; right: 15px; bottom: 20px;
-    }
-
-    /* 2. Style pour le badge 24 pointes blanc/violet */
-    .badge-24-pro {
-        width: 18px; height: 18px; background: white;
-        clip-path: polygon(50% 0%, 53% 5%, 60% 3%, 63% 9%, 70% 8%, 73% 14%, 80% 15%, 82% 21%, 88% 23%, 89% 30%, 94% 33%, 94% 40%, 98% 45%, 96% 52%, 99% 59%, 95% 65%, 96% 72%, 91% 77%, 90% 84%, 84% 87%, 81% 93%, 74% 94%, 70% 99%, 63% 97%, 57% 100%, 50% 96%, 43% 100%, 37% 97%, 30% 99%, 26% 94%, 19% 93%, 16% 87%, 10% 84%, 9% 77%, 4% 72%, 5% 65%, 1% 59%, 4% 52%, 2% 45%, 6% 40%, 6% 33%, 11% 30%, 12% 23%, 18% 21%, 20% 15%, 27% 14%, 30% 8%, 37% 9%, 40% 3%, 47% 5%);
-        display: inline-flex; align-items: center; justify-content: center;
-        margin-left: 5px;
-    }
-    .badge-24-pro::after {
-        content: '✓'; color: #9c27b0; font-size: 10px; font-weight: bold;
-    }
-</style>
-
-<div class="side-bar">
-    <div class="profile-pic">
-        <img src="ta-photo.jpg" style="width:100%; height:100%; border-radius:50%;">
-        <div id="followBtn" onclick="this.style.display='none'" style="position:absolute; bottom:-5px; left:50%; transform:translateX(-50%); background:#fe2c55; color:white; border-radius:50%; width:18px; height:18px; display:flex; align-items:center; justify-content:center; font-size:12px; cursor:pointer;">+</div>
-    </div>
-    
-    <div class="action-item" onclick="likePost(this)">
-        <span id="heartIcon" style="font-size: 35px; transition: 0.2s;">🤍</span>
-        <span>150.6K</span>
-    </div>
-
-    <div class="music-disc"></div>
-</div>
-
-<script>
-    function likePost(el) {
-        const heart = document.getElementById('heartIcon');
-        if(heart.innerText === '🤍') {
-            heart.innerText = '❤️';
-            heart.style.transform = 'scale(1.3)';
-            setTimeout(() => heart.style.transform = 'scale(1)', 200);
-        } else {
-            heart.innerText = '🤍';
-        }
-    }
-</script>
 </head>
-<body>
+<body id="mainBody">
 
-    <div class="top-nav">
-        <div class="live-btn">📺</div>
-        <div class="search-bar">
-            <input type="text" placeholder="Rechercher des vidéos...">
+    <div class="top-header">
+        <div class="search-row">
+            <span onclick="openAuth()" style="cursor:pointer">👤</span>
+            <div class="search-box"><input type="text" placeholder="Rechercher..."></div>
+            <span onclick="toggleSettings()">⚙️</span>
         </div>
-        <div style="font-size: 20px;">🔔</div>
+        <div class="feed-menu">
+            <div class="menu-item">Suivis</div>
+            <div class="menu-item active">Pour toi</div>
+        </div>
     </div>
 
-    <div class="video-container">
-        <h1 style="font-size: 42px; text-shadow: 0 4px 10px rgba(0,0,0,0.5);">zah zalaah ty aiiii</h1>
+    <div class="stories-container">
+        <div class="story-item">
+            <div class="story-ring" style="background:none; border:2px solid #555">
+                <img src="https://via.placeholder.com/60" class="story-pic" id="storyPfp">
+            </div>
+            <div class="add-plus" onclick="document.getElementById('pfpInput').click()">+</div>
+            <span class="story-name">Ta story</span>
+        </div>
+    </div>
+
+    <div class="post-area">
+        <h1 style="font-size: 40px;">zah zalaah ty aiiii</h1>
+        
+        <div class="video-info">
+            <h3 style="display:flex; align-items:center; margin:0;">
+                <span id="userName">Luther (Proprio)</span> <div class="badge-24"></div>
+            </h3>
+            <p id="userBio">#LuthersFashion #Premium #2026</p>
+            <a href="#" id="userLink" style="color:var(--violet-c); text-decoration:none; font-size:13px;">🌐 Ajouter un lien</a>
+        </div>
 
         <div class="side-bar">
-            <div class="profile-pic"></div> <div class="action-item">
-                <span style="font-size: 30px;">🤍</span>
-                <span>150.6K</span>
+            <div class="pfp-main" onclick="document.getElementById('pfpInput').click()">
+                <img id="mainPfp" src="https://via.placeholder.com/60">
+                <div style="position:absolute; bottom:-5px; left:50%; transform:translateX(-50%); background:#fe2c55; border-radius:50%; width:16px; height:16px; display:flex; align-items:center; justify-content:center; font-size:12px;">+</div>
             </div>
-            <div class="action-item">
-                <span style="font-size: 30px;">💬</span>
-                <span>274</span>
-            </div>
-            <div class="action-item">
-                <span style="font-size: 30px;">🔖</span>
-                <span>7286</span>
-            </div>
-            <div class="action-item">
-                <span style="font-size: 30px;">➥</span>
-                <span>2570</span>
-            </div>
+            <div class="action-btn" onclick="this.querySelector('span').innerText='❤️'">🤍<span>150K</span></div>
+            <div class="action-btn" onclick="alert('Commentaires...')">💬<span>274</span></div>
+            <div class="action-btn" onclick="alert('Partager...')">➥<span>250</span></div>
+            <div class="disc"></div>
         </div>
+    </div>
 
-        <div class="video-overlay">
-            <h3 style="margin: 0; display: flex; align-items: center;">
-                Moi (Premium) <div class="badge-24"></div>
-            </h3>
-            <p style="margin: 5px 0 0; font-size: 15px;">#fyp #viral #PremiumStyle</p>
+    <div id="editModal" class="modal">
+        <h2 style="color:var(--violet-p)">Paramètres</h2>
+        <div style="display:flex; justify-content:space-between; background:var(--input-bg); padding:10px; border-radius:10px; margin-bottom:10px;" onclick="toggleDark()">
+            <span>Mode Sombre</span> <span id="darkLabel">OFF</span>
         </div>
+        <input type="text" id="editName" placeholder="Nom d'utilisateur">
+        <textarea id="editBio" placeholder="Ta Bio"></textarea>
+        <input type="text" id="editLink" placeholder="Ton lien">
+        <button onclick="saveProfile()" style="width:100%; background:var(--violet-p); color:white; border:none; padding:12px; border-radius:10px; font-weight:bold;">Enregistrer</button>
+        <p onclick="toggleSettings()" style="text-align:center; opacity:0.6; cursor:pointer;">Fermer</p>
+    </div>
+
+    <div id="authModal" class="modal" style="color:black; background:white;">
+        <h2>Se connecter</h2>
+        <div class="social-btn" onclick="socialLogin('Google')">🌐 Continuer avec Google</div>
+        <div class="social-btn" onclick="socialLogin('Apple')">🍎 Continuer avec Apple ID</div>
+        <div class="social-btn" onclick="socialLogin('Facebook')">🔵 Continuer avec Facebook</div>
+        <div class="social-btn" onclick="socialLogin('Téléphone')">📞 Numéro de téléphone</div>
+        <p onclick="document.getElementById('authModal').style.display='none'" style="text-align:center; cursor:pointer;">Annuler</p>
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-icon">🏠<br>Accueil</div>
-        <div class="nav-icon">👥<br>Amis</div>
-        <div class="nav-icon" onclick="alert('Ajouter à votre publication')">
-            <div class="plus-container">+</div>
-        </div>
-        <div class="nav-icon">💬<br>Boîte de réception</div>
-        <div class="nav-icon">👤<br>Profil</div>
+        <div style="font-size:11px; text-align:center;">🏠<br>Accueil</div>
+        <div style="font-size:11px; text-align:center;">👥<br>Amis</div>
+        <div class="plus-p">+</div>
+        <div style="font-size:11px; text-align:center;" onclick="alert('Bienvenue ! Vous vous suivez mutuellement 👋')">💬<br>Messages</div>
+        <div style="font-size:11px; text-align:center;">👤<br>Profil</div>
     </div>
 
+    <input type="file" id="pfpInput" style="display:none" accept="image/*" onchange="loadPfp(event)">
+
+    <script>
+        function toggleSettings() {
+            const m = document.getElementById('editModal');
+            m.style.display = m.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function toggleDark() {
+            document.getElementById('mainBody').classList.toggle('dark-mode');
+            const isDark = document.getElementById('mainBody').classList.contains('dark-mode');
+            document.getElementById('darkLabel').innerText = isDark ? "ON" : "OFF";
+        }
+
+        function saveProfile() {
+            document.getElementById('userName').innerText = document.getElementById('editName').value || "Utilisateur";
+            document.getElementById('userBio').innerText = document.getElementById('editBio').value;
+            document.getElementById('userLink').innerText = document.getElementById('editLink').value || "Lien ajouté";
+            toggleSettings();
+        }
+
+        function loadPfp(event) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('mainPfp').src = e.target.result;
+                document.getElementById('storyPfp').src = e.target.result;
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        function openAuth() { document.getElementById('authModal').style.display = 'block'; }
+
+        function socialLogin(p) {
+            alert("Connexion via " + p + " réussie !");
+            document.getElementById('authModal').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
