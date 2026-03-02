@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther's Fashion - Blue Badge Edition</title>
+    <title>Luther's Fashion - White Symbole Blue Badge</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -12,13 +12,21 @@
         body, html { margin: 0; padding: 0; height: 100%; background: var(--bg-dark); font-family: 'Segoe UI', sans-serif; color: white; overflow: hidden; }
         .main-container { height: 100vh; background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-light) 100%); position: relative; }
 
-        /* BADGE 24 POINTES COULEUR BLEU */
+        /* BADGE BLEU AVEC SYMBOLE FRAIS BLANC */
         .badge-24 { 
-            width: 18px; height: 18px; background: white; 
+            width: 18px; height: 18px; 
+            background: white; /* Fond blanc du badge */
             clip-path: polygon(50% 0%, 58% 10%, 68% 5%, 72% 16%, 83% 15%, 83% 26%, 93% 30%, 90% 41%, 98% 50%, 90% 59%, 93% 70%, 83% 74%, 83% 85%, 72% 84%, 68% 95%, 58% 90%, 50% 100%, 42% 90%, 32% 95%, 28% 84%, 17% 85%, 17% 74%, 7% 70%, 10% 59%, 2% 50%, 10% 41%, 7% 30%, 17% 26%, 17% 15%, 28% 16%, 32% 5%, 42% 10%); 
             display: flex; align-items: center; justify-content: center; 
+            border: 2px solid var(--tiktok-blue); /* Contour bleu du badge */
+            box-sizing: border-box; /* Pour que la bordure ne réduise pas la taille */
         }
-        .badge-24::after { content: '✔'; color: var(--tiktok-blue); font-size: 10px; font-weight: bold; }
+        .badge-24::after { 
+            content: '✔'; /* Le symbole frais (check) */
+            color: white; /* Couleur du check (frais) en blanc */
+            font-size: 10px; font-weight: bold; 
+            text-shadow: -1px -1px 0 var(--tiktok-blue), 1px -1px 0 var(--tiktok-blue), -1px 1px 0 var(--tiktok-blue), 1px 1px 0 var(--tiktok-blue); /* Contour bleu autour du check blanc pour la visibilité */
+        }
 
         /* ACTIONS DROITE */
         .side-actions { position: absolute; right: 10px; bottom: 120px; display: flex; flex-direction: column; align-items: center; gap: 20px; z-index: 10; }
@@ -44,7 +52,7 @@
                 @<span id="displayUser">Luther</span> 
                 <div class="badge-24"></div>
             </div>
-            <p>Le badge bleu est de retour ! Prêt pour le lancement. 🚀</p>
+            <p>Frais blanc, contour bleu ! C'est le style Luther's Fashion. 🚀</p>
         </div>
 
         <div class="side-actions">
