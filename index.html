@@ -4,105 +4,163 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Luther's Fashion - Officiel</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        :root {
-            --violet-p: #9c27b0;
-            --violet-c: #ce85f2;
-            --bg-dark: #1a0121;
-        }
+        :root { --violet-p: #9c27b0; --violet-c: #ce85f2; --bg-dark: #1a0121; }
+        body, html { margin: 0; padding: 0; height: 100%; background: var(--bg-dark); font-family: 'Segoe UI', sans-serif; color: white; overflow-x: hidden; }
 
-        body, html { 
-            margin: 0; padding: 0; height: 100%; 
-            background: var(--bg-dark); 
-            font-family: 'Segoe UI', sans-serif; color: white; overflow: hidden;
-        }
-
-        /* --- INTERFACE PRINCIPALE --- */
+        /* --- ACCUEIL --- */
         .main-container { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-        .profile-name { font-size: 24px; font-weight: bold; display: flex; align-items: center; gap: 5px; }
+        .badge { width: 16px; height: 16px; background: var(--violet-p); clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); display: inline-block; margin-left: 5px; }
+
+        /* --- MODAL INSCRIPTION --- */
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 999; }
+        .modal-card { background: white; color: black; width: 90%; max-width: 400px; padding: 25px; border-radius: 25px; text-align: center; }
+        input, select { width: 90%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #ddd; font-size: 14px; }
         
-        /* Badge de vérification violet */
-        .badge { width: 16px; height: 16px; background: var(--violet-p); clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); display: inline-block; }
+        .login-btn { display: flex; align-items: center; padding: 12px; margin-top: 15px; border-radius: 12px; cursor: pointer; font-weight: bold; background: #f5f5f5; border: 1px solid #ddd; }
+        .login-btn img { width: 20px; height: 20px; margin-right: 15px; }
 
-        /* --- MODAL REJOINRE (VIOLET & BLANC) --- */
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 9999; }
-        .modal-card { background: white; color: black; width: 90%; max-width: 400px; padding: 30px; border-radius: 25px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .modal-card h2 { margin-bottom: 25px; font-size: 22px; }
+        /* --- PROFIL TIKTOK STYLE --- */
+        #userProfile { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); flex-direction: column; align-items: center; padding-top: 60px; z-index: 1000; }
+        .profile-pic-container { position: relative; width: 120px; height: 120px; }
+        #profilePic { width: 100%; height: 100%; border-radius: 50%; border: 3px solid var(--violet-p); object-fit: cover; }
+        .upload-icon { position: absolute; bottom: 0; right: 0; background: var(--violet-p); color: white; padding: 8px; border-radius: 50%; cursor: pointer; }
 
-        /* Boutons de connexion avec vrais logos */
-        .login-btn { 
-            display: flex; align-items: center; padding: 12px 20px; margin: 12px 0; 
-            border: 1px solid #ddd; border-radius: 12px; cursor: pointer; 
-            font-weight: 600; transition: 0.2s; position: relative;
-        }
-        .login-btn:active { transform: scale(0.98); }
-        .login-btn img { width: 22px; height: 22px; position: absolute; left: 20px; }
-        .login-btn span { width: 100%; text-align: center; }
-
-        /* Styles spécifiques aux boutons */
-        .btn-google { background: #f5f5f5; color: black; }
-        .btn-apple { background: black; color: white; border: none; }
-        .btn-facebook { background: #1877F2; color: white; border: none; }
+        /* --- PARAMÈTRES --- */
+        #settingsMenu { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); z-index: 2000; padding: 20px; box-sizing: border-box; }
+        .setting-item { padding: 15px 0; border-bottom: 1px solid #333; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
     </style>
 </head>
 <body>
 
     <div class="main-container">
-        <h1 style="font-size: 40px; text-shadow: 0 0 20px var(--violet-c);">Luther's Fashion</h1>
-        <div class="profile-name">
-            <span id="userName">Luther</span> <div class="badge"></div>
-        </div>
-        <p style="opacity: 0.7;">Bientôt disponible...</p>
+        <h1 style="font-size: 35px; color: var(--violet-c);">Luther's Fashion</h1>
+        <p>Bientôt disponible...</p>
     </div>
 
     <div id="authModal" class="overlay">
         <div class="modal-card">
-            <h2>Rejoindre Luther's</h2>
+            <h2 id="modalTitle">Rejoindre Luther's</h2>
+            <input type="text" id="clientEmail" placeholder="Email ou Identifiant">
+            <input type="password" id="clientPass" placeholder="Mot de passe">
+            <input type="password" id="confirmPass" placeholder="Confirmer le mot de passe">
+            
+            <select id="clientCountry">
+                <option value="">🌍 Choisis ton pays</option>
+                <option value="France">🇫🇷 France</option>
+                <option value="USA">🇺🇸 USA</option>
+                <option value="Maroc">🇲🇦 Maroc</option>
+                <option value="Congo">🇨🇬 Congo</option>
+                <option value="Côte d'Ivoire">🇮🇨 Côte d'Ivoire</option>
+                <option value="Sénégal">🇸🇳 Sénégal</option>
+            </select>
 
-            <div class="login-btn btn-google" onclick="successAuth('Google')">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_Logo.svg" alt="Google">
-                <span>Continuer avec Google</span>
+            <div class="login-btn" onclick="validateAndSave('Google')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_Logo.svg">
+                <span>S'inscrire avec Google</span>
             </div>
-
-            <div class="login-btn btn-apple" onclick="successAuth('Apple')">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" style="filter: invert(1);" alt="Apple">
-                <span>Continuer avec Apple</span>
-            </div>
-
-            <div class="login-btn btn-facebook" onclick="successAuth('Facebook')">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_2023.svg" style="filter: brightness(0) invert(1);" alt="Facebook">
-                <span>Continuer avec Facebook</span>
-            </div>
-
-            <p style="margin-top: 20px; color: #888; cursor: pointer;" onclick="document.getElementById('authModal').style.display='none'">Fermer</p>
+            <p id="errorMsg" style="color: red; font-size: 12px; margin-top: 10px; display: none;"></p>
         </div>
     </div>
 
+    <div id="userProfile">
+        <div onclick="toggleSettings()" style="position: absolute; top: 20px; right: 20px; font-size: 25px; cursor: pointer;">⚙️</div>
+        
+        <div class="profile-pic-container">
+            <img id="profilePic" src="https://via.placeholder.com/150">
+            <label for="uploadPic" class="upload-icon">📷</label>
+            <input type="file" id="uploadPic" accept="image/*" style="display: none;" onchange="previewImage(event)">
+        </div>
+
+        <h2 id="displayUserName" style="margin-top: 15px;">Utilisateur <div class="badge"></div></h2>
+        
+        <div style="display: flex; gap: 30px; margin: 20px 0;">
+            <div style="text-align: center;"><b id="txtFollowers">0</b><br><small>Abonnés</small></div>
+            <div style="text-align: center;"><b id="txtFollowing">0</b><br><small>Abonnements</small></div>
+        </div>
+
+        <button onclick="shareProfile()" style="background: var(--violet-p); color: white; border: none; padding: 12px 35px; border-radius: 25px; font-weight: bold; cursor: pointer;">🔗 Partager mon profil</button>
+        <button onclick="logout()" style="margin-top: 15px; background: transparent; color: var(--violet-c); border: 1px solid var(--violet-c); padding: 10px 30px; border-radius: 25px; cursor: pointer;">Déconnexion</button>
+    </div>
+
+    <div id="settingsMenu">
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <span onclick="toggleSettings()" style="font-size: 25px; cursor: pointer;">✕</span>
+            <h3 style="margin-left: 20px;">Paramètres</h3>
+        </div>
+        <div class="setting-item"><span>🌍 Langue</span>
+            <select id="langSelect" onchange="changeLang()" style="width: auto; background: #333; color: white;">
+                <option value="fr">🇫🇷 Français</option>
+                <option value="en">🇺🇸 English</option>
+                <option value="es">🇪🇸 Español</option>
+            </select>
+        </div>
+        <div class="setting-item">👤 Gérer le compte</div>
+        <div class="setting-item">🔒 Confidentialité</div>
+        <div onclick="logout()" style="color: #ff4d4d; text-align: center; margin-top: 30px; cursor: pointer;">Déconnexion</div>
+    </div>
+
     <script>
-        // Ta fonction de liaison avec ton URL officielle
-        function successAuth(plateforme) {
-            const scriptURL = "https://script.google.com/macros/s/AKfycbzmWi55H7--DzkuiTHWS4Q4xmqeBq9WvkLpd0y9GIpTL3osmmL4zpACStbOCOwYgw0Q/exec";
-            const nomUser = document.getElementById('userName').innerText;
+        const scriptURL = "https://script.google.com/macros/s/AKfycbzmWi55H7--DzkuiTHWS4Q4xmqeBq9WvkLpd0y9GIpTL3osmmL4zpACStbOCOwYgw0Q/exec";
 
-            const data = {
-                methode: plateforme,
-                nom: nomUser
-            };
+        function validateAndSave(plateforme) {
+            const email = document.getElementById('clientEmail').value;
+            const pass = document.getElementById('clientPass').value;
+            const confirm = document.getElementById('confirmPass').value;
+            const country = document.getElementById('clientCountry').value;
+            const error = document.getElementById('errorMsg');
 
-            // Envoi des données vers Google Sheets
-            fetch(scriptURL, {
-                method: 'POST',
-                mode: 'no-cors', 
-                body: JSON.stringify(data)
-            })
+            if (!email || !pass || !country) {
+                error.innerText = "Remplis tous les champs !";
+                error.style.display = "block";
+                return;
+            }
+            if (pass !== confirm) {
+                error.innerText = "Mots de passe différents !";
+                error.style.display = "block";
+                return;
+            }
+
+            const data = { methode: plateforme, nom: email, mdp: pass, pays: country };
+
+            fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) })
             .then(() => {
-                alert("Félicitations " + nomUser + " ! Ton inscription via " + plateforme + " a été envoyée à Luther.");
                 document.getElementById('authModal').style.display = 'none';
-            })
-            .catch(error => {
-                console.error('Erreur :', error);
-                alert("Erreur technique. Vérifie ta connexion.");
+                document.getElementById('userProfile').style.display = 'flex';
+                document.getElementById('displayUserName').innerHTML = email + ' <div class="badge"></div>';
+                
+                // Confettis !
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#9c27b0', '#ffffff'] });
             });
+        }
+
+        function previewImage(e) {
+            const reader = new FileReader();
+            reader.onload = () => document.getElementById('profilePic').src = reader.result;
+            reader.readAsDataURL(e.target.files[0]);
+        }
+
+        function toggleSettings() {
+            const m = document.getElementById('settingsMenu');
+            m.style.display = (m.style.display === "block") ? "none" : "block";
+        }
+
+        function logout() { location.reload(); }
+
+        function shareProfile() {
+            const url = window.location.href;
+            if (navigator.share) {
+                navigator.share({ title: "Luther's Fashion", url: url });
+            } else {
+                navigator.clipboard.writeText(url);
+                alert("Lien copié !");
+            }
+        }
+
+        function changeLang() {
+            const l = document.getElementById('langSelect').value;
+            alert("Langue changée : " + l);
         }
     </script>
 </body>
