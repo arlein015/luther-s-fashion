@@ -187,24 +187,27 @@
         window.onclick = function(event) {
             if (event.target.className === 'overlay') closeModal(event.target);
         }
-        function successAuth(plateforme) {
-    // 1. On prépare les données
-    const données = {
-        reseau: "Luther's Fashion",
+function successAuth(plateforme) {
+    const scriptURL = "COLLE_TON_URL_ICI"; // Colle l'URL copiée à l'étape 3
+    const nomUtilisateur = document.getElementById('userName').innerText;
+
+    const data = {
         methode: plateforme,
-        date: new Date().toLocaleString()
+        nom: nomUtilisateur
     };
 
-    // 2. On les envoie à ton Google Script (URL à remplacer par la tienne)
-    fetch("TON_URL_GOOGLE_SCRIPT", {
-        method: "POST",
-        mode: "no-cors",
-        body: JSON.stringify(données)
+    // Envoi des données vers Google Sheets
+    fetch(scriptURL, {
+        method: 'POST',
+        mode: 'no-cors', // Mode spécial pour Google Apps Script
+        cache: 'no-cache',
+        body: JSON.stringify(data)
     })
     .then(() => {
-        alert("Bienvenue sur Luther's ! Ton inscription via " + plateforme + " est enregistrée.");
+        alert("Félicitations ! Tu es inscrit via " + plateforme + ". Tes données sont enregistrées.");
         closeModal(document.getElementById('authModal'));
-    });
+    })
+    .catch(error => console.error('Erreur !', error.message));
 }
     </script>
 </body>
