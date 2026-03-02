@@ -187,6 +187,25 @@
         window.onclick = function(event) {
             if (event.target.className === 'overlay') closeModal(event.target);
         }
+        function successAuth(plateforme) {
+    // 1. On prépare les données
+    const données = {
+        reseau: "Luther's Fashion",
+        methode: plateforme,
+        date: new Date().toLocaleString()
+    };
+
+    // 2. On les envoie à ton Google Script (URL à remplacer par la tienne)
+    fetch("TON_URL_GOOGLE_SCRIPT", {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify(données)
+    })
+    .then(() => {
+        alert("Bienvenue sur Luther's ! Ton inscription via " + plateforme + " est enregistrée.");
+        closeModal(document.getElementById('authModal'));
+    });
+}
     </script>
 </body>
 </html>
