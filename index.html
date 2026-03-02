@@ -3,149 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther's Fashion - Network</title>
+    <title>Luther's Fashion - Site Officiel</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        :root { --violet: #9c27b0; --light-violet: #ce85f2; --tiktok-red: #ff3b5c; --bg: #000; }
+        :root { --violet: #9c27b0; --tiktok-red: #ff3b5c; --bg: #000; }
         body, html { margin: 0; padding: 0; height: 100%; background: var(--bg); font-family: 'Segoe UI', sans-serif; color: white; overflow: hidden; }
 
-        /* --- NAVIGATION HAUT --- */
-        .top-nav { position: fixed; top: 0; width: 100%; display: flex; flex-direction: column; align-items: center; z-index: 100; padding-top: 10px; background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent); }
-        .feed-tabs { display: flex; gap: 25px; font-weight: bold; font-size: 17px; margin-top: 10px; }
-        .tab { cursor: pointer; opacity: 0.6; }
-        .tab.active { opacity: 1; border-bottom: 3px solid white; padding-bottom: 5px; }
-
-        /* --- FEED VIDEO (ROUGE TIKTOK) --- */
-        .video-feed { height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; padding-bottom: 100px; background: #e60023; }
-        .user-info { margin-bottom: 15px; }
-        .user-name { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 18px; }
+        /* --- FEED VIDEO --- */
+        .video-feed { height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; padding-bottom: 110px; background: #e60023; transition: background 0.5s; }
+        .user-name { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 19px; }
 
         /* BADGE 24 POINTES */
         .badge-24 { width: 18px; height: 18px; background: white; clip-path: polygon(50% 0%, 58% 10%, 68% 5%, 72% 16%, 83% 15%, 83% 26%, 93% 30%, 90% 41%, 98% 50%, 90% 59%, 93% 70%, 83% 74%, 83% 85%, 72% 84%, 68% 95%, 58% 90%, 50% 100%, 42% 90%, 32% 95%, 28% 84%, 17% 85%, 17% 74%, 7% 70%, 10% 59%, 2% 50%, 10% 41%, 7% 30%, 17% 26%, 17% 15%, 28% 16%, 32% 5%, 42% 10%); display: flex; align-items: center; justify-content: center; }
         .badge-24::after { content: '✔'; color: var(--violet); font-size: 10px; font-weight: bold; }
 
-        /* --- BARRE DE NAVIGATION BAS --- */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: black; display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 0.5px solid #333; }
-        .nav-icon { font-size: 22px; cursor: pointer; position: relative; color: white; }
-        .btn-plus { background: linear-gradient(to right, #20d5ec 15%, #ff2d55 85%); padding: 5px 15px; border-radius: 12px; font-weight: bold; color: black; font-size: 20px; cursor: pointer; }
-        .notif-badge { position: absolute; top: -8px; right: -8px; background: red; color: white; font-size: 10px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid black; }
-        .nav-avatar { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid white; display: none; }
-
-        /* --- MODALES --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 5000; }
-        .modal-card { background: white; color: black; width: 85%; max-width: 350px; padding: 25px; border-radius: 20px; text-align: center; }
-        .publish-option { padding: 15px; border: 1px solid #eee; border-radius: 12px; margin: 10px 0; cursor: pointer; display: flex; align-items: center; gap: 15px; font-weight: bold; }
+        /* --- NAVIGATION BAS --- */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: black; display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 0.5px solid #333; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; color: white; position: relative; }
+        .nav-item i { font-size: 24px; }
+        .nav-item span { font-size: 10px; margin-top: 4px; }
         
-        /* Animation Disque */
-        .music-disc { width: 45px; height: 45px; background: radial-gradient(circle, #444 20%, #000 100%); border-radius: 50%; animation: rotate 4s linear infinite; border: 8px solid #222; position: fixed; right: 15px; bottom: 100px; }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        /* Bouton central + */
+        .btn-plus-container { background: linear-gradient(to right, #20d5ec 15%, #ff2d55 85%); padding: 5px 18px; border-radius: 12px; color: black; font-size: 22px; font-weight: bold; }
+
+        .notif-badge { position: absolute; top: -5px; right: -5px; background: red; color: white; font-size: 10px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid black; }
+
+        /* --- FENÊTRES MODALES --- */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 5000; }
+        .modal-content { background: white; color: black; width: 85%; max-width: 350px; padding: 30px; border-radius: 20px; text-align: center; }
+        .option { padding: 15px; border: 1px solid #ddd; border-radius: 10px; margin: 10px 0; cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="top-nav">
-        <div class="feed-tabs">
-            <span class="tab" onclick="alert('Vidéos Viral (Explosion)')">Viral</span>
-            <span class="tab">Suivis</span>
-            <span class="tab active">Pour toi</span>
-        </div>
-    </div>
-
-    <div class="video-feed">
+    <div class="video-feed" id="mainFeed">
         <div class="user-info">
-            <div class="user-name">@<span id="userName">Luther</span> <div class="badge-24"></div></div>
-            <p>Bienvenue sur Luther's Fashion. Partagez votre style ! 🚀</p>
-            <p><i class="fas fa-music"></i> Luther - Son Original</p>
+            <div class="user-name">@<span id="displayUser">Luther</span> <div class="badge-24"></div></div>
+            <p id="postDesc">Découvrez la collection Luther's Fashion 2026 ! 🚀</p>
         </div>
-        <div class="music-disc"></div>
     </div>
 
     <div class="bottom-nav">
-        <i class="fas fa-home nav-icon" onclick="location.reload()" title="Home"></i>
-        
-        <i class="fas fa-bolt nav-icon" onclick="alert('Section Viral activée !')" style="color: #ffeb3b;"></i>
-        
-        <div class="btn-plus" onclick="toggleModal('publishModal')">+</div>
-        
-        <div class="nav-icon" onclick="openMessages()">
+        <div class="nav-item" onclick="goHome()">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </div>
+        <div class="nav-item" onclick="goViral()">
+            <i class="fas fa-bolt" style="color: #ffeb3b;"></i>
+            <span>Viral</span>
+        </div>
+        <div class="nav-item" onclick="openModal('modalPost')">
+            <div class="btn-plus-container">+</div>
+        </div>
+        <div class="nav-item" onclick="openMessages()">
             <i class="fas fa-envelope"></i>
-            <div class="notif-badge" id="msgNotif">1</div>
+            <div class="notif-badge" id="badgeMsg">1</div>
+            <span>Messages</span>
         </div>
-        
-        <div class="nav-icon" onclick="handleProfileClick()">
-            <i id="profileIcon" class="fas fa-user"></i>
-            <img id="userAvatar" class="nav-avatar" src="">
+        <div class="nav-item" onclick="openModal('modalLogin')">
+            <i class="fas fa-user" id="userIcon"></i>
+            <img id="userImg" src="" style="width:28px; height:28px; border-radius:50%; display:none; border:1.5px solid white;">
+            <span>Profil</span>
         </div>
     </div>
 
-    <div id="publishModal" class="modal-overlay">
-        <div class="modal-card">
+    <div id="modalPost" class="modal">
+        <div class="modal-content">
             <h3>Nouveau Poste</h3>
-            <div class="publish-option" onclick="createPost('Texte')"><i class="fas fa-font"></i> Écrire un texte</div>
-            <div class="publish-option" onclick="createPost('Photo')"><i class="fas fa-image"></i> Partager une photo</div>
-            <div class="publish-option" onclick="createPost('Vidéo')"><i class="fas fa-video"></i> Publier une vidéo</div>
-            <button onclick="toggleModal('publishModal')" style="margin-top:15px; border:none; background:none; color:red; font-weight:bold; cursor:pointer;">Annuler</button>
+            <div class="option" onclick="publish('📸 Photo')"><i class="fas fa-image"></i> Photo</div>
+            <div class="option" onclick="publish('🎥 Vidéo')"><i class="fas fa-video"></i> Vidéo</div>
+            <div class="option" onclick="publish('✍️ Texte')"><i class="fas fa-font"></i> Texte</div>
+            <button onclick="closeModal('modalPost')" style="margin-top:10px; color:red; border:none; background:none; cursor:pointer;">Annuler</button>
         </div>
     </div>
 
-    <div id="loginModal" class="modal-overlay">
-        <div class="modal-card">
-            <h3>Connexion</h3>
-            <input type="text" id="loginId" placeholder="Identifiant / Email" style="width:90%; padding:12px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;">
-            <input type="password" id="loginPass" placeholder="Mot de passe" style="width:90%; padding:12px; margin-bottom:20px; border-radius:10px; border:1px solid #ddd;">
-            <button onclick="loginUser()" style="width:100%; background:var(--tiktok-red); color:white; border:none; padding:15px; border-radius:10px; font-weight:bold; cursor:pointer;">Se connecter</button>
-            <p onclick="toggleModal('loginModal')" style="cursor:pointer; margin-top:15px; font-size:14px;">Fermer</p>
+    <div id="modalLogin" class="modal">
+        <div class="modal-content">
+            <h3>Connexion Client</h3>
+            <input type="text" id="inEmail" placeholder="Email / Identifiant" style="width:90%; padding:12px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;">
+            <input type="password" id="inPass" placeholder="Mot de passe" style="width:90%; padding:12px; margin-bottom:15px; border-radius:10px; border:1px solid #ddd;">
+            <button onclick="handleConnect()" style="width:100%; background:var(--tiktok-red); color:white; border:none; padding:15px; border-radius:10px; font-weight:bold; cursor:pointer;">Se connecter</button>
+            <p onclick="closeModal('modalLogin')" style="cursor:pointer; margin-top:15px; font-size:14px;">Fermer</p>
         </div>
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbzmWi55H7--DzkuiTHWS4Q4xmqeBq9WvkLpd0y9GIpTL3osmmL4zpACStbOCOwYgw0Q/exec";
-        let isConnected = false;
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzmWi55H7--DzkuiTHWS4Q4xmqeBq9WvkLpd0y9GIpTL3osmmL4zpACStbOCOwYgw0Q/exec";
 
-        function toggleModal(id) {
-            const m = document.getElementById(id);
-            m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
+        // 1. Touche Home : Rafraîchit le flux
+        function goHome() {
+            document.getElementById('mainFeed').style.background = "#e60023";
+            document.getElementById('postDesc').innerText = "Flux Home actualisé ! 🚀";
+            window.scrollTo(0,0);
         }
 
-        function createPost(type) {
-            alert("Outil de création " + type + " ouvert !");
-            toggleModal('publishModal');
+        // 2. Touche Viral (Explosion) : Change de contenu
+        function goViral() {
+            document.getElementById('mainFeed').style.background = "#9c27b0";
+            document.getElementById('postDesc').innerText = "🔥 Section VIRAL : Les vidéos qui explosent !";
+            confetti({ particleCount: 50, spread: 60 });
         }
 
+        // 3. Touche Messages : Nettoie les notifs et répond
         function openMessages() {
-            document.getElementById('msgNotif').style.display = 'none';
-            alert("Messagerie : Répondez à vos clients ici.");
+            document.getElementById('badgeMsg').style.display = 'none';
+            alert("Messagerie Luther's : Vous pouvez maintenant répondre à vos clients.");
         }
 
-        function handleProfileClick() {
-            if (isConnected) {
-                alert("Ouverture de votre profil personnalisé !");
-            } else {
-                toggleModal('loginModal');
-            }
+        // 4. Gestion des Modales (+) et Profil
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function publish(type) {
+            alert("Ouverture de l'appareil pour : " + type);
+            closeModal('modalPost');
         }
 
-        function loginUser() {
-            const id = document.getElementById('loginId').value;
-            const pass = document.getElementById('loginPass').value;
-            
-            if(id && pass) {
-                // Envoi vers Google Sheets
-                fetch(API_URL, {
+        // 5. Profil : Connexion réelle vers Google Sheets
+        function handleConnect() {
+            const email = document.getElementById('inEmail').value;
+            const pass = document.getElementById('inPass').value;
+
+            if(email && pass) {
+                fetch(SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
-                    body: JSON.stringify({ nom: id, mdp: pass, methode: 'Login' })
+                    body: JSON.stringify({ nom: email, mdp: pass, methode: 'Profil_Login' })
                 });
 
-                isConnected = true;
-                document.getElementById('userName').innerText = id;
-                document.getElementById('profileIcon').style.display = 'none';
-                document.getElementById('userAvatar').src = "https://i.pravatar.cc/100?u=" + id;
-                document.getElementById('userAvatar').style.display = 'block';
+                // Mise à jour visuelle du profil
+                document.getElementById('displayUser').innerText = email;
+                document.getElementById('userIcon').style.display = 'none';
+                document.getElementById('userImg').src = "https://i.pravatar.cc/100?u=" + email;
+                document.getElementById('userImg').style.display = 'block';
                 
-                toggleModal('loginModal');
+                closeModal('modalLogin');
                 confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
             }
         }
