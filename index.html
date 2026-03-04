@@ -19,7 +19,7 @@
         .tab { opacity: 0.7; cursor: pointer; border-bottom: 2px solid transparent; padding-bottom: 5px; }
         .tab.active { opacity: 1; border-bottom: 2px solid white; }
 
-        /* Stories */
+        /* Stories Accueil */
         .stories { position: absolute; top: 70px; left: 10px; display: flex; gap: 10px; z-index: 10; }
         .story { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--violet-p); padding: 2px; position: relative; }
         .story img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
@@ -29,12 +29,14 @@
         #page-messages { position: absolute; top: 0; left: 0; width: 100%; height: calc(100% - 60px); background: white; color: black; display: none; overflow-y: auto; z-index: 500; }
         .msg-header { display: flex; justify-content: space-between; padding: 15px; align-items: center; border-bottom: 1px solid #f9f9f9; }
         .msg-story-container { display: flex; gap: 15px; padding: 15px; overflow-x: auto; border-bottom: 1px solid #f0f0f0; }
-        .msg-circle { width: 65px; text-align: center; font-size: 11px; flex-shrink: 0; }
+        .msg-circle { width: 65px; text-align: center; font-size: 11px; flex-shrink: 0; color: black; }
         .img-wrapper { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #20d5ec; padding: 2px; margin-bottom: 5px; }
         .img-wrapper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .list-item { display: flex; align-items: center; padding: 12px 15px; gap: 12px; }
-        .notif-icon { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; }
-        .badge-red-small { background: red; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: auto; }
+        
+        /* Items de la liste messages */
+        .list-item { display: flex; align-items: center; padding: 12px 15px; gap: 12px; cursor: pointer; }
+        .notif-icon { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; }
+        .badge-red-small { background: #ff3b5c; color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; margin-left: auto; }
 
         /* Actions Droite */
         .side-actions { position: absolute; right: 10px; bottom: 120px; display: flex; flex-direction: column; align-items: center; gap: 20px; z-index: 10; }
@@ -43,10 +45,8 @@
         .heart.active { color: #ff3b5c; animation: heartBeat 0.4s ease; }
         @keyframes heartBeat { 0% {transform:scale(1);} 50% {transform:scale(1.3);} 100% {transform:scale(1);} }
 
-        /* Photo de Profil Côté */
+        /* Photo de Profil Côté & Disque */
         .profile-pic-side { width: 50px; height: 50px; border-radius: 50%; border: 2px solid white; margin-bottom: 10px; object-fit: cover; }
-
-        /* Disque de Musique qui tourne */
         .music-disc { width: 40px; height: 40px; background: radial-gradient(circle, #444 20%, #000 100%); border-radius: 50%; animation: rotate 3s linear infinite; border: 5px solid #222; margin-top: 10px; }
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
@@ -95,7 +95,7 @@
             <div class="side-actions">
                 <img class="profile-pic-side" id="avatarSide" src="https://via.placeholder.com/100">
                 <div class="action-btn" onclick="toggleLike(this)"><i class="fas fa-heart heart"></i><br>150K</div>
-                <div class="action-btn" onclick="alert('Commentaires ouverts')"><i class="fas fa-comment-dots"></i><br>856</div>
+                <div class="action-btn"><i class="fas fa-comment-dots"></i><br>856</div>
                 <div class="action-btn" onclick="shareNow()"><i class="fas fa-share"></i><br>Partager</div>
                 <div class="music-disc"></div>
             </div>
@@ -107,20 +107,36 @@
                 <b style="font-size: 17px;">Messages <span style="color:#2ecc71">●</span></b>
                 <i class="fas fa-search"></i>
             </div>
+            
             <div class="msg-story-container">
-                <div class="msg-circle"><div class="img-wrapper"><img src="https://i.pravatar.cc/100?u=1"></div>Murah ca...</div>
-                <div class="msg-circle"><div class="img-wrapper"><img src="https://i.pravatar.cc/100?u=2"></div>Norah Nelsie</div>
-                <div class="msg-circle"><div class="img-wrapper"><img src="https://i.pravatar.cc/100?u=3"></div>Aina Andriah</div>
+                <div class="msg-circle"><div class="img-wrapper"><img src="https://i.pravatar.cc/100?u=10"></div>Murah ca...</div>
+                <div class="msg-circle"><div class="img-wrapper"><img src="https://i.pravatar.cc/100?u=11"></div>Norah Nelsie</div>
+                <div class="msg-circle"><div class="img-wrapper"><img src="https://i.pravatar.cc/100?u=12"></div>Aina Andriah</div>
+                <div class="msg-circle"><div class="img-wrapper"><img src="https://i.pravatar.cc/100?u=13"></div>Wichouuu❤️</div>
             </div>
+
             <div class="list-item">
-                <div class="notif-icon" style="background:#00a2ff"><i class="fas fa-users"></i></div>
-                <div><b>Nouveaux followers</b><br><span style="color:gray; font-size:13px;">Un utilisateur a commencé à vous suivre.</span></div>
-                <div class="badge-red-small">10</div>
-           <div class="list-item" style="display: flex; align-items: center; padding: 12px 15px; gap: 12px; cursor: pointer;">
-                <div class="notif-icon" style="width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #ff2d55; color: white; font-size: 24px;">
-                  <i class="fas fa-heart"></i>
+                <div class="notif-icon" style="background:#ff2d55">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div style="flex-grow: 1;">
+                    <b style="font-size: 15px;">Activité</b><br>
+                    <span style="color:gray; font-size:13px;">Clau 🦋 a répondu à ton commentaire :...</span>
+                </div>
+                <div class="badge-red-small">21</div>
+            </div>
+
+            <div class="list-item">
+                <div style="width: 48px; height: 48px; border-radius: 50%; overflow: hidden;">
+                    <img src="https://i.pravatar.cc/100?u=10" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div style="flex-grow: 1;">
+                    <b style="font-size: 15px;">🍒 Murah camayo 🍭</b><br>
+                    <span style="color:gray; font-size:13px;">Envoyé il y a 59 min</span>
+                </div>
+                <i class="fas fa-camera" style="color: gray;"></i>
+            </div>
         </div>
-   </div>
 
         <div class="bottom-nav">
             <i class="fas fa-home nav-item active" id="btn-home" onclick="showHome()"></i>
@@ -136,7 +152,7 @@
 
     <div id="modalLogin" class="modal">
         <div class="modal-content">
-            <h2 id="modalTitle">Rejoindre Threndly</h2>
+            <h2>Rejoindre Threndly</h2>
             <div id="step1">
                 <input type="email" id="userEmail" placeholder="Email">
                 <input type="password" id="userPass" placeholder="Mot de passe">
@@ -148,7 +164,6 @@
                 <textarea id="userBio" placeholder="Ta bio mode..."></textarea>
                 <button class="btn-finish" onclick="saveProfile()">Enregistrer mon profil</button>
             </div>
-            <button onclick="closeModal('modalLogin')" style="margin-top:10px; background:none; border:none; color:gray; cursor:pointer;">Annuler</button>
         </div>
     </div>
 
@@ -159,7 +174,6 @@
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
         function nextStep() { document.getElementById('step1').style.display='none'; document.getElementById('step2').style.display='flex'; }
 
-        // NAVIGATION MESSAGES
         function openMessages() {
             document.getElementById('page-home').style.display = 'none';
             document.getElementById('page-messages').style.display = 'block';
@@ -201,16 +215,14 @@
             const heart = btn.querySelector('.heart');
             heart.classList.toggle('active');
             if(heart.classList.contains('active')) {
-                heart.className = 'fas fa-heart heart active';
-                confetti({ particleCount: 30, spread: 60, origin: { x: 0.9, y: 0.7 }, colors: ['#ff3b5c'] });
-            } else { heart.className = 'fas fa-heart heart'; }
+                confetti({ particleCount: 30, colors: ['#ff3b5c'] });
+            }
         }
 
         function shareNow() {
             if (navigator.share) {
                 navigator.share({ title: "Threndly Fashion", url: window.location.href });
             } else {
-                navigator.clipboard.writeText(window.location.href);
                 alert("Lien copié !");
             }
         }
