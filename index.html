@@ -3,114 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trendly - Violet Badge Edition</title>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <title>Threndly - Blue Badge Edition</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        :root { --violet-luther: #9c27b0; --bg-dark: #1a0121; --bg-light: #3a0e4e; --notif-red: #ff3b5c; }
+        :root { --threndly-blue: #20d5ec; --threndly-violet: #3a0e4e; }
         body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; overflow: hidden; background: #000; }
 
-        .main-container { height: 100vh; width: 100%; position: relative; }
-
         /* --- ACCUEIL (FLUX VIOLET) --- */
-        #page-home { height: 100%; background: linear-gradient(180deg, #1a0121 0%, var(--bg-light) 100%); position: relative; display: block; }
-        .top-tabs { position: absolute; top: 15px; width: 100%; display: flex; justify-content: center; gap: 15px; font-weight: bold; color: white; z-index: 10; }
-        .tab-link { opacity: 0.6; cursor: pointer; font-size: 14px; }
-        .tab-link.active { opacity: 1; border-bottom: 2px solid white; }
+        #page-home { height: 100%; background: linear-gradient(180deg, #1a0121 0%, var(--threndly-violet) 100%); position: relative; display: block; }
         
-        /* BADGE 24 POINTES VIOLET */
-        .badge-24 { 
-            width: 16px; height: 16px; 
-            background: var(--violet-luther); /* Couleur de fond du badge en violet */
-            clip-path: polygon(50% 0%, 58% 10%, 68% 5%, 72% 16%, 83% 15%, 83% 26%, 93% 30%, 90% 41%, 98% 50%, 90% 59%, 93% 70%, 83% 74%, 83% 85%, 72% 84%, 68% 95%, 58% 90%, 50% 100%, 42% 90%, 32% 95%, 28% 84%, 17% 85%, 17% 74%, 7% 70%, 10% 59%, 2% 50%, 10% 41%, 7% 30%, 17% 26%, 17% 15%, 28% 16%, 32% 5%, 42% 10%); 
-            display: flex; align-items: center; justify-content: center; 
-            border: 1.5px solid white; /* Contour blanc pour la visibilité sur fond violet */
-            box-sizing: border-box;
-        }
-        .badge-24::after { 
-            content: '✔'; /* Le symbole frais (check) */
-            color: white; /* Couleur du check (frais) en blanc */
-            font-size: 9px; font-weight: bold; 
+        /* STYLE DU BADGE BLEU */
+        .badge-verified {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            background-color: var(--threndly-blue); /* Le badge devient bleu */
+            clip-path: polygon(50% 0%, 58% 10%, 68% 5%, 72% 16%, 83% 15%, 83% 26%, 93% 30%, 90% 41%, 98% 50%, 90% 59%, 93% 70%, 83% 74%, 83% 85%, 72% 84%, 68% 95%, 58% 90%, 50% 100%, 42% 90%, 32% 95%, 28% 84%, 17% 85%, 17% 74%, 7% 70%, 10% 59%, 2% 50%, 10% 41%, 7% 30%, 17% 26%, 17% 15%, 28% 16%, 32% 5%, 42% 10%);
+            margin-left: 5px;
+            vertical-align: middle;
         }
 
-        .side-actions { position: absolute; right: 10px; bottom: 100px; display: flex; flex-direction: column; align-items: center; gap: 18px; color: white; }
-        .action-item { text-align: center; font-size: 12px; cursor: pointer; }
-        .action-item i { font-size: 28px; margin-bottom: 4px; }
+        .badge-verified::after {
+            content: '\f00c'; 
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: white; /* Le check devient blanc pour bien ressortir sur le bleu */
+            font-size: 8px;
+        }
 
-        /* --- MESSAGES (FOND BLANC) --- */
-        #page-messages { height: calc(100% - 65px); background: white; color: black; display: none; overflow-y: auto; }
-        /* Style des éléments de la page messages omis pour la brièveté, mais inclus dans la version complète précédente */
-
-        /* --- BARRE DE NAVIGATION (FIXE AU BAS) --- */
+        /* --- NAVIGATION BAS --- */
         .bottom-nav { position: absolute; bottom: 0; width: 100%; height: 65px; background: #000; display: flex; justify-content: space-around; align-items: center; border-top: 0.5px solid #333; z-index: 100; }
-        .nav-icon { color: white; font-size: 22px; cursor: pointer; position: relative; opacity: 0.7; }
+        .nav-icon { color: white; font-size: 22px; cursor: pointer; opacity: 0.7; }
         .nav-icon.active { opacity: 1; }
-        .btn-add { background: linear-gradient(to right, #20d5ec, #ff3b5c); padding: 4px 14px; border-radius: 8px; color: black; font-weight: bold; }
-        
-        /* LE BADGE DE NOTIFICATION QUI RESTE TOUJOURS */
-        .env-badge { position: absolute; top: -5px; right: -8px; background: var(--notif-red); color: white; font-size: 10px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid black; }
+        .btn-add { background: linear-gradient(to right, var(--threndly-blue), #ff3b5c); padding: 4px 14px; border-radius: 8px; color: black; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="main-container">
-        
         <div id="page-home">
-            <div class="top-tabs">
-                <span class="tab-link">Suivi</span>
-                <span class="tab-link active">Pour toi</span>
-                <span class="tab-link">Live</span>
-            </div>
-
             <div style="position: absolute; bottom: 85px; left: 15px; color: white;">
-                <div style="display: flex; align-items: center; gap: 6px; font-weight: bold; font-size: 16px; margin-bottom: 6px;">
-                    @ Trendly <div class="badge-24"></div>
+                <div style="display: flex; align-items: center; font-weight: bold; font-size: 16px; margin-bottom: 6px;">
+                    @ Threndly <span class="badge-verified"></span>
                 </div>
                 <div style="font-size: 13px; max-width: 280px; line-height: 1.4;">
-                    Découvrez la collection Trendly 2026 ! #Style #Mode #Premium 🚀
+                    Découvrez la collection Threndly 2026 ! #Style #Mode #Premium 🚀
                 </div>
                 <div style="margin-top: 8px; font-size: 12px; opacity: 0.9;">
-                    <i class="fas fa-music"></i> &nbsp; Trendly Audio - Son Original
+                    <i class="fas fa-music"></i> &nbsp; Threndly Audio - Son Original
                 </div>
             </div>
 
-            <div class="side-actions">
-                <div class="action-item"><i class="fas fa-heart"></i><br>150K</div>
-                <div class="action-item"><i class="fas fa-comment-dots"></i><br>856</div>
-                <div class="action-item"><i class="fas fa-share"></i><br>Partager</div>
+            <div style="position: absolute; right: 10px; bottom: 100px; display: flex; flex-direction: column; align-items: center; gap: 18px; color: white;">
+                <div style="text-align: center; font-size: 12px;"><i class="fas fa-heart" style="font-size: 28px;"></i><br>150K</div>
+                <div style="text-align: center; font-size: 12px;"><i class="fas fa-comment-dots" style="font-size: 28px;"></i><br>856</div>
+                <div style="text-align: center; font-size: 12px;"><i class="fas fa-share" style="font-size: 28px;"></i><br>Partager</div>
             </div>
         </div>
-
-        <div id="page-messages">
-            </div>
 
         <div class="bottom-nav">
-            <i class="fas fa-home nav-icon active" id="btn-home" onclick="showHome()"></i>
+            <i class="fas fa-home nav-icon active"></i>
             <i class="fas fa-compass nav-icon"></i>
             <div class="btn-add">+</div>
-            <div class="nav-icon" id="btn-msg" onclick="showMessages()">
-                <i class="fas fa-envelope"></i>
-                <div class="env-badge">1</div> </div>
+            <i class="fas fa-envelope nav-icon"></i>
             <i class="fas fa-user nav-icon"></i>
         </div>
-
     </div>
 
-    <script>
-        function showMessages() {
-            document.getElementById('page-home').style.display = 'none';
-            document.getElementById('page-messages').style.display = 'block';
-            document.getElementById('btn-msg').classList.add('active');
-            document.getElementById('btn-home').classList.remove('active');
-        }
-
-        function showHome() {
-            document.getElementById('page-home').style.display = 'block';
-            document.getElementById('page-messages').style.display = 'none';
-            document.getElementById('btn-home').classList.add('active');
-            document.getElementById('btn-msg').classList.remove('active');
-        }
-    </script>
 </body>
 </html>
