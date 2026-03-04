@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threndly - Messages Auto</title>
+    <title>Threndly - Messages Dynamiques</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -13,45 +13,44 @@
 
         .main-container { height: 100vh; background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-light) 100%); display: flex; flex-direction: column; position: relative; }
 
-        /* Navigation Haut */
-        .top-nav { position: absolute; top: 20px; width: 100%; display: flex; justify-content: center; gap: 20px; font-weight: bold; z-index: 10; }
-        .tab { opacity: 0.7; cursor: pointer; border-bottom: 2px solid transparent; padding-bottom: 5px; }
-        .tab.active { opacity: 1; border-bottom: 2px solid white; }
-
         /* --- PAGE MESSAGES (BLANC) --- */
         #page-messages { position: absolute; top: 0; left: 0; width: 100%; height: calc(100% - 60px); background: white; color: black; display: none; overflow-y: auto; z-index: 500; }
         .msg-header { display: flex; justify-content: space-between; padding: 15px; align-items: center; border-bottom: 1px solid #f9f9f9; }
         
         /* Items de la liste messages */
-        .list-item { display: flex; align-items: center; padding: 12px 15px; gap: 12px; border-bottom: 0.5px solid #f1f1f1; animation: slideIn 0.3s ease-out; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .list-item { display: flex; align-items: center; padding: 12px 15px; gap: 12px; border-bottom: 0.5px solid #f1f1f1; animation: slideIn 0.4s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
         
-        .notif-icon { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; }
         .profile-msg-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
         .badge-red-small { background: #ff3b5c; color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; margin-left: auto; }
 
-        /* Infos Bas Gauche */
-        .post-info { position: absolute; bottom: 80px; left: 15px; max-width: 70%; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
-        .user-tag { display: flex; align-items: center; gap: 5px; font-weight: bold; font-size: 16px; margin-bottom: 5px; }
+        /* Bouton Test Message */
+        .btn-test-msg { position: absolute; top: 80px; right: 15px; background: #20d5ec; color: black; border: none; padding: 8px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; z-index: 600; display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
 
-        /* BARRE DE NAVIGATION BAS */
-        .bottom-nav { position: absolute; bottom: 0; width: 100%; height: 60px; background: #000; display: flex; justify-content: space-around; align-items: center; border-top: 0.5px solid #333; z-index: 1000; }
+        /* Accueil & Badge */
+        .post-info { position: absolute; bottom: 80px; left: 15px; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
+        .user-tag { display: flex; align-items: center; gap: 5px; font-weight: bold; font-size: 16px; }
+
+        /* Nav Bas */
+        .bottom-nav { position: absolute; bottom: 0; width: 100%; height: 60px; background: #000; display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
         .nav-item { font-size: 22px; cursor: pointer; color: white; position: relative; opacity: 0.7; }
         .nav-item.active { opacity: 1; }
         .btn-plus-tiktok { background: linear-gradient(to right, #20d5ec 15%, var(--violet-p) 85%); padding: 5px 15px; border-radius: 10px; color: black; font-weight: bold; }
+        .notif-badge { position: absolute; top: -5px; right: -8px; background: red; color: white; font-size: 10px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid black; }
     </style>
 </head>
 <body>
 
     <div class="main-container">
+        <button id="testMsgBtn" class="btn-test-msg" onclick="receiveNewMessage()">Recevoir un message</button>
+
         <div id="page-home" style="height: 100%;">
-            <div class="top-nav"><span class="tab active">Pour toi</span></div>
             <div class="post-info">
                 <div class="user-tag">
-                    @<span id="displayUser">Threndly</span> 
+                    @<span>Threndly</span> 
                     <i class="fas fa-check-circle" style="color: #20d5ec; font-size: 14px;"></i>
                 </div>
-                <p>Découvrez la nouvelle mise à jour Threndly ! 🚀</p>
+                <p>Nouveau message reçu ? Regarde tes enveloppes ! 📩</p>
             </div>
         </div>
 
@@ -63,7 +62,9 @@
             </div>
             
             <div class="list-item">
-                <div class="notif-icon" style="background:#ff2d55"><i class="fas fa-heart"></i></div>
+                <div style="width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #ff2d55; color: white; font-size: 22px;">
+                    <i class="fas fa-heart"></i>
+                </div>
                 <div style="flex-grow: 1;">
                     <b>Activité</b><br>
                     <span style="color:gray; font-size:13px;">Clau 🦋 a répondu à ton commentaire...</span>
@@ -79,24 +80,22 @@
             <div class="btn-plus-tiktok">+</div>
             <div class="nav-item" id="btn-msg" onclick="openMessages()">
                 <i class="fas fa-envelope"></i>
+                <div class="notif-badge" id="ui-badge" style="display:none;">1</div>
             </div>
             <i class="fas fa-user nav-item"></i>
         </div>
     </div>
 
     <script>
-        // DONNÉES DES MESSAGES (S'affichera automatiquement)
-        const messagesData = [
-            { name: "Norah Nelsie", img: "https://i.pravatar.cc/100?u=1", text: "Salut ! J'adore ton style !", time: "14:30" },
-            { name: "Murah camayo 🍭", img: "https://i.pravatar.cc/100?u=10", text: "Envoyé il y a 59 min", time: "13:40" },
-            { name: "Wichouuu❤️", img: "https://i.pravatar.cc/100?u=13", text: "Tu es dispo demain ?", time: "Hier" }
+        let messages = [
+            { name: "Norah Nelsie", img: "https://i.pravatar.cc/100?u=5", text: "Salut ! J'adore ton style !", time: "14:30" },
+            { name: "Murah camayo 🍭", img: "https://i.pravatar.cc/100?u=10", text: "Envoyé il y a 59 min", time: "13:40" }
         ];
 
         function renderMessages() {
             const list = document.getElementById('dynamic-messages-list');
-            list.innerHTML = ""; // On vide pour mettre à jour
-            
-            messagesData.forEach(msg => {
+            list.innerHTML = ""; 
+            messages.forEach(msg => {
                 list.innerHTML += `
                     <div class="list-item">
                         <img src="${msg.img}" class="profile-msg-img">
@@ -110,17 +109,37 @@
             });
         }
 
+        // SIMULER LA RÉCEPTION AUTOMATIQUE
+        function receiveNewMessage() {
+            const names = ["Wichouuu❤️", "Lova Rico", "Aina Andriah", "Hardy Jurcia"];
+            const newMsg = {
+                name: names[Math.floor(Math.random() * names.length)],
+                img: `https://i.pravatar.cc/100?u=${Math.random()}`,
+                text: "Vient de t'envoyer un message...",
+                time: "À l'instant"
+            };
+            messages.unshift(newMsg); // Ajoute en haut de liste
+            renderMessages();
+            
+            // Notification visuelle
+            document.getElementById('ui-badge').style.display = 'flex';
+            confetti({ particleCount: 40, spread: 70, origin: { y: 0.9 } });
+        }
+
         function openMessages() {
             document.getElementById('page-home').style.display = 'none';
             document.getElementById('page-messages').style.display = 'block';
+            document.getElementById('testMsgBtn').style.display = 'block';
             document.getElementById('btn-msg').classList.add('active');
             document.getElementById('btn-home').classList.remove('active');
-            renderMessages(); // Charge les messages quand on ouvre
+            document.getElementById('ui-badge').style.display = 'none'; // Efface le badge quand on lit
+            renderMessages();
         }
 
         function showHome() {
             document.getElementById('page-home').style.display = 'block';
             document.getElementById('page-messages').style.display = 'none';
+            document.getElementById('testMsgBtn').style.display = 'none';
             document.getElementById('btn-home').classList.add('active');
             document.getElementById('btn-msg').classList.remove('active');
         }
