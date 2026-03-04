@@ -3,59 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threndly</title>
+    <title>Threndly - Smart OS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --violet-p: #9c27b0; --pink-notif: #ff3b5c; --blue-cert: #20d5ec; --bg-input: #f1f1f1; }
-        body, html { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: white; height: 100%; overflow: hidden; }
+        body, html { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background: white; height: 100%; overflow: hidden; }
 
-        /* --- STRUCTURE PAGES --- */
         .page { display: none; height: calc(100% - 65px); width: 100%; overflow-y: auto; }
         .active-page { display: flex; flex-direction: column; }
 
-        /* --- HEADER MESSAGES --- */
-        .header-main { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: white; position: sticky; top: 0; z-index: 10; }
-        .header-main b { font-size: 20px; }
+        /* HEADER & STORIES */
+        .header-main { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: white; sticky: top; }
         .stories-container { display: flex; gap: 15px; padding: 10px 15px; overflow-x: auto; border-bottom: 1px solid #f0f0f0; }
         .story-circle { text-align: center; font-size: 11px; min-width: 75px; }
-        .story-circle img { width: 65px; height: 65px; border-radius: 50%; border: 2.5px solid var(--blue-cert); padding: 2px; object-fit: cover; }
+        .story-circle img { width: 65px; height: 65px; border-radius: 50%; border: 2.5px solid var(--blue-cert); padding: 2px; }
 
-        /* --- LISTE ITEMS --- */
-        .list-item { display: flex; align-items: center; padding: 12px 15px; gap: 12px; cursor: pointer; }
-        .item-icon { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; }
-        .item-info { flex-grow: 1; }
-        .item-info b { display: block; font-size: 15px; }
-        .item-info span { font-size: 13px; color: #777; }
-        .badge-count { background: var(--pink-notif); color: white; font-size: 11px; font-weight: bold; min-width: 20px; height: 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
+        /* LISTE SMART */
+        .list-item { display: flex; align-items: center; padding: 12px 15px; gap: 12px; cursor: pointer; transition: 0.2s; }
+        .list-item:active { background: #f9f9f9; }
+        .badge-count { background: var(--pink-notif); color: white; font-size: 11px; font-weight: bold; min-width: 20px; height: 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
 
-        /* --- VUE CHAT & RÉACTIONS --- */
-        #view-chat { position: fixed; top: 0; left: 100%; width: 100%; height: 100%; background: #f8f9fa; z-index: 2000; transition: 0.3s; display: flex; flex-direction: column; }
+        /* VUE CHAT INTELLIGENTE */
+        #view-chat { position: fixed; top: 0; left: 100%; width: 100%; height: 100%; background: #f8f9fa; z-index: 2000; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
         #view-chat.active { left: 0; }
-        .chat-header { background: white; padding: 10px 15px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #eee; }
-        .chat-messages { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .chat-messages { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
         
-        /* Bulle Vocale */
-        .bubble { padding: 12px 16px; border-radius: 20px; max-width: 80%; font-size: 14px; position: relative; }
+        .bubble { padding: 12px 16px; border-radius: 20px; max-width: 80%; font-size: 14px; animation: pop 0.3s ease; }
+        @keyframes pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .sent { background: var(--violet-p); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
-        .vocal-player { display: flex; align-items: center; gap: 10px; width: 180px; }
-        .vocal-bar { height: 4px; flex-grow: 1; background: rgba(255,255,255,0.3); border-radius: 2px; }
 
-        /* Réactions rapides */
-        .reactions-strip { display: flex; gap: 10px; padding: 5px 15px; background: transparent; }
-        .reaction-item { background: #f1f1f1; padding: 5px 10px; border-radius: 15px; font-size: 18px; cursor: pointer; }
-
-        /* Clavier */
+        /* CLAVIER PRO */
         .chat-input-area { background: white; padding: 10px; border-top: 1px solid #eee; }
-        .input-wrapper { display: flex; align-items: center; gap: 10px; }
-        .btn-cam-blue { background: #00a2f8; color: white; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        .input-box { flex-grow: 1; background: var(--bg-input); border-radius: 25px; display: flex; align-items: center; padding: 0 15px; height: 40px; }
-        .input-box input { border: none; background: transparent; outline: none; flex-grow: 1; font-size: 14px; }
+        .reactions-strip { display: flex; gap: 10px; padding: 5px 15px; }
+        .reaction-item { background: #f1f1f1; padding: 6px 12px; border-radius: 15px; font-size: 18px; cursor: pointer; transition: 0.2s; }
+        .reaction-item:hover { transform: translateY(-5px); }
 
-        /* --- NAV BAS --- */
+        .btn-cam-blue { background: #00a2f8; color: white; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .input-box { flex-grow: 1; background: var(--bg-input); border-radius: 25px; display: flex; align-items: center; padding: 0 15px; height: 42px; border: 1px solid #e0e0e0; }
+        .input-box input { border: none; background: transparent; outline: none; flex-grow: 1; }
+
+        /* NAVIGATION */
         .nav-bar { position: fixed; bottom: 0; width: 100%; height: 65px; background: black; display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
-        .nav-btn { color: white; font-size: 24px; opacity: 0.6; position: relative; cursor: pointer; }
+        .nav-btn { color: white; font-size: 24px; opacity: 0.6; position: relative; }
         .nav-btn.active { opacity: 1; }
-        .nav-badge { position: absolute; top: -8px; right: -10px; background: var(--pink-notif); color: white; font-size: 10px; padding: 2px 5px; border-radius: 10px; font-weight: bold; }
+        .nav-badge { position: absolute; top: -8px; right: -10px; background: var(--pink-notif); color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -63,8 +54,8 @@
     <div id="page-msg" class="page active-page">
         <div class="header-main">
             <i class="fas fa-th-large"></i>
-            <b>Messages <span style="color:#2ecc71">•</span></b>
-            <i class="fas fa-search"></i>
+            <b id="title-app">Messages <span style="color:#2ecc71">•</span></b>
+            <i class="fas fa-search" onclick="toggleSearch()"></i>
         </div>
 
         <div class="stories-container">
@@ -74,23 +65,8 @@
             <div class="story-circle"><img src="https://i.pravatar.cc/100?u=wich"> <br> Wichouuu ❤️</div>
         </div>
 
-        <div class="list-item">
-            <div class="item-icon" style="background:#00a2f8;"><i class="fas fa-user-plus"></i></div>
-            <div class="item-info"><b>Nouveaux followers</b> <span>Hardy Jurcia a commencé à te suivre.</span></div>
-            <div class="badge-count">10</div>
-        </div>
-
-        <div class="list-item">
-            <div class="item-icon" style="background:var(--pink-notif);"><i class="fas fa-heart"></i></div>
-            <div class="item-info"><b>Activité</b> <span>Clau ❤️ a répondu à ton commentaire : ...</span></div>
-            <div class="badge-count">21</div>
-        </div>
-
-        <div class="list-item" onclick="openChat('Norah Nelsie', 'https://i.pravatar.cc/100?u=norah')">
-            <img src="https://i.pravatar.cc/100?u=norah" style="width:45px; border-radius:50%;">
-            <div class="item-info"><b>Norah Nelsie</b> <span>ilbsdkjbiqsUHdmbqs</span></div>
-            <div class="badge-count">1</div>
-        </div>
+        <div id="contact-list">
+            </div>
     </div>
 
     <div id="page-prof" class="page">
@@ -99,40 +75,43 @@
             <h2 style="display:flex; align-items:center; justify-content:center; gap:8px;">
                 Threndly <i class="fas fa-check-circle" style="color:var(--blue-cert);"></i>
             </h2>
+            <p>Compte Certifié</p>
         </div>
     </div>
 
     <div id="view-chat">
         <div class="chat-header">
             <i class="fas fa-arrow-left" onclick="closeChat()"></i>
-            <img id="chat-img" style="width:35px; border-radius:50%;">
+            <img id="chat-img" style="width:35px; border-radius:50%;" src="">
             <b id="chat-name"></b>
         </div>
         
         <div class="chat-messages" id="chat-box">
             <div class="bubble sent">ilbsdkjbiqsUHdmbqs</div>
-            <div class="bubble sent">
-                <div class="vocal-player">
-                    <i class="fas fa-play"></i>
-                    <div class="vocal-bar"></div>
+            <div class="bubble sent" id="vocal-msg" onclick="playVocal()">
+                <div style="display:flex; align-items:center; gap:10px; width:180px;">
+                    <i class="fas fa-play" id="play-icon"></i>
+                    <div style="height:4px; flex-grow:1; background:rgba(255,255,255,0.3); position:relative;">
+                        <div id="vocal-progress" style="position:absolute; height:100%; background:white; width:0%;"></div>
+                    </div>
                     <small>0:04</small>
                 </div>
             </div>
         </div>
 
         <div class="reactions-strip">
-            <div class="reaction-item">❤️</div>
-            <div class="reaction-item">😂</div>
-            <div class="reaction-item">👍</div>
-            <div class="reaction-item">🙌</div>
+            <div class="reaction-item" onclick="sendEmoji('❤️')">❤️</div>
+            <div class="reaction-item" onclick="sendEmoji('😂')">😂</div>
+            <div class="reaction-item" onclick="sendEmoji('👍')">👍</div>
+            <div class="reaction-item" onclick="sendEmoji('🙌')">🙌</div>
         </div>
 
         <div class="chat-input-area">
             <div class="input-wrapper">
-                <div class="btn-cam-blue"><i class="fas fa-camera"></i></div>
+                <div class="btn-cam-blue" onclick="alert('Camera Active')"><i class="fas fa-camera"></i></div>
                 <div class="input-box">
                     <input type="text" id="cInput" placeholder="Message..." oninput="toggleSend()">
-                    <i class="far fa-image" style="margin-right:10px;"></i>
+                    <i class="far fa-image" style="margin-right:12px;"></i>
                     <i class="far fa-smile"></i>
                 </div>
                 <i class="fas fa-microphone" id="mBtn" style="font-size:22px;"></i>
@@ -144,22 +123,35 @@
     <div class="nav-bar">
         <i class="fas fa-home nav-btn" onclick="switchTab('home')"></i>
         <i class="fas fa-users nav-btn" onclick="switchTab('users')"><div class="nav-badge">65</div></i>
-        <div style="background:linear-gradient(to right, #20d5ec, var(--violet-p)); width:45px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center;"><b>+</b></div>
+        <div style="background:linear-gradient(to right, #20d5ec, var(--violet-p)); width:45px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:white;"><b>+</b></div>
         <i class="fas fa-envelope nav-btn active" onclick="switchTab('msg')"><div class="nav-badge">42</div></i>
         <i class="fas fa-user nav-btn" onclick="switchTab('prof')"></i>
     </div>
 
     <script>
-        function switchTab(t) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            if(t==='msg') document.getElementById('page-msg').classList.add('active-page');
-            if(t==='prof') document.getElementById('page-prof').classList.add('active-page');
+        const contacts = [
+            { id: 1, name: "Nouveaux followers", sub: "Hardy Jurcia a commencé...", badge: 10, color: "#00a2f8", icon: "fa-user-plus" },
+            { id: 2, name: "Activité", sub: "Clau ❤️ a répondu...", badge: 21, color: "#ff3b5c", icon: "fa-heart" },
+            { id: 3, name: "Norah Nelsie", sub: "ilbsdkjbiqsUHdmbqs", badge: 1, img: "https://i.pravatar.cc/100?u=norah" }
+        ];
+
+        function renderContacts() {
+            const list = document.getElementById('contact-list');
+            list.innerHTML = "";
+            contacts.forEach(c => {
+                const avatar = c.img ? `<img src="${c.img}" style="width:45px; border-radius:50%;">` : `<div style="background:${c.color}; width:45px; height:45px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white;"><i class="fas ${c.icon}"></i></div>`;
+                list.innerHTML += `
+                    <div class="list-item" onclick="openChat('${c.name}', '${c.img || ''}')">
+                        ${avatar}
+                        <div style="flex-grow:1"><b>${c.name}</b><span>${c.sub}</span></div>
+                        <div class="badge-count">${c.badge}</div>
+                    </div>`;
+            });
         }
 
         function openChat(name, img) {
             document.getElementById('chat-name').innerText = name;
-            document.getElementById('chat-img').src = img;
+            document.getElementById('chat-img').src = img || 'https://via.placeholder.com/35';
             document.getElementById('view-chat').classList.add('active');
         }
 
@@ -173,13 +165,36 @@
 
         function sendText() {
             let input = document.getElementById('cInput');
-            let box = document.getElementById('chat-box');
             if(input.value.trim()){
-                box.innerHTML += `<div class="bubble sent">${input.value}</div>`;
+                addMessage(input.value);
                 input.value = ""; toggleSend();
-                box.scrollTop = box.scrollHeight;
             }
         }
+
+        function sendEmoji(emoji) { addMessage(emoji); }
+
+        function addMessage(text) {
+            let box = document.getElementById('chat-box');
+            box.innerHTML += `<div class="bubble sent">${text}</div>`;
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function playVocal() {
+            let prog = document.getElementById('vocal-progress');
+            let icon = document.getElementById('play-icon');
+            icon.classList.replace('fa-play', 'fa-pause');
+            prog.style.transition = "width 4s linear";
+            prog.style.width = "100%";
+            setTimeout(() => { icon.classList.replace('fa-pause', 'fa-play'); prog.style.width = "0%"; prog.style.transition = "none"; }, 4000);
+        }
+
+        function switchTab(t) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
+            if(t==='msg') document.getElementById('page-msg').classList.add('active-page');
+            if(t==='prof') document.getElementById('page-prof').classList.add('active-page');
+        }
+
+        renderContacts();
     </script>
 </body>
 </html>
