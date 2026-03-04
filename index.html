@@ -3,107 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threndly - Messagerie Animée</title>
+    <title>Threndly - Messagerie</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --threndly-purple: #9c27b0;
-            --threndly-blue-certif: #0095f6; /* Ton badge bleu */
-            --tick-gray: #e0e0e0;
+            --threndly-blue: #0095f6; /* Ton bleu de certification */
+            --tick-gray: #b0b0b0;
         }
 
-        body { font-family: sans-serif; background: #f4f4f4; padding: 20px; }
-
+        body { font-family: sans-serif; background: #fafafa; margin: 0; }
+        
+        /* Bulle de message Threndly */
         .message-sent {
             background-color: var(--threndly-purple);
             color: white;
-            padding: 12px 18px;
+            padding: 10px 15px;
             border-radius: 18px 18px 0 18px;
-            max-width: fit-content;
-            margin-left: auto;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-width: 75%;
+            margin: 10px 10px 10px auto;
+            position: relative;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
 
         .status-container {
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            font-size: 11px;
+            font-size: 10px;
+            gap: 4px;
             margin-top: 4px;
-            gap: 5px;
         }
 
-        /* --- ANIMATIONS DES COCHES --- */
+        /* Styles des coches */
+        .tick-blue { color: var(--threndly-blue); }
+        .tick-gray { color: var(--tick-gray); }
 
-        /* Animation de pop pour la coche */
-        @keyframes tickPop {
-            0% { transform: scale(0); opacity: 0; }
-            70% { transform: scale(1.2); }
-            100% { transform: scale(1); opacity: 1; }
+        /* Animation Pop */
+        .pop-in {
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
         }
 
-        /* Animation de couleur pour le passage au "Vu" */
-        @keyframes colorToBlue {
-            from { color: var(--tick-gray); }
-            to { color: var(--threndly-blue-certif); }
-        }
-
-        .fa-check, .fa-check-double {
-            transition: color 0.3s ease;
-        }
-
-        /* Classe à ajouter pour déclencher l'animation "Vu" */
-        .is-read {
-            animation: colorToBlue 0.4s forwards;
-        }
-
-        .pop-effect {
-            display: inline-block;
-            animation: tickPop 0.3s ease-out;
-        }
-
-        .btn-test {
-            margin-top: 20px;
-            padding: 10px;
-            background: var(--threndly-blue-certif);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+        #chat-window { height: 85vh; overflow-y: auto; padding: 15px; }
     </style>
 </head>
 <body>
 
-    <div id="chat">
-        <div class="message-sent">
-            <div>Salut ! Comment va Threndly ?</div>
-            <div class="status-container">
-                <span class="time">17:15</span>
-                <span id="status-icon">
-                    <i class="fas fa-check" style="color: var(--tick-gray);"></i>
-                </span>
-            </div>
+    <div id="chat-window">
         </div>
-    </div>
 
-    <button class="btn-test" onclick="simulerLecture()">Simuler la lecture (Vu)</button>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    <script>
-        function simulerLecture() {
-            const container = document.getElementById('status-icon');
+        // Ta configuration intégrée
+        const firebaseConfig = {
+            apiKey: "AIzaSyDimaKVWWObrRRR83OjVBJJbFtsNjXphXI",
+            authDomain: "trendly-fca7c.firebaseapp.com",
+            projectId: "trendly-fca7c",
+            storageBucket: "trendly-fca7c.firebasestorage.app",
+            messagingSenderId: "1070458426638",
+            appId: "1:1070458426638:web:6a7dd8dadc78e45019735f",
+            measurementId: "G-ZZYFT9MM8Q"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Surveiller les messages en temps réel
+        const q = query(collection(db, "messages"), orderBy("timestamp"));
+        onSnapshot(q, (snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+                if (change.type === "added") {
+                    renderMessage(change.doc.id, change.doc.data());
+                }
+                if (change.type === "modified") {
+                    updateMessageUI(change.doc.id, change.doc.data());
+                }
+            });
+        });
+
+        // Afficher le message dans l'interface
+        function renderMessage(id, data) {
+            const chat = document.getElementById('chat-window');
+            const isRead = data.status === 'seen';
+            const iconClass = isRead ? 'fa-check-double tick-blue' : 'fa-check tick-gray';
             
-            // 1. On passe de une coche à deux coches avec un effet de "pop"
-            container.innerHTML = '<i class="fas fa-check-double pop-effect"></i>';
-            
-            // 2. Après un court délai, on applique la couleur bleue de certification
-            setTimeout(() => {
-                const icon = container.querySelector('i');
-                icon.classList.add('is-read');
-            }, 300);
+            const html = `
+                <div class="message-sent" data-id="${id}">
+                    <div>${data.text}</div>
+                    <div class="status-container">
+                        <span class="status-icon"><i class="fas ${iconClass}"></i></span>
+                    </div>
+                </div>
+            `;
+            chat.insertAdjacentHTML('beforeend', html);
+
+            // Si c'est un message reçu, on active l'espion pour le "Vu"
+            if (!isRead) {
+                const element = document.querySelector(`[data-id="${id}"]`);
+                observer.observe(element);
+            }
         }
-    </script>
 
+        // Mettre à jour les coches en bleu
+        function updateMessageUI(id, data) {
+            if (data.status === 'seen') {
+                const iconContainer = document.querySelector(`[data-id="${id}"] .status-icon`);
+                if (iconContainer) {
+                    iconContainer.innerHTML = '<i class="fas fa-check-double tick-blue pop-in"></i>';
+                }
+            }
+        }
+
+        // Détecter si l'autre utilisateur voit le message
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('data-id');
+                    updateDoc(doc(db, "messages", id), { status: "seen" });
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 1.0 });
+
+    </script>
 </body>
 </html>
