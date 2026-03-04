@@ -3,135 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threndly - Messages & Notifications</title>
+    <title>Threndly - Messagerie Interactive</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --violet-p: #9c27b0; --pink-notif: #ff3b5c; }
-        body, html { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background-color: white; color: black; }
+        body, html { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background: white; overflow: hidden; height: 100%; }
 
-        /* --- HEADER --- */
+        /* --- VUE LISTE (MESSAGES) --- */
+        #view-list { height: 100%; display: flex; flex-direction: column; }
         .header { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #f0f0f0; }
-        .header i { font-size: 20px; color: #333; }
-        .header b { font-size: 18px; }
+        .stories { display: flex; gap: 15px; padding: 15px; overflow-x: auto; border-bottom: 1px solid #f5f5f5; }
+        .story { text-align: center; font-size: 11px; min-width: 70px; }
+        .story img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #20d5ec; padding: 2px; }
 
-        /* --- STORIES / AVATARS EN HAUT --- */
-        .stories-container { display: flex; gap: 15px; padding: 15px; overflow-x: auto; border-bottom: 1px solid #f5f5f5; }
-        .story-item { text-align: center; font-size: 11px; min-width: 70px; }
-        .story-circle { width: 65px; height: 65px; border-radius: 50%; border: 2px solid #20d5ec; padding: 2px; object-fit: cover; }
+        .msg-item { display: flex; align-items: center; padding: 12px 15px; gap: 12px; cursor: pointer; }
+        .msg-item:active { background: #f9f9f9; }
+        .avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
+        .badge-red { background: var(--pink-notif); color: white; font-size: 11px; font-weight: bold; min-width: 18px; height: 18px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-left: auto; padding: 0 5px; }
 
-        /* --- LISTE DES MESSAGES ET ACTIVITÉS --- */
-        .msg-list { display: flex; flex-direction: column; }
-        .msg-item { display: flex; align-items: center; padding: 12px 15px; gap: 12px; cursor: pointer; border-bottom: 0.5px solid #fafafa; }
-        .icon-circle { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: white; }
-        .profile-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
+        /* --- VUE CHAT (DISCUSSION) --- */
+        #view-chat { position: fixed; top: 0; left: 100%; width: 100%; height: 100%; background: #f0f2f5; z-index: 2000; transition: 0.3s; display: flex; flex-direction: column; }
+        #view-chat.active { left: 0; }
+        .chat-header { background: white; padding: 12px 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #ddd; }
+        .chat-messages { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .bubble { padding: 10px 14px; border-radius: 18px; max-width: 75%; font-size: 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .sent { background: var(--violet-p); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .received { background: white; align-self: flex-start; border-bottom-left-radius: 2px; }
 
-        /* COULEURS SPÉCIFIQUES */
-        .bg-blue { background-color: #4da9ff; }
-        .bg-pink { background-color: #ff4d6d; } /* Pour l'activité Coeur */
-        .bg-dark-blue { background-color: #2c3e50; }
+        /* BARRE INPUT */
+        .input-bar { background: white; padding: 10px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #ddd; }
+        .btn-plus { width: 34px; height: 34px; background: #f0f0f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .input-field { flex-grow: 1; background: #f0f2f5; border: none; padding: 10px 15px; border-radius: 20px; outline: none; }
 
-        .msg-content { flex-grow: 1; }
-        .msg-content b { font-size: 14px; display: block; }
-        .msg-content span { font-size: 13px; color: #777; }
-
-        /* BADGES ROUGES */
-        .badge-red { background: var(--pink-notif); color: white; font-size: 11px; font-weight: bold; min-width: 18px; height: 18px; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 0 5px; }
-        .cam-icon { color: #ccc; font-size: 18px; }
-
-        /* --- NAVIGATION BAS --- */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 60px; background: #000; display: flex; justify-content: space-around; align-items: center; }
+        /* NAVIGATION BAS */
+        .nav-bottom { position: fixed; bottom: 0; width: 100%; height: 60px; background: #000; display: flex; justify-content: space-around; align-items: center; }
         .nav-item { color: white; font-size: 22px; position: relative; opacity: 0.7; }
-        .nav-item.active { opacity: 1; }
-        .nav-badge { position: absolute; top: -5px; right: -8px; background: var(--pink-notif); color: white; font-size: 10px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 1px solid black; }
-        .btn-plus-main { background: linear-gradient(to right, #20d5ec, var(--violet-p)); padding: 4px 14px; border-radius: 8px; color: black; font-weight: bold; font-size: 20px; }
+        .nav-badge { position: absolute; top: -5px; right: -8px; background: var(--pink-notif); color: white; font-size: 10px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <i class="fas fa-users"></i>
-        <b>Messages <span style="color: #2ecc71; font-size: 25px; vertical-align: middle;">•</span></b>
-        <i class="fas fa-search"></i>
-    </div>
-
-    <div class="stories-container">
-        <div class="story-item"><img src="https://i.pravatar.cc/100?u=a" class="story-circle"><br>Mura... 🍒</div>
-        <div class="story-item"><img src="https://i.pravatar.cc/100?u=b" class="story-circle"><br>Norah Nelsie</div>
-        <div class="story-item"><img src="https://i.pravatar.cc/100?u=c" class="story-circle"><br>Aina Andriah</div>
-        <div class="story-item"><img src="https://i.pravatar.cc/100?u=d" class="story-circle"><br>Wichouuu❤️</div>
-    </div>
-
-    <div class="msg-list">
+    <div id="view-list">
+        <div class="header"><i class="fas fa-users"></i><b>Messages •</b><i class="fas fa-search"></i></div>
+        <div class="stories" id="story-line"></div>
+        <div id="contact-list"></div>
         
-        <div class="msg-item">
-            <div class="icon-circle bg-blue"><i class="fas fa-user-plus"></i></div>
-            <div class="msg-content">
-                <b>Nouveaux followers</b>
-                <span>Hardy Jurcia a commencé à te suivre.</span>
-            </div>
-            <div class="badge-red">10</div>
+        <div class="nav-bottom">
+            <i class="fas fa-home nav-item"></i>
+            <div class="nav-item"><i class="fas fa-users"></i><div class="nav-badge">65</div></div>
+            <div style="background:linear-gradient(to right, #20d5ec, var(--violet-p)); padding:5px 15px; border-radius:8px;"><b>+</b></div>
+            <div class="nav-item"><i class="fas fa-envelope"></i><div class="nav-badge">42</div></div>
+            <i class="fas fa-user nav-item"></i>
         </div>
-
-        <div class="msg-item" style="background-color: #fff9fb;">
-            <div class="icon-circle bg-pink"><i class="fas fa-heart"></i></div>
-            <div class="msg-content">
-                <b>Activité</b>
-                <span>Clau🧡 a répondu à ton commentaire : ...</span>
-            </div>
-            <div class="badge-red">21</div>
-        </div>
-
-        <div class="msg-item">
-            <div class="icon-circle bg-dark-blue"><i class="fas fa-comment-dots"></i></div>
-            <div class="msg-content">
-                <b>Demandes de messages</b>
-                <span>Tu as reçu 4 demandes</span>
-            </div>
-            <div class="badge-red">4</div>
-        </div>
-
-        <div class="msg-item" onclick="location.href='chat.html'">
-            <img src="https://i.pravatar.cc/100?u=1" class="profile-img">
-            <div class="msg-content">
-                <b>Norah Nelsie</b>
-                <span>ilbsdkjbiqsUHdmbqs</span>
-            </div>
-            <div class="badge-red">1</div>
-        </div>
-
-        <div class="msg-item">
-            <img src="https://i.pravatar.cc/100?u=x" class="profile-img">
-            <div class="msg-content">
-                <b>Hadriel 🇲🇬</b>
-                <span>Ça va toi ? • 6 j</span>
-            </div>
-            <div class="badge-red">1</div>
-        </div>
-
-        <div class="msg-item">
-            <img src="https://i.pravatar.cc/100?u=y" class="profile-img">
-            <div class="msg-content">
-                <b>personne</b>
-                <span>Dis bonjour à personne</span>
-            </div>
-            <i class="fas fa-camera cam-icon"></i>
-        </div>
-
     </div>
 
-    <div class="bottom-nav">
-        <i class="fas fa-home nav-item"></i>
-        <div class="nav-item">
-            <i class="fas fa-users"></i>
-            <div class="nav-badge">65</div>
+    <div id="view-chat">
+        <div class="chat-header">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <i class="fas fa-arrow-left" onclick="closeChat()"></i>
+                <img id="chat-avatar" class="avatar" style="width:35px; height:35px;">
+                <b id="chat-name"></b>
+            </div>
+            <i class="fas fa-ellipsis-v" onclick="alert('Menu: Éphémère, Thème, Enregistrer')"></i>
         </div>
-        <div class="btn-plus-main">+</div>
-        <div class="nav-item active">
-            <i class="fas fa-envelope"></i>
-            <div class="nav-badge">42</div>
+        <div class="chat-messages" id="chat-box"></div>
+        <div class="input-bar">
+            <div class="btn-plus" onclick="alert('Photos, Vidéos, Docs, Localisation')"><i class="fas fa-plus"></i></div>
+            <input type="text" class="input-field" placeholder="Message...">
+            <i class="fas fa-microphone" style="color:#555"></i>
         </div>
-        <i class="fas fa-user nav-item"></i>
     </div>
 
+    <script>
+        const data = [
+            { id: 1, name: "Norah Nelsie", img: "https://i.pravatar.cc/100?u=1", last: "ilbsdkjbiqsUHdmbqs", count: 1 },
+            { id: 2, name: "Hadriel 🇲🇬", img: "https://i.pravatar.cc/100?u=2", last: "Ça va toi ? • 6 j", count: 1 },
+            { id: 3, name: "Mura... 🍒", img: "https://i.pravatar.cc/100?u=3", last: "Envoyé il y a 59 min", count: 0 }
+        ];
+
+        function init() {
+            const list = document.getElementById('contact-list');
+            const stories = document.getElementById('story-line');
+            list.innerHTML = ""; stories.innerHTML = "";
+
+            data.forEach(c => {
+                // Remplissage Stories
+                stories.innerHTML += `<div class="story"><img src="${c.img}"><br>${c.name.split(' ')[0]}</div>`;
+                
+                // Remplissage Liste
+                list.innerHTML += `
+                    <div class="msg-item" onclick="openChat(${c.id})">
+                        <img src="${c.img}" class="avatar">
+                        <div style="flex-grow:1">
+                            <b>${c.name}</b>
+                            <span style="color:gray; font-size:13px;">${c.last}</span>
+                        </div>
+                        ${c.count > 0 ? `<div class="badge-red" id="badge-${c.id}">${c.count}</div>` : '<i class="fas fa-camera" style="color:#ccc"></i>'}
+                    </div>`;
+            });
+        }
+
+        function openChat(id) {
+            const c = data.find(x => x.id === id);
+            document.getElementById('chat-name').innerText = c.name;
+            document.getElementById('chat-avatar').src = c.img;
+            
+            // Efface le badge rouge au clic
+            const badge = document.getElementById(`badge-${id}`);
+            if(badge) badge.style.display = 'none';
+
+            // Simulation de messages
+            const box = document.getElementById('chat-box');
+            box.innerHTML = `<div class="bubble received">Salut c'est ${c.name} !</div>`;
+            if(c.id === 1) {
+                box.innerHTML += `<div class="bubble sent">ilbsdkjbiqsUHdmbqs</div>`;
+                box.innerHTML += `<div class="bubble sent" style="display:flex; align-items:center; gap:8px;"><i class="fas fa-play"></i><div style="width:100px; height:4px; background:rgba(255,255,255,0.3); border-radius:2px;"></div><span>0:04</span></div>`;
+            }
+
+            document.getElementById('view-chat').classList.add('active');
+        }
+
+        function closeChat() { document.getElementById('view-chat').classList.remove('active'); }
+
+        init();
+    </script>
 </body>
 </html>
