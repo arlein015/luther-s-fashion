@@ -6,36 +6,44 @@
     <title>Threndly - Official</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --violet-p: #9c27b0; --pink-notif: #ff3b5c; --blue-cert: #20d5ec; }
+        :root { --violet-p: #9c27b0; --pink-notif: #ff3b5c; --blue-cert: #20d5ec; --bg-light: #f1f1f1; }
         body, html { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background: white; overflow: hidden; height: 100%; width: 100%; }
 
-        /* --- PAGES --- */
+        /* --- SYSTÈME DE PAGES --- */
         .page { display: none; height: calc(100% - 60px); width: 100%; overflow-y: auto; }
         .active-page { display: flex; flex-direction: column; }
 
-        /* --- PAGE MESSAGES [FÉLICITATIONS, ELLE EST PRÊTE] --- */
-        #page-messages { background: white; color: black; }
-        .header-msg { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #f0f0f0; align-items: center; }
+        /* --- PAGE MESSAGES --- */
+        .header-msg { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #f0f0f0; align-items: center; background: white; position: sticky; top: 0; z-index: 10; }
+        .stories { display: flex; gap: 15px; padding: 15px; overflow-x: auto; border-bottom: 1px solid #f5f5f5; }
+        .story { text-align: center; font-size: 11px; min-width: 70px; }
+        .story img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--blue-cert); padding: 2px; }
         .msg-item { display: flex; align-items: center; padding: 12px 15px; gap: 12px; cursor: pointer; }
-        .badge-red { background: var(--pink-notif); color: white; font-size: 11px; font-weight: bold; min-width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: auto; }
+        .badge-red { background: var(--pink-notif); color: white; font-size: 11px; font-weight: bold; min-width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: auto; padding: 0 5px; }
 
-        /* --- PAGE PROFIL [NOUVEAU] --- */
-        #page-profile { background: white; color: black; }
-        .profile-header { padding: 20px; text-align: center; border-bottom: 1px solid #eee; }
-        .profile-pic { width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--blue-cert); padding: 3px; object-fit: cover; }
-        .profile-name { font-size: 18px; font-weight: bold; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 5px; }
-        .stats-bar { display: flex; justify-content: space-around; padding: 15px 0; border-bottom: 1px solid #eee; }
-        .stat-item { text-align: center; }
-        .stat-item b { display: block; font-size: 16px; }
-        .stat-item span { font-size: 12px; color: gray; }
+        /* --- VUE CHAT & CLAVIER --- */
+        #view-chat { position: fixed; top: 0; left: 100%; width: 100%; height: 100%; background: #f0f2f5; z-index: 2000; transition: 0.3s; display: flex; flex-direction: column; }
+        #view-chat.active { left: 0; }
+        .chat-header { background: white; padding: 12px 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #ddd; }
+        .chat-messages { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .bubble { padding: 10px 14px; border-radius: 18px; max-width: 75%; font-size: 14px; }
+        .sent { background: var(--violet-p); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
         
-        /* GRILLE DE PHOTOS */
-        .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; }
-        .grid-item { aspect-ratio: 1/1; background: #eee; background-size: cover; background-position: center; }
+        /* BARRE DE SAISIE MULTIMÉDIA */
+        .input-bar { padding: 8px 12px; background: white; display: flex; align-items: center; gap: 10px; border-top: 1px solid #eee; }
+        .btn-camera-blue { background: #00a2f8; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+        .input-container-wrapper { flex-grow: 1; position: relative; display: flex; align-items: center; }
+        .input-field { width: 100%; background: var(--bg-light); border: 1px solid #e0e0e0; padding: 10px 75px 10px 15px; border-radius: 25px; outline: none; }
+        .inner-icons { position: absolute; right: 15px; display: flex; gap: 12px; color: #555; font-size: 18px; }
 
-        /* --- BARRE DE NAVIGATION --- */
+        /* --- PAGE PROFIL --- */
+        .profile-header { padding: 20px; text-align: center; border-bottom: 1px solid #eee; }
+        .profile-pic { width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--blue-cert); padding: 3px; }
+        .profile-name { font-size: 18px; font-weight: bold; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 5px; }
+
+        /* --- NAV BAS --- */
         .nav-bottom { position: fixed; bottom: 0; width: 100%; height: 60px; background: #000; display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
-        .nav-item { color: white; font-size: 22px; position: relative; opacity: 0.6; cursor: pointer; }
+        .nav-item { color: white; font-size: 22px; opacity: 0.6; cursor: pointer; }
         .nav-item.active { opacity: 1; }
     </style>
 </head>
@@ -43,12 +51,12 @@
 
     <div id="page-messages" class="page active-page">
         <div class="header-msg">
-            <i class="fas fa-users"></i>
-            <b>Messages <span style="color:#2ecc71">•</span></b>
-            <i class="fas fa-search"></i>
+            <i class="fas fa-users" style="font-size: 24px;"></i>
+            <b style="font-size: 20px;">Messages <span style="color:#2ecc71">•</span></b>
+            <i class="fas fa-search" style="font-size: 20px;"></i>
         </div>
-        <div id="contact-list">
-            </div>
+        <div class="stories" id="story-line"></div>
+        <div id="contact-list"></div>
     </div>
 
     <div id="page-profile" class="page">
@@ -56,23 +64,33 @@
             <img src="https://i.pravatar.cc/150?u=threndly" class="profile-pic">
             <div class="profile-name">
                 Threndly 
-                <i class="fas fa-check-circle" style="color: var(--blue-cert);"></i>
+                <i class="fas fa-check-circle" style="color: var(--blue-cert);"></i> </div>
+            <p style="color: gray; font-size: 13px;">@threndly_official</p>
+        </div>
+    </div>
+
+    <div id="view-chat">
+        <div class="chat-header">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <i class="fas fa-arrow-left" onclick="closeChat()"></i>
+                <img id="chat-avatar" style="width:35px; height:35px; border-radius:50%;">
+                <b id="chat-name"></b>
             </div>
-            <p style="font-size: 13px; color: gray;">Compte Officiel Certifié</p>
-            <button style="width: 80%; padding: 8px; border-radius: 5px; border: 1px solid #ddd; background: #fafafa; font-weight: bold;">Modifier le profil</button>
+            <i class="fas fa-ellipsis-v"></i>
         </div>
-        <div class="stats-bar">
-            <div class="stat-item"><b>12.5k</b><span>Abonnés</span></div>
-            <div class="stat-item"><b>450</b><span>Abonnements</span></div>
-            <div class="stat-item"><b>1.2M</b><span>J'aime</span></div>
-        </div>
-        <div class="photo-grid">
-            <div class="grid-item" style="background-image: url('https://picsum.photos/200/200?sig=1')"></div>
-            <div class="grid-item" style="background-image: url('https://picsum.photos/200/200?sig=2')"></div>
-            <div class="grid-item" style="background-image: url('https://picsum.photos/200/200?sig=3')"></div>
-            <div class="grid-item" style="background-image: url('https://picsum.photos/200/200?sig=4')"></div>
-            <div class="grid-item" style="background-image: url('https://picsum.photos/200/200?sig=5')"></div>
-            <div class="grid-item" style="background-image: url('https://picsum.photos/200/200?sig=6')"></div>
+        <div class="chat-messages" id="chat-box"></div>
+        
+        <div class="input-bar">
+            <div class="btn-camera-blue"><i class="fas fa-camera"></i></div>
+            <div class="input-container-wrapper">
+                <input type="text" class="input-field" id="chatInput" placeholder="Message..." oninput="toggleIcons()">
+                <div class="inner-icons">
+                    <i class="far fa-image"></i>
+                    <i class="far fa-smile"></i>
+                </div>
+            </div>
+            <i class="fas fa-microphone" id="micBtn" style="font-size: 22px; color: #555;"></i>
+            <i class="fas fa-paper-plane" id="sendBtn" style="display:none; font-size: 22px; color: var(--violet-p);" onclick="sendMessage()"></i>
         </div>
     </div>
 
@@ -90,37 +108,49 @@
             { id: 2, name: "Hadriel 🇲🇬", img: "https://i.pravatar.cc/100?u=2", last: "Ça va toi ?", count: 1 }
         ];
 
-        function renderMessages() {
+        function renderList() {
             const list = document.getElementById('contact-list');
-            list.innerHTML = "";
+            const stories = document.getElementById('story-line');
+            list.innerHTML = ""; stories.innerHTML = "";
             contacts.forEach(c => {
+                stories.innerHTML += `<div class="story"><img src="${c.img}"><br>${c.name.split(' ')[0]}</div>`;
                 list.innerHTML += `
-                    <div class="msg-item">
-                        <img src="${c.img}" style="width:48px;height:48px;border-radius:50%;">
-                        <div><b>${c.name}</b><br><small style="color:gray">${c.last}</small></div>
+                    <div class="msg-item" onclick="openChat(${c.id})">
+                        <img src="${c.img}" style="width:50px; height:50px; border-radius:50%;">
+                        <div style="flex-grow:1"><b>${c.name}</b><br><small style="color:gray">${c.last}</small></div>
                         ${c.count > 0 ? `<div class="badge-red">${c.count}</div>` : ''}
                     </div>`;
             });
         }
 
-        function switchPage(pageId) {
-            // Cacher toutes les pages
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        function openChat(id) {
+            const c = contacts.find(x => x.id === id);
+            document.getElementById('chat-name').innerText = c.name;
+            document.getElementById('chat-avatar').src = c.img;
+            document.getElementById('view-chat').classList.add('active');
+        }
 
-            // Afficher la page choisie
-            if(pageId === 'messages') {
+        function closeChat() { document.getElementById('view-chat').classList.remove('active'); }
+
+        function toggleIcons() {
+            const val = document.getElementById('chatInput').value;
+            document.getElementById('micBtn').style.display = val ? 'none' : 'block';
+            document.getElementById('sendBtn').style.display = val ? 'block' : 'none';
+        }
+
+        function switchPage(p) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active-page'));
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            if(p === 'messages') {
                 document.getElementById('page-messages').classList.add('active-page');
                 document.getElementById('nav-msg').classList.add('active');
-                renderMessages();
-            } else if (pageId === 'profile') {
+            } else if(p === 'profile') {
                 document.getElementById('page-profile').classList.add('active-page');
                 document.getElementById('nav-prof').classList.add('active');
             }
         }
 
-        // Initialisation
-        renderMessages();
+        renderList();
     </script>
 </body>
 </html>
