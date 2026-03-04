@@ -3,77 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threndly - Lecture Messages</title>
+    <title>Threndly - Chat Intégré</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         :root { --violet-p: #9c27b0; --bg-dark: #1a0121; --bg-light: #3a0e4e; }
-        body, html { margin: 0; padding: 0; height: 100%; background: var(--bg-dark); font-family: 'Segoe UI', sans-serif; color: white; overflow: hidden; }
-        .main-container { height: 100vh; background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-light) 100%); display: flex; flex-direction: column; position: relative; }
+        body, html { margin: 0; padding: 0; height: 100%; background: var(--bg-dark); font-family: 'Segoe UI', sans-serif; overflow: hidden; }
+        .main-container { height: 100vh; position: relative; }
 
         /* --- PAGE MESSAGES BLANCHE --- */
         #page-messages { position: absolute; top: 0; left: 0; width: 100%; height: calc(100% - 60px); background: white; color: black; display: none; overflow-y: auto; z-index: 500; }
         .msg-header { display: flex; justify-content: space-between; padding: 15px; align-items: center; border-bottom: 1px solid #f9f9f9; }
-        
-        /* Animation au clic pour simuler l'ouverture */
-        .list-item { display: flex; align-items: center; padding: 12px 15px; gap: 12px; border-bottom: 0.5px solid #f1f1f1; cursor: pointer; transition: background 0.2s; }
-        .list-item:active { background: #f0f0f0; }
-
+        .list-item { display: flex; align-items: center; padding: 12px 15px; gap: 12px; border-bottom: 0.5px solid #f1f1f1; cursor: pointer; }
         .profile-msg-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
-        
-        /* BADGE ROUGE INDIVIDUEL */
-        .notif-count-red { background: #ff3b5c; color: white; font-size: 11px; font-weight: bold; min-width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: auto; padding: 2px; }
+        .notif-count-red { background: #ff3b5c; color: white; font-size: 11px; font-weight: bold; min-width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: auto; }
 
-        /* Accueil & Badge Certifié */
-        .post-info { position: absolute; bottom: 80px; left: 15px; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
-        .user-tag { display: flex; align-items: center; gap: 5px; font-weight: bold; font-size: 16px; }
+        /* --- VRAIE PAGE DE DISCUSSION --- */
+        #page-chat { position: fixed; top: 0; left: 100%; width: 100%; height: 100%; background: #f4f4f4; z-index: 2000; transition: 0.3s ease; display: flex; flex-direction: column; color: black; }
+        #page-chat.active { left: 0; }
+        .chat-header { background: white; padding: 15px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #ddd; }
+        .chat-messages { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .bubble { padding: 10px 15px; border-radius: 18px; max-width: 70%; font-size: 14px; }
+        .received { background: white; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .sent { background: var(--violet-p); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
 
-        .bottom-nav { position: absolute; bottom: 0; width: 100%; height: 60px; background: #000; display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
-        .nav-item { font-size: 22px; cursor: pointer; color: white; opacity: 0.7; }
-        .nav-item.active { opacity: 1; }
-        .btn-plus-tiktok { background: linear-gradient(to right, #20d5ec 15%, var(--violet-p) 85%); padding: 5px 15px; border-radius: 10px; color: black; font-weight: bold; }
-        
-        .btn-test-msg { position: absolute; top: 80px; right: 15px; background: #20d5ec; color: black; border: none; padding: 8px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; z-index: 600; }
+        /* BARRE DE CLAVIER */
+        .chat-input-bar { background: white; padding: 10px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #ddd; }
+        .btn-plus { width: 35px; height: 35px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #555; }
+        .input-field { flex-grow: 1; background: #f0f0f0; border: none; padding: 10px 15px; border-radius: 20px; outline: none; }
+        .btn-vocal { color: var(--violet-p); font-size: 20px; cursor: pointer; }
+
+        /* MENU PLUS (Photos, Doc, Localisation) */
+        .plus-menu { display: none; position: absolute; bottom: 70px; left: 10px; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); padding: 10px; flex-direction: column; gap: 10px; z-index: 2100; }
+        .plus-item { display: flex; align-items: center; gap: 10px; font-size: 14px; cursor: pointer; padding: 5px 10px; }
+        .plus-item i { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; }
+
+        /* Badge Accueil */
+        .post-info { position: absolute; bottom: 80px; left: 15px; color: white; }
+        .user-tag { display: flex; align-items: center; gap: 5px; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="main-container">
-        <button id="testMsgBtn" class="btn-test-msg" onclick="receiveNewMessage()" style="display:none;">Simuler un message</button>
-
-        <div id="page-home">
+        <div id="page-home" style="height: 100%;">
             <div class="post-info">
-                <div class="user-tag">
-                    @<span>Threndly</span> 
-                    <i class="fas fa-check-circle" style="color: #20d5ec; font-size: 14px;"></i>
-                </div>
+                <div class="user-tag">@<span>Threndly</span> <i class="fas fa-check-circle" style="color: #20d5ec; font-size: 14px;"></i></div>
+                <p>Ouvre tes messages pour tester le nouveau chat !</p>
             </div>
         </div>
 
         <div id="page-messages">
-            <div class="msg-header">
-                <i class="fas fa-user-plus"></i>
-                <b>Messages</b>
-                <i class="fas fa-search"></i>
-            </div>
+            <div class="msg-header"><i class="fas fa-arrow-left" onclick="showHome()"></i><b>Messages</b><i class="fas fa-search"></i></div>
             <div id="dynamic-list"></div>
         </div>
 
-        <div class="bottom-nav">
-            <i class="fas fa-home nav-item active" id="btn-home" onclick="showHome()"></i>
-            <div class="btn-plus-tiktok">+</div>
-            <i class="fas fa-envelope nav-item" id="btn-msg" onclick="openMessages()"></i>
-            <i class="fas fa-user nav-item"></i>
+        <div id="page-chat">
+            <div class="chat-header">
+                <i class="fas fa-arrow-left" onclick="closeChat()"></i>
+                <img id="chat-avatar" src="" style="width: 35px; height: 35px; border-radius: 50%;">
+                <b id="chat-name">Nom</b>
+            </div>
+            
+            <div class="chat-messages" id="chat-box">
+                <div class="bubble received">Salut ! Bienvenue sur le nouveau chat Threndly. 👋</div>
+            </div>
+
+            <div class="plus-menu" id="plusMenu">
+                <div class="plus-item"><i class="fas fa-image" style="background:#4da9ff"></i> Photo ou Vidéo</div>
+                <div class="plus-item"><i class="fas fa-file-alt" style="background:#7f66ff"></i> Document</div>
+                <div class="plus-item"><i class="fas fa-map-marker-alt" style="background:#ff5c5c"></i> Localisation</div>
+            </div>
+
+            <div class="chat-input-bar">
+                <div class="btn-plus" onclick="togglePlusMenu()"><i class="fas fa-plus"></i></div>
+                <input type="text" class="input-field" id="chatInput" placeholder="Message...">
+                <i class="fas fa-microphone btn-vocal" id="micBtn" onclick="sendVoice()"></i>
+                <i class="fas fa-paper-plane btn-vocal" id="sendBtn" style="display:none;" onclick="sendMessage()"></i>
+            </div>
         </div>
     </div>
 
     <script>
-        // On utilise un ID pour chaque contact pour pouvoir les identifier
         let contacts = [
-            { id: 0, name: "Norah Nelsie", img: "https://i.pravatar.cc/100?u=1", text: "Salut !", count: 5 },
-            { id: 1, name: "Wichouuu❤️", img: "https://i.pravatar.cc/100?u=13", text: "On se voit quand ?", count: 1 },
-            { id: 2, name: "Murah camayo 🍭", img: "https://i.pravatar.cc/100?u=10", text: "Envoyé il y a 59 min", count: 0 }
+            { id: 0, name: "Norah Nelsie", img: "https://i.pravatar.cc/100?u=1", last: "Salut !", count: 3 },
+            { id: 1, name: "Wichouuu❤️", img: "https://i.pravatar.cc/100?u=13", last: "On se voit ?", count: 1 }
         ];
 
         function render() {
@@ -81,48 +96,52 @@
             list.innerHTML = "";
             contacts.forEach(c => {
                 list.innerHTML += `
-                    <div class="list-item" onclick="readMessage(${c.id})">
+                    <div class="list-item" onclick="openChat(${c.id})">
                         <img src="${c.img}" class="profile-msg-img">
-                        <div style="flex-grow: 1;">
-                            <b>${c.name}</b><br>
-                            <span style="color:gray; font-size:13px;">${c.text}</span>
-                        </div>
-                        ${c.count > 0 ? `<div class="notif-count-red">${c.count}</div>` : '<i class="fas fa-camera" style="color:gray"></i>'}
-                    </div>
-                `;
+                        <div style="flex-grow: 1;"><b>${c.name}</b><br><span style="color:gray; font-size:12px;">${c.last}</span></div>
+                        ${c.count > 0 ? `<div class="notif-count-red">${c.count}</div>` : ''}
+                    </div>`;
             });
         }
 
-        // Fonction pour effacer le badge rouge quand on clique
-        function readMessage(id) {
-            const contact = contacts.find(c => c.id === id);
-            if (contact && contact.count > 0) {
-                contact.count = 0; // Le badge disparait
-                render();
-            }
-        }
-
-        function receiveNewMessage() {
-            // Ajoute un message aléatoire à un contact pour tester
-            const randomIndex = Math.floor(Math.random() * contacts.length);
-            contacts[randomIndex].count++;
-            render();
-            confetti({ particleCount: 15, origin: { y: 0.9 } });
-        }
-
-        function openMessages() {
-            document.getElementById('page-home').style.display = 'none';
-            document.getElementById('page-messages').style.display = 'block';
-            document.getElementById('testMsgBtn').style.display = 'block';
+        function openChat(id) {
+            const c = contacts.find(x => x.id === id);
+            c.count = 0; // Marquer comme lu
+            document.getElementById('chat-name').innerText = c.name;
+            document.getElementById('chat-avatar').src = c.img;
+            document.getElementById('page-chat').classList.add('active');
             render();
         }
 
-        function showHome() {
-            document.getElementById('page-home').style.display = 'block';
-            document.getElementById('page-messages').style.display = 'none';
-            document.getElementById('testMsgBtn').style.display = 'none';
+        function closeChat() { document.getElementById('page-chat').classList.remove('active'); }
+        function showHome() { document.getElementById('page-home').style.display='block'; document.getElementById('page-messages').style.display='none'; }
+        function openMessages() { document.getElementById('page-home').style.display='none'; document.getElementById('page-messages').style.display='block'; render(); }
+        
+        function togglePlusMenu() {
+            const menu = document.getElementById('plusMenu');
+            menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
         }
 
+        // Gestion de l'envoi de message
+        const input = document.getElementById('chatInput');
+        input.oninput = () => {
+            document.getElementById('micBtn').style.display = input.value ? 'none' : 'block';
+            document.getElementById('sendBtn').style.display = input.value ? 'block' : 'none';
+        };
+
+        function sendMessage() {
+            if(!input.value) return;
+            const box = document.getElementById('chat-box');
+            box.innerHTML += `<div class="bubble sent">${input.value}</div>`;
+            input.value = "";
+            input.oninput();
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function sendVoice() { alert("Enregistrement vocal démarré... 🎙️"); }
+
+        // Simuler l'ouverture depuis l'accueil (pour le test)
+        window.onclick = (e) => { if(e.target.id === "page-home") openMessages(); };
         render();
     </script>
 </body>
