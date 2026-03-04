@@ -186,6 +186,14 @@
                 navigator.clipboard.writeText(window.location.href);
                 alert("Lien copié ! Partage-le avec tes amis.");
             }
+        function openMessages() {
+      // Cache la page d'accueil (flux violet)
+         document.getElementById('page-home').style.display = 'none';
+     // Affiche la page des messages (fond blanc)
+         document.getElementById('page-messages').style.display = 'block';
+    // Enlève le petit badge rouge "1" sur l'enveloppe
+         document.getElementById('notif-env').style.display = 'none';
+  }
         }
     </script>
 </body>
