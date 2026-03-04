@@ -55,7 +55,15 @@
         <div id="page-home">
             <div style="position: absolute; bottom: 85px; left: 15px; color: white;">
                 <div style="display: flex; align-items: center; font-weight: bold; font-size: 16px; margin-bottom: 6px;">
-                    @ Threndly <span class="badge-verified"></span>
+                    @ Threndly <span function openMessages() {
+    // Cache la page d'accueil (flux violet)
+    document.getElementById('page-home').style.display = 'none';
+    // Affiche la page des messages (fond blanc)
+    document.getElementById('page-messages').style.display = 'block';
+    // Enlève le petit badge rouge "1" sur l'enveloppe
+    document.getElementById('notif-env').style.display = 'none';
+}
+(le badge dois toujours comme ça )
                 </div>
                 <div style="font-size: 13px; max-width: 280px; line-height: 1.4;">
                     Découvrez la collection Threndly 2026 ! #Style #Mode #Premium 🚀
