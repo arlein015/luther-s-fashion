@@ -9,17 +9,17 @@
         :root { --violet-p: #9c27b0; --pink-notif: #ff3b5c; --blue-cert: #20d5ec; }
         body, html { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background: black; overflow: hidden; height: 100%; position: fixed; width: 100%; }
 
-        /* --- SYSTÈME PULL-TO-REFRESH --- */
+        /* --- INDICATEUR DE CHARGEMENT RÉALISTE --- */
         #refresh-indicator { 
-            position: absolute; top: -50px; left: 0; width: 100%; height: 50px; 
-            display: flex; align-items: center; justify-content: center; color: white; 
-            transition: transform 0.2s; z-index: 100; font-size: 20px;
+            position: absolute; top: -60px; left: 0; width: 100%; height: 60px; 
+            display: flex; align-items: center; justify-content: center; color: var(--blue-cert); 
+            transition: transform 0.3s; z-index: 100; font-size: 24px;
         }
 
         /* --- VUE ACCUEIL --- */
         #view-home { 
             height: 100%; background: #1a0121; display: flex; flex-direction: column; 
-            position: relative; color: white; transition: transform 0.3s cubic-bezier(0,0,0.5,1);
+            position: relative; color: white; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .post-info { position: absolute; bottom: 80px; left: 15px; }
         .user-tag { display: flex; align-items: center; gap: 5px; font-weight: bold; font-size: 16px; }
@@ -31,6 +31,7 @@
         .story { text-align: center; font-size: 11px; min-width: 70px; }
         .story img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--blue-cert); padding: 2px; }
 
+        /* BADGES ROUGES */
         .msg-item { display: flex; align-items: center; padding: 12px 15px; gap: 12px; cursor: pointer; position: relative; }
         .avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
         .badge-red { background: var(--pink-notif); color: white; font-size: 11px; font-weight: bold; min-width: 18px; height: 18px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-left: auto; padding: 0 5px; }
@@ -49,7 +50,7 @@
         .input-field { flex-grow: 1; background: #f0f2f5; border: none; padding: 10px 15px; border-radius: 20px; outline: none; }
         .btn-send-toggle { font-size: 20px; cursor: pointer; color: var(--violet-p); }
 
-        /* NAVIGATION BAS --- */
+        /* NAVIGATION BAS */
         .nav-bottom { position: fixed; bottom: 0; width: 100%; height: 60px; background: #000; display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
         .nav-item { color: white; font-size: 22px; position: relative; opacity: 0.6; cursor: pointer; }
         .nav-item.active { opacity: 1; }
@@ -58,7 +59,7 @@
 </head>
 <body>
 
-    <div id="refresh-indicator"><i class="fas fa-sync-alt fa-spin"></i></div>
+    <div id="refresh-indicator"><i class="fas fa-circle-notch fa-spin"></i></div>
 
     <div id="view-home" ontouchstart="touchStart(event)" ontouchmove="touchMove(event)" ontouchend="touchEnd()">
         <div class="post-info">
@@ -66,7 +67,7 @@
                 @<span id="post-username">Threndly</span> 
                 <i class="fas fa-check-circle" style="color: var(--blue-cert);"></i>
             </div>
-            <p id="post-caption">Fais glisser vers le bas pour actualiser ! ⬇️</p>
+            <p id="post-caption">Glisse vers le bas pour voir du nouveau ! ⬇️</p>
         </div>
     </div>
 
@@ -103,40 +104,61 @@
     </div>
 
     <script>
-        // --- LOGIQUE ACTUALISATION (PULL TO REFRESH) ---
         let startY = 0;
+        let isRefreshing = false;
         const homeView = document.getElementById('view-home');
         const indicator = document.getElementById('refresh-indicator');
 
-        function touchStart(e) { startY = e.touches[0].pageY; }
+        function touchStart(e) { if(!isRefreshing) startY = e.touches[0].pageY; }
         
         function touchMove(e) {
+            if(isRefreshing) return;
             const currentY = e.touches[0].pageY;
             const diff = currentY - startY;
-            if (diff > 0 && diff < 80) {
+            if (diff > 0 && diff < 100) {
                 homeView.style.transform = `translateY(${diff}px)`;
-                indicator.style.transform = `translateY(${diff}px)`;
+                indicator.style.transform = `translateY(${diff + 60}px)`;
             }
         }
 
         function touchEnd() {
-            homeView.style.transform = `translateY(0px)`;
-            indicator.style.transform = `translateY(0px)`;
-            actualiserContenu();
+            if(isRefreshing) return;
+            const currentTransform = new WebKitCSSMatrix(window.getComputedStyle(homeView).transform).m42;
+            
+            if (currentTransform > 50) {
+                startRefresh();
+            } else {
+                homeView.style.transform = `translateY(0px)`;
+                indicator.style.transform = `translateY(0px)`;
+            }
+        }
+
+        function startRefresh() {
+            isRefreshing = true;
+            homeView.style.transform = `translateY(60px)`;
+            indicator.style.transform = `translateY(60px)`;
+            
+            // SIMULATION DE CHARGEMENT DE 2 SECONDES
+            setTimeout(() => {
+                actualiserContenu();
+                homeView.style.transform = `translateY(0px)`;
+                indicator.style.transform = `translateY(0px)`;
+                isRefreshing = false;
+            }, 2000);
         }
 
         function actualiserContenu() {
             const contents = [
-                { user: "Norah_Nelsie", cap: "Nouveau contenu après actualisation ! ✨" },
-                { user: "Hadriel_261", cap: "Regardez ma nouvelle vidéo 🇲🇬" },
-                { user: "Threndly_Official", cap: "Le pull-to-refresh fonctionne parfaitement !" }
+                { user: "Mura_Cherry 🍒", cap: "Nouvelle photo postée ! Allez voir" },
+                { user: "Wichouuu❤️", cap: "Le live commence dans 5 minutes ! 🚀" },
+                { user: "Norah_Nelsie", cap: "Superbe journée aujourd'hui ☀️" }
             ];
             const random = contents[Math.floor(Math.random() * contents.length)];
             document.getElementById('post-username').innerText = random.user;
             document.getElementById('post-caption').innerText = random.cap;
         }
 
-        // --- GESTION DES PAGES ET DU CHAT ---
+        // --- RESTE DU CODE (MESSAGERIE) ---
         const contacts = [
             { id: 1, name: "Norah Nelsie", img: "https://i.pravatar.cc/100?u=1", last: "ilbsdkjbiqsUHdmbqs", count: 1 },
             { id: 2, name: "Hadriel 🇲🇬", img: "https://i.pravatar.cc/100?u=2", last: "Ça va toi ?", count: 1 }
