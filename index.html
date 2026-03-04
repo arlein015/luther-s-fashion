@@ -3,103 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threndly - Messagerie</title>
+    <title>Threndly - Messagerie Animée</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --threndly-purple: #9c27b0;
-            --threndly-blue-certif: #0095f6; /* Ton bleu de certification */
-            --bg-light: #f4f4f4;
+            --threndly-blue-certif: #0095f6; /* Ton badge bleu */
+            --tick-gray: #e0e0e0;
         }
 
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: var(--bg-light); }
-        
-        /* En-tête du profil */
-        .header { background: white; padding: 10px; display: flex; align-items: center; border-bottom: 1px solid #ddd; }
-        .back-btn { font-size: 20px; margin-right: 15px; cursor: pointer; }
-        .profile-pic { width: 40px; height: 40px; border-radius: 50%; background: #ccc; margin-right: 10px; }
-        .user-info b { display: flex; align-items: center; gap: 5px; }
-        
-        /* Badge Bleu (Strictement inchangé) */
-        .certif-badge { color: var(--threndly-blue-certif); font-size: 14px; }
+        body { font-family: sans-serif; background: #f4f4f4; padding: 20px; }
 
-        /* Zone de messages */
-        .chat-container { padding: 20px; display: flex; flex-direction: column; gap: 15px; height: 80vh; overflow-y: auto; }
-        
         .message-sent {
-            align-self: flex-end;
             background-color: var(--threndly-purple);
             color: white;
-            padding: 10px 15px;
+            padding: 12px 18px;
             border-radius: 18px 18px 0 18px;
-            max-width: 70%;
-            position: relative;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-width: fit-content;
+            margin-left: auto;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .message-content { margin-bottom: 5px; word-wrap: break-word; }
-
-        /* Système de Coche (Ticks) */
         .status-container {
             display: flex;
             justify-content: flex-end;
             align-items: center;
             font-size: 11px;
-            gap: 4px;
-            opacity: 0.9;
+            margin-top: 4px;
+            gap: 5px;
         }
 
-        .tick { font-size: 10px; }
-        .tick.read { color: var(--threndly-blue-certif); font-weight: bold; } /* Double bleu si vu */
+        /* --- ANIMATIONS DES COCHES --- */
 
-        /* Barre d'envoi */
-        .input-area {
-            position: fixed;
-            bottom: 0; width: 100%;
-            background: white;
+        /* Animation de pop pour la coche */
+        @keyframes tickPop {
+            0% { transform: scale(0); opacity: 0; }
+            70% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Animation de couleur pour le passage au "Vu" */
+        @keyframes colorToBlue {
+            from { color: var(--tick-gray); }
+            to { color: var(--threndly-blue-certif); }
+        }
+
+        .fa-check, .fa-check-double {
+            transition: color 0.3s ease;
+        }
+
+        /* Classe à ajouter pour déclencher l'animation "Vu" */
+        .is-read {
+            animation: colorToBlue 0.4s forwards;
+        }
+
+        .pop-effect {
+            display: inline-block;
+            animation: tickPop 0.3s ease-out;
+        }
+
+        .btn-test {
+            margin-top: 20px;
             padding: 10px;
-            display: flex;
-            align-items: center;
-            border-top: 1px solid #ddd;
-        }
-        .input-area input {
-            flex: 1; border: none; background: #eee;
-            padding: 10px; border-radius: 20px; margin: 0 10px;
+            background: var(--threndly-blue-certif);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <span class="back-btn">←</span>
-        <div class="profile-pic"></div>
-        <div class="user-info">
-            <b>Norah Nelsie <i class="fas fa-check-circle certif-badge"></i></b>
-            <small>En ligne</small>
-        </div>
-    </div>
-
-    <div class="chat-container">
+    <div id="chat">
         <div class="message-sent">
-            <div class="message-content">Le message est envoyé !</div>
+            <div>Salut ! Comment va Threndly ?</div>
             <div class="status-container">
-                <span class="time">17:08</span>
-                <i class="fas fa-check tick"></i> </div>
-        </div>
-
-        <div class="message-sent">
-            <div class="message-content">ilbsdkjbiqsUHdmbqs</div>
-            <div class="status-container">
-                <span class="time">17:09</span>
-                <i class="fas fa-check-double tick read"></i> </div>
+                <span class="time">17:15</span>
+                <span id="status-icon">
+                    <i class="fas fa-check" style="color: var(--tick-gray);"></i>
+                </span>
+            </div>
         </div>
     </div>
 
-    <div class="input-area">
-        <i class="fas fa-camera"></i>
-        <input type="text" placeholder="Message...">
-        <i class="fas fa-microphone"></i>
-    </div>
+    <button class="btn-test" onclick="simulerLecture()">Simuler la lecture (Vu)</button>
+
+    <script>
+        function simulerLecture() {
+            const container = document.getElementById('status-icon');
+            
+            // 1. On passe de une coche à deux coches avec un effet de "pop"
+            container.innerHTML = '<i class="fas fa-check-double pop-effect"></i>';
+            
+            // 2. Après un court délai, on applique la couleur bleue de certification
+            setTimeout(() => {
+                const icon = container.querySelector('i');
+                icon.classList.add('is-read');
+            }, 300);
+        }
+    </script>
 
 </body>
 </html>
