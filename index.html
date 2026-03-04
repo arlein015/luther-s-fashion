@@ -3,146 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threndly - Messages Individuels</title>
+    <title>Threndly - Notifications Individuelles</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        :root { --violet-p: #9c27b0; --violet-c: #ce85f2; --bg-dark: #1a0121; --bg-light: #3a0e4e; }
+        :root { --violet-p: #9c27b0; --bg-dark: #1a0121; --bg-light: #3a0e4e; }
         body, html { margin: 0; padding: 0; height: 100%; background: var(--bg-dark); font-family: 'Segoe UI', sans-serif; color: white; overflow: hidden; }
 
         .main-container { height: 100vh; background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-light) 100%); display: flex; flex-direction: column; position: relative; }
 
-        /* --- PAGE MESSAGES (BLANC) --- */
+        /* --- PAGE MESSAGES BLANCHE --- */
         #page-messages { position: absolute; top: 0; left: 0; width: 100%; height: calc(100% - 60px); background: white; color: black; display: none; overflow-y: auto; z-index: 500; }
         .msg-header { display: flex; justify-content: space-between; padding: 15px; align-items: center; border-bottom: 1px solid #f9f9f9; }
         
-        .list-item { display: flex; align-items: center; padding: 12px 15px; gap: 12px; border-bottom: 0.5px solid #f1f1f1; animation: slideIn 0.4s ease-out; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        
+        .list-item { display: flex; align-items: center; padding: 12px 15px; gap: 12px; border-bottom: 0.5px solid #f1f1f1; position: relative; }
         .profile-msg-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
         
-        /* Badge rouge à droite de la personne */
-        .badge-person { background: #ff3b5c; color: white; font-size: 11px; font-weight: bold; min-width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: auto; padding: 2px; }
+        /* LE BADGE ROUGE À DROITE */
+        .notif-count-red { background: #ff3b5c; color: white; font-size: 11px; font-weight: bold; min-width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: auto; padding: 2px; }
 
-        .btn-test-msg { position: absolute; top: 80px; right: 15px; background: #20d5ec; color: black; border: none; padding: 8px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; z-index: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-
-        /* Accueil & Badge */
+        /* Styles Accueil */
         .post-info { position: absolute; bottom: 80px; left: 15px; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
         .user-tag { display: flex; align-items: center; gap: 5px; font-weight: bold; font-size: 16px; }
 
         /* Navigation Bas */
         .bottom-nav { position: absolute; bottom: 0; width: 100%; height: 60px; background: #000; display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
-        .nav-item { font-size: 22px; cursor: pointer; color: white; position: relative; opacity: 0.7; }
+        .nav-item { font-size: 22px; cursor: pointer; color: white; opacity: 0.7; }
         .nav-item.active { opacity: 1; }
         .btn-plus-tiktok { background: linear-gradient(to right, #20d5ec 15%, var(--violet-p) 85%); padding: 5px 15px; border-radius: 10px; color: black; font-weight: bold; }
         
-        /* Badge sur l'enveloppe */
-        .notif-badge-env { position: absolute; top: -5px; right: -8px; background: red; color: white; font-size: 10px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid black; font-weight: bold; }
+        .btn-test-msg { position: absolute; top: 80px; right: 15px; background: #20d5ec; color: black; border: none; padding: 8px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; z-index: 600; }
     </style>
 </head>
 <body>
 
     <div class="main-container">
-        <button id="testMsgBtn" class="btn-test-msg" onclick="receiveNewMessage()">Recevoir un message</button>
+        <button id="testMsgBtn" class="btn-test-msg" onclick="receiveNewMessage()" style="display:none;">Simuler un message</button>
 
-        <div id="page-home" style="height: 100%;">
+        <div id="page-home">
             <div class="post-info">
                 <div class="user-tag">
                     @<span>Threndly</span> 
                     <i class="fas fa-check-circle" style="color: #20d5ec; font-size: 14px;"></i>
                 </div>
-                <p>Nouveau message ? Regarde ton badge rouge !</p>
             </div>
         </div>
 
         <div id="page-messages">
             <div class="msg-header">
                 <i class="fas fa-user-plus"></i>
-                <b style="font-size: 17px;">Messages</b>
+                <b>Messages</b>
                 <i class="fas fa-search"></i>
             </div>
-            <div id="dynamic-messages-list"></div>
+            
+            <div id="dynamic-list">
+                </div>
         </div>
 
         <div class="bottom-nav">
             <i class="fas fa-home nav-item active" id="btn-home" onclick="showHome()"></i>
             <div class="btn-plus-tiktok">+</div>
-            <div class="nav-item" id="btn-msg" onclick="openMessages()">
-                <i class="fas fa-envelope"></i>
-                <div class="notif-badge-env" id="env-badge" style="display:none;">0</div>
-            </div>
+            <i class="fas fa-envelope nav-item" id="btn-msg" onclick="openMessages()"></i>
             <i class="fas fa-user nav-item"></i>
         </div>
     </div>
 
     <script>
-        let totalUnread = 0;
-        // On stocke les messages par personne pour compter
-        let contacts = {
-            "Wichouuu❤️": { img: "https://i.pravatar.cc/100?u=13", lastMsg: "Salut !", count: 0, time: "14:30" },
-            "Norah Nelsie": { img: "https://i.pravatar.cc/100?u=11", lastMsg: "J'adore ton style !", count: 0, time: "12:10" }
-        };
+        let contacts = [
+            { name: "Norah Nelsie", img: "https://i.pravatar.cc/100?u=1", text: "Salut !", count: 5 },
+            { name: "Wichouuu❤️", img: "https://i.pravatar.cc/100?u=13", text: "On se voit quand ?", count: 1 },
+            { name: "Murah camayo 🍭", img: "https://i.pravatar.cc/100?u=10", text: "Envoyé il y a 59 min", count: 0 }
+        ];
 
-        function renderMessages() {
-            const list = document.getElementById('dynamic-messages-list');
-            list.innerHTML = ""; 
-            
-            for (let name in contacts) {
-                let person = contacts[name];
+        function render() {
+            const list = document.getElementById('dynamic-list');
+            list.innerHTML = "";
+            contacts.forEach(c => {
                 list.innerHTML += `
                     <div class="list-item">
-                        <img src="${person.img}" class="profile-msg-img">
+                        <img src="${c.img}" class="profile-msg-img">
                         <div style="flex-grow: 1;">
-                            <b>${name}</b><br>
-                            <span style="color:gray; font-size:13px;">${person.lastMsg}</span>
+                            <b>${c.name}</b><br>
+                            <span style="color:gray; font-size:13px;">${c.text}</span>
                         </div>
-                        ${person.count > 0 ? `<div class="badge-person">${person.count}</div>` : `<div style="color:gray; font-size:11px;">${person.time}</div>`}
+                        ${c.count > 0 ? `<div class="notif-count-red">${c.count}</div>` : ''}
                     </div>
                 `;
-            }
+            });
         }
 
         function receiveNewMessage() {
-            const names = Object.keys(contacts);
-            const randomName = names[Math.floor(Math.random() * names.length)];
-            
-            contacts[randomName].count += 1; // On augmente le compteur de cette personne précise
-            contacts[randomName].lastMsg = "Vient d'envoyer un message...";
-            contacts[randomName].time = "À l'instant";
-            
-            totalUnread++;
-            
-            // Met à jour le badge sur l'enveloppe
-            const envBadge = document.getElementById('env-badge');
-            envBadge.innerText = totalUnread;
-            envBadge.style.display = 'flex';
-            
-            renderMessages();
+            contacts[0].count++; // On ajoute un message à la première personne
+            render();
             confetti({ particleCount: 20, origin: { y: 0.9 } });
         }
 
         function openMessages() {
             document.getElementById('page-home').style.display = 'none';
             document.getElementById('page-messages').style.display = 'block';
-            document.getElementById('btn-msg').classList.add('active');
-            document.getElementById('btn-home').classList.remove('active');
-            
-            // L'enveloppe ne montre plus de badge global quand on est sur la page
-            totalUnread = 0;
-            document.getElementById('env-badge').style.display = 'none';
-            renderMessages();
+            document.getElementById('testMsgBtn').style.display = 'block';
+            render();
         }
 
         function showHome() {
             document.getElementById('page-home').style.display = 'block';
             document.getElementById('page-messages').style.display = 'none';
-            document.getElementById('btn-home').classList.add('active');
-            document.getElementById('btn-msg').classList.remove('active');
+            document.getElementById('testMsgBtn').style.display = 'none';
         }
 
-        // Initialisation
-        renderMessages();
+        render();
     </script>
 </body>
 </html>
