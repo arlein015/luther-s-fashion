@@ -3,31 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threndly - Notifications Individuelles</title>
+    <title>Threndly - Lecture Messages</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         :root { --violet-p: #9c27b0; --bg-dark: #1a0121; --bg-light: #3a0e4e; }
         body, html { margin: 0; padding: 0; height: 100%; background: var(--bg-dark); font-family: 'Segoe UI', sans-serif; color: white; overflow: hidden; }
-
         .main-container { height: 100vh; background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-light) 100%); display: flex; flex-direction: column; position: relative; }
 
         /* --- PAGE MESSAGES BLANCHE --- */
         #page-messages { position: absolute; top: 0; left: 0; width: 100%; height: calc(100% - 60px); background: white; color: black; display: none; overflow-y: auto; z-index: 500; }
         .msg-header { display: flex; justify-content: space-between; padding: 15px; align-items: center; border-bottom: 1px solid #f9f9f9; }
         
-        .list-item { display: flex; align-items: center; padding: 12px 15px; gap: 12px; border-bottom: 0.5px solid #f1f1f1; position: relative; }
+        /* Animation au clic pour simuler l'ouverture */
+        .list-item { display: flex; align-items: center; padding: 12px 15px; gap: 12px; border-bottom: 0.5px solid #f1f1f1; cursor: pointer; transition: background 0.2s; }
+        .list-item:active { background: #f0f0f0; }
+
         .profile-msg-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
         
-        /* LE BADGE ROUGE À DROITE */
+        /* BADGE ROUGE INDIVIDUEL */
         .notif-count-red { background: #ff3b5c; color: white; font-size: 11px; font-weight: bold; min-width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: auto; padding: 2px; }
 
-        /* Styles Accueil */
+        /* Accueil & Badge Certifié */
         .post-info { position: absolute; bottom: 80px; left: 15px; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
         .user-tag { display: flex; align-items: center; gap: 5px; font-weight: bold; font-size: 16px; }
 
-        /* Navigation Bas */
         .bottom-nav { position: absolute; bottom: 0; width: 100%; height: 60px; background: #000; display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
         .nav-item { font-size: 22px; cursor: pointer; color: white; opacity: 0.7; }
         .nav-item.active { opacity: 1; }
@@ -56,9 +57,7 @@
                 <b>Messages</b>
                 <i class="fas fa-search"></i>
             </div>
-            
-            <div id="dynamic-list">
-                </div>
+            <div id="dynamic-list"></div>
         </div>
 
         <div class="bottom-nav">
@@ -70,10 +69,11 @@
     </div>
 
     <script>
+        // On utilise un ID pour chaque contact pour pouvoir les identifier
         let contacts = [
-            { name: "Norah Nelsie", img: "https://i.pravatar.cc/100?u=1", text: "Salut !", count: 5 },
-            { name: "Wichouuu❤️", img: "https://i.pravatar.cc/100?u=13", text: "On se voit quand ?", count: 1 },
-            { name: "Murah camayo 🍭", img: "https://i.pravatar.cc/100?u=10", text: "Envoyé il y a 59 min", count: 0 }
+            { id: 0, name: "Norah Nelsie", img: "https://i.pravatar.cc/100?u=1", text: "Salut !", count: 5 },
+            { id: 1, name: "Wichouuu❤️", img: "https://i.pravatar.cc/100?u=13", text: "On se voit quand ?", count: 1 },
+            { id: 2, name: "Murah camayo 🍭", img: "https://i.pravatar.cc/100?u=10", text: "Envoyé il y a 59 min", count: 0 }
         ];
 
         function render() {
@@ -81,22 +81,33 @@
             list.innerHTML = "";
             contacts.forEach(c => {
                 list.innerHTML += `
-                    <div class="list-item">
+                    <div class="list-item" onclick="readMessage(${c.id})">
                         <img src="${c.img}" class="profile-msg-img">
                         <div style="flex-grow: 1;">
                             <b>${c.name}</b><br>
                             <span style="color:gray; font-size:13px;">${c.text}</span>
                         </div>
-                        ${c.count > 0 ? `<div class="notif-count-red">${c.count}</div>` : ''}
+                        ${c.count > 0 ? `<div class="notif-count-red">${c.count}</div>` : '<i class="fas fa-camera" style="color:gray"></i>'}
                     </div>
                 `;
             });
         }
 
+        // Fonction pour effacer le badge rouge quand on clique
+        function readMessage(id) {
+            const contact = contacts.find(c => c.id === id);
+            if (contact && contact.count > 0) {
+                contact.count = 0; // Le badge disparait
+                render();
+            }
+        }
+
         function receiveNewMessage() {
-            contacts[0].count++; // On ajoute un message à la première personne
+            // Ajoute un message aléatoire à un contact pour tester
+            const randomIndex = Math.floor(Math.random() * contacts.length);
+            contacts[randomIndex].count++;
             render();
-            confetti({ particleCount: 20, origin: { y: 0.9 } });
+            confetti({ particleCount: 15, origin: { y: 0.9 } });
         }
 
         function openMessages() {
