@@ -8,47 +8,47 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        :root { --threndly-blue: #20d5ec; --threndly-violet: #3a0e4e; --tiktok-red: #ff3b5c; }
+        :root { --threndly-blue: #20d5ec; --threndly-violet: #3a0e4e; --notif-red: #ff3b5c; }
         body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; overflow: hidden; background: #000; }
 
-        /* CONTENEUR PRINCIPAL */
         .main-container { height: 100vh; width: 100%; position: relative; }
 
-        /* --- STYLE PAGE ACCUEIL (VIOLET) --- */
+        /* --- ACCUEIL (FLUX VIOLET) --- */
         #page-home { height: 100%; background: linear-gradient(180deg, #1a0121 0%, var(--threndly-violet) 100%); position: relative; display: block; }
         .top-tabs { position: absolute; top: 15px; width: 100%; display: flex; justify-content: center; gap: 15px; font-weight: bold; color: white; z-index: 10; }
         .tab-link { opacity: 0.6; cursor: pointer; font-size: 14px; }
         .tab-link.active { opacity: 1; border-bottom: 2px solid white; }
         
-        .side-actions { position: absolute; right: 10px; bottom: 100px; display: flex; flex-direction: column; align-items: center; gap: 18px; color: white; }
-        .action-item { text-align: center; font-size: 12px; cursor: pointer; }
-        .action-item i { font-size: 28px; margin-bottom: 4px; }
-
         /* BADGE 24 POINTES */
         .badge-24 { 
             width: 16px; height: 16px; background: white; 
             clip-path: polygon(50% 0%, 58% 10%, 68% 5%, 72% 16%, 83% 15%, 83% 26%, 93% 30%, 90% 41%, 98% 50%, 90% 59%, 93% 70%, 83% 74%, 83% 85%, 72% 84%, 68% 95%, 58% 90%, 50% 100%, 42% 90%, 32% 95%, 28% 84%, 17% 85%, 17% 74%, 7% 70%, 10% 59%, 2% 50%, 10% 41%, 7% 30%, 17% 26%, 17% 15%, 28% 16%, 32% 5%, 42% 10%); 
-            display: flex; align-items: center; justify-content: center; border: 1px solid var(--threndly-blue);
+            display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--threndly-blue);
         }
         .badge-24::after { content: '✔'; color: white; font-size: 9px; text-shadow: 0 0 2px var(--threndly-blue); }
 
-        /* --- STYLE PAGE MESSAGES (BLANC) --- */
+        .side-actions { position: absolute; right: 10px; bottom: 100px; display: flex; flex-direction: column; align-items: center; gap: 18px; color: white; }
+        .action-item { text-align: center; font-size: 12px; cursor: pointer; }
+        .action-item i { font-size: 28px; margin-bottom: 4px; }
+
+        /* --- MESSAGES (FOND BLANC) --- */
         #page-messages { height: calc(100% - 65px); background: white; color: black; display: none; overflow-y: auto; }
         .msg-story-container { display: flex; gap: 15px; padding: 15px; overflow-x: auto; border-bottom: 1px solid #f0f0f0; }
-        .msg-circle { width: 65px; text-align: center; font-size: 11px; flex-shrink: 0; }
         .img-wrapper { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--threndly-blue); padding: 2px; margin-bottom: 5px; }
         .img-wrapper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
         
         .list-item { display: flex; align-items: center; padding: 12px 15px; gap: 12px; }
         .notif-icon { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; }
-        .badge-red-small { background: var(--tiktok-red); color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: auto; }
+        .badge-red-small { background: var(--notif-red); color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: auto; }
 
-        /* --- NAVIGATION BAS --- */
+        /* --- BARRE DE NAVIGATION (FIXE AU BAS) --- */
         .bottom-nav { position: absolute; bottom: 0; width: 100%; height: 65px; background: #000; display: flex; justify-content: space-around; align-items: center; border-top: 0.5px solid #333; z-index: 100; }
         .nav-icon { color: white; font-size: 22px; cursor: pointer; position: relative; opacity: 0.7; }
         .nav-icon.active { opacity: 1; }
-        .btn-add { background: linear-gradient(to right, var(--threndly-blue), var(--tiktok-red)); padding: 4px 14px; border-radius: 8px; color: black; font-weight: bold; }
-        .env-badge { position: absolute; top: -5px; right: -8px; background: var(--tiktok-red); color: white; font-size: 10px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid black; }
+        .btn-add { background: linear-gradient(to right, var(--threndly-blue), #ff3b5c); padding: 4px 14px; border-radius: 8px; color: black; font-weight: bold; }
+        
+        /* LE BADGE QUI RESTE TOUJOURS */
+        .env-badge { position: absolute; top: -5px; right: -8px; background: var(--notif-red); color: white; font-size: 10px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid black; }
     </style>
 </head>
 <body>
@@ -67,10 +67,10 @@
                     @ Threndly <div class="badge-24"></div>
                 </div>
                 <div style="font-size: 13px; max-width: 280px; line-height: 1.4;">
-                    Découvrez la collection Luther's Fashion 2024 ! #Style #Mode #Premium 🚀
+                    Découvrez la collection Threndly 2026 ! #Style #Mode #Premium 🚀
                 </div>
                 <div style="margin-top: 8px; font-size: 12px; opacity: 0.9;">
-                    <i class="fas fa-music"></i> &nbsp; Luther - Son Original
+                    <i class="fas fa-music"></i> &nbsp; Threndly Audio - Son Original
                 </div>
             </div>
 
@@ -89,10 +89,10 @@
             </div>
 
             <div class="msg-story-container">
-                <div class="msg-circle"><div class="img-wrapper"><img src="https://i.pravatar.cc/100?u=1"></div>Murah ca...</div>
-                <div class="msg-circle"><div class="img-wrapper"><img src="https://i.pravatar.cc/100?u=2"></div>Norah Nelsie</div>
-                <div class="msg-circle"><div class="img-wrapper"><img src="https://i.pravatar.cc/100?u=3"></div>Aina Andriah</div>
-                <div class="msg-circle"><div class="img-wrapper"><img src="https://i.pravatar.cc/100?u=4"></div>Wichouuu❤️</div>
+                <div style="text-align:center; font-size:11px;"><div class="img-wrapper"><img src="https://i.pravatar.cc/100?u=1"></div>Murah ca...</div>
+                <div style="text-align:center; font-size:11px;"><div class="img-wrapper"><img src="https://i.pravatar.cc/100?u=2"></div>Norah Nelsie</div>
+                <div style="text-align:center; font-size:11px;"><div class="img-wrapper"><img src="https://i.pravatar.cc/100?u=3"></div>Aina Andriah</div>
+                <div style="text-align:center; font-size:11px;"><div class="img-wrapper"><img src="https://i.pravatar.cc/100?u=4"></div>Wichouuu❤️</div>
             </div>
 
             <div class="list-item">
@@ -105,46 +105,33 @@
                 <div><b>Activité</b><br><span style="color:gray; font-size:13px;">Clau 🦋 a répondu à ton commentaire...</span></div>
                 <div class="badge-red-small">21</div>
             </div>
-            <div class="list-item">
-                <img src="https://i.pravatar.cc/100?u=1" style="width:48px; border-radius:50%">
-                <div><b>Murah camayo 🍭</b><br><span style="color:gray; font-size:13px;">Envoyé il y a 59 min</span></div>
-                <i class="fas fa-camera" style="margin-left:auto; color:gray"></i>
-            </div>
         </div>
 
         <div class="bottom-nav">
-            <i class="fas fa-home nav-icon active" id="btn-home" onclick="changeTab('home')"></i>
+            <i class="fas fa-home nav-icon active" id="btn-home" onclick="showHome()"></i>
             <i class="fas fa-compass nav-icon"></i>
             <div class="btn-add">+</div>
-            <div class="nav-icon" id="btn-msg" onclick="changeTab('msg')">
+            <div class="nav-icon" id="btn-msg" onclick="showMessages()">
                 <i class="fas fa-envelope"></i>
-                <div class="env-badge" id="main-badge">1</div>
-            </div>
+                <div class="env-badge">1</div> </div>
             <i class="fas fa-user nav-icon"></i>
         </div>
 
     </div>
 
     <script>
-        function changeTab(tab) {
-            const home = document.getElementById('page-home');
-            const msg = document.getElementById('page-messages');
-            const iconHome = document.getElementById('btn-home');
-            const iconMsg = document.getElementById('btn-msg');
-            const badge = document.getElementById('main-badge');
+        function showMessages() {
+            document.getElementById('page-home').style.display = 'none';
+            document.getElementById('page-messages').style.display = 'block';
+            document.getElementById('btn-msg').classList.add('active');
+            document.getElementById('btn-home').classList.remove('active');
+        }
 
-            if (tab === 'msg') {
-                home.style.display = 'none';
-                msg.style.display = 'block';
-                iconMsg.classList.add('active');
-                iconHome.classList.remove('active');
-                badge.style.display = 'none'; // Le badge disparaît quand on lit
-            } else {
-                home.style.display = 'block';
-                msg.style.display = 'none';
-                iconHome.classList.add('active');
-                iconMsg.classList.remove('active');
-            }
+        function showHome() {
+            document.getElementById('page-home').style.display = 'block';
+            document.getElementById('page-messages').style.display = 'none';
+            document.getElementById('btn-home').classList.add('active');
+            document.getElementById('btn-msg').classList.remove('active');
         }
     </script>
 </body>
