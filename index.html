@@ -3,58 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threndly - Messagerie Interactive</title>
+    <title>Threndly - Official App</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --violet-p: #9c27b0; --pink-notif: #ff3b5c; }
+        :root { --violet-p: #9c27b0; --pink-notif: #ff3b5c; --blue-cert: #20d5ec; }
         body, html { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background: white; overflow: hidden; height: 100%; }
 
-        /* --- VUE LISTE (MESSAGES) --- */
-        #view-list { height: 100%; display: flex; flex-direction: column; }
+        /* --- VUE ACCUEIL (AVEC BADGE CERTIFIÉ) --- */
+        #view-home { height: 100%; background: #1a0121; display: flex; flex-direction: column; position: relative; color: white; }
+        .post-info { position: absolute; bottom: 80px; left: 15px; }
+        .user-tag { display: flex; align-items: center; gap: 5px; font-weight: bold; font-size: 16px; }
+
+        /* --- VUE LISTE MESSAGES --- */
+        #view-list { height: 100%; display: none; flex-direction: column; }
         .header { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #f0f0f0; }
         .stories { display: flex; gap: 15px; padding: 15px; overflow-x: auto; border-bottom: 1px solid #f5f5f5; }
         .story { text-align: center; font-size: 11px; min-width: 70px; }
-        .story img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #20d5ec; padding: 2px; }
+        .story img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--blue-cert); padding: 2px; }
 
-        .msg-item { display: flex; align-items: center; padding: 12px 15px; gap: 12px; cursor: pointer; }
-        .msg-item:active { background: #f9f9f9; }
+        .msg-item { display: flex; align-items: center; padding: 12px 15px; gap: 12px; cursor: pointer; position: relative; }
         .avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
         .badge-red { background: var(--pink-notif); color: white; font-size: 11px; font-weight: bold; min-width: 18px; height: 18px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-left: auto; padding: 0 5px; }
 
-        /* --- VUE CHAT (DISCUSSION) --- */
+        /* --- VUE CHAT (DISCUSSION PRIVÉE) --- */
         #view-chat { position: fixed; top: 0; left: 100%; width: 100%; height: 100%; background: #f0f2f5; z-index: 2000; transition: 0.3s; display: flex; flex-direction: column; }
         #view-chat.active { left: 0; }
         .chat-header { background: white; padding: 12px 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #ddd; }
+        .options-menu { display: none; position: absolute; top: 50px; right: 10px; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-radius: 10px; padding: 10px; z-index: 3000; flex-direction: column; gap: 10px; }
+        
         .chat-messages { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .bubble { padding: 10px 14px; border-radius: 18px; max-width: 75%; font-size: 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .bubble { padding: 10px 14px; border-radius: 18px; max-width: 75%; font-size: 14px; transition: opacity 0.5s; }
         .sent { background: var(--violet-p); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
-        .received { background: white; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .received { background: white; align-self: flex-start; border-bottom-left-radius: 2px; color: black; }
 
-        /* BARRE INPUT */
+        /* BARRE INPUT DYNAMIQUE */
         .input-bar { background: white; padding: 10px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #ddd; }
         .btn-plus { width: 34px; height: 34px; background: #f0f0f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .input-field { flex-grow: 1; background: #f0f2f5; border: none; padding: 10px 15px; border-radius: 20px; outline: none; }
+        .btn-send-toggle { font-size: 20px; cursor: pointer; color: var(--violet-p); }
 
         /* NAVIGATION BAS */
-        .nav-bottom { position: fixed; bottom: 0; width: 100%; height: 60px; background: #000; display: flex; justify-content: space-around; align-items: center; }
-        .nav-item { color: white; font-size: 22px; position: relative; opacity: 0.7; }
-        .nav-badge { position: absolute; top: -5px; right: -8px; background: var(--pink-notif); color: white; font-size: 10px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .nav-bottom { position: fixed; bottom: 0; width: 100%; height: 60px; background: #000; display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
+        .nav-item { color: white; font-size: 22px; position: relative; opacity: 0.6; cursor: pointer; }
+        .nav-item.active { opacity: 1; }
+        .nav-badge { position: absolute; top: -5px; right: -8px; background: var(--pink-notif); color: white; font-size: 10px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
     </style>
 </head>
 <body>
 
+    <div id="view-home">
+        <div class="post-info">
+            <div class="user-tag">
+                @<span>Threndly</span> 
+                <i class="fas fa-check-circle" style="color: var(--blue-cert);"></i>
+            </div>
+            <p>Bienvenue sur ton application privée.</p>
+        </div>
+    </div>
+
     <div id="view-list">
-        <div class="header"><i class="fas fa-users"></i><b>Messages •</b><i class="fas fa-search"></i></div>
+        <div class="header"><i class="fas fa-users"></i><b>Messages <span style="color:#2ecc71">•</span></b><i class="fas fa-search"></i></div>
         <div class="stories" id="story-line"></div>
         <div id="contact-list"></div>
-        
-        <div class="nav-bottom">
-            <i class="fas fa-home nav-item"></i>
-            <div class="nav-item"><i class="fas fa-users"></i><div class="nav-badge">65</div></div>
-            <div style="background:linear-gradient(to right, #20d5ec, var(--violet-p)); padding:5px 15px; border-radius:8px;"><b>+</b></div>
-            <div class="nav-item"><i class="fas fa-envelope"></i><div class="nav-badge">42</div></div>
-            <i class="fas fa-user nav-item"></i>
-        </div>
     </div>
 
     <div id="view-chat">
@@ -64,68 +74,106 @@
                 <img id="chat-avatar" class="avatar" style="width:35px; height:35px;">
                 <b id="chat-name"></b>
             </div>
-            <i class="fas fa-ellipsis-v" onclick="alert('Menu: Éphémère, Thème, Enregistrer')"></i>
+            <i class="fas fa-ellipsis-v" onclick="toggleMenu()"></i>
+            <div class="options-menu" id="optMenu">
+                <div onclick="toggleEphemeral()">Mode Éphémère (<span id="eph-status">OFF</span>)</div>
+                <div onclick="alert('Thème modifié')">Thème</div>
+                <div onclick="alert('Enregistrement...')">Enregistrer Vidéo/Photo</div>
+            </div>
         </div>
         <div class="chat-messages" id="chat-box"></div>
         <div class="input-bar">
-            <div class="btn-plus" onclick="alert('Photos, Vidéos, Docs, Localisation')"><i class="fas fa-plus"></i></div>
-            <input type="text" class="input-field" placeholder="Message...">
-            <i class="fas fa-microphone" style="color:#555"></i>
+            <div class="btn-plus"><i class="fas fa-plus"></i></div>
+            <input type="text" class="input-field" id="chatInput" placeholder="Message..." oninput="toggleSendIcon()">
+            <i class="fas fa-microphone btn-send-toggle" id="micBtn" onclick="sendVocal()"></i>
+            <i class="fas fa-paper-plane btn-send-toggle" id="sendBtn" style="display:none;" onclick="sendMessage()"></i>
         </div>
     </div>
 
+    <div class="nav-bottom">
+        <i class="fas fa-home nav-item active" onclick="showPage('home')"></i>
+        <div class="nav-item"><i class="fas fa-users"></i><div class="nav-badge">65</div></div>
+        <div style="background:linear-gradient(to right, #20d5ec, var(--violet-p)); padding:5px 15px; border-radius:8px;"><b>+</b></div>
+        <div class="nav-item" onclick="showPage('list')"><i class="fas fa-envelope"></i><div class="nav-badge">42</div></div>
+        <i class="fas fa-user nav-item"></i>
+    </div>
+
     <script>
-        const data = [
+        const contacts = [
             { id: 1, name: "Norah Nelsie", img: "https://i.pravatar.cc/100?u=1", last: "ilbsdkjbiqsUHdmbqs", count: 1 },
-            { id: 2, name: "Hadriel 🇲🇬", img: "https://i.pravatar.cc/100?u=2", last: "Ça va toi ? • 6 j", count: 1 },
-            { id: 3, name: "Mura... 🍒", img: "https://i.pravatar.cc/100?u=3", last: "Envoyé il y a 59 min", count: 0 }
+            { id: 2, name: "Hadriel 🇲🇬", img: "https://i.pravatar.cc/100?u=2", last: "Ça va toi ?", count: 1 }
         ];
 
-        function init() {
+        let ephemeralMode = false;
+
+        function showPage(page) {
+            document.getElementById('view-home').style.display = (page === 'home') ? 'flex' : 'none';
+            document.getElementById('view-list').style.display = (page === 'list') ? 'flex' : 'none';
+            if(page==='list') renderList();
+        }
+
+        function renderList() {
             const list = document.getElementById('contact-list');
             const stories = document.getElementById('story-line');
             list.innerHTML = ""; stories.innerHTML = "";
-
-            data.forEach(c => {
-                // Remplissage Stories
+            contacts.forEach(c => {
                 stories.innerHTML += `<div class="story"><img src="${c.img}"><br>${c.name.split(' ')[0]}</div>`;
-                
-                // Remplissage Liste
                 list.innerHTML += `
                     <div class="msg-item" onclick="openChat(${c.id})">
                         <img src="${c.img}" class="avatar">
-                        <div style="flex-grow:1">
-                            <b>${c.name}</b>
-                            <span style="color:gray; font-size:13px;">${c.last}</span>
-                        </div>
-                        ${c.count > 0 ? `<div class="badge-red" id="badge-${c.id}">${c.count}</div>` : '<i class="fas fa-camera" style="color:#ccc"></i>'}
+                        <div style="flex-grow:1"><b>${c.name}</b><br><small style="color:gray">${c.last}</small></div>
+                        ${c.count > 0 ? `<div class="badge-red" id="badge-${c.id}">${c.count}</div>` : ''}
                     </div>`;
             });
         }
 
+        function toggleSendIcon() {
+            const val = document.getElementById('chatInput').value;
+            document.getElementById('micBtn').style.display = val ? 'none' : 'block';
+            document.getElementById('sendBtn').style.display = val ? 'block' : 'none';
+        }
+
         function openChat(id) {
-            const c = data.find(x => x.id === id);
+            const c = contacts.find(x => x.id === id);
             document.getElementById('chat-name').innerText = c.name;
             document.getElementById('chat-avatar').src = c.img;
-            
-            // Efface le badge rouge au clic
-            const badge = document.getElementById(`badge-${id}`);
-            if(badge) badge.style.display = 'none';
-
-            // Simulation de messages
-            const box = document.getElementById('chat-box');
-            box.innerHTML = `<div class="bubble received">Salut c'est ${c.name} !</div>`;
-            if(c.id === 1) {
-                box.innerHTML += `<div class="bubble sent">ilbsdkjbiqsUHdmbqs</div>`;
-                box.innerHTML += `<div class="bubble sent" style="display:flex; align-items:center; gap:8px;"><i class="fas fa-play"></i><div style="width:100px; height:4px; background:rgba(255,255,255,0.3); border-radius:2px;"></div><span>0:04</span></div>`;
-            }
-
+            if(document.getElementById(`badge-${id}`)) document.getElementById(`badge-${id}`).style.display = 'none';
             document.getElementById('view-chat').classList.add('active');
         }
 
         function closeChat() { document.getElementById('view-chat').classList.remove('active'); }
 
-        init();
+        function toggleMenu() {
+            const m = document.getElementById('optMenu');
+            m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function toggleEphemeral() {
+            ephemeralMode = !ephemeralMode;
+            document.getElementById('eph-status').innerText = ephemeralMode ? "ON" : "OFF";
+            toggleMenu();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            addBubble(input.value, 'sent');
+            input.value = "";
+            toggleSendIcon();
+        }
+
+        function sendVocal() {
+            addBubble(`<i class="fas fa-play"></i> Message vocal 0:04`, 'sent');
+        }
+
+        function addBubble(content, type) {
+            const box = document.getElementById('chat-box');
+            const b = document.createElement('div');
+            b.className = `bubble ${type}`;
+            b.innerHTML = content;
+            box.appendChild(b);
+            box.scrollTop = box.scrollHeight;
+            if(ephemeralMode) setTimeout(() => { b.style.opacity = '0'; setTimeout(()=>b.remove(), 500); }, 5000);
+        }
     </script>
 </body>
 </html>
