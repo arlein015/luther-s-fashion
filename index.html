@@ -3,186 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threndly - Private Chat</title>
+    <title>Threndly - Chat Options</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --violet-p: #9c27b0; --bg-dark: #1a0121; --bg-light: #3a0e4e; }
-        body, html { margin: 0; padding: 0; height: 100%; background: var(--bg-dark); font-family: 'Segoe UI', sans-serif; overflow: hidden; }
+        :root { --violet-p: #9c27b0; --bg-chat: #f0f2f5; }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
+
+        /* --- PAGE DE DISCUSSION --- */
+        #page-chat { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-chat); display: flex; flex-direction: column; transition: background 0.3s; }
         
-        /* --- PAGES --- */
-        #page-home { height: 100%; display: flex; flex-direction: column; background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-light) 100%); }
-        #page-messages { position: absolute; top: 0; left: 0; width: 100%; height: calc(100% - 60px); background: white; color: black; display: none; overflow-y: auto; z-index: 500; }
-        #page-chat { position: fixed; top: 0; left: 100%; width: 100%; height: 100%; background: #f0f2f5; z-index: 2000; transition: 0.3s; display: flex; flex-direction: column; color: black; }
-        #page-chat.active { left: 0; }
+        /* HEADER AVEC MENU 3 POINTS */
+        .chat-header { background: white; padding: 12px 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #ddd; position: relative; }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .btn-menu-dots { cursor: pointer; padding: 5px; font-size: 18px; color: #555; }
 
-        /* --- ACCUEIL & BADGE --- */
-        .post-info { position: absolute; bottom: 80px; left: 15px; color: white; }
-        .user-tag { display: flex; align-items: center; gap: 5px; font-weight: bold; }
+        /* MENU DÉROULANT */
+        .options-menu { display: none; position: absolute; top: 50px; right: 15px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); width: 220px; z-index: 3000; flex-direction: column; padding: 8px 0; }
+        .option-item { padding: 12px 15px; display: flex; align-items: center; gap: 12px; cursor: pointer; font-size: 14px; color: #333; }
+        .option-item:hover { background: #f5f5f5; }
+        .option-item i { color: var(--violet-p); width: 20px; text-align: center; }
 
-        /* --- CHAT ELEMENTS --- */
-        .chat-header { background: white; padding: 12px 15px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #ddd; }
+        /* CONTENU CHAT */
         .chat-messages { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .bubble { padding: 10px 14px; border-radius: 18px; max-width: 75%; font-size: 14px; position: relative; transition: opacity 0.5s; }
+        .bubble { padding: 10px 14px; border-radius: 18px; max-width: 75%; font-size: 14px; }
         .sent { background: var(--violet-p); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
-        .received { background: white; align-self: flex-start; border-bottom-left-radius: 2px; }
-        
-        /* Message éphémère animation */
-        .ephemeral { border: 1px dashed rgba(255,255,255,0.5); }
-        .fade-out { opacity: 0; }
 
-        /* Barre de saisie */
+        /* BARRE BAS */
         .chat-input-bar { background: white; padding: 10px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #ddd; }
         .btn-plus { width: 34px; height: 34px; background: #f0f0f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .input-field { flex-grow: 1; background: #f0f2f5; border: none; padding: 10px 15px; border-radius: 20px; outline: none; }
-        .btn-vocal.recording { color: red; animation: pulse 1s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
-
-        /* Audio bubble */
-        .audio-wave { display: flex; align-items: center; gap: 8px; width: 150px; }
-        .wave-bar { flex-grow: 1; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px; position: relative; }
-        .wave-bar::after { content: ''; position: absolute; left: 0; top:0; height: 100%; width: 40%; background: white; }
-
-        /* NAV BAS */
-        .bottom-nav { position: absolute; bottom: 0; width: 100%; height: 60px; background: #000; display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
-        .nav-item { font-size: 22px; cursor: pointer; color: white; opacity: 0.6; }
-        .nav-item.active { opacity: 1; }
     </style>
 </head>
 <body>
 
-    <div class="main-container">
-        <div id="page-home">
-            <div class="post-info">
-                <div class="user-tag">@Threndly <i class="fas fa-check-circle" style="color: #20d5ec;"></i></div>
-                <p>Mode Éphémère & Vocal activé ! 🔒🎙️</p>
+    <div id="page-chat">
+        <div class="chat-header">
+            <div class="header-left">
+                <i class="fas fa-arrow-left"></i>
+                <img src="https://i.pravatar.cc/100?u=1" style="width: 35px; height: 35px; border-radius: 50%;">
+                <b>Norah Nelsie</b>
             </div>
-        </div>
+            <div class="btn-menu-dots" onclick="toggleOptionsMenu()">
+                <i class="fas fa-ellipsis-v"></i>
+            </div>
 
-        <div id="page-messages">
-            <div class="msg-header">
-                <i class="fas fa-arrow-left" onclick="showHome()"></i>
-                <b>Messages</b>
-                <div style="font-size: 10px; color: var(--violet-p);" onclick="toggleEphemeralMode()">
-                    <i class="fas fa-history"></i> <span id="eph-status">Éphémère OFF</span>
+            <div class="options-menu" id="optionsMenu">
+                <div class="option-item" onclick="alert('Enregistrement Vidéo/Photo lancé')">
+                    <i class="fas fa-camera-retro"></i> Enregistrer Vidéo & Photo
+                </div>
+                <div class="option-item" onclick="toggleEphemeral()">
+                    <i class="fas fa-bolt"></i> Mode Éphémère: <span id="eph-label" style="margin-left:5px; font-weight:bold; color:red;">OFF</span>
+                </div>
+                <div class="option-item" onclick="changeTheme()">
+                    <i class="fas fa-paint-brush"></i> Thème de discussion
+                </div>
+                <div class="option-item" style="border-top: 1px solid #eee; color: red;">
+                    <i class="fas fa-ban"></i> Bloquer l'utilisateur
                 </div>
             </div>
-            <div id="dynamic-list"></div>
         </div>
 
-        <div id="page-chat">
-            <div class="chat-header">
-                <i class="fas fa-arrow-left" onclick="closeChat()"></i>
-                <img id="chat-avatar" style="width: 35px; height: 35px; border-radius: 50%;">
-                <b id="chat-name"></b>
-            </div>
-            <div class="chat-messages" id="chat-box"></div>
-            <div class="chat-input-bar">
-                <div class="btn-plus"><i class="fas fa-plus"></i></div>
-                <input type="text" class="input-field" id="chatInput" placeholder="Message..." oninput="checkInput()">
-                <i class="fas fa-microphone btn-vocal" id="micBtn" onclick="handleVocal()"></i>
-                <i class="fas fa-paper-plane" id="sendBtn" style="display:none; color:var(--violet-p);" onclick="sendMessage()"></i>
+        <div class="chat-messages" id="chat-box">
+            <div class="bubble sent">ilbsdkjbiqsUHdmbqs</div>
+            <div class="bubble sent" style="display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-play"></i>
+                <div style="width: 100px; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px;"></div>
+                <span>0:04</span>
             </div>
         </div>
 
-        <div class="bottom-nav">
-            <i class="fas fa-home nav-item active" onclick="showHome()"></i>
-            <div style="background:linear-gradient(to right, #20d5ec, var(--violet-p)); padding:5px 15px; border-radius:10px; color:black;"><b>+</b></div>
-            <i class="fas fa-envelope nav-item" onclick="openMessages()"></i>
-            <i class="fas fa-user nav-item"></i>
+        <div class="chat-input-bar">
+            <div class="btn-plus"><i class="fas fa-plus"></i></div>
+            <input type="text" class="input-field" placeholder="Message...">
+            <i class="fas fa-microphone" style="color: #555;"></i>
         </div>
     </div>
 
     <script>
-        let contacts = [{ id: 0, name: "Norah Nelsie", img: "https://i.pravatar.cc/100?u=1", last: "Salut !", count: 2 }];
-        let isEphemeral = false;
-        let isRecording = false;
+        let ephActive = false;
+        let themeIndex = 0;
+        const themes = ['#f0f2f5', '#ffe0e0', '#e0f7fa', '#f3e5f5'];
 
-        function toggleEphemeralMode() {
-            isEphemeral = !isEphemeral;
-            document.getElementById('eph-status').innerText = isEphemeral ? "Éphémère ON" : "Éphémère OFF";
-            alert(isEphemeral ? "Les nouveaux messages disparaîtront après 10s" : "Mode normal activé");
+        function toggleOptionsMenu() {
+            const menu = document.getElementById('optionsMenu');
+            menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
         }
 
-        function handleVocal() {
-            const mic = document.getElementById('micBtn');
-            if (!isRecording) {
-                isRecording = true;
-                mic.classList.add('recording');
-                // Simule la fin de l'enregistrement après 2s
-                setTimeout(() => {
-                    if(isRecording) {
-                        const audioHTML = `<div class="audio-wave"><i class="fas fa-play"></i><div class="wave-bar"></div><span>0:04</span></div>`;
-                        addBubble(audioHTML, 'sent');
-                        stopRecording();
-                    }
-                }, 2000);
-            } else {
-                stopRecording();
+        // Fermer le menu si on clique ailleurs
+        window.onclick = function(event) {
+            if (!event.target.matches('.fa-ellipsis-v') && !event.target.matches('.btn-menu-dots')) {
+                document.getElementById('optionsMenu').style.display = "none";
             }
         }
 
-        function stopRecording() {
-            isRecording = false;
-            document.getElementById('micBtn').classList.remove('recording');
+        function toggleEphemeral() {
+            ephActive = !ephActive;
+            const label = document.getElementById('eph-label');
+            label.innerText = ephActive ? "ON" : "OFF";
+            label.style.color = ephActive ? "#4CAF50" : "red";
+            alert(ephActive ? "Mode Éphémère activé" : "Mode Éphémère désactivé");
         }
 
-        function addBubble(content, type) {
-            const box = document.getElementById('chat-box');
-            const div = document.createElement('div');
-            div.className = `bubble ${type} ${isEphemeral ? 'ephemeral' : ''}`;
-            div.innerHTML = content;
-            box.appendChild(div);
-            box.scrollTop = box.scrollHeight;
-
-            if (isEphemeral) {
-                setTimeout(() => {
-                    div.classList.add('fade-out');
-                    setTimeout(() => div.remove(), 500);
-                }, 10000); // 10 secondes
-            }
-        }
-
-        function sendMessage() {
-            const input = document.getElementById('chatInput');
-            if(!input.value) return;
-            addBubble(input.value, 'sent');
-            input.value = "";
-            checkInput();
-        }
-
-        function checkInput() {
-            const val = document.getElementById('chatInput').value;
-            document.getElementById('micBtn').style.display = val ? 'none' : 'block';
-            document.getElementById('sendBtn').style.display = val ? 'block' : 'none';
-        }
-
-        function openMessages() { 
-            document.getElementById('page-home').style.display='none'; 
-            document.getElementById('page-messages').style.display='block'; 
-            render(); 
-        }
-        function showHome() { 
-            document.getElementById('page-home').style.display='block'; 
-            document.getElementById('page-messages').style.display='none'; 
-        }
-        function openChat(id) {
-            const c = contacts.find(x => x.id === id);
-            document.getElementById('chat-name').innerText = c.name;
-            document.getElementById('chat-avatar').src = c.img;
-            document.getElementById('page-chat').classList.add('active');
-        }
-        function closeChat() { document.getElementById('page-chat').classList.remove('active'); }
-
-        function render() {
-            const list = document.getElementById('dynamic-list');
-            list.innerHTML = "";
-            contacts.forEach(c => {
-                list.innerHTML += `<div class="list-item" style="display:flex; align-items:center; padding:15px; border-bottom:1px solid #eee; color:black;" onclick="openChat(${c.id})">
-                    <img src="${c.img}" style="width:45px; height:45px; border-radius:50%; margin-right:12px;">
-                    <div style="flex-grow:1;"><b>${c.name}</b><br><small style="color:gray;">${c.last}</small></div>
-                    ${c.count > 0 ? `<div style="background:#ff3b5c; color:white; border-radius:50%; width:18px; height:18px; font-size:10px; display:flex; align-items:center; justify-content:center;">${c.count}</div>` : ''}
-                </div>`;
-            });
+        function changeTheme() {
+            themeIndex = (themeIndex + 1) % themes.length;
+            document.getElementById('page-chat').style.background = themes[themeIndex];
         }
     </script>
 </body>
