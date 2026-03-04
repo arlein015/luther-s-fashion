@@ -3,37 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threndly - Super App</title>
+    <title>Threndly - Messagerie Officielle</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --threndly-purple: #9c27b0;
-            --threndly-blue: #0095f6; /* Bleu certification */
-            --bg-chat: #efe7dd;
+            --threndly-blue: #0095f6; /* Bleu de certification Threndly */
+            --bg-chat: #f4f4f9;
         }
 
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; background: var(--bg-chat); }
 
-        /* Header Threndly */
-        .header { background: white; padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 10; }
-        .user-profile { display: flex; align-items: center; gap: 12px; }
-        .avatar { width: 45px; height: 45px; border-radius: 50%; background: #ddd; }
-        .badge-certif { color: var(--threndly-blue); font-size: 16px; }
+        /* Header avec Badge Bleu */
+        .header { background: white; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 100; }
+        .user-info { display: flex; align-items: center; gap: 12px; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: #ddd; }
+        .badge-certif { color: var(--threndly-blue); font-size: 15px; margin-left: 2px; }
 
-        /* Zone de Messages */
-        #chat-content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .bubble { max-width: 80%; padding: 10px 15px; border-radius: 15px; position: relative; font-size: 15px; line-height: 1.4; }
+        /* Zone de Chat */
+        #chat-window { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+        .bubble { max-width: 75%; padding: 10px 14px; border-radius: 18px; position: relative; font-size: 15px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
         .sent { align-self: flex-end; background: var(--threndly-purple); color: white; border-bottom-right-radius: 2px; }
         .received { align-self: flex-start; background: white; color: #333; border-bottom-left-radius: 2px; }
         
         /* Médias */
-        .msg-image { max-width: 100%; border-radius: 10px; margin-top: 5px; cursor: pointer; }
-        .audio-player { margin-top: 5px; filter: hue-rotate(250deg); }
+        .msg-media { max-width: 100%; border-radius: 10px; margin-top: 5px; display: block; }
+        .location-btn { color: white; text-decoration: underline; font-size: 13px; cursor: pointer; }
 
-        /* Coche intelligente */
-        .status-box { display: flex; justify-content: flex-end; align-items: center; gap: 4px; font-size: 11px; margin-top: 5px; }
+        /* Statut des coches */
+        .status-box { display: flex; justify-content: flex-end; align-items: center; gap: 4px; font-size: 10px; margin-top: 4px; }
         .tick-blue { color: var(--threndly-blue); font-weight: bold; }
-        .tick-gray { color: #ccc; }
+        .tick-gray { color: #e0e0e0; }
+        .pop-in { animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
 
-        /* Barre d'action */
-        .action-bar { background: white; padding
+        /* Barre d'envoi */
+        .input-container { background: white; padding: 10px; border-top: 1px solid #eee; }
+        .media-menu { display: none; justify-content: space-around; padding: 10px; background: #fafafa; border-radius: 15px; margin-bottom: 8px; }
+        .controls { display: flex; align-items: center; gap: 12px; }
+        #msg-input { flex: 1; padding: 10px 15px; border-radius: 20px; border: 1px solid #ddd; outline: none; }
+        .icon-btn { color: #777; font-size: 20px; cursor: pointer; }
+        .send-btn { color: var(--threndly-purple); font-size: 24px; border: none; background: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="user-info">
+            <div class="avatar"></div>
+            <strong>Support Threndly <i class="fas fa-check-circle badge-certif"></i></strong>
+        </div>
+        <div style="color: var(--threndly-purple); font-size: 18px; display: flex; gap: 15px;">
+            <i class="fas fa-phone"></i>
+            <i class="fas fa-video"></i>
+        </div>
+    </div>
+
+    <div id="chat-window"></div>
+
+    <div class="input-container">
+        <div id="media-menu" class="media-menu">
+            <label class="icon-btn"><i class="fas fa-image"></i><input type="file" id="img-upload" accept="image/*" hidden></label>
+            <span class="icon-btn" onclick="sendLoc()"><i class="fas fa-map-marker-alt"></i></span>
+            <span class="icon-btn"><i class="fas fa-microphone"></i></span>
+        </div>
+        <div class="controls">
+            <i class="fas fa-plus-circle icon-btn" onclick="document.getElementById('media-menu').style.display = 'flex'"></i>
+            <input type="text" id="msg-input" placeholder="Message...">
+            <button class="send-btn" id="send-btn"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+
+        // CONFIGURATION FIREBASE THRENDLY
+        const firebaseConfig = {
+            apiKey: "AIzaSyDimaKVWWObrRRR83OjVBJJbFtsNjXphXI",
+            authDomain: "trendly-fca7c.firebaseapp.com",
+            projectId: "trendly-fca7c",
+            storageBucket: "trendly-fca7c.firebasestorage.app",
+            messagingSenderId: "1070458426638",
+            appId: "1:1070458426638:web:6a7dd8dadc78e45019735f",
+            measurementId: "G-ZZYFT9MM8Q"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        // --- ENVOYER TEXTE ---
+        async function sendText() {
+            const input = document.getElementById('msg-input');
+            if (!input.value.trim()) return;
+            await addDoc(collection(db, "messages"), {
+                content: input.value,
+                type: 'text',
+                status: 'sent',
+                timestamp: new Date()
+            });
+            input.value = "";
+            document.getElementById('media-menu').style.display = 'none';
+        }
+
+        // --- ENVOYER IMAGE ---
+        async function uploadImg(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const fileRef = ref(storage, `uploads/${Date.now()}_${file.name}`);
+            await uploadBytes(fileRef, file);
+            const url = await getDownloadURL(fileRef);
+            await addDoc(collection(db, "messages"), {
+                content: url,
+                type: 'image',
+                status: 'sent',
+                timestamp: new Date()
+            });
+        }
+
+        // --- LOCALISATION ---
+        window.sendLoc = () => {
+            navigator.geolocation.getCurrentPosition(async (pos) => {
+                const mapUrl = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+                await addDoc(collection(db, "messages"), {
+                    content: mapUrl,
+                    type: 'location',
+                    status: 'sent',
+                    timestamp: new Date()
+                });
+            });
+        };
+
+        // --- ÉCOUTE TEMPS RÉEL ---
+        onSnapshot(query(collection(db, "messages"), orderBy("timestamp")), (snap) => {
+            const win = document.getElementById('chat-window');
+            win.innerHTML = "";
+            snap.forEach(d => render(d.id, d.data()));
+            win.scrollTop = win.scrollHeight;
+        });
+
+        function render(id, data) {
+            const win = document.getElementById('chat-window');
+            const isRead = data.status === 'seen';
+            const tickIcon = isRead ? 'fa-check-double tick-blue pop-in' : 'fa-check tick-gray';
+            
+            let htmlContent = data.content;
+            if (data.type === 'image') htmlContent = `<img src="${data.content}" class="msg-media">`;
+            if (data.type === 'location') htmlContent = `<a href="${data.content}" target="_blank" class="location-btn">📍 Voir ma position</a>`;
+
+            const bubble = `
+                <div class="bubble sent" data-id="${id}">
+                    ${htmlContent}
+                    <div class="status-box"><i class="fas ${tickIcon}"></i></div>
+                </div>`;
+            win.insertAdjacentHTML('beforeend', bubble);
+
+            // Intelligence : marquer comme VU si visible
+            const el = document.querySelector(`[data-id="${id}"]`);
+            new IntersectionObserver(([entry]) => {
+                if (entry.isIntersecting && data.status === 'sent') {
+                    updateDoc(doc(db, "messages", id), { status: 'seen' });
+                }
+            }, {threshold: 1}).observe(el);
+        }
+
+        document.getElementById('send-btn').onclick = sendText;
+        document.getElementById('img-upload').onchange = uploadImg;
+        document.getElementById('msg-input').onkeypress = (e) => { if(e.key === 'Enter') sendText(); };
+    </script>
+</body>
+</html>
