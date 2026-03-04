@@ -3,195 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threndly - Messaging</title>
+    <title>Threndly - Super App</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --threndly-purple: #9c27b0;
-            --threndly-blue: #0095f6; /* Ton bleu de certification */
-            --bg-light: #f0f2f5;
+            --threndly-blue: #0095f6; /* Bleu certification */
+            --bg-chat: #efe7dd;
         }
 
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg-light); display: flex; flex-direction: column; height: 100vh; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; background: var(--bg-chat); }
 
-        /* Header avec ton Badge Bleu */
-        .header { background: white; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 100; }
-        .user-info { display: flex; align-items: center; gap: 10px; }
-        .profile-pic { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
-        .certif-badge { color: var(--threndly-blue); font-size: 14px; }
-        .call-actions { display: flex; gap: 15px; color: var(--threndly-purple); font-size: 18px; cursor: pointer; }
+        /* Header Threndly */
+        .header { background: white; padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 10; }
+        .user-profile { display: flex; align-items: center; gap: 12px; }
+        .avatar { width: 45px; height: 45px; border-radius: 50%; background: #ddd; }
+        .badge-certif { color: var(--threndly-blue); font-size: 16px; }
 
-        /* Zone de Chat */
-        #chat-window { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        
-        /* Bulles de Messages */
-        .msg { max-width: 75%; padding: 10px 15px; border-radius: 18px; position: relative; font-size: 15px; box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
+        /* Zone de Messages */
+        #chat-content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .bubble { max-width: 80%; padding: 10px 15px; border-radius: 15px; position: relative; font-size: 15px; line-height: 1.4; }
         .sent { align-self: flex-end; background: var(--threndly-purple); color: white; border-bottom-right-radius: 2px; }
-        .received { align-self: flex-start; background: white; color: black; border-bottom-left-radius: 2px; }
+        .received { align-self: flex-start; background: white; color: #333; border-bottom-left-radius: 2px; }
+        
+        /* Médias */
+        .msg-image { max-width: 100%; border-radius: 10px; margin-top: 5px; cursor: pointer; }
+        .audio-player { margin-top: 5px; filter: hue-rotate(250deg); }
 
-        /* Médias dans le Chat */
-        .msg img, .msg video { max-width: 100%; border-radius: 10px; margin-top: 5px; }
-        .location-link { color: white; text-decoration: underline; font-size: 13px; }
+        /* Coche intelligente */
+        .status-box { display: flex; justify-content: flex-end; align-items: center; gap: 4px; font-size: 11px; margin-top: 5px; }
+        .tick-blue { color: var(--threndly-blue); font-weight: bold; }
+        .tick-gray { color: #ccc; }
 
-        /* Coche & Statut */
-        .status-container { display: flex; justify-content: flex-end; align-items: center; gap: 4px; font-size: 10px; margin-top: 4px; }
-        .tick-blue { color: var(--threndly-blue); }
-        .tick-gray { color: #e0e0e0; }
-        .pop-in { animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
-
-        /* Barre d'envoi & Menu média */
-        .input-area { background: white; padding: 10px; border-top: 1px solid #ddd; }
-        .controls { display: flex; align-items: center; gap: 10px; }
-        #message-input { flex: 1; padding: 10px 15px; border-radius: 25px; border: 1px solid #ddd; outline: none; }
-        .icon-btn { color: #666; font-size: 20px; cursor: pointer; transition: 0.2s; }
-        .icon-btn:hover { color: var(--threndly-purple); }
-        .send-btn { color: var(--threndly-purple); font-size: 24px; border: none; background: none; cursor: pointer; }
-
-        /* Menu de partage caché */
-        .media-menu { display: none; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 10px; background: #f9f9f9; border-radius: 15px; margin-bottom: 10px; }
-    </style>
-</head>
-<body>
-
-    <div class="header">
-        <div class="user-info">
-            <img src="https://via.placeholder.com/40" class="profile-pic">
-            <strong>Norah Nelsie <i class="fas fa-check-circle certif-badge"></i></strong>
-        </div>
-        <div class="call-actions">
-            <i class="fas fa-phone" onclick="startCall('audio')"></i>
-            <i class="fas fa-video" onclick="startCall('video')"></i>
-        </div>
-    </div>
-
-    <div id="chat-window"></div>
-
-    <div class="input-area">
-        <div id="media-menu" class="media-menu">
-            <label class="icon-btn"><i class="fas fa-image"></i><input type="file" id="file-img" accept="image/*" hidden></label>
-            <label class="icon-btn"><i class="fas fa-video"></i><input type="file" id="file-vid" accept="video/*" hidden></label>
-            <label class="icon-btn"><i class="fas fa-file-alt"></i><input type="file" id="file-doc" accept=".pdf,.doc,.docx" hidden></label>
-            <span class="icon-btn" onclick="sendLocation()"><i class="fas fa-map-marker-alt"></i></span>
-            <span class="icon-btn" id="voice-btn"><i class="fas fa-microphone"></i></span>
-        </div>
-        <div class="controls">
-            <i class="fas fa-plus-circle icon-btn" onclick="toggleMenu()"></i>
-            <input type="text" id="message-input" placeholder="Message...">
-            <button class="send-btn" id="send-btn"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </div>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
-
-        // TA CONFIGURATION (Utilise tes clés Firebase ici)
-        const firebaseConfig = {
-            apiKey: "AIzaSyDimaKVWWObrRRR83OjVBJJbFtsNjXphXI",
-            authDomain: "trendly-fca7c.firebaseapp.com",
-            projectId: "trendly-fca7c",
-            storageBucket: "trendly-fca7c.firebasestorage.app",
-            messagingSenderId: "1070458426638",
-            appId: "1:1070458426638:web:6a7dd8dadc78e45019735f",
-            measurementId: "G-ZZYFT9MM8Q"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const storage = getStorage(app);
-
-        // --- ENVOI DE TEXTE ---
-        async function sendMsg() {
-            const input = document.getElementById('message-input');
-            if(input.value.trim() === "") return;
-            await addDoc(collection(db, "messages"), {
-                text: input.value,
-                type: 'text',
-                status: 'sent',
-                timestamp: new Date()
-            });
-            input.value = "";
-        }
-
-        // --- ENVOI DE FICHIERS (Photos/Vidéos/Docs) ---
-        async function handleFileUpload(e, type) {
-            const file = e.target.files[0];
-            if(!file) return;
-            const fileRef = ref(storage, `threndly/${Date.now()}_${file.name}`);
-            await uploadBytes(fileRef, file);
-            const url = await getDownloadURL(fileRef);
-            await addDoc(collection(db, "messages"), {
-                fileUrl: url,
-                type: type,
-                status: 'sent',
-                timestamp: new Date()
-            });
-        }
-
-        // --- LOCALISATION ---
-        window.sendLocation = () => {
-            navigator.geolocation.getCurrentPosition(async (pos) => {
-                const url = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
-                await addDoc(collection(db, "messages"), {
-                    text: "📍 Ma localisation",
-                    fileUrl: url,
-                    type: 'location',
-                    status: 'sent',
-                    timestamp: new Date()
-                });
-            });
-        };
-
-        // --- GESTION DU "VU" & AFFICHAGE ---
-        onSnapshot(query(collection(db, "messages"), orderBy("timestamp")), (snap) => {
-            const chat = document.getElementById('chat-window');
-            chat.innerHTML = "";
-            snap.forEach(docSnap => {
-                const data = docSnap.data();
-                renderBulle(docSnap.id, data);
-            });
-            chat.scrollTop = chat.scrollHeight;
-        });
-
-        function renderBulle(id, data) {
-            const chat = document.getElementById('chat-window');
-            const isRead = data.status === 'seen';
-            const icon = isRead ? 'fa-check-double tick-blue pop-in' : 'fa-check tick-gray';
-            
-            let content = data.text || "";
-            if(data.type === 'image') content = `<img src="${data.fileUrl}">`;
-            if(data.type === 'video') content = `<video controls src="${data.fileUrl}"></video>`;
-            if(data.type === 'location') content = `<a href="${data.fileUrl}" target="_blank" class="location-link">Voir sur la carte</a>`;
-
-            const html = `
-                <div class="msg sent" data-id="${id}">
-                    ${content}
-                    <div class="status-container">
-                        <i class="fas ${icon}"></i>
-                    </div>
-                </div>
-            `;
-            chat.insertAdjacentHTML('beforeend', html);
-
-            // Détection automatique du "VU"
-            const el = document.querySelector(`[data-id="${id}"]`);
-            new IntersectionObserver(([e]) => {
-                if(e.isIntersecting && data.status === 'sent') {
-                    updateDoc(doc(db, "messages", id), { status: "seen" });
-                }
-            }, {threshold: 1}).observe(el);
-        }
-
-        // --- EVENT LISTENERS ---
-        document.getElementById('send-btn').onclick = sendMsg;
-        document.getElementById('file-img').onchange = (e) => handleFileUpload(e, 'image');
-        document.getElementById('file-vid').onchange = (e) => handleFileUpload(e, 'video');
-        window.toggleMenu = () => { 
-            const m = document.getElementById('media-menu');
-            m.style.display = m.style.display === 'grid' ? 'none' : 'grid';
-        };
-    </script>
-</body>
-</html>
+        /* Barre d'action */
+        .action-bar { background: white; padding
