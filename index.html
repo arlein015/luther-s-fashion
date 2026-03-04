@@ -3,111 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threndly - Chat Options</title>
+    <title>Threndly - Messages & Notifications</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --violet-p: #9c27b0; --bg-chat: #f0f2f5; }
-        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
+        :root { --violet-p: #9c27b0; --pink-notif: #ff3b5c; }
+        body, html { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background-color: white; color: black; }
 
-        /* --- PAGE DE DISCUSSION --- */
-        #page-chat { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-chat); display: flex; flex-direction: column; transition: background 0.3s; }
-        
-        /* HEADER AVEC MENU 3 POINTS */
-        .chat-header { background: white; padding: 12px 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #ddd; position: relative; }
-        .header-left { display: flex; align-items: center; gap: 12px; }
-        .btn-menu-dots { cursor: pointer; padding: 5px; font-size: 18px; color: #555; }
+        /* --- HEADER --- */
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #f0f0f0; }
+        .header i { font-size: 20px; color: #333; }
+        .header b { font-size: 18px; }
 
-        /* MENU DÉROULANT */
-        .options-menu { display: none; position: absolute; top: 50px; right: 15px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); width: 220px; z-index: 3000; flex-direction: column; padding: 8px 0; }
-        .option-item { padding: 12px 15px; display: flex; align-items: center; gap: 12px; cursor: pointer; font-size: 14px; color: #333; }
-        .option-item:hover { background: #f5f5f5; }
-        .option-item i { color: var(--violet-p); width: 20px; text-align: center; }
+        /* --- STORIES / AVATARS EN HAUT --- */
+        .stories-container { display: flex; gap: 15px; padding: 15px; overflow-x: auto; border-bottom: 1px solid #f5f5f5; }
+        .story-item { text-align: center; font-size: 11px; min-width: 70px; }
+        .story-circle { width: 65px; height: 65px; border-radius: 50%; border: 2px solid #20d5ec; padding: 2px; object-fit: cover; }
 
-        /* CONTENU CHAT */
-        .chat-messages { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .bubble { padding: 10px 14px; border-radius: 18px; max-width: 75%; font-size: 14px; }
-        .sent { background: var(--violet-p); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+        /* --- LISTE DES MESSAGES ET ACTIVITÉS --- */
+        .msg-list { display: flex; flex-direction: column; }
+        .msg-item { display: flex; align-items: center; padding: 12px 15px; gap: 12px; cursor: pointer; border-bottom: 0.5px solid #fafafa; }
+        .icon-circle { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: white; }
+        .profile-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
 
-        /* BARRE BAS */
-        .chat-input-bar { background: white; padding: 10px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #ddd; }
-        .btn-plus { width: 34px; height: 34px; background: #f0f0f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        .input-field { flex-grow: 1; background: #f0f2f5; border: none; padding: 10px 15px; border-radius: 20px; outline: none; }
+        /* COULEURS SPÉCIFIQUES */
+        .bg-blue { background-color: #4da9ff; }
+        .bg-pink { background-color: #ff4d6d; } /* Pour l'activité Coeur */
+        .bg-dark-blue { background-color: #2c3e50; }
+
+        .msg-content { flex-grow: 1; }
+        .msg-content b { font-size: 14px; display: block; }
+        .msg-content span { font-size: 13px; color: #777; }
+
+        /* BADGES ROUGES */
+        .badge-red { background: var(--pink-notif); color: white; font-size: 11px; font-weight: bold; min-width: 18px; height: 18px; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 0 5px; }
+        .cam-icon { color: #ccc; font-size: 18px; }
+
+        /* --- NAVIGATION BAS --- */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 60px; background: #000; display: flex; justify-content: space-around; align-items: center; }
+        .nav-item { color: white; font-size: 22px; position: relative; opacity: 0.7; }
+        .nav-item.active { opacity: 1; }
+        .nav-badge { position: absolute; top: -5px; right: -8px; background: var(--pink-notif); color: white; font-size: 10px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 1px solid black; }
+        .btn-plus-main { background: linear-gradient(to right, #20d5ec, var(--violet-p)); padding: 4px 14px; border-radius: 8px; color: black; font-weight: bold; font-size: 20px; }
     </style>
 </head>
 <body>
 
-    <div id="page-chat">
-        <div class="chat-header">
-            <div class="header-left">
-                <i class="fas fa-arrow-left"></i>
-                <img src="https://i.pravatar.cc/100?u=1" style="width: 35px; height: 35px; border-radius: 50%;">
-                <b>Norah Nelsie</b>
-            </div>
-            <div class="btn-menu-dots" onclick="toggleOptionsMenu()">
-                <i class="fas fa-ellipsis-v"></i>
-            </div>
-
-            <div class="options-menu" id="optionsMenu">
-                <div class="option-item" onclick="alert('Enregistrement Vidéo/Photo lancé')">
-                    <i class="fas fa-camera-retro"></i> Enregistrer Vidéo & Photo
-                </div>
-                <div class="option-item" onclick="toggleEphemeral()">
-                    <i class="fas fa-bolt"></i> Mode Éphémère: <span id="eph-label" style="margin-left:5px; font-weight:bold; color:red;">OFF</span>
-                </div>
-                <div class="option-item" onclick="changeTheme()">
-                    <i class="fas fa-paint-brush"></i> Thème de discussion
-                </div>
-                <div class="option-item" style="border-top: 1px solid #eee; color: red;">
-                    <i class="fas fa-ban"></i> Bloquer l'utilisateur
-                </div>
-            </div>
-        </div>
-
-        <div class="chat-messages" id="chat-box">
-            <div class="bubble sent">ilbsdkjbiqsUHdmbqs</div>
-            <div class="bubble sent" style="display: flex; align-items: center; gap: 8px;">
-                <i class="fas fa-play"></i>
-                <div style="width: 100px; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px;"></div>
-                <span>0:04</span>
-            </div>
-        </div>
-
-        <div class="chat-input-bar">
-            <div class="btn-plus"><i class="fas fa-plus"></i></div>
-            <input type="text" class="input-field" placeholder="Message...">
-            <i class="fas fa-microphone" style="color: #555;"></i>
-        </div>
+    <div class="header">
+        <i class="fas fa-users"></i>
+        <b>Messages <span style="color: #2ecc71; font-size: 25px; vertical-align: middle;">•</span></b>
+        <i class="fas fa-search"></i>
     </div>
 
-    <script>
-        let ephActive = false;
-        let themeIndex = 0;
-        const themes = ['#f0f2f5', '#ffe0e0', '#e0f7fa', '#f3e5f5'];
+    <div class="stories-container">
+        <div class="story-item"><img src="https://i.pravatar.cc/100?u=a" class="story-circle"><br>Mura... 🍒</div>
+        <div class="story-item"><img src="https://i.pravatar.cc/100?u=b" class="story-circle"><br>Norah Nelsie</div>
+        <div class="story-item"><img src="https://i.pravatar.cc/100?u=c" class="story-circle"><br>Aina Andriah</div>
+        <div class="story-item"><img src="https://i.pravatar.cc/100?u=d" class="story-circle"><br>Wichouuu❤️</div>
+    </div>
 
-        function toggleOptionsMenu() {
-            const menu = document.getElementById('optionsMenu');
-            menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
-        }
+    <div class="msg-list">
+        
+        <div class="msg-item">
+            <div class="icon-circle bg-blue"><i class="fas fa-user-plus"></i></div>
+            <div class="msg-content">
+                <b>Nouveaux followers</b>
+                <span>Hardy Jurcia a commencé à te suivre.</span>
+            </div>
+            <div class="badge-red">10</div>
+        </div>
 
-        // Fermer le menu si on clique ailleurs
-        window.onclick = function(event) {
-            if (!event.target.matches('.fa-ellipsis-v') && !event.target.matches('.btn-menu-dots')) {
-                document.getElementById('optionsMenu').style.display = "none";
-            }
-        }
+        <div class="msg-item" style="background-color: #fff9fb;">
+            <div class="icon-circle bg-pink"><i class="fas fa-heart"></i></div>
+            <div class="msg-content">
+                <b>Activité</b>
+                <span>Clau🧡 a répondu à ton commentaire : ...</span>
+            </div>
+            <div class="badge-red">21</div>
+        </div>
 
-        function toggleEphemeral() {
-            ephActive = !ephActive;
-            const label = document.getElementById('eph-label');
-            label.innerText = ephActive ? "ON" : "OFF";
-            label.style.color = ephActive ? "#4CAF50" : "red";
-            alert(ephActive ? "Mode Éphémère activé" : "Mode Éphémère désactivé");
-        }
+        <div class="msg-item">
+            <div class="icon-circle bg-dark-blue"><i class="fas fa-comment-dots"></i></div>
+            <div class="msg-content">
+                <b>Demandes de messages</b>
+                <span>Tu as reçu 4 demandes</span>
+            </div>
+            <div class="badge-red">4</div>
+        </div>
 
-        function changeTheme() {
-            themeIndex = (themeIndex + 1) % themes.length;
-            document.getElementById('page-chat').style.background = themes[themeIndex];
-        }
-    </script>
+        <div class="msg-item" onclick="location.href='chat.html'">
+            <img src="https://i.pravatar.cc/100?u=1" class="profile-img">
+            <div class="msg-content">
+                <b>Norah Nelsie</b>
+                <span>ilbsdkjbiqsUHdmbqs</span>
+            </div>
+            <div class="badge-red">1</div>
+        </div>
+
+        <div class="msg-item">
+            <img src="https://i.pravatar.cc/100?u=x" class="profile-img">
+            <div class="msg-content">
+                <b>Hadriel 🇲🇬</b>
+                <span>Ça va toi ? • 6 j</span>
+            </div>
+            <div class="badge-red">1</div>
+        </div>
+
+        <div class="msg-item">
+            <img src="https://i.pravatar.cc/100?u=y" class="profile-img">
+            <div class="msg-content">
+                <b>personne</b>
+                <span>Dis bonjour à personne</span>
+            </div>
+            <i class="fas fa-camera cam-icon"></i>
+        </div>
+
+    </div>
+
+    <div class="bottom-nav">
+        <i class="fas fa-home nav-item"></i>
+        <div class="nav-item">
+            <i class="fas fa-users"></i>
+            <div class="nav-badge">65</div>
+        </div>
+        <div class="btn-plus-main">+</div>
+        <div class="nav-item active">
+            <i class="fas fa-envelope"></i>
+            <div class="nav-badge">42</div>
+        </div>
+        <i class="fas fa-user nav-item"></i>
+    </div>
+
 </body>
 </html>
