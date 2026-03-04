@@ -3,164 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threndly - Full App</title>
+    <title>Threndly - Messagerie</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --violet-p: #9c27b0; --pink-notif: #ff3b5c; --blue-cert: #20d5ec; --bg-input: #f1f1f1; }
-        body, html { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background: white; height: 100%; overflow: hidden; width: 100%; }
+        :root {
+            --threndly-purple: #9c27b0;
+            --threndly-blue-certif: #0095f6; /* Ton bleu de certification */
+            --bg-light: #f4f4f4;
+        }
 
-        /* --- STRUCTURE --- */
-        .page { display: none; height: calc(100% - 65px); width: 100%; overflow-y: auto; }
-        .active-page { display: flex; flex-direction: column; }
-
-        /* --- VUE CHAT AVEC BOUTONS D'APPEL --- */
-        #view-chat { position: fixed; top: 0; left: 100%; width: 100%; height: 100%; background: #fff; z-index: 2000; transition: 0.3s; display: flex; flex-direction: column; }
-        #view-chat.active { left: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: var(--bg-light); }
         
-        .chat-header { background: white; padding: 10px 15px; display: flex; align-items: center; border-bottom: 1px solid #eee; }
-        .header-info { flex-grow: 1; display: flex; align-items: center; gap: 10px; }
-        .header-actions { display: flex; gap: 20px; color: #333; font-size: 18px; margin-right: 10px; }
-
-        .chat-messages { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #fdfdfd; }
+        /* En-tête du profil */
+        .header { background: white; padding: 10px; display: flex; align-items: center; border-bottom: 1px solid #ddd; }
+        .back-btn { font-size: 20px; margin-right: 15px; cursor: pointer; }
+        .profile-pic { width: 40px; height: 40px; border-radius: 50%; background: #ccc; margin-right: 10px; }
+        .user-info b { display: flex; align-items: center; gap: 5px; }
         
-        /* Bulle et Double Check Bleu */
-        .bubble { padding: 10px 15px; border-radius: 18px; max-width: 75%; font-size: 14px; position: relative; }
-        .sent { background: var(--violet-p); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
-        .check-container { display: flex; justify-content: flex-end; align-items: center; gap: 3px; font-size: 10px; margin-top: 4px; opacity: 0.9; }
-        .fa-check-double { color: #20d5ec; } /* LE VRAI VU EN BLEU */
+        /* Badge Bleu (Strictement inchangé) */
+        .certif-badge { color: var(--threndly-blue-certif); font-size: 14px; }
 
-        /* CLAVIER */
-        .chat-input-area { background: white; padding: 8px 12px; border-top: 1px solid #eee; }
-        .input-flex-container { display: flex; align-items: center; gap: 10px; }
-        .btn-camera-main { background: #00a2f8; color: white; min-width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        .input-search-style { flex-grow: 1; background: var(--bg-input); border-radius: 25px; display: flex; align-items: center; padding: 0 15px; height: 42px; position: relative; }
-        .input-search-style input { border: none; background: transparent; outline: none; width: 100%; font-size: 15px; }
-        .inner-tools { position: absolute; right: 12px; display: flex; gap: 12px; color: #555; }
+        /* Zone de messages */
+        .chat-container { padding: 20px; display: flex; flex-direction: column; gap: 15px; height: 80vh; overflow-y: auto; }
+        
+        .message-sent {
+            align-self: flex-end;
+            background-color: var(--threndly-purple);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 18px 18px 0 18px;
+            max-width: 70%;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
 
-        /* NAV BAS */
-        .nav-bottom { position: fixed; bottom: 0; width: 100%; height: 65px; background: black; display: flex; justify-content: space-around; align-items: center; }
-        .nav-item { color: white; opacity: 0.6; font-size: 24px; position: relative; }
-        .n-badge { position: absolute; top: -8px; right: -10px; background: var(--pink-notif); color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; }
+        .message-content { margin-bottom: 5px; word-wrap: break-word; }
+
+        /* Système de Coche (Ticks) */
+        .status-container {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            font-size: 11px;
+            gap: 4px;
+            opacity: 0.9;
+        }
+
+        .tick { font-size: 10px; }
+        .tick.read { color: var(--threndly-blue-certif); font-weight: bold; } /* Double bleu si vu */
+
+        /* Barre d'envoi */
+        .input-area {
+            position: fixed;
+            bottom: 0; width: 100%;
+            background: white;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            border-top: 1px solid #ddd;
+        }
+        .input-area input {
+            flex: 1; border: none; background: #eee;
+            padding: 10px; border-radius: 20px; margin: 0 10px;
+        }
     </style>
 </head>
 <body>
 
-    <div id="page-msg" class="page active-page">
-        <div style="padding: 15px; display: flex; justify-content: space-between; align-items: center;">
-            <i class="fas fa-th-large"></i>
-            <b>Messages <span style="color:#2ecc71">•</span></b>
-            <i class="fas fa-search"></i>
-        </div>
-        <div id="msg-list">
-            </div>
-    </div>
-
-    <div id="view-chat">
-        <div class="chat-header">
-            <i class="fas fa-arrow-left" onclick="closeChat()" style="margin-right: 15px;"></i>
-            <div class="header-info">
-                <img id="c-img" style="width:38px; border-radius:50%;">
-                <b id="c-name"></b>
-            </div>
-            <div class="header-actions">
-                <i class="fas fa-phone-alt" onclick="alert('Appel audio...')"></i>
-                <i class="fas fa-video" onclick="alert('Appel vidéo...')"></i>
-                <i class="fas fa-ellipsis-v"></i>
-            </div>
-        </div>
-        
-        <div class="chat-messages" id="chat-box">
-            <div class="bubble sent">
-                <div style="display:flex; align-items:center; gap:10px; width:160px;">
-                    <i class="fas fa-play"></i>
-                    <div style="height:4px; flex-grow:1; background:rgba(255,255,255,0.3); border-radius:2px;"></div>
-                    <small>0:04</small>
-                </div>
-                <div class="check-container"><span>17:08</span> <i class="fas fa-check-double"></i></div>
-            </div>
-        </div>
-
-        <div class="chat-input-area">
-            <div class="input-flex-container">
-                <div class="btn-camera-main"><i class="fas fa-camera"></i></div>
-                <div class="input-search-style">
-                    <input type="text" id="msgInput" placeholder="Message..." oninput="checkInput()">
-                    <div class="inner-tools">
-                        <i class="far fa-image"></i>
-                        <i class="far fa-smile"></i>
-                    </div>
-                </div>
-                <div class="action-btn">
-                    <i class="fas fa-microphone" id="micIco" style="font-size: 22px;"></i>
-                    <i class="fas fa-paper-plane" id="sendIco" style="display:none; color:var(--violet-p); font-size: 22px;" onclick="sendText()"></i>
-                </div>
-            </div>
+    <div class="header">
+        <span class="back-btn">←</span>
+        <div class="profile-pic"></div>
+        <div class="user-info">
+            <b>Norah Nelsie <i class="fas fa-check-circle certif-badge"></i></b>
+            <small>En ligne</small>
         </div>
     </div>
 
-    <div class="nav-bottom">
-        <i class="fas fa-home nav-item"></i>
-        <i class="fas fa-users nav-item"><div class="n-badge">65</div></i>
-        <div style="background:linear-gradient(to right, #20d5ec, var(--violet-p)); width:45px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:white;"><b>+</b></div>
-        <i class="fas fa-envelope nav-item active"><div class="n-badge">42</div></i>
-        <i class="fas fa-user nav-item"></i>
+    <div class="chat-container">
+        <div class="message-sent">
+            <div class="message-content">Le message est envoyé !</div>
+            <div class="status-container">
+                <span class="time">17:08</span>
+                <i class="fas fa-check tick"></i> </div>
+        </div>
+
+        <div class="message-sent">
+            <div class="message-content">ilbsdkjbiqsUHdmbqs</div>
+            <div class="status-container">
+                <span class="time">17:09</span>
+                <i class="fas fa-check-double tick read"></i> </div>
+        </div>
     </div>
 
-    <script>
-        let contacts = [
-            { id: 1, name: "Norah Nelsie", img: "https://i.pravatar.cc/100?u=norah", sub: "ilbsdkjbiqsUHdmbqs", badge: 1 }
-        ];
+    <div class="input-area">
+        <i class="fas fa-camera"></i>
+        <input type="text" placeholder="Message...">
+        <i class="fas fa-microphone"></i>
+    </div>
 
-        function renderContacts() {
-            const list = document.getElementById('msg-list');
-            list.innerHTML = "";
-            contacts.forEach(c => {
-                list.innerHTML += `
-                    <div style="padding: 12px 15px; display: flex; align-items: center; gap: 12px; cursor: pointer;" onclick="openChat(${c.id})">
-                        <img src="${c.img}" style="width:50px; border-radius:50%;">
-                        <div style="flex-grow:1;"><b>${c.name}</b><br><small style="color:gray;">${c.sub}</small></div>
-                        ${c.badge > 0 ? `<div style="background:var(--pink-notif); color:white; border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:11px;">${c.badge}</div>` : ''}
-                    </div>`;
-            });
-        }
-
-        function openChat(id) {
-            const c = contacts.find(x => x.id === id);
-            c.badge = 0; // Le badge rouge disparaît au clic
-            document.getElementById('c-name').innerText = c.name;
-            document.getElementById('c-img').src = c.img;
-            document.getElementById('view-chat').classList.add('active');
-            renderContacts();
-        }
-
-        function closeChat() { document.getElementById('view-chat').classList.remove('active'); }
-
-        function checkInput() {
-            let val = document.getElementById('msgInput').value;
-            document.getElementById('micIco').style.display = val ? 'none' : 'block';
-            document.getElementById('sendIco').style.display = val ? 'block' : 'none';
-        }
-
-        function sendText() {
-            let input = document.getElementById('msgInput');
-            let box = document.getElementById('chat-box');
-            if(input.value.trim()){
-                // Ajout de la bulle avec le double check bleu
-                box.innerHTML += `
-                    <div class="bubble sent">
-                        ${input.value}
-                        <div class="check-container"><span>17:09</span> <i class="fas fa-check-double"></i></div>
-                    </div>`;
-                
-                // Mise à jour du dernier message dans la liste
-                contacts[0].sub = input.value;
-                input.value = ""; 
-                checkInput();
-                renderContacts();
-                box.scrollTop = box.scrollHeight;
-            }
-        }
-        renderContacts();
-    </script>
 </body>
 </html>
