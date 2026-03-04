@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threndly - Notifications Dynamiques</title>
+    <title>Threndly - Messages Individuels</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -18,10 +18,12 @@
         .msg-header { display: flex; justify-content: space-between; padding: 15px; align-items: center; border-bottom: 1px solid #f9f9f9; }
         
         .list-item { display: flex; align-items: center; padding: 12px 15px; gap: 12px; border-bottom: 0.5px solid #f1f1f1; animation: slideIn 0.4s ease-out; }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         
         .profile-msg-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
-        .badge-red-small { background: #ff3b5c; color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; margin-left: auto; }
+        
+        /* Badge rouge à droite de la personne */
+        .badge-person { background: #ff3b5c; color: white; font-size: 11px; font-weight: bold; min-width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: auto; padding: 2px; }
 
         .btn-test-msg { position: absolute; top: 80px; right: 15px; background: #20d5ec; color: black; border: none; padding: 8px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; z-index: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
 
@@ -35,8 +37,8 @@
         .nav-item.active { opacity: 1; }
         .btn-plus-tiktok { background: linear-gradient(to right, #20d5ec 15%, var(--violet-p) 85%); padding: 5px 15px; border-radius: 10px; color: black; font-weight: bold; }
         
-        /* Badge de notification en rouge */
-        .notif-badge { position: absolute; top: -5px; right: -8px; background: red; color: white; font-size: 10px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid black; font-weight: bold; }
+        /* Badge sur l'enveloppe */
+        .notif-badge-env { position: absolute; top: -5px; right: -8px; background: red; color: white; font-size: 10px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid black; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -50,7 +52,7 @@
                     @<span>Threndly</span> 
                     <i class="fas fa-check-circle" style="color: #20d5ec; font-size: 14px;"></i>
                 </div>
-                <p>Nouveau message ? Vérifie l'enveloppe !</p>
+                <p>Nouveau message ? Regarde ton badge rouge !</p>
             </div>
         </div>
 
@@ -60,7 +62,6 @@
                 <b style="font-size: 17px;">Messages</b>
                 <i class="fas fa-search"></i>
             </div>
-            
             <div id="dynamic-messages-list"></div>
         </div>
 
@@ -69,51 +70,56 @@
             <div class="btn-plus-tiktok">+</div>
             <div class="nav-item" id="btn-msg" onclick="openMessages()">
                 <i class="fas fa-envelope"></i>
-                <div class="notif-badge" id="ui-badge" style="display:none;">0</div>
+                <div class="notif-badge-env" id="env-badge" style="display:none;">0</div>
             </div>
             <i class="fas fa-user nav-item"></i>
         </div>
     </div>
 
     <script>
-        let unreadCount = 0;
-        let messages = [];
+        let totalUnread = 0;
+        // On stocke les messages par personne pour compter
+        let contacts = {
+            "Wichouuu❤️": { img: "https://i.pravatar.cc/100?u=13", lastMsg: "Salut !", count: 0, time: "14:30" },
+            "Norah Nelsie": { img: "https://i.pravatar.cc/100?u=11", lastMsg: "J'adore ton style !", count: 0, time: "12:10" }
+        };
 
         function renderMessages() {
             const list = document.getElementById('dynamic-messages-list');
             list.innerHTML = ""; 
-            messages.forEach(msg => {
+            
+            for (let name in contacts) {
+                let person = contacts[name];
                 list.innerHTML += `
                     <div class="list-item">
-                        <img src="${msg.img}" class="profile-msg-img">
+                        <img src="${person.img}" class="profile-msg-img">
                         <div style="flex-grow: 1;">
-                            <b>${msg.name}</b><br>
-                            <span style="color:gray; font-size:13px;">${msg.text}</span>
+                            <b>${name}</b><br>
+                            <span style="color:gray; font-size:13px;">${person.lastMsg}</span>
                         </div>
-                        <div style="color: gray; font-size: 11px;">${msg.time}</div>
+                        ${person.count > 0 ? `<div class="badge-person">${person.count}</div>` : `<div style="color:gray; font-size:11px;">${person.time}</div>`}
                     </div>
                 `;
-            });
+            }
         }
 
         function receiveNewMessage() {
-            unreadCount++; // Augmente le nombre de notifications
-            const names = ["Wichouuu❤️", "Lova Rico", "Aina Andriah", "Hardy Jurcia"];
-            const newMsg = {
-                name: names[Math.floor(Math.random() * names.length)],
-                img: `https://i.pravatar.cc/100?u=${Math.random()}`,
-                text: "Vient de t'envoyer un message...",
-                time: "À l'instant"
-            };
-            messages.unshift(newMsg);
+            const names = Object.keys(contacts);
+            const randomName = names[Math.floor(Math.random() * names.length)];
+            
+            contacts[randomName].count += 1; // On augmente le compteur de cette personne précise
+            contacts[randomName].lastMsg = "Vient d'envoyer un message...";
+            contacts[randomName].time = "À l'instant";
+            
+            totalUnread++;
+            
+            // Met à jour le badge sur l'enveloppe
+            const envBadge = document.getElementById('env-badge');
+            envBadge.innerText = totalUnread;
+            envBadge.style.display = 'flex';
+            
             renderMessages();
-            
-            // Mise à jour du badge rouge avec le nombre
-            const badge = document.getElementById('ui-badge');
-            badge.innerText = unreadCount;
-            badge.style.display = 'flex';
-            
-            confetti({ particleCount: 30, spread: 50, origin: { y: 0.9 } });
+            confetti({ particleCount: 20, origin: { y: 0.9 } });
         }
 
         function openMessages() {
@@ -122,9 +128,9 @@
             document.getElementById('btn-msg').classList.add('active');
             document.getElementById('btn-home').classList.remove('active');
             
-            // On remet le compteur à zéro quand on ouvre les messages
-            unreadCount = 0;
-            document.getElementById('ui-badge').style.display = 'none';
+            // L'enveloppe ne montre plus de badge global quand on est sur la page
+            totalUnread = 0;
+            document.getElementById('env-badge').style.display = 'none';
             renderMessages();
         }
 
@@ -134,6 +140,9 @@
             document.getElementById('btn-home').classList.add('active');
             document.getElementById('btn-msg').classList.remove('active');
         }
+
+        // Initialisation
+        renderMessages();
     </script>
 </body>
 </html>
