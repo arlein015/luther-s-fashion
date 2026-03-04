@@ -3,172 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luther's Fashion - Violet Style</title>
+    <title>Threndly - Official App</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        :root { --violet-p: #9c27b0; --violet-c: #ce85f2; --bg-dark: #1a0121; --bg-light: #3a0e4e; }
-        body, html { margin: 0; padding: 0; height: 100%; background: var(--bg-dark); font-family: 'Segoe UI', sans-serif; color: white; overflow: hidden; }
+        :root { 
+            --threndly-blue: #20d5ec; 
+            --threndly-violet: #3a0e4e; 
+            --notif-red: #ff3b5c; 
+        }
+        
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; overflow: hidden; background: #000; }
+        .main-container { height: 100vh; width: 100%; position: relative; }
 
-        /* --- FOND VIOLET EN DÉGRADÉ --- */
-        .main-container { height: 100vh; background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-light) 100%); display: flex; flex-direction: column; position: relative; }
+        /* --- PAGE ACCUEIL (VIOLET) --- */
+        #page-home { height: 100%; background: linear-gradient(180deg, #1a0121 0%, var(--threndly-violet) 100%); position: relative; display: block; }
+        
+        .top-tabs { position: absolute; top: 15px; width: 100%; display: flex; justify-content: center; gap: 15px; font-weight: bold; color: white; z-index: 10; }
+        .tab-link { opacity: 0.6; cursor: pointer; font-size: 14px; }
+        .tab-link.active { opacity: 1; border-bottom: 2px solid white; }
 
-        /* Navigation Haut */
-        .top-nav { position: absolute; top: 20px; width: 100%; display: flex; justify-content: center; gap: 20px; font-weight: bold; z-index: 10; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
-        .tab { opacity: 0.7; cursor: pointer; border-bottom: 2px solid transparent; padding-bottom: 5px; }
-        .tab.active { opacity: 1; border-bottom: 2px solid white; }
+       /* STYLE DU BADGE BLEU FONCÉ */
+.badge-verified {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    background-color: #0088cc; /* Un bleu plus foncé et plus soutenu */
+    clip-path: polygon(50% 0%, 58% 10%, 68% 5%, 72% 16%, 83% 15%, 83% 26%, 93% 30%, 90% 41%, 98% 50%, 90% 59%, 93% 70%, 83% 74%, 83% 85%, 72% 84%, 68% 95%, 58% 90%, 50% 100%, 42% 90%, 32% 95%, 28% 84%, 17% 85%, 17% 74%, 7% 70%, 10% 59%, 2% 50%, 10% 41%, 7% 30%, 17% 26%, 17% 15%, 28% 16%, 32% 5%, 42% 10%);
+    margin-left: 5px;
+    vertical-align: middle;
+    box-shadow: 0 0 2px rgba(0,0,0,0.5); /* Pour qu'il ressorte mieux sur le violet */
+}
 
-        /* Stories */
-        .stories { position: absolute; top: 70px; left: 10px; display: flex; gap: 10px; z-index: 10; }
-        .story { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--violet-p); padding: 2px; position: relative; }
-        .story img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .story.me::after { content: '+'; position: absolute; bottom: 0; right: 0; background: var(--violet-p); width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; border: 2px solid white; color: white; }
+.badge-verified::after {
+    content: '\f00c'; 
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    color: white; 
+    font-size: 8px;
+}
+        .side-actions { position: absolute; right: 10px; bottom: 100px; display: flex; flex-direction: column; align-items: center; gap: 18px; color: white; }
+        .action-item { text-align: center; font-size: 12px; cursor: pointer; }
+        .action-item i { font-size: 28px; margin-bottom: 4px; }
 
-        /* Actions Droite */
-        .side-actions { position: absolute; right: 10px; bottom: 120px; display: flex; flex-direction: column; align-items: center; gap: 20px; z-index: 10; }
-        .action-btn { text-align: center; font-size: 12px; cursor: pointer; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
-        .action-btn i { font-size: 30px; margin-bottom: 5px; color: white; }
-        .heart.active { color: #ff3b5c; animation: heartBeat 0.4s ease; }
-        @keyframes heartBeat { 0% {transform:scale(1);} 50% {transform:scale(1.3);} 100% {transform:scale(1);} }
+        /* --- PAGE MESSAGES (BLANC) --- */
+        #page-messages { height: calc(100% - 65px); background: white; color: black; display: none; overflow-y: auto; }
+        .msg-header { display: flex; justify-content: space-between; padding: 15px; align-items: center; border-bottom: 1px solid #f9f9f9; }
+        .msg-story-container { display: flex; gap: 15px; padding: 15px; overflow-x: auto; border-bottom: 1px solid #f0f0f0; }
+        .img-wrapper { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--threndly-blue); padding: 2px; margin-bottom: 5px; }
+        .img-wrapper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .list-item { display: flex; align-items: center; padding: 12px 15px; gap: 12px; }
+        .notif-icon { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; }
+        .badge-red-small { background: var(--notif-red); color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: auto; }
 
-        /* Photo de Profil Côté */
-        .profile-pic-side { width: 50px; height: 50px; border-radius: 50%; border: 2px solid white; margin-bottom: 10px; object-fit: cover; }
-
-        /* Disque de Musique qui tourne */
-        .music-disc { width: 40px; height: 40px; background: radial-gradient(circle, #444 20%, #000 100%); border-radius: 50%; animation: rotate 3s linear infinite; border: 5px solid #222; margin-top: 10px; }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        /* Infos Bas Gauche */
-        .post-info { position: absolute; bottom: 80px; left: 15px; max-width: 70%; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
-        .user-tag { display: flex; align-items: center; gap: 5px; font-weight: bold; font-size: 16px; margin-bottom: 5px; }
-
-        /* BARRE DE NAVIGATION BAS */
-        .bottom-nav { position: absolute; bottom: 0; width: 100%; height: 60px; background: #000; display: flex; justify-content: space-around; align-items: center; border-top: 0.5px solid #333; z-index: 100; }
-        .nav-item { font-size: 22px; cursor: pointer; color: white; position: relative; }
-        .btn-plus-tiktok { background: linear-gradient(to right, #20d5ec 15%, var(--violet-p) 85%); padding: 5px 15px; border-radius: 10px; color: black; font-weight: bold; }
-        .notif-badge { position: absolute; top: -5px; right: -8px; background: red; color: white; font-size: 10px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid black; }
-
-        /* MODALES */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 1000; }
-        .modal-content { background: white; color: black; width: 90%; max-width: 380px; padding: 30px; border-radius: 20px; text-align: center; }
-        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #ddd; box-sizing: border-box; }
-        .btn-finish { width: 100%; background: var(--bg-dark); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        /* --- BARRE DE NAVIGATION (NOIR) --- */
+        .bottom-nav { position: absolute; bottom: 0; width: 100%; height: 65px; background: #000; display: flex; justify-content: space-around; align-items: center; border-top: 0.5px solid #333; z-index: 100; }
+        .nav-icon { color: white; font-size: 22px; cursor: pointer; position: relative; opacity: 0.7; transition: 0.3s; }
+        .nav-icon.active { opacity: 1; }
+        .btn-add { background: linear-gradient(to right, var(--threndly-blue), var(--notif-red)); padding: 4px 14px; border-radius: 8px; color: black; font-weight: bold; cursor: pointer; }
+        
+        /* BADGE ROUGE PERMANENT */
+        .env-badge { position: absolute; top: -5px; right: -8px; background: var(--notif-red); color: white; font-size: 10px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid black; }
     </style>
 </head>
 <body>
 
     <div class="main-container">
-        <div class="top-nav">
-            <span class="tab">Suivi</span>
-            <span class="tab active">Pour toi</span>
-        </div>
-
-        <div class="stories">
-            <div class="story me"><img id="avatarStory" src="https://via.placeholder.com/100"></div>
-            <div class="story"><img src="https://i.pravatar.cc/100?u=1"></div>
-            <div class="story"><img src="https://i.pravatar.cc/100?u=2"></div>
-        </div>
-
-        <div class="post-info">
-            <div class="user-tag">
-                @<span id="displayUser">Luther</span> 
-                <i class="fas fa-check-circle" style="color: #20d5ec; font-size: 14px;"></i>
+        
+        <div id="page-home">
+            <div class="top-tabs">
+                <span class="tab-link">Suivi</span>
+                <span class="tab-link active">Pour toi</span>
+                <span class="tab-link">Live</span>
             </div>
-            <p style="font-size: 14px; margin: 5px 0;">Découvrez la collection Luther's Fashion 2024 ! #Style #Mode #Premium 🚀</p>
-            <p style="font-size: 13px; opacity: 0.9;"><i class="fas fa-music"></i> <marquee scrollamount="3" style="width: 150px;">Luther - Son Original 2024</marquee></p>
+
+            <div style="position: absolute; bottom: 85px; left: 15px; color: white;">
+                <div style="display: flex; align-items: center; font-weight: bold; font-size: 16px; margin-bottom: 6px;">
+                    @ Threndly <span class="badge-verified"></span>
+                </div>
+                <div style="font-size: 13px; max-width: 280px; line-height: 1.4;">
+                    Découvrez la collection Threndly 2026 ! #Style #Mode #Premium 🚀
+                </div>
+                <div style="margin-top: 8px; font-size: 12px; opacity: 0.9;">
+                    <i class="fas fa-music"></i> &nbsp; Threndly Audio - Son Original
+                </div>
+            </div>
+
+            <div class="side-actions">
+                <div class="action-item" onclick="addLike()"><i class="fas fa-heart" id="heart"></i><br><span id="like-count">150K</span></div>
+                <div class="action-item"><i class="fas fa-comment-dots"></i><br>856</div>
+                <div class="action-item"><i class="fas fa-share"></i><br>Partager</div>
+            </div>
         </div>
 
-        <div class="side-actions">
-            <img class="profile-pic-side" id="avatarSide" src="https://via.placeholder.com/100">
-            <div class="action-btn" onclick="toggleLike(this)"><i class="fas fa-heart heart"></i><br>150K</div>
-            <div class="action-btn" onclick="alert('Commentaires ouverts')"><i class="fas fa-comment-dots"></i><br>856</div>
-            <div class="action-btn" onclick="shareNow()"><i class="fas fa-share"></i><br>Partager</div>
-            <div class="music-disc"></div>
+        <div id="page-messages">
+            <div class="msg-header">
+                <i class="fas fa-user-plus"></i>
+                <b style="font-size: 17px;">Messages <span style="color:#2ecc71">●</span></b>
+                <i class="fas fa-search"></i>
+            </div>
+
+            <div class="msg-story-container">
+                <div style="text-align:center; font-size:11px; min-width:65px;"><div class="img-wrapper"><img src="https://i.pravatar.cc/100?u=1"></div>Murah ca...</div>
+                <div style="text-align:center; font-size:11px; min-width:65px;"><div class="img-wrapper"><img src="https://i.pravatar.cc/100?u=2"></div>Norah Nelsie</div>
+                <div style="text-align:center; font-size:11px; min-width:65px;"><div class="img-wrapper"><img src="https://i.pravatar.cc/100?u=3"></div>Aina Andriah</div>
+                <div style="text-align:center; font-size:11px; min-width:65px;"><div class="img-wrapper"><img src="https://i.pravatar.cc/100?u=4"></div>Wichouuu❤️</div>
+            </div>
+
+            <div class="list-item">
+                <div class="notif-icon" style="background:#00a2ff"><i class="fas fa-users"></i></div>
+                <div><b>Nouveaux followers</b><br><span style="color:gray; font-size:13px;">Hardy Jurcia a commencé à te suivre.</span></div>
+                <div class="badge-red-small">10</div>
+            </div>
+            <div class="list-item">
+                <div class="notif-icon" style="background:var(--notif-red)"><i class="fas fa-heart"></i></div>
+                <div><b>Activité</b><br><span style="color:gray; font-size:13px;">Clau 🦋 a répondu à ton commentaire...</span></div>
+                <div class="badge-red-small">21</div>
+            </div>
         </div>
 
         <div class="bottom-nav">
-            <i class="fas fa-home nav-item" onclick="location.reload()"></i>
-            <i class="fas fa-compass nav-item" onclick="alert('Viral / Exploration')"></i>
-            <div class="btn-plus-tiktok" onclick="openModal('modalPost')">+</div>
-            <div class="nav-item" onclick="clearMsg()">
+            <i class="fas fa-home nav-icon active" id="btn-home" onclick="navTo('home')"></i>
+            <i class="fas fa-compass nav-icon"></i>
+            <div class="btn-add" onclick="confetti({particleCount:100})">+</div>
+            <div class="nav-icon" id="btn-msg" onclick="navTo('msg')">
                 <i class="fas fa-envelope"></i>
-                <div class="notif-badge" id="badgeMsg">1</div>
-            </div>
-            <i class="fas fa-user nav-item" onclick="openModal('modalLogin')"></i>
+                <div class="env-badge">1</div> </div>
+            <i class="fas fa-user nav-icon"></i>
         </div>
-    </div>
 
-    <div id="modalLogin" class="modal">
-        <div class="modal-content">
-            <h2 id="modalTitle">Rejoindre Luther's</h2>
-            <div id="step1">
-                <input type="email" id="userEmail" placeholder="Email">
-                <input type="password" id="userPass" placeholder="Mot de passe">
-                <button class="btn-finish" onclick="nextStep()">Suivant</button>
-            </div>
-            <div id="step2" style="display: none;">
-                <input type="file" id="upload" accept="image/*" onchange="preview(this)">
-                <input type="text" id="userAddr" placeholder="Adresse complète">
-                <textarea id="userBio" placeholder="Ta bio mode..."></textarea>
-                <button class="btn-finish" onclick="saveProfile()">Enregistrer mon profil</button>
-            </div>
-        </div>
     </div>
 
     <script>
-        const SHEETS_URL = "https://script.google.com/macros/s/AKfycbzmWi55H7--DzkuiTHWS4Q4xmqeBq9WvkLpd0y9GIpTL3osmmL4zpACStbOCOwYgw0Q/exec";
+        function navTo(page) {
+            const home = document.getElementById('page-home');
+            const msg = document.getElementById('page-messages');
+            const iconHome = document.getElementById('btn-home');
+            const iconMsg = document.getElementById('btn-msg');
 
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        function nextStep() { document.getElementById('step1').style.display='none'; document.getElementById('step2').style.display='flex'; }
-
-        function preview(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('avatarStory').src = e.target.result;
-                    document.getElementById('avatarSide').src = e.target.result;
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        function saveProfile() {
-            const data = {
-                email: document.getElementById('userEmail').value,
-                adresse: document.getElementById('userAddr').value,
-                bio: document.getElementById('userBio').value
-            };
-            
-            // Envoi à Google Sheets
-            fetch(SHEETS_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
-            
-            document.getElementById('displayUser').innerText = data.email.split('@')[0];
-            confetti({ particleCount: 150 });
-            closeModal('modalLogin');
-        }
-
-        function clearMsg() { document.getElementById('badgeMsg').style.display = 'none'; alert("Messages ouverts"); }
-        
-        function toggleLike(btn) {
-            const heart = btn.querySelector('.heart');
-            heart.classList.toggle('active');
-            if(heart.classList.contains('active')) {
-                heart.className = 'fas fa-heart heart active';
-                confetti({ particleCount: 30, spread: 60, origin: { x: 0.9, y: 0.7 }, colors: ['#ff3b5c'] });
-            } else { heart.className = 'fas fa-heart heart'; }
-        }
-
-        function shareNow() {
-            if (navigator.share) {
-                navigator.share({ title: "Luther's Fashion", url: window.location.href });
+            if (page === 'msg') {
+                home.style.display = 'none';
+                msg.style.display = 'block';
+                iconMsg.classList.add('active');
+                iconHome.classList.remove('active');
             } else {
-                navigator.clipboard.writeText(window.location.href);
-                alert("Lien copié ! Partage-le avec tes amis.");
+                home.style.display = 'block';
+                msg.style.display = 'none';
+                iconHome.classList.add('active');
+                iconMsg.classList.remove('active');
             }
+        }
+
+        function addLike() {
+            const heart = document.getElementById('heart');
+            heart.style.color = 'var(--notif-red)';
+            confetti({ particleCount: 40, colors: ['#ff3b5c'] });
         }
     </script>
 </body>
 </html>
-
