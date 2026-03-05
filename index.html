@@ -2,133 +2,166 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Threndly - Réseau Officiel</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+    <title>Threndly ✅</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
 
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f7f9f9; margin: 0; padding-bottom: 80px; }
-        
-        /* Barre de navigation */
-        .navbar { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 10px 20px; border-bottom: 1px solid #eff3f4; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        .logo { color: #1d9bf0; font-weight: 900; font-size: 24px; letter-spacing: -1px; }
-        .btn-profil { background: #000; color: white; border: none; padding: 8px 16px; border-radius: 99px; font-weight: bold; cursor: pointer; font-size: 14px; }
-
-        /* Flux de messages */
-        #flux { max-width: 600px; margin: auto; }
-        .tweet { background: white; border-bottom: 1px solid #eff3f4; padding: 15px; display: flex; flex-direction: column; }
-        .username { font-weight: bold; color: #0f1419; display: flex; align-items: center; }
-        .badge { color: #1d9bf0; margin-left: 4px; font-size: 16px; }
-        .content { margin-top: 5px; color: #0f1419; line-height: 1.5; font-size: 15px; word-wrap: break-word; }
-        
-        /* Message Système (Notification) */
-        .system-msg { background: #fff3cd !important; border-left: 4px solid #ffcc00; }
-
-        /* Modal Profil */
-        #modal-profil { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; display: flex; align-items: center; justify-content: center; }
-        .modal-content { background: white; width: 90%; max-width: 350px; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        h2 { margin-top: 0; font-size: 20px; }
-        input { width: 100%; padding: 12px; margin: 20px 0; border: 1px solid #cfd9de; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
-        .btn-save { background: #1d9bf0; color: white; width: 100%; padding: 12px; border-radius: 99px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; }
+        :root {
+            --blue-cert: #20d5ec;
+            --bg-dark: #121212;
+            --text-light: #ffffff;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        header {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #333;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        #chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+        .message {
+            background: #1e1e1e;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--blue-cert);
+        }
+        .username {
+            font-weight: bold;
+            color: var(--blue-cert);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .badge {
+            color: var(--blue-cert);
+            font-size: 0.9rem;
+        }
+        #input-area {
+            padding: 15px;
+            background: #1e1e1e;
+            display: flex;
+            gap: 10px;
+        }
+        input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background: #333;
+            color: white;
+        }
+        button {
+            background: var(--blue-cert);
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        /* Notification Prompt */
+        #notif-banner {
+            background: #222;
+            padding: 10px;
+            text-align: center;
+            display: none;
+        }
     </style>
 </head>
 <body>
 
-    <div class="navbar">
-        <div class="logo">Threndly</div>
-        <button class="btn-profil" onclick="ouvrirProfil()">👤 Profil</button>
+    <header>Threndly <span class="badge">✅</span></header>
+
+    <div id="notif-banner">
+        Souhaitez-vous activer les notifications Threndly ? 
+        <button onclick="requestNotif()">Activer ✅</button>
     </div>
 
-    <div id="modal-profil" style="display:none;">
-        <div class="modal-content">
-            <h2>Bienvenue sur Threndly</h2>
-            <p>Ton compte va recevoir le badge ✅</p>
-            <input type="text" id="usernameInput" placeholder="Ton nom d'utilisateur...">
-            <button class="btn-save" onclick="sauvegarderProfil()">Activer mon badge ✅</button>
+    <div id="chat-container">
         </div>
-    </div>
 
-    <div id="flux">
-        </div>
+    <div id="input-area">
+        <input type="text" id="userMsg" placeholder="Écrire un message...">
+        <button onclick="sendMessage()">Envoyer</button>
+    </div>
 
     <script>
-        // Ta configuration Firebase
+        // CONFIGURATION THRENDLY ✅
         const firebaseConfig = {
-            apiKey: "AIzaSyDimaKVWWObrRRR83OjVBJJbFtsNjXphXI",
+            apiKey: "AIzaSy... (Ta clé API)",
+            authDomain: "trendly-fca7c.firebaseapp.com",
+            databaseURL: "https://trendly-fca7c-default-rtdb.firebaseio.com",
             projectId: "trendly-fca7c",
-            appId: "1:305193026365:web:86699f8f4115b9c6f2a74c",
-            messagingSenderId: "305193026365"
+            storageBucket: "trendly-fca7c.appspot.com",
+            messagingSenderId: "1070458426638",
+            appId: "1:1070458426638:web:6a7dd8dadc78e45019735f"
         };
+
+        // Initialisation
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        const db = firebase.database();
         const messaging = firebase.messaging();
 
-        let monNom = localStorage.getItem('threndly_name');
+        // 1. Écouter les messages en temps réel
+        db.ref('messages').limitToLast(20).on('value', (snapshot) => {
+            const container = document.getElementById('chat-container');
+            container.innerHTML = '';
+            snapshot.forEach((child) => {
+                const msg = child.val();
+                container.innerHTML += `
+                    <div class="message">
+                        <div class="username">${msg.pseudo} <span class="badge">✅</span></div>
+                        <div>${msg.texte}</div>
+                    </div>
+                `;
+            });
+            container.scrollTop = container.scrollHeight;
+        });
 
-        // Gestion du Profil
-        if (!monNom) {
-            document.getElementById('modal-profil').style.display = 'flex';
-        }
-
-        function ouvrirProfil() {
-            document.getElementById('modal-profil').style.display = 'flex';
-            if(monNom) document.getElementById('usernameInput').value = monNom;
-        }
-
-        function sauvegarderProfil() {
-            const nom = document.getElementById('usernameInput').value.trim();
-            if (nom.length >= 2) {
-                localStorage.setItem('threndly_name', nom);
-                monNom = nom;
-                document.getElementById('modal-profil').style.display = 'none';
-                
-                // Demande de notification lors du clic sur le bouton
-                demanderPermissionNotifs();
+        // 2. Envoyer un message
+        function sendMessage() {
+            const input = document.getElementById('userMsg');
+            if (input.value.trim() !== "") {
+                db.ref('messages').push({
+                    pseudo: "Utilisateur", // Tu pourras plus tard ajouter un système de login
+                    texte: input.value,
+                    date: new Date().toLocaleString()
+                });
+                input.value = '';
             }
         }
 
-        function demanderPermissionNotifs() {
-            messaging.requestPermission()
-                .then(() => messaging.getToken())
-                .then((token) => {
-                    console.log("Token généré, notifications actives !");
-                    // On abonne l'utilisateur au sujet "all" pour recevoir les messages du Sheets
-                    messaging.subscribeToTopic('all'); 
-                })
-                .catch((err) => console.log("L'utilisateur a refusé ou erreur Safari."));
+        // 3. Gestion des Notifications (Pour iPhone et Android)
+        function requestNotif() {
+            Notification.requestPermission().then((permission) => {
+                if (permission === 'granted') {
+                    console.log('Notification autorisée !');
+                    document.getElementById('notif-banner').style.display = 'none';
+                    // S'abonner au topic "all" via ton service worker
+                }
+            });
         }
 
-        // Lecture des messages en temps réel
-        db.collection("messages").orderBy("timestamp", "desc").limit(20).onSnapshot((snap) => {
-            const flux = document.getElementById('flux');
-            flux.innerHTML = "";
-            snap.forEach((doc) => {
-                const data = doc.data();
-                const div = document.createElement('div');
-                
-                if (data.sender === "SYSTÈME") {
-                    div.className = "tweet system-msg";
-                    div.innerHTML = `<div class="content">📢 <b>INFO :</b> ${data.content}</div>`;
-                } else {
-                    div.className = "tweet";
-                    div.innerHTML = `
-                        <div class="username">${data.sender} <span class="badge">✅</span></div>
-                        <div class="content">${data.content}</div>
-                    `;
-                }
-                flux.appendChild(div);
-            });
-        });
-
-        // Enregistrement du Service Worker pour les notifications en arrière-plan
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/firebase-messaging-sw.js')
-            .then((reg) => {
-                messaging.useServiceWorker(reg);
-            });
+        // Afficher la bannière si les notifs ne sont pas encore acceptées
+        if (Notification.permission !== 'granted') {
+            document.getElementById('notif-banner').style.display = 'block';
         }
     </script>
 </body>
