@@ -1,49 +1,58 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Threndly - Profil & Réseau</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Threndly - Réseau Certifié</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #E1E8ED; margin: 0; }
-        .nav { background: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #CCD6DD; position: sticky; top: 0; }
-        .nav h1 { color: #1DA1F2; margin: 0; font-size: 20px; }
-        .btn-profil { background: #1DA1F2; color: white; border: none; padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; }
-        
-        #flux { padding: 10px; }
-        .msg { background: white; padding: 15px; border-radius: 15px; margin-bottom: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-        .sender { font-weight: bold; color: #14171A; }
-        .badge { color: #1DA1F2; margin-left: 4px; font-weight: bold; }
-        .content { margin-top: 5px; color: #444; }
-        .sys { background: #FFF3CD; text-align: center; border: 1px solid #FFEEBA; }
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
 
-        /* Modal Profil */
-        #modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:999; }
-        .modal-box { background:white; width:85%; max-width:400px; margin:25% auto; padding:20px; border-radius:20px; text-align:center; }
-        input { width: 90%; padding: 12px; margin: 15px 0; border: 1px solid #CCD6DD; border-radius: 10px; font-size: 16px; }
+    <style>
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f7f9f9; margin: 0; padding-bottom: 80px; }
+        
+        /* Barre de navigation */
+        .navbar { background: white; padding: 10px 20px; border-bottom: 1px solid #eff3f4; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        .logo { color: #1d9bf0; font-weight: bold; font-size: 22px; }
+        .btn-profil { background: #1d9bf0; color: white; border: none; padding: 8px 16px; border-radius: 99px; font-weight: bold; cursor: pointer; }
+
+        /* Style des messages */
+        #flux { max-width: 600px; margin: auto; padding: 10px; }
+        .tweet { background: white; border: 1px solid #eff3f4; padding: 15px; margin-bottom: 1px; }
+        .username { font-weight: bold; color: #0f1419; }
+        .badge { color: #1d9bf0; margin-left: 4px; font-size: 14px; }
+        .content { margin-top: 5px; color: #0f1419; line-height: 1.4; word-wrap: break-word; }
+        .system-msg { background: #fff3cd; border: 1px solid #ffeeba; border-radius: 10px; text-align: center; font-style: italic; }
+
+        /* Fenêtre de Profil (Modal) */
+        #modal-profil { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; }
+        .modal-content { background: white; width: 85%; max-width: 400px; margin: 20vh auto; padding: 25px; border-radius: 20px; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #cfd9de; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
+        .btn-save { background: #0f1419; color: white; width: 100%; padding: 12px; border-radius: 99px; border: none; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div class="nav">
-        <h1>Threndly</h1>
-        <button class="btn-profil" onclick="ouvrirProfil()">👤 Mon Profil</button>
+    <div class="navbar">
+        <div class="logo">Threndly</div>
+        <button class="btn-profil" onclick="ouvrirProfil()">👤 Profil</button>
     </div>
 
-    <div id="modal">
-        <div class="modal-box">
-            <h3>Bienvenue sur Threndly</h3>
-            <p>Choisis ton nom d'utilisateur :</p>
-            <input type="text" id="nameInput" placeholder="Ex: Jean_Dupont">
-            <button class="btn-profil" onclick="sauverProfil()">Valider mon profil ✅</button>
+    <div id="modal-profil">
+        <div class="modal-content">
+            <h2>Configurer mon profil</h2>
+            <p>Choisis le nom qui apparaîtra avec ton badge bleu ✅</p>
+            <input type="text" id="usernameInput" placeholder="Ton nom d'utilisateur...">
+            <button class="btn-save" onclick="sauvegarderProfil()">Enregistrer mon profil</button>
         </div>
     </div>
 
-    <div id="flux"></div>
+    <div id="flux">
+        </div>
 
     <script>
+        // Configuration Firebase (ne pas modifier)
         const firebaseConfig = {
             apiKey: "AIzaSyDimaKVWWObrRRR83OjVBJJbFtsNjXphXI",
             projectId: "trendly-fca7c",
@@ -52,41 +61,68 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Gestion Profil
-        let userNom = localStorage.getItem('threndly_user') || "";
-        if(!userNom) { ouvrirProfil(); }
+        // --- GESTION DU PROFIL ---
+        let monNom = localStorage.getItem('threndly_user_name');
+        
+        // Si c'est la première visite, on force l'ouverture du profil
+        if (!monNom) {
+            ouvrirProfil();
+        }
 
-        function ouvrirProfil() { document.getElementById('modal').style.display = 'block'; }
-        function sauverProfil() {
-            const nom = document.getElementById('nameInput').value;
-            if(nom) {
-                localStorage.setItem('threndly_user', nom);
-                document.getElementById('modal').style.display = 'none';
-                location.reload(); 
+        function ouvrirProfil() {
+            document.getElementById('modal-profil').style.display = 'block';
+            if(monNom) document.getElementById('usernameInput').value = monNom;
+        }
+
+        function sauvegarderProfil() {
+            const nouveauNom = document.getElementById('usernameInput').value.trim();
+            if (nouveauNom.length > 2) {
+                localStorage.setItem('threndly_user_name', nouveauNom);
+                monNom = nouveauNom;
+                document.getElementById('modal-profil').style.display = 'none';
+                alert("Profil Threndly mis à jour ! ✅");
+            } else {
+                alert("Choisis un nom plus long (3 caractères min).");
             }
         }
 
-        // Affichage des messages
-        db.collection("messages").orderBy("timestamp", "desc").limit(50).onSnapshot(snap => {
+        // --- AFFICHAGE DES MESSAGES EN TEMPS RÉEL ---
+        db.collection("messages").orderBy("timestamp", "desc").limit(50).onSnapshot((snap) => {
             const flux = document.getElementById('flux');
             flux.innerHTML = "";
-            snap.forEach(doc => {
-                const m = doc.data();
-                const div = document.createElement('div');
-                div.className = "msg" + (m.sender === "SYSTÈME" ? " sys" : "");
+            
+            snap.forEach((doc) => {
+                const data = doc.data();
+                const card = document.createElement('div');
                 
-                if(m.sender === "SYSTÈME") {
-                    div.innerHTML = `📢 <b>ALERTE :</b> ${m.content}`;
+                if (data.sender === "SYSTÈME") {
+                    card.className = "tweet system-msg";
+                    card.innerHTML = `<div class="content">📢 <b>ALERTE :</b> ${data.content}</div>`;
                 } else {
-                    div.innerHTML = `<span class="sender">${m.sender}</span><span class="badge">✅</span><div class="content">${m.content}</div>`;
+                    card.className = "tweet";
+                    card.innerHTML = `
+                        <div>
+                            <span class="username">${data.sender}</span>
+                            <span class="badge">✅</span>
+                        </div>
+                        <div class="content">${data.content}</div>
+                    `;
                 }
-                flux.appendChild(div);
+                flux.appendChild(card);
             });
         });
 
-        // Demande de notification (si HTTPS)
-        if ("Notification" in window && Notification.permission !== "granted") {
-            Notification.requestPermission();
+        // --- ACTIVATION DES NOTIFICATIONS ---
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/firebase-messaging-sw.js')
+            .then((registration) => {
+                console.log('Service Worker Threndly enregistré !');
+                const messaging = firebase.messaging();
+                messaging.requestPermission()
+                .then(() => messaging.getToken())
+                .then((token) => console.log("Token prêt pour les notifs."))
+                .catch((err) => console.log("Permission refusée."));
+            });
         }
     </script>
 </body>
