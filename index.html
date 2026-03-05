@@ -2,73 +2,92 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threndly - Réseau Certifié</title>
+    <title>Threndly - Profil & Réseau</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <style>
-        body { font-family: sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
-        #messages-container { max-width: 500px; margin: auto; }
-        .message { background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .systeme { background: #fff3cd !important; border: 1px solid #ffeeba; text-align: center; font-weight: bold; color: #856404; }
-        .badge-bleu { color: #1DA1F2; margin-left: 5px; }
-        .header { text-align: center; color: #1DA1F2; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #E1E8ED; margin: 0; }
+        .nav { background: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #CCD6DD; position: sticky; top: 0; }
+        .nav h1 { color: #1DA1F2; margin: 0; font-size: 20px; }
+        .btn-profil { background: #1DA1F2; color: white; border: none; padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+        
+        #flux { padding: 10px; }
+        .msg { background: white; padding: 15px; border-radius: 15px; margin-bottom: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .sender { font-weight: bold; color: #14171A; }
+        .badge { color: #1DA1F2; margin-left: 4px; font-weight: bold; }
+        .content { margin-top: 5px; color: #444; }
+        .sys { background: #FFF3CD; text-align: center; border: 1px solid #FFEEBA; }
+
+        /* Modal Profil */
+        #modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:999; }
+        .modal-box { background:white; width:85%; max-width:400px; margin:25% auto; padding:20px; border-radius:20px; text-align:center; }
+        input { width: 90%; padding: 12px; margin: 15px 0; border: 1px solid #CCD6DD; border-radius: 10px; font-size: 16px; }
     </style>
 </head>
 <body>
 
-    <div class="header">
+    <div class="nav">
         <h1>Threndly</h1>
+        <button class="btn-profil" onclick="ouvrirProfil()">👤 Mon Profil</button>
     </div>
 
-    <div id="messages-container">
-        <p style="text-align: center;">Chargement du réseau...</p>
+    <div id="modal">
+        <div class="modal-box">
+            <h3>Bienvenue sur Threndly</h3>
+            <p>Choisis ton nom d'utilisateur :</p>
+            <input type="text" id="nameInput" placeholder="Ex: Jean_Dupont">
+            <button class="btn-profil" onclick="sauverProfil()">Valider mon profil ✅</button>
+        </div>
     </div>
+
+    <div id="flux"></div>
 
     <script>
-        // Ta configuration Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDimaKVWWObrRRR83OjVBJJbFtsNjXphXI",
-            authDomain: "trendly-fca7c.firebaseapp.com",
             projectId: "trendly-fca7c",
-            storageBucket: "trendly-fca7c.appspot.com",
-            messagingSenderId: "305193026365",
             appId: "1:305193026365:web:86699f8f4115b9c6f2a74c"
         };
-
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Demander la permission pour les notifications au chargement
-        if ("Notification" in window) {
-            Notification.requestPermission();
+        // Gestion Profil
+        let userNom = localStorage.getItem('threndly_user') || "";
+        if(!userNom) { ouvrirProfil(); }
+
+        function ouvrirProfil() { document.getElementById('modal').style.display = 'block'; }
+        function sauverProfil() {
+            const nom = document.getElementById('nameInput').value;
+            if(nom) {
+                localStorage.setItem('threndly_user', nom);
+                document.getElementById('modal').style.display = 'none';
+                location.reload(); 
+            }
         }
 
-        // Écouter les messages en temps réel
-        db.collection("messages").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
-            const container = document.getElementById('messages-container');
-            container.innerHTML = "";
-            
-            snapshot.forEach((doc) => {
-                const msg = doc.data();
+        // Affichage des messages
+        db.collection("messages").orderBy("timestamp", "desc").limit(50).onSnapshot(snap => {
+            const flux = document.getElementById('flux');
+            flux.innerHTML = "";
+            snap.forEach(doc => {
+                const m = doc.data();
                 const div = document.createElement('div');
-                div.className = "message";
+                div.className = "msg" + (m.sender === "SYSTÈME" ? " sys" : "");
                 
-                if (msg.sender === "SYSTÈME") {
-                    div.classList.add("systeme");
-                    div.innerHTML = `📢 ALERTE : ${msg.content}`;
-                    
-                    // Créer une notification navigateur/mobile si l'app est ouverte
-                    if (Notification.permission === "granted") {
-                        new Notification("Threndly 🛡️", { body: msg.content });
-                    }
+                if(m.sender === "SYSTÈME") {
+                    div.innerHTML = `📢 <b>ALERTE :</b> ${m.content}`;
                 } else {
-                    div.innerHTML = `<strong>${msg.sender}</strong><span class="badge-bleu">✅</span><br>${msg.content}`;
+                    div.innerHTML = `<span class="sender">${m.sender}</span><span class="badge">✅</span><div class="content">${m.content}</div>`;
                 }
-                
-                container.appendChild(div);
+                flux.appendChild(div);
             });
         });
+
+        // Demande de notification (si HTTPS)
+        if ("Notification" in window && Notification.permission !== "granted") {
+            Notification.requestPermission();
+        }
     </script>
 </body>
 </html>
