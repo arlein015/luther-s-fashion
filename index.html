@@ -3,121 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trendly ✅ - Pro App</title>
+    <title>Threndly ✅ - Premium</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         :root { 
-            --trendly-gradient: linear-gradient(135deg, #2D9CDB 0%, #BB6BD9 100%); /* Le dégradé Bleu-Violet */
-            --bg-black: #000000; /* Le fond noir */
-            --dark-gray: #1A1A1A; 
-            --light-text: #FFFFFF;
+            --trendly-blue: #00B2FF; 
+            --bg-dark: #0F0F0F;
+            --gradient: linear-gradient(135deg, #2D9CDB 0%, #BB6BD9 100%);
         }
 
-        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg-black); color: var(--light-text); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg-dark); color: white; margin: 0; display: flex; flex-direction: column; height: 100vh; }
         
-        /* Header avec Logo Trendly */
-        header { background: #000; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
-        .logo-container { display: flex; align-items: center; gap: 10px; }
-        .trendly-te-logo { width: 35px; height: 35px; } /* Ton logo TE */
-        .trendly-text { font-size: 1.3rem; font-weight: bold; background: var(--trendly-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .call-icons i { margin-left: 20px; cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
-        .call-icons i:hover { background: var(--trendly-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        /* Badge Certifié Threndly */
+        .verified-badge { color: #00d2ff; font-size: 0.9em; margin-left: 4px; vertical-align: middle; }
 
-        /* Chat Area */
-        #chat-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
-        .msg { max-width: 80%; padding: 10px 15px; border-radius: 20px; position: relative; font-size: 14px; line-height: 1.4; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-        .sent { align-self: flex-end; background: var(--trendly-gradient); color: white; border-bottom-right-radius: 4px; } /* Bulles envoyées dégradées */
-        .received { align-self: flex-start; background: var(--dark-gray); color: var(--light-text); border-bottom-left-radius: 4px; }
-        .msg-info { font-size: 10px; opacity: 0.5; display: block; margin-top: 6px; text-align: right; }
-        .media-content { max-width: 100%; border-radius: 12px; margin-top: 5px; }
+        header { padding: 15px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; background: #000; }
+        .logo-text { font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; }
 
-        /* Input Area Moderne */
-        #input-area { background: #000; padding: 15px; display: flex; align-items: center; gap: 15px; border-top: 1px solid #333; }
-        #msg-input { flex: 1; border: 1px solid #333; background: var(--dark-gray); color: white; padding: 14px 20px; border-radius: 30px; outline: none; transition: 0.3s; }
-        #msg-input:focus { border-color: #BB6BD9; }
-        .icon-btn { color: #888; font-size: 1.3rem; cursor: pointer; transition: 0.2s; }
-        .icon-btn:hover { color: #2D9CDB; }
-        .send-btn { border: none; background: var(--trendly-gradient); color: white; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
-        .send-btn:hover { transform: scale(1.05); }
+        #chat-container { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
+        
+        /* Style des messages inspiré de ton image */
+        .msg-block { display: flex; flex-direction: column; gap: 2px; }
+        .user-name { font-weight: bold; font-size: 1rem; color: #fff; display: flex; align-items: center; }
+        .msg-text { font-size: 0.95rem; color: #efefef; opacity: 0.9; margin-top: 2px; }
 
-        /* Calling Overlay */
-        #call-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); color: white; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; }
-        #video-grid { display: grid; grid-template-columns: 1fr; width: 100%; height: 65%; gap: 10px; padding: 20px; box-sizing: border-box; }
-        video { width: 100%; height: 100%; object-fit: cover; border-radius: 20px; background: #111; border: 1px solid #222; }
-        .call-controls { margin-top: 40px; display: flex; gap: 20px; }
-        .btn-circle { width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; cursor: pointer; border: none; transition: 0.3s; }
-        .btn-end { background: #ff3b30; color: white; }
-        .btn-end:hover { background: #b01a11; }
+        #input-area { padding: 15px; background: #000; display: flex; gap: 10px; align-items: center; border-top: 1px solid #222; }
+        input { flex: 1; background: #1A1A1A; border: none; padding: 12px 18px; border-radius: 25px; color: white; outline: none; }
+        .send-btn { background: var(--gradient); border: none; width: 40px; height: 40px; border-radius: 50%; color: white; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo-container">
-        <svg class="trendly-te-logo" viewBox="0 0 100 100">
-            <defs>
-                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style="stop-color:#2D9CDB;stop-opacity:1" />
-                    <stop offset="100%" style="stop-color:#BB6BD9;stop-opacity:1" />
-                </linearGradient>
-            </defs>
-            <path d="M10,10 H90 V25 H55 V90 H35 V25 H10 Z" fill="url(#grad1)"/>
-            <path d="M60,35 H85 V45 H60 Z" fill="url(#grad1)"/>
-            <path d="M60,55 H85 V65 H60 Z" fill="url(#grad1)"/>
-        </svg>
-        <span class="trendly-text">TRENDLY ✅</span>
-    </div>
-    <div class="call-icons">
-        <i class="fas fa-phone" onclick="initiateCall('audio')"></i>
-        <i class="fas fa-video" onclick="initiateCall('video')"></i>
-    </div>
+    <div class="logo-text">@ threndly <i class="fas fa-check-circle verified-badge"></i></div>
+    <div style="display:flex; gap:20px;"><i class="fas fa-phone"></i><i class="fas fa-video"></i></div>
 </header>
 
-<div id="chat-container"></div>
-
-<div id="input-area">
-    <i class="far fa-smile icon-btn"></i>
-    <label for="file-upload"><i class="fas fa-paperclip icon-btn"></i></label>
-    <input type="file" id="file-upload" style="display:none" onchange="handleFileUpload(this)">
-    <input type="text" id="msg-input" placeholder="Ecrivez un message pour Trendly..." onkeypress="if(event.key=='Enter')sendMsg()">
-    <i class="fas fa-microphone icon-btn" id="voice-rec" onclick="startVoiceRecord()"></i>
-    <button onclick="sendMsg()" class="send-btn"><i class="fas fa-paper-plane"></i></button>
+<div id="chat-container">
+    <div class="msg-block">
+        <span class="user-name">@ bouta <i class="fas fa-check-circle verified-badge"></i></span>
+        <span class="msg-text">Découvrez la collection ! #Style #Mode #Premium</span>
+    </div>
 </div>
 
-<div id="call-overlay">
-    <h2 id="call-status">Appel Trendly ✅...</h2>
-    <div id="video-grid">
-        <video id="localVideo" autoplay muted playsinline></video>
-        <video id="remoteVideo" autoplay playsinline></video>
-    </div>
-    <div class="call-controls">
-        <button class="btn-circle btn-end" onclick="endCall()"><i class="fas fa-phone-slash"></i></button>
-    </div>
+<div id="input-area">
+    <i class="fas fa-plus" style="color:#888"></i>
+    <input type="text" id="msg-input" placeholder="Ajouter un message...">
+    <button onclick="sendMsg()" class="send-btn"><i class="fas fa-arrow-up"></i></button>
 </div>
 
 <script>
-    // ⚠️ METS TES PROPRES CONFIGURATIONS FIREBASE ICI
+    // CONFIGURATION FIREBASE (Remplis avec tes infos)
     const firebaseConfig = {
         apiKey: "TON_API_KEY",
         databaseURL: "https://trendly-fca7c-default-rtdb.firebaseio.com",
-        storageBucket: "trendly-fca7c.appspot.com",
         projectId: "trendly-fca7c"
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    const storage = firebase.storage();
-    const auth = firebase.auth();
 
-    // Authentification Anonyme pour le Storage
-    auth.signInAnonymously();
-
-    let myName = prompt("Entrez votre pseudo Trendly ✅") || "Anonyme";
+    let myName = prompt("Ton pseudo ?") || "Anonyme";
 
     function sendMsg() {
         const text = document.getElementById('msg-input').value;
@@ -125,64 +75,28 @@
             db.ref("messages").push({
                 user: myName,
                 text: text,
-                type: "text",
-                time: new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})
+                timestamp: Date.now()
             });
             document.getElementById('msg-input').value = "";
         }
     }
 
-    function handleFileUpload(input) {
-        const file = input.files[0];
-        if(!file) return;
-        const path = `trendly/${Date.now()}_${file.name}`;
-        const ref = storage.ref(path);
-        
-        ref.put(file).then(() => ref.getDownloadURL()).then(url => {
-            let type = "file";
-            if(file.type.startsWith("image")) type = "image";
-            if(file.type.startsWith("video")) type = "video";
-            if(file.type.startsWith("audio")) type = "audio";
-
-            db.ref("messages").push({
-                user: myName,
-                url: url,
-                type: type,
-                fileName: file.name,
-                time: new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})
-            });
-        });
-    }
-
-    db.ref("messages").limitToLast(20).on("child_added", snap => {
+    db.ref("messages").on("child_added", snap => {
         const m = snap.val();
         const container = document.getElementById('chat-container');
         const div = document.createElement('div');
-        div.className = `msg ${m.user === myName ? 'sent' : 'received'}`;
+        div.className = "msg-block";
         
-        let content = `<strong style="font-size:11px; color:#aaa">${m.user}</strong><br>`;
-        if(m.type === 'text') content += m.text;
-        if(m.type === 'image') content += `<img src="${m.url}" class="media-content">`;
-        if(m.type === 'video') content += `<video src="${m.url}" controls class="media-content"></video>`;
-        if(m.type === 'audio') content += `<audio src="${m.url}" controls style="width:100%"></audio>`;
+        // On ajoute le badge bleu à chaque message
+        div.innerHTML = `
+            <span class="user-name">@ ${m.user} <i class="fas fa-check-circle verified-badge"></i></span>
+            <span class="msg-text">${m.text}</span>
+        `;
         
-        content += `<span class="msg-info">${m.time}</span>`;
-        div.innerHTML = content;
         container.appendChild(div);
         container.scrollTop = container.scrollHeight;
     });
-
-    function initiateCall(type) {
-        document.getElementById('call-overlay').style.display = 'flex';
-        navigator.mediaDevices.getUserMedia({video: type === 'video', audio: true})
-            .then(stream => { document.getElementById('localVideo').srcObject = stream; });
-    }
-
-    function endCall() {
-        const stream = document.getElementById('localVideo').srcObject;
-        if(stream) stream.getTracks().forEach(track => track.stop());
-        document.getElementById('call-overlay').style.display = 'none';
-    }
 </script>
+
 </body>
 </html>
