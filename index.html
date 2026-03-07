@@ -91,7 +91,10 @@
 </div>
 
 <script>
-    const firebaseConfig = { databaseURL: "https://trendly-fca7c-default-rtdb.firebaseio.com", projectId: "trendly-fca7c" };
+    const firebaseConfig = { 
+        databaseURL: "https://trendly-fca7c-default-rtdb.firebaseio.com", 
+        projectId: "trendly-fca7c" 
+    };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
@@ -112,8 +115,10 @@
         document.getElementById('auth-screen').style.display = 'none';
         document.getElementById('app-interface').style.display = 'flex';
         startChat();
+        listenForCalls(); // On commence à écouter si quelqu'un nous appelle
     }
 
+    // --- ENVOI DE MESSAGES & PHOTOS ---
     function sendMsg() {
         const input = document.getElementById('message-input');
         if(input.value.trim()){
@@ -144,12 +149,10 @@
     function startChat() {
         const box = document.getElementById('chat-box');
         db.ref("messages").off();
-        // On charge tout l'historique sans limite
         db.ref("messages").on("child_added", snap => {
             const data = snap.val();
             const isMe = data.user === myUser;
             if(!isMe) document.getElementById('partner-display').innerHTML = `${data.user} <i class="fas fa-check-circle" style="color:var(--cyan)"></i>`;
-            
             const div = document.createElement('div');
             div.className = `msg ${isMe ? 'my-msg' : 'other-msg'}`;
             div.innerHTML = data.type === 'image' ? `<img src="${data.text}">` : data.text;
@@ -158,32 +161,66 @@
         });
     }
 
-    // --- LOGIQUE APPEL ---
+    // --- LOGIQUE APPEL VIDÉO ---
+
+    // 1. Envoyer une invitation d'appel
     async function startCall(video) {
+        const callId = "call_" + Date.now();
+        db.ref("calls").set({
+            from: myUser,
+            type: video ? "video" : "audio",
+            status: "ringing"
+        });
+        showVideoScreen(video);
+    }
+
+    // 2. Écouter si quelqu'un nous appelle
+    function listenForCalls() {
+        db.ref("calls").on("value", snap => {
+            const call = snap.val();
+            if (call && call.from !== myUser && call.status === "ringing") {
+                if (confirm(`Appel ${call.type} de ${call.from}. Accepter ?`)) {
+                    db.ref("calls").update({ status: "accepted" });
+                    showVideoScreen(call.type === "video");
+                } else {
+                    db.ref("calls").remove();
+                }
+            }
+        });
+    }
+
+    // 3. Afficher l'écran vidéo et activer la caméra
+    async function showVideoScreen(videoEnabled) {
         document.getElementById('call-screen').style.display = 'flex';
         try {
             currentStream = await navigator.mediaDevices.getUserMedia({ 
-                video: video ? { facingMode: "user" } : false, 
+                video: videoEnabled ? { facingMode: "user" } : false, 
                 audio: true 
             });
             document.getElementById('local-video').srcObject = currentStream;
-        } catch (e) { alert("Erreur caméra/micro"); }
+            // Note: Pour un vrai "Face à Face", il faudrait PeerJS, mais ici on teste déjà la caméra locale
+        } catch (e) { 
+            alert("Erreur : Vérifie que tu as autorisé la caméra et que tu es en HTTPS."); 
+            endCall();
+        }
     }
 
     async function switchCam() {
         useFrontCam = !useFrontCam;
-        const videoTrack = currentStream.getVideoTracks()[0];
-        if(videoTrack) videoTrack.stop();
-        const newStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: useFrontCam ? "user" : "environment" } });
-        const newTrack = newStream.getVideoTracks()[0];
-        currentStream.removeTrack(videoTrack);
-        currentStream.addTrack(newTrack);
-        document.getElementById('local-video').srcObject = currentStream;
+        if (currentStream) {
+            currentStream.getTracks().forEach(track => track.stop());
+            currentStream = await navigator.mediaDevices.getUserMedia({ 
+                video: { facingMode: useFrontCam ? "user" : "environment" }, 
+                audio: true 
+            });
+            document.getElementById('local-video').srcObject = currentStream;
+        }
     }
 
     function endCall() {
         if(currentStream) currentStream.getTracks().forEach(t => t.stop());
         document.getElementById('call-screen').style.display = 'none';
+        db.ref("calls").remove();
     }
 
     function logout() { localStorage.removeItem('threndly_user'); location.reload(); }
