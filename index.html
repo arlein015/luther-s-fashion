@@ -128,13 +128,17 @@
         myUser = name;
         localStorage.setItem('threndly_user', name);
         document.getElementById('auth-screen').style.display = 'none';
+        
+        // --- NOUVEAU : On s'enregistre pour être suggéré aux autres ---
+        db.ref("all_users/" + name).set({ name: name });
+        
         loadFriends();
     }
 
-    // --- CHARGER LA LISTE DES AMIS (Comme ta capture d'écran) ---
     function loadFriends() {
         const list = document.getElementById('friends-list');
-        // Liste statique pour l'exemple, mais peut être dynamique avec Firebase
+        
+        // 1. Tes amis statiques que tu aimes
         const friends = [
             { name: "Joselyna", last: "zahay zaza jiajy...", img: "https://i.pravatar.cc/150?u=jos" },
             { name: "Nelly", last: "okay havy agny z...", img: "https://i.pravatar.cc/150?u=nel" },
@@ -156,8 +160,41 @@
             `;
             list.appendChild(div);
         });
+
+        // --- NOUVEAU : On ajoute les suggestions en dessous ---
+        const sugTitle = document.createElement('div');
+        sugTitle.innerHTML = `<div style="padding:15px; font-size:0.7rem; color:#555; text-transform:uppercase;">Suggestions d'amis</div>`;
+        list.appendChild(sugTitle);
+
+        db.ref("all_users").on("value", snap => {
+            snap.forEach(child => {
+                const u = child.val();
+                // On n'affiche pas les gens déjà dans ta liste statique, ni toi-même
+                const isExisting = friends.some(f => f.name === u.name);
+                if(u.name !== myUser && !isExisting) {
+                    const div = document.createElement('div');
+                    div.className = 'friend-item';
+                    div.innerHTML = `
+                        <img src="https://i.pravatar.cc/150?u=${u.name}" class="friend-avatar">
+                        <div class="friend-info">
+                            <div class="friend-name">${u.name} <i class="fas fa-check-circle" style="color:#555; font-size:0.7rem"></i></div>
+                            <div class="last-msg">Nouveau sur Threndly</div>
+                        </div>
+                        <button onclick="addFriend(event, '${u.name}')" style="background:var(--grad); border:none; color:white; padding:5px 10px; border-radius:15px; font-size:0.7rem; cursor:pointer;">Ajouter +</button>
+                    `;
+                    list.appendChild(div);
+                }
+            });
+        });
     }
 
+    function addFriend(e, name) {
+        e.stopPropagation();
+        alert(name + " a été ajouté ! (Il apparaîtra dans tes discussions bientôt)");
+        // Ici on pourrait l'ajouter à une liste "mes_amis" dans Firebase
+    }
+
+    // Le reste de tes fonctions (openChat, sendMsg, loadMessages, logout) reste IDENTIQUE
     function openChat(name, img) {
         activeChat = name;
         document.getElementById('main-chat').style.display = 'flex';
@@ -170,7 +207,6 @@
 
     function closeChat() { document.getElementById('main-chat').style.display = 'none'; }
 
-    // --- LOGIQUE MESSAGES ---
     function sendMsg() {
         const text = document.getElementById('message-input').value;
         if(text && activeChat) {
