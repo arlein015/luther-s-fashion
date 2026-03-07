@@ -12,25 +12,26 @@
         :root { --cyan: #00d2ff; --bg: #000; --grad: linear-gradient(135deg, #2D9CDB 0%, #BB6BD9 100%); }
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: white; margin: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
+        /* Écran d'accueil */
         #auth-screen { position: fixed; inset: 0; background: #000; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .auth-card { background: #111; padding: 25px; border-radius: 20px; border: 1px solid #222; width: 320px; text-align: center; }
-        
         .logo-te { font-size: 2.5rem; font-weight: bold; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; }
-        
-        .auth-input { background: #1a1a1a; border: 1px solid #333; color: white; padding: 12px; border-radius: 10px; width: 100%; margin-bottom: 10px; outline: none; box-sizing: border-box; transition: 0.3s; }
-        .auth-input:focus { border-color: var(--cyan); }
-
+        .auth-input { background: #1a1a1a; border: 1px solid #333; color: white; padding: 12px; border-radius: 10px; width: 100%; margin-bottom: 10px; outline: none; box-sizing: border-box; }
         .btn-main { background: var(--grad); border: none; padding: 14px; width: 100%; border-radius: 30px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        
         .switch-btn { color: #888; font-size: 0.85rem; margin-top: 15px; cursor: pointer; display: block; text-decoration: underline; }
         .hidden { display: none; }
         
         /* Interface Chat */
         #app-interface { display: none; flex-direction: column; height: 100vh; }
-        header { padding: 15px 20px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; }
-        #chat-box { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .msg { background: #1a1a1a; padding: 10px 15px; border-radius: 15px; max-width: 80%; margin-bottom: 5px; }
-        .my-msg { align-self: flex-end; background: var(--grad); }
+        header { padding: 15px 20px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; }
+        #chat-box { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+        
+        .msg { padding: 12px 16px; border-radius: 18px; max-width: 75%; position: relative; line-height: 1.4; background: #1a1a1a; align-self: flex-start; }
+        .my-msg { align-self: flex-end; background: var(--grad); border-bottom-right-radius: 4px; }
+        .msg-user { font-size: 0.7rem; font-weight: bold; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
+        
+        #input-area { padding: 15px; background: #000; border-top: 1px solid #222; display: flex; gap: 10px; }
+        #message-input { flex: 1; background: #1a1a1a; border: none; padding: 12px 20px; border-radius: 25px; color: white; outline: none; }
     </style>
 </head>
 <body>
@@ -39,14 +40,10 @@
     <div class="logo-te">Threndly</div>
     <div class="auth-card">
         <h3 id="auth-title">Connexion ✅</h3>
-        
         <input type="text" id="user-id" class="auth-input" placeholder="Email ou Numéro">
         <input type="password" id="user-pass" class="auth-input" placeholder="Mot de passe">
-        
         <input type="password" id="user-confirm" class="auth-input hidden" placeholder="Confirmer le mot de passe">
-        
         <button class="btn-main" id="btn-action" onclick="handleAuth()">Se connecter</button>
-        
         <span class="switch-btn" id="toggle-link" onclick="toggleMode()">Pas de compte ? S'inscrire</span>
         <p id="error-msg" style="color: #ff4444; font-size: 0.8rem; margin-top: 10px; display: none;"></p>
     </div>
@@ -55,9 +52,13 @@
 <div id="app-interface">
     <header>
         <div style="font-weight:bold">Threndly <i class="fas fa-check-circle" style="color:var(--cyan)"></i></div>
-        <div id="user-display" style="font-size:0.8rem; color:#888"></div>
+        <button onclick="logout()" style="background:none; border:none; color:#ff4444; cursor:pointer"><i class="fas fa-sign-out-alt"></i></button>
     </header>
     <div id="chat-box"></div>
+    <div id="input-area">
+        <input type="text" id="message-input" placeholder="Message certifié..." onkeypress="if(event.key=='Enter')sendMsg()">
+        <button style="background:var(--grad); border:none; color:white; width:45px; height:45px; border-radius:50%" onclick="sendMsg()"><i class="fas fa-arrow-up"></i></button>
+    </div>
 </div>
 
 <script>
@@ -69,86 +70,79 @@
     const db = firebase.database();
 
     let isLoginMode = true;
-    let myUser = "";
+    let myUser = localStorage.getItem('threndly_user') || "";
+
+    // 1. VERIFICATION AUTOMATIQUE AU CHARGEMENT
+    window.onload = function() {
+        if(myUser) {
+            enterApp(myUser);
+        }
+    }
 
     function toggleMode() {
         isLoginMode = !isLoginMode;
-        const title = document.getElementById('auth-title');
-        const btn = document.getElementById('btn-action');
-        const link = document.getElementById('toggle-link');
-        const confirmInput = document.getElementById('user-confirm');
-
-        if (isLoginMode) {
-            title.innerText = "Connexion ✅";
-            btn.innerText = "Se connecter";
-            link.innerText = "Pas de compte ? S'inscrire";
-            confirmInput.classList.add('hidden');
-        } else {
-            title.innerText = "Inscription ✅";
-            btn.innerText = "Créer mon compte";
-            link.innerText = "Déjà un compte ? Se connecter";
-            confirmInput.classList.remove('hidden');
-        }
+        document.getElementById('auth-title').innerText = isLoginMode ? "Connexion ✅" : "Inscription ✅";
+        document.getElementById('btn-action').innerText = isLoginMode ? "Se connecter" : "Créer mon compte";
+        document.getElementById('toggle-link').innerText = isLoginMode ? "Pas de compte ? S'inscrire" : "Déjà un compte ? Se connecter";
+        document.getElementById('user-confirm').classList.toggle('hidden', isLoginMode);
     }
 
     function handleAuth() {
         const id = document.getElementById('user-id').value.trim();
         const pass = document.getElementById('user-pass').value.trim();
         const confirm = document.getElementById('user-confirm').value.trim();
-        const error = document.getElementById('error-msg');
+        
+        if(!id || !pass) return;
 
-        error.style.display = 'none';
-
-        if (!id || !pass) {
-            showError("Veuillez remplir les champs.");
-            return;
-        }
-
-        if (!isLoginMode) {
-            // MODE INSCRIPTION
-            if (pass !== confirm) {
-                showError("Les mots de passe ne correspondent pas !");
-                return;
-            }
-            // On enregistre l'utilisateur dans Firebase
-            db.ref('users/' + id.replace(/[^a-zA-Z0-9]/g, "")).set({
-                password: pass
-            }).then(() => {
-                enterApp(id);
-            });
+        if(!isLoginMode) {
+            if(pass !== confirm) { alert("Mots de passe différents !"); return; }
+            db.ref('users/' + id.replace(/[^a-zA-Z0-9]/g, "")).set({ password: pass }).then(() => enterApp(id));
         } else {
-            // MODE CONNEXION
-            db.ref('users/' + id.replace(/[^a-zA-Z0-9]/g, "")).once('value', (snap) => {
-                if (snap.exists() && snap.val().password === pass) {
-                    enterApp(id);
-                } else {
-                    showError("Identifiant ou mot de passe incorrect.");
-                }
+            db.ref('users/' + id.replace(/[^a-zA-Z0-9]/g, "")).once('value', s => {
+                if(s.exists() && s.val().password === pass) enterApp(id);
+                else alert("Erreur identifiants");
             });
         }
-    }
-
-    function showError(txt) {
-        const error = document.getElementById('error-msg');
-        error.innerText = txt;
-        error.style.display = 'block';
     }
 
     function enterApp(name) {
         myUser = name;
+        localStorage.setItem('threndly_user', name); // Sauvegarde sur l'appareil
         document.getElementById('auth-screen').style.display = 'none';
         document.getElementById('app-interface').style.display = 'flex';
-        document.getElementById('user-display').innerText = "@" + name;
         startChat();
     }
 
+    function logout() {
+        localStorage.removeItem('threndly_user');
+        location.reload();
+    }
+
+    function sendMsg() {
+        const input = document.getElementById('message-input');
+        if(input.value.trim()){
+            db.ref("messages").push({
+                user: myUser,
+                text: input.value,
+                timestamp: Date.now()
+            });
+            input.value = "";
+        }
+    }
+
     function startChat() {
-        db.ref("messages").limitToLast(20).on("child_added", snap => {
+        // Chargement de l'historique complet
+        db.ref("messages").on("child_added", snap => {
             const data = snap.val();
             const box = document.getElementById('chat-box');
+            const isMe = data.user === myUser;
+            
             const div = document.createElement('div');
-            div.className = `msg ${data.user === myUser ? 'my-msg' : ''}`;
-            div.innerHTML = `<small style="display:block; font-size:0.6rem; opacity:0.6">${data.user}</small>${data.text}`;
+            div.className = `msg ${isMe ? 'my-msg' : ''}`;
+            div.innerHTML = `
+                <div class="msg-user">@${data.user} <i class="fas fa-check-circle" style="font-size:0.6rem"></i></div>
+                <div>${data.text}</div>
+            `;
             box.appendChild(div);
             box.scrollTop = box.scrollHeight;
         });
