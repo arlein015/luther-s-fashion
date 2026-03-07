@@ -11,170 +11,134 @@
       background: #f9f9f9;
     }
     header {
-      background: #4a90e2;
-      color: white;
-      padding: 15px;
+      background: #fff;
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      text-align: center;
     }
     header h1 {
       margin: 0;
+      font-size: 20px;
     }
-    nav ul {
-      list-style: none;
-      padding: 0;
+    .stories {
       display: flex;
-      gap: 15px;
+      overflow-x: auto;
+      padding: 10px;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
     }
-    nav a {
-      color: white;
-      text-decoration: none;
+    .story {
+      flex: 0 0 auto;
+      margin-right: 10px;
+      text-align: center;
     }
-    main {
-      display: flex;
-      flex-direction: column;
-      padding: 20px;
+    .story img {
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      border: 2px solid #4a90e2;
     }
-    #chat-list {
-      margin-bottom: 20px;
+    .notifications {
+      background: #fff;
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
     }
-    #chat-list h2 {
-      margin-bottom: 10px;
+    .notifications div {
+      margin-bottom: 8px;
+      font-size: 14px;
     }
-    #conversations {
-      list-style: none;
-      padding: 0;
+    .conversation-list {
+      background: #fff;
+      padding: 10px;
     }
-    #conversations li {
-      background: white;
+    .conversation {
       padding: 12px;
-      margin-bottom: 8px;
-      border-radius: 8px;
+      border-bottom: 1px solid #eee;
       cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    #chat-window {
-      background: white;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    .conversation strong {
+      display: block;
+      font-size: 15px;
     }
-    #messages {
-      min-height: 150px;
-      margin-bottom: 15px;
-    }
-    .message {
-      background: #e6f0ff;
-      padding: 8px 12px;
-      margin-bottom: 8px;
-      border-radius: 15px;
-      max-width: 70%;
-    }
-    form {
-      display: flex;
-      gap: 10px;
-    }
-    form input {
-      flex: 1;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-    form button {
-      padding: 8px 12px;
-      background: #4a90e2;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
+    .conversation span {
+      font-size: 13px;
+      color: #555;
     }
     footer {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: #fff;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+    }
+    footer div {
       text-align: center;
-      padding: 10px;
-      background: #4a90e2;
-      color: white;
-      margin-top: 20px;
+      font-size: 12px;
+      color: #333;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <header>
     <h1>Messages</h1>
-    <nav>
-      <ul>
-        <li><a href="index.html">Accueil</a></li>
-        <li><a href="messages.html">Messages</a></li>
-        <li><a href="profile.html">Profil</a></li>
-      </ul>
-    </nav>
   </header>
 
-  <main>
-    <section id="chat-list">
-      <h2>Conversations</h2>
-      <ul id="conversations"></ul>
-    </section>
+  <!-- Stories en haut -->
+  <div class="stories">
+    <div class="story">
+      <img src="avatar1.png" alt="Murah">
+      <div>Murah</div>
+    </div>
+    <div class="story">
+      <img src="avatar2.png" alt="Norah">
+      <div>Norah</div>
+    </div>
+    <div class="story">
+      <img src="avatar3.png" alt="Aina">
+      <div>Aina</div>
+    </div>
+    <div class="story">
+      <img src="avatar4.png" alt="Wichouu">
+      <div>Wichouu</div>
+    </div>
+  </div>
 
-    <section id="chat-window">
-      <h2 id="chat-title">Sélectionnez une conversation</h2>
-      <div id="messages"></div>
-      <form id="message-form">
-        <input type="text" id="message-input" placeholder="Écrire un message..." required>
-        <button type="submit">Envoyer</button>
-      </form>
-    </section>
-  </main>
+  <!-- Notifications -->
+  <div class="notifications">
+    <div><strong>Nouveaux followers :</strong> Hardy Jurcia a commencé à te suivre (10)</div>
+    <div><strong>Activité :</strong> Clau🦋 a répondu à ton commentaire (21)</div>
+    <div><strong>Demandes de messages :</strong> Tu as reçu 4 demandes</div>
+  </div>
 
+  <!-- Conversations -->
+  <div class="conversation-list" id="conversations"></div>
+
+  <!-- Barre de navigation en bas -->
   <footer>
-    <p>&copy; 2026 Trendly</p>
+    <div>Accueil</div>
+    <div>Ami(e)s</div>
+    <div>+</div>
+    <div>Messages</div>
+    <div>Profil</div>
   </footer>
 
   <script>
     const conversations = [
-      { id: 1, name: "Murah Camayo 🍭", messages: ["Salut Arlein !", "Tu bosses sur Trendly ?"] },
-      { id: 2, name: "Norah Nelsie", messages: ["Coucou 👋", "On se capte bientôt ?"] },
-      { id: 3, name: "Aina Andriah", messages: ["Hello !", "J’adore ton projet 🚀"] }
+      { name: "Murah Camayo 🍭", last: "Salut !", time: "59 min" },
+      { name: "Espérée", last: "À demain", time: "1 j" },
+      { name: "Haëckel", last: "Ok merci", time: "6 j" },
+      { name: "Gladys", last: "Demande acceptée", time: "6 j" }
     ];
 
-    const convList = document.getElementById("conversations");
-    const chatTitle = document.getElementById("chat-title");
-    const messagesContainer = document.getElementById("messages");
-    const form = document.getElementById("message-form");
-    const input = document.getElementById("message-input");
+    const convContainer = document.getElementById("conversations");
 
-    let currentConv = null;
-
-    // Afficher la liste des conversations
     conversations.forEach(conv => {
-      const li = document.createElement("li");
-      li.textContent = conv.name;
-      li.addEventListener("click", () => openConversation(conv));
-      convList.appendChild(li);
-    });
-
-    function openConversation(conv) {
-      currentConv = conv;
-      chatTitle.textContent = `Conversation avec ${conv.name}`;
-      messagesContainer.innerHTML = "";
-      conv.messages.forEach(msg => {
-        const div = document.createElement("div");
-        div.className = "message";
-        div.textContent = msg;
-        messagesContainer.appendChild(div);
-      });
-    }
-
-    // Envoyer un nouveau message
-    form.addEventListener("submit", e => {
-      e.preventDefault();
-      if (!currentConv) return;
-      const newMsg = input.value;
-      currentConv.messages.push(newMsg);
-
       const div = document.createElement("div");
-      div.className = "message";
-      div.textContent = newMsg;
-      messagesContainer.appendChild(div);
-
-      input.value = "";
+      div.className = "conversation";
+      div.innerHTML = `<strong>${conv.name}</strong><span>${conv.last} • ${conv.time}</span>`;
+      convContainer.appendChild(div);
     });
   </script>
 </body>
