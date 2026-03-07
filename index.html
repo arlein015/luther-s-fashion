@@ -62,7 +62,7 @@
     <div class="auth-card">
         <input type="text" id="user-id" class="auth-input" placeholder="Ton nom">
         <input type="password" id="user-pass" class="auth-input" placeholder="Mot de passe">
-        <button class="btn-main" onclick="handleAuth()">Entrer ✅</button>
+        <button class="btn-main" onclick="handleAuth()" style="background:var(--grad); border:none; padding:12px; border-radius:20px; color:white; width:100%; cursor:pointer;">Entrer ✅</button>
     </div>
 </div>
 
@@ -74,8 +74,7 @@
     <div class="search-bar">
         <input type="text" placeholder="Rechercher ou démarrer...">
     </div>
-    <div id="friends-list">
-        </div>
+    <div id="friends-list"></div>
 </div>
 
 <div id="main-chat">
@@ -86,8 +85,8 @@
             <div id="chat-name" style="font-weight:bold;"></div>
         </div>
         <div style="display:flex; gap:20px; color:#888;">
-            <i class="fas fa-phone" onclick="startCall('audio')" style="cursor:pointer"></i>
-            <i class="fas fa-video" onclick="startCall('video')" style="cursor:pointer"></i>
+            <i class="fas fa-phone" onclick="alert('Appel audio...')" style="cursor:pointer"></i>
+            <i class="fas fa-video" onclick="alert('Appel vidéo...')" style="cursor:pointer"></i>
         </div>
     </header>
     <div id="chat-box"></div>
@@ -98,14 +97,6 @@
             <input type="text" id="message-input" placeholder="Message..." onkeypress="if(event.key=='Enter')sendMsg()">
         </div>
         <button onclick="sendMsg()" style="background:var(--grad); border:none; width:40px; height:40px; border-radius:50%; color:white;"><i class="fas fa-arrow-up"></i></button>
-    </div>
-</div>
-
-<div id="call-screen">
-    <video id="remote-video" autoplay playsinline></video>
-    <video id="local-video" autoplay playsinline muted></video>
-    <div style="position:absolute; bottom:40px; left:50%; transform:translateX(-50%); display:flex; gap:20px;">
-        <button onclick="endCall()" style="background:#ff4444; border:none; padding:15px; border-radius:50%; color:white; font-size:1.5rem;"><i class="fas fa-phone-slash"></i></button>
     </div>
 </div>
 
@@ -129,7 +120,7 @@
         localStorage.setItem('threndly_user', name);
         document.getElementById('auth-screen').style.display = 'none';
         
-        // --- NOUVEAU : On s'enregistre pour être suggéré aux autres ---
+        // On s'enregistre dans Firebase pour apparaître dans les suggestions des autres
         db.ref("all_users/" + name).set({ name: name });
         
         loadFriends();
@@ -138,7 +129,7 @@
     function loadFriends() {
         const list = document.getElementById('friends-list');
         
-        // 1. Tes amis statiques que tu aimes
+        // 1. Tes amis statiques (Design préservé)
         const friends = [
             { name: "Joselyna", last: "zahay zaza jiajy...", img: "https://i.pravatar.cc/150?u=jos" },
             { name: "Nelly", last: "okay havy agny z...", img: "https://i.pravatar.cc/150?u=nel" },
@@ -161,15 +152,14 @@
             list.appendChild(div);
         });
 
-        // --- NOUVEAU : On ajoute les suggestions en dessous ---
-        const sugTitle = document.createElement('div');
-        sugTitle.innerHTML = `<div style="padding:15px; font-size:0.7rem; color:#555; text-transform:uppercase;">Suggestions d'amis</div>`;
-        list.appendChild(sugTitle);
+        // 2. Section Suggestions
+        const title = document.createElement('div');
+        title.innerHTML = `<div style="padding:15px; font-size:0.7rem; color:#555; text-transform:uppercase; border-top: 1px solid #222;">Suggestions d'amis</div>`;
+        list.appendChild(title);
 
         db.ref("all_users").on("value", snap => {
             snap.forEach(child => {
                 const u = child.val();
-                // On n'affiche pas les gens déjà dans ta liste statique, ni toi-même
                 const isExisting = friends.some(f => f.name === u.name);
                 if(u.name !== myUser && !isExisting) {
                     const div = document.createElement('div');
@@ -177,7 +167,7 @@
                     div.innerHTML = `
                         <img src="https://i.pravatar.cc/150?u=${u.name}" class="friend-avatar">
                         <div class="friend-info">
-                            <div class="friend-name">${u.name} <i class="fas fa-check-circle" style="color:#555; font-size:0.7rem"></i></div>
+                            <div class="friend-name">${u.name} <i class="fas fa-check-circle" style="color:#444; font-size:0.7rem"></i></div>
                             <div class="last-msg">Nouveau sur Threndly</div>
                         </div>
                         <button onclick="addFriend(event, '${u.name}')" style="background:var(--grad); border:none; color:white; padding:5px 10px; border-radius:15px; font-size:0.7rem; cursor:pointer;">Ajouter +</button>
@@ -190,11 +180,9 @@
 
     function addFriend(e, name) {
         e.stopPropagation();
-        alert(name + " a été ajouté ! (Il apparaîtra dans tes discussions bientôt)");
-        // Ici on pourrait l'ajouter à une liste "mes_amis" dans Firebase
+        alert(name + " a été ajouté ! ✅");
     }
 
-    // Le reste de tes fonctions (openChat, sendMsg, loadMessages, logout) reste IDENTIQUE
     function openChat(name, img) {
         activeChat = name;
         document.getElementById('main-chat').style.display = 'flex';
@@ -227,6 +215,15 @@
             box.appendChild(div);
             box.scrollTop = box.scrollHeight;
         });
+    }
+
+    function sendPhoto(input) {
+        const file = input.files[0]; if(!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            db.ref("chats/" + activeChat).push({ from: myUser, text: e.target.result, type: 'image' });
+        };
+        reader.readAsDataURL(file);
     }
 
     function logout() { localStorage.removeItem('threndly_user'); location.reload(); }
