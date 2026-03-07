@@ -7,8 +7,9 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        :root { --cyan: #00d2ff; --bg: #000; --sidebar: #121212; --grad: linear-gradient(135deg, #2D9CDB 0%, #BB6BD9 100%); }
+        :root { --cyan: #00d2ff; --bg: #000; --sidebar: #0a0a0a; --grad: linear-gradient(135deg, #2D9CDB 0%, #BB6BD9 100%); }
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: white; margin: 0; height: 100vh; display: flex; overflow: hidden; }
 
         /* Login */
@@ -16,35 +17,45 @@
         .auth-card { background: #111; padding: 25px; border-radius: 20px; border: 1px solid #222; width: 300px; text-align: center; }
         .logo-te { font-size: 2.2rem; font-weight: bold; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; }
 
-        /* Sidebar (Liste d'amis) */
-        #sidebar { width: 350px; background: var(--sidebar); border-right: 1px solid #222; display: flex; flex-direction: column; }
-        .sidebar-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
-        .search-bar { padding: 10px 20px; }
-        .search-bar input { width: 100%; background: #222; border: none; padding: 10px; border-radius: 10px; color: white; outline: none; }
+        /* Sidebar Élégante (Liste d'amis) */
+        #sidebar { width: 350px; background: var(--sidebar); border-right: 1px solid #1a1a1a; display: flex; flex-direction: column; }
         
-        #friends-list { flex: 1; overflow-y: auto; }
-        .friend-item { padding: 15px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.2s; border-bottom: 1px solid #1a1a1a; }
-        .friend-item:hover { background: #1a1a1a; }
-        .friend-avatar { width: 50px; height: 50px; border-radius: 50%; background: #333; object-fit: cover; }
-        .friend-info { flex: 1; }
-        .friend-name { font-weight: bold; display: flex; align-items: center; gap: 5px; }
-        .last-msg { font-size: 0.85rem; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
+        /* Sidebar Header (Badge retiré) */
+        .sidebar-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logo-text { font-size: 1.5rem; font-weight: bold; color: white; display: flex; align-items: center; gap: 8px; }
+        .logo-text span { background: #9b51e0; width: 15px; height: 15px; border-radius: 4px; }
 
-        /* Zone de Chat */
+        .search-container { padding: 0 15px 15px; }
+        .search-bar { width: 100%; background: #1a1a1a; border: none; padding: 12px; border-radius: 10px; color: white; outline: none; }
+
+        /* Liste des amis Style */
+        #friends-list { flex: 1; overflow-y: auto; }
+        .friend-item { padding: 15px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.2s; }
+        .friend-item:hover { background: #1a1a1a; }
+        .friend-avatar { width: 50px; height: 50px; border-radius: 50%; background: #333; object-fit: cover; border: 1px solid #222; }
+        .friend-info { flex: 1; overflow: hidden; }
+        .friend-name-time { display: flex; justify-content: space-between; align-items: center; }
+        .friend-name { font-weight: bold; font-size: 0.95rem; }
+        .last-msg { font-size: 0.8rem; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+
+        /* Zone de Chat (Design exact) */
         #main-chat { flex: 1; display: none; flex-direction: column; background: #000; }
-        header { padding: 10px 20px; height: 60px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; }
+        header { padding: 15px; border-bottom: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; height: 60px; }
         #chat-box { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
         
-        .msg { padding: 10px 14px; border-radius: 18px; max-width: 70%; position: relative; }
-        .my-msg { align-self: flex-end; background: var(--grad); border-bottom-right-radius: 4px; }
-        .other-msg { align-self: flex-start; background: #262626; border-bottom-left-radius: 4px; }
-        .msg img { max-width: 100%; border-radius: 10px; margin-top: 5px; }
+        .msg { padding: 10px 14px; border-radius: 12px; max-width: 60%; font-size: 0.9rem; line-height: 1.3; }
+        .my-msg { align-self: flex-end; background: var(--grad); color: white; border-bottom-right-radius: 2px; }
+        .other-msg { align-self: flex-start; background: #262626; border-bottom-left-radius: 2px; }
+        .msg img { max-width: 100%; border-radius: 8px; margin-top: 5px; }
 
-        #input-area { padding: 15px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #222; }
-        .input-box { flex: 1; background: #1a1a1a; border-radius: 25px; padding: 10px 15px; display: flex; }
-        #message-input { background: transparent; border: none; color: white; flex: 1; outline: none; }
+        /* Barre d'envoi élégante */
+        #input-area { padding: 20px; display: flex; align-items: center; gap: 15px; border-top: 1px solid #1a1a1a; }
+        .input-box { flex: 1; background: #1a1a1a; border-radius: 12px; padding: 0 15px; display: flex; }
+        #message-input { background: transparent; border: none; padding: 12px 0; color: white; flex: 1; outline: none; }
+        .icon-btn { color: #888; font-size: 1.2rem; cursor: pointer; }
+        .send-btn { background: var(--grad); border: none; width: 40px; height: 40px; border-radius: 50%; color: white; cursor: pointer; }
 
-        /* Appel Vidéo Overlay */
+        /* Appels */
         #call-screen { display:none; position:fixed; inset:0; background:#000; z-index:3000; }
         #local-video { position:absolute; bottom:30px; right:20px; width:120px; height:180px; border-radius:15px; border:2px solid #fff; object-fit: cover; z-index: 10; }
         #remote-video { width:100%; height:100%; object-fit: cover; }
@@ -60,43 +71,44 @@
 <div id="auth-screen">
     <div class="logo-te">Threndly ✅</div>
     <div class="auth-card">
-        <input type="text" id="user-id" class="auth-input" placeholder="Ton nom">
-        <input type="password" id="user-pass" class="auth-input" placeholder="Mot de passe">
-        <button class="btn-main" onclick="handleAuth()" style="background:var(--grad); border:none; padding:12px; border-radius:20px; color:white; width:100%; cursor:pointer;">Entrer ✅</button>
+        <input type="text" id="user-id" class="auth-input" placeholder="Identifiant" style="width:100%; padding:12px; margin-bottom:10px; background:#1a1a1a; border:none; color:white; border-radius:8px;">
+        <input type="password" id="user-pass" class="auth-input" placeholder="Mot de passe" style="width:100%; padding:12px; margin-bottom:15px; background:#1a1a1a; border:none; color:white; border-radius:8px;">
+        <button class="btn-main" onclick="handleAuth()" style="background:var(--grad); border:none; padding:12px 20px; border-radius:20px; color:white; font-weight:bold; cursor:pointer;">Entrer ✅</button>
     </div>
 </div>
 
 <div id="sidebar">
     <div class="sidebar-header">
-        <div class="logo-te" style="font-size: 1.5rem; margin:0;">Threndly ✅</div>
-        <i class="fas fa-sign-out-alt" onclick="logout()" style="cursor:pointer"></i>
+        <div class="logo-text">Threndly <span></span></div>
+        <i class="fas fa-sign-out-alt icon-btn" onclick="logout()"></i>
     </div>
-    <div class="search-bar">
-        <input type="text" placeholder="Rechercher ou démarrer...">
+    <div class="search-container">
+        <input type="text" class="search-bar" placeholder="Rechercher...">
     </div>
-    <div id="friends-list"></div>
+    <div id="friends-list">
+        </div>
 </div>
 
 <div id="main-chat">
     <header>
         <div style="display:flex; align-items:center; gap:10px;">
-            <i class="fas fa-arrow-left" onclick="closeChat()" style="cursor:pointer; display:none;" id="back-btn"></i>
-            <img src="" id="chat-avatar" style="width:40px; height:40px; border-radius:50%; display:none;">
+            <i class="fas fa-arrow-left icon-btn" onclick="closeChat()" style="display:none;" id="back-btn"></i>
+            <img src="" id="chat-avatar" style="width:35px; height:35px; border-radius:50%; display:none;">
             <div id="chat-name" style="font-weight:bold;"></div>
         </div>
-        <div style="display:flex; gap:20px; color:#888;">
-            <i class="fas fa-phone" onclick="startCall('audio')" style="cursor:pointer"></i>
-            <i class="fas fa-video" onclick="startCall('video')" style="cursor:pointer"></i>
+        <div style="display:flex; gap:20px;">
+            <i class="fas fa-phone icon-btn" onclick="startCall('audio')"></i>
+            <i class="fas fa-video icon-btn" onclick="startCall('video')"></i>
         </div>
     </header>
     <div id="chat-box"></div>
     <div id="input-area">
-        <label for="img-input" style="color:#888; font-size:1.3rem; cursor:pointer"><i class="far fa-image"></i></label>
+        <label for="img-input"><i class="far fa-image icon-btn"></i></label>
         <input type="file" id="img-input" hidden accept="image/*" onchange="sendPhoto(this)">
         <div class="input-box">
-            <input type="text" id="message-input" placeholder="Message..." onkeypress="if(event.key=='Enter')sendMsg()">
+            <input type="text" id="message-input" placeholder="Écris un message..." onkeypress="if(event.key=='Enter')sendMsg()">
         </div>
-        <button onclick="sendMsg()" style="background:var(--grad); border:none; width:40px; height:40px; border-radius:50%; color:white;"><i class="fas fa-arrow-up"></i></button>
+        <button onclick="sendMsg()" class="send-btn"><i class="fas fa-arrow-up"></i></button>
     </div>
 </div>
 
@@ -130,8 +142,10 @@
         loadFriends();
     }
 
+    // --- CHARGER LA LISTE DES AMIS ---
     function loadFriends() {
         const list = document.getElementById('friends-list');
+        // Tes amis actuels et leurs données d'exemple
         const friends = [
             { name: "Joselyna", last: "zahay zaza jiajy...", img: "https://i.pravatar.cc/150?u=jos" },
             { name: "Nelly", last: "okay havy agny z...", img: "https://i.pravatar.cc/150?u=nel" },
@@ -167,10 +181,11 @@
 
     function closeChat() { document.getElementById('main-chat').style.display = 'none'; }
 
+    // --- LOGIQUE MESSAGES (Ton code d'origine) ---
     function sendMsg() {
         const text = document.getElementById('message-input').value;
         if(text && activeChat) {
-            db.ref("chats/" + activeChat).push({ from: myUser, text: text, type: 'text' });
+            db.ref("chats/" + activeChat).push({ from: myUser, text: text, type: 'text', time: Date.now() });
             document.getElementById('message-input').value = "";
         }
     }
@@ -193,7 +208,7 @@
         const file = input.files[0]; if(!file) return;
         const reader = new FileReader();
         reader.onload = function(e) {
-            db.ref("chats/" + activeChat).push({ from: myUser, text: e.target.result, type: 'image' });
+            db.ref("chats/" + activeChat).push({ from: myUser, text: e.target.result, type: 'image', time: Date.now() });
         };
         reader.readAsDataURL(file);
     }
