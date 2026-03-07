@@ -8,69 +8,71 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* DESIGN EXACT */
-        :root { --cyan: #00d2ff; --bg: #000; --sidebar: #0a0a0a; --grad: linear-gradient(135deg, #2D9CDB 0%, #BB6BD9 100%); }
+        :root { --cyan: #00d2ff; --bg: #000; --sidebar: #121212; --grad: linear-gradient(135deg, #2D9CDB 0%, #BB6BD9 100%); }
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: white; margin: 0; height: 100vh; display: flex; overflow: hidden; }
-
-        /* Sidebar Style */
-        #sidebar { width: 350px; background: var(--bg); border-right: 1px solid #1a1a1a; display: flex; flex-direction: column; }
-        .sidebar-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .logo-text { font-size: 1.5rem; font-weight: bold; color: #4facfe; display: flex; align-items: center; gap: 8px; }
-        .logo-text span { background: #9b51e0; width: 15px; height: 15px; border-radius: 4px; } /* Petit carré violet */
-
-        .search-container { padding: 0 15px 15px; }
-        .search-bar { width: 100%; background: #1a1a1a; border: none; padding: 12px; border-radius: 10px; color: white; outline: none; }
-
-        /* Liste d'amis */
-        #friends-list { flex: 1; overflow-y: auto; }
-        .friend-item { padding: 15px; display: flex; align-items: center; gap: 15px; cursor: pointer; }
-        .friend-avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 1px solid #333; }
-        .friend-name { font-weight: bold; display: flex; align-items: center; gap: 5px; }
-        .friend-last { font-size: 0.85rem; color: #888; margin-top: 2px; }
-        .badge-verified { color: var(--cyan); font-size: 0.8rem; }
-
-        /* Section Suggestions */
-        .section-title { padding: 15px; font-size: 0.7rem; color: #444; text-transform: uppercase; letter-spacing: 1px; border-top: 1px solid #111; }
-        .add-btn { background: var(--grad); border: none; color: white; padding: 6px 12px; border-radius: 15px; font-size: 0.7rem; font-weight: bold; cursor: pointer; margin-left: auto; }
-
-        /* Chat */
-        #main-chat { flex: 1; display: none; flex-direction: column; background: var(--bg); }
-        header { padding: 15px; border-bottom: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; }
-        #chat-box { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-        
-        .msg { padding: 10px 14px; border-radius: 12px; max-width: 60%; font-size: 0.95rem; }
-        .my-msg { align-self: flex-end; background: var(--grad); color: white; border-bottom-right-radius: 2px; }
-        .other-msg { align-self: flex-start; background: #262626; border-bottom-left-radius: 2px; }
-        .msg img { max-width: 100%; border-radius: 8px; margin-top: 5px; }
-
-        /* Input */
-        #input-area { padding: 20px; display: flex; align-items: center; gap: 15px; }
-        .input-container { flex: 1; background: #1a1a1a; border-radius: 12px; display: flex; align-items: center; padding: 0 15px; }
-        #message-input { flex: 1; background: transparent; border: none; padding: 12px 0; color: white; outline: none; }
-        .send-btn { background: var(--grad); border: none; width: 40px; height: 40px; border-radius: 50%; color: white; cursor: pointer; }
 
         /* Login */
         #auth-screen { position: fixed; inset: 0; background: #000; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .login-card { background: #0a0a0a; padding: 30px; border-radius: 20px; width: 300px; text-align: center; border: 1px solid #1a1a1a; }
+        .auth-card { background: #111; padding: 25px; border-radius: 20px; border: 1px solid #222; width: 300px; text-align: center; }
+        .logo-te { font-size: 2.2rem; font-weight: bold; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; }
+
+        /* Sidebar (Liste d'amis) */
+        #sidebar { width: 350px; background: var(--sidebar); border-right: 1px solid #222; display: flex; flex-direction: column; }
+        .sidebar-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
+        .search-bar { padding: 10px 20px; }
+        .search-bar input { width: 100%; background: #222; border: none; padding: 10px; border-radius: 10px; color: white; outline: none; }
+        
+        #friends-list { flex: 1; overflow-y: auto; }
+        .friend-item { padding: 15px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.2s; border-bottom: 1px solid #1a1a1a; }
+        .friend-item:hover { background: #1a1a1a; }
+        .friend-avatar { width: 50px; height: 50px; border-radius: 50%; background: #333; object-fit: cover; }
+        .friend-info { flex: 1; }
+        .friend-name { font-weight: bold; display: flex; align-items: center; gap: 5px; }
+        .last-msg { font-size: 0.85rem; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
+
+        /* Zone de Chat */
+        #main-chat { flex: 1; display: none; flex-direction: column; background: #000; }
+        header { padding: 10px 20px; height: 60px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; }
+        #chat-box { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+        
+        .msg { padding: 10px 14px; border-radius: 18px; max-width: 70%; position: relative; }
+        .my-msg { align-self: flex-end; background: var(--grad); border-bottom-right-radius: 4px; }
+        .other-msg { align-self: flex-start; background: #262626; border-bottom-left-radius: 4px; }
+        .msg img { max-width: 100%; border-radius: 10px; margin-top: 5px; }
+
+        #input-area { padding: 15px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #222; }
+        .input-box { flex: 1; background: #1a1a1a; border-radius: 25px; padding: 10px 15px; display: flex; }
+        #message-input { background: transparent; border: none; color: white; flex: 1; outline: none; }
+
+        /* Appel Vidéo Overlay */
+        #call-screen { display:none; position:fixed; inset:0; background:#000; z-index:3000; }
+        #local-video { position:absolute; bottom:30px; right:20px; width:120px; height:180px; border-radius:15px; border:2px solid #fff; object-fit: cover; z-index: 10; }
+        #remote-video { width:100%; height:100%; object-fit: cover; }
+
+        @media (max-width: 768px) {
+            #sidebar { width: 100%; }
+            #main-chat { position: fixed; inset: 0; z-index: 100; }
+        }
     </style>
 </head>
 <body>
 
 <div id="auth-screen">
-    <div class="login-card">
-        <h2 style="color:var(--cyan); margin-bottom:20px;">Threndly ✅</h2>
-        <input type="text" id="user-id" placeholder="Ton nom" style="width:100%; padding:12px; margin-bottom:15px; background:#1a1a1a; border:none; color:white; border-radius:8px;">
-        <button onclick="handleAuth()" style="width:100%; padding:12px; background:var(--grad); border:none; color:white; border-radius:8px; font-weight:bold; cursor:pointer;">Entrer ✅</button>
+    <div class="logo-te">Threndly ✅</div>
+    <div class="auth-card">
+        <input type="text" id="user-id" class="auth-input" placeholder="Ton nom">
+        <input type="password" id="user-pass" class="auth-input" placeholder="Mot de passe">
+        <button class="btn-main" onclick="handleAuth()" style="background:var(--grad); border:none; padding:12px; border-radius:20px; color:white; width:100%; cursor:pointer;">Entrer ✅</button>
     </div>
 </div>
 
 <div id="sidebar">
     <div class="sidebar-header">
-        <div class="logo-text">Threndly <span></span></div>
-        <i class="fas fa-sign-out-alt" onclick="logout()" style="color:#444; cursor:pointer;"></i>
+        <div class="logo-te" style="font-size: 1.5rem; margin:0;">Threndly ✅</div>
+        <i class="fas fa-sign-out-alt" onclick="logout()" style="cursor:pointer"></i>
     </div>
-    <div class="search-container">
-        <input type="text" class="search-bar" placeholder="Rechercher ou démarrer...">
+    <div class="search-bar">
+        <input type="text" placeholder="Rechercher ou démarrer...">
     </div>
     <div id="friends-list"></div>
 </div>
@@ -78,23 +80,31 @@
 <div id="main-chat">
     <header>
         <div style="display:flex; align-items:center; gap:10px;">
-            <i class="fas fa-arrow-left" onclick="closeChat()" style="cursor:pointer; color:#888;"></i>
-            <img id="chat-avatar" src="" style="width:35px; height:35px; border-radius:50%;">
+            <i class="fas fa-arrow-left" onclick="closeChat()" style="cursor:pointer; display:none;" id="back-btn"></i>
+            <img src="" id="chat-avatar" style="width:40px; height:40px; border-radius:50%; display:none;">
             <div id="chat-name" style="font-weight:bold;"></div>
         </div>
         <div style="display:flex; gap:20px; color:#888;">
-            <i class="fas fa-phone"></i>
-            <i class="fas fa-video"></i>
+            <i class="fas fa-phone" onclick="startCall('audio')" style="cursor:pointer"></i>
+            <i class="fas fa-video" onclick="startCall('video')" style="cursor:pointer"></i>
         </div>
     </header>
     <div id="chat-box"></div>
     <div id="input-area">
-        <label for="img-input"><i class="far fa-image" style="color:#888; font-size:1.2rem; cursor:pointer;"></i></label>
+        <label for="img-input" style="color:#888; font-size:1.3rem; cursor:pointer"><i class="far fa-image"></i></label>
         <input type="file" id="img-input" hidden accept="image/*" onchange="sendPhoto(this)">
-        <div class="input-container">
+        <div class="input-box">
             <input type="text" id="message-input" placeholder="Message..." onkeypress="if(event.key=='Enter')sendMsg()">
         </div>
-        <button class="send-btn" onclick="sendMsg()"><i class="fas fa-arrow-up"></i></button>
+        <button onclick="sendMsg()" style="background:var(--grad); border:none; width:40px; height:40px; border-radius:50%; color:white;"><i class="fas fa-arrow-up"></i></button>
+    </div>
+</div>
+
+<div id="call-screen">
+    <video id="remote-video" autoplay playsinline></video>
+    <video id="local-video" autoplay playsinline muted></video>
+    <div style="position:absolute; bottom:40px; left:50%; transform:translateX(-50%); display:flex; gap:20px;">
+        <button onclick="endCall()" style="background:#ff4444; border:none; padding:15px; border-radius:50%; color:white; font-size:1.5rem;"><i class="fas fa-phone-slash"></i></button>
     </div>
 </div>
 
@@ -117,15 +127,12 @@
         myUser = name;
         localStorage.setItem('threndly_user', name);
         document.getElementById('auth-screen').style.display = 'none';
-        db.ref("users/" + name).update({ username: name, lastSeen: Date.now() });
-        loadInterface();
+        loadFriends();
     }
 
-    function loadInterface() {
+    function loadFriends() {
         const list = document.getElementById('friends-list');
-        
-        // 1. TES AMIS (DESIGN IMAGE_292EA0)
-        const staticFriends = [
+        const friends = [
             { name: "Joselyna", last: "zahay zaza jiajy...", img: "https://i.pravatar.cc/150?u=jos" },
             { name: "Nelly", last: "okay havy agny z...", img: "https://i.pravatar.cc/150?u=nel" },
             { name: "Arthur💸", last: "on peut parler sur...", img: "https://i.pravatar.cc/150?u=art" },
@@ -133,44 +140,19 @@
         ];
 
         list.innerHTML = "";
-        staticFriends.forEach(f => addFriendUI(f.name, f.last, f.img, false));
-
-        // 2. SUGGESTIONS DES GENS SUR FIREBASE
-        const title = document.createElement('div');
-        title.className = "section-title";
-        title.innerText = "Suggestions d'amis";
-        list.appendChild(title);
-
-        db.ref("users").on("value", snap => {
-            snap.forEach(u => {
-                const user = u.val();
-                const isExisting = staticFriends.some(f => f.name === user.username);
-                if(user.username !== myUser && !isExisting) {
-                    addFriendUI(user.username, "Nouveau sur Threndly", `https://i.pravatar.cc/150?u=${user.username}`, true);
-                }
-            });
+        friends.forEach(f => {
+            const div = document.createElement('div');
+            div.className = 'friend-item';
+            div.onclick = () => openChat(f.name, f.img);
+            div.innerHTML = `
+                <img src="${f.img}" class="friend-avatar">
+                <div class="friend-info">
+                    <div class="friend-name">${f.name} <i class="fas fa-check-circle" style="color:var(--cyan); font-size:0.7rem"></i></div>
+                    <div class="last-msg">${f.last}</div>
+                </div>
+            `;
+            list.appendChild(div);
         });
-    }
-
-    function addFriendUI(name, last, img, isSug) {
-        const list = document.getElementById('friends-list');
-        const div = document.createElement('div');
-        div.className = 'friend-item';
-        div.innerHTML = `
-            <img src="${img}" class="friend-avatar">
-            <div class="friend-info">
-                <div class="friend-name">${name} <i class="fas fa-check-circle badge-verified"></i></div>
-                <div class="friend-last">${last}</div>
-            </div>
-            ${isSug ? `<button class="add-btn" onclick="addFriend(event, '${name}')">Ajouter +</button>` : ''}
-        `;
-        div.onclick = () => { if(!isSug) openChat(name, img); };
-        list.appendChild(div);
-    }
-
-    function addFriend(e, name) {
-        e.stopPropagation();
-        alert(name + " ajouté ! ✅");
     }
 
     function openChat(name, img) {
@@ -178,6 +160,8 @@
         document.getElementById('main-chat').style.display = 'flex';
         document.getElementById('chat-name').innerText = name;
         document.getElementById('chat-avatar').src = img;
+        document.getElementById('chat-avatar').style.display = 'block';
+        if(window.innerWidth < 768) document.getElementById('back-btn').style.display = 'block';
         loadMessages();
     }
 
@@ -186,18 +170,16 @@
     function sendMsg() {
         const text = document.getElementById('message-input').value;
         if(text && activeChat) {
-            const id = myUser < activeChat ? myUser+"_"+activeChat : activeChat+"_"+myUser;
-            db.ref("msgs/" + id).push({ from: myUser, text: text, type: 'text' });
+            db.ref("chats/" + activeChat).push({ from: myUser, text: text, type: 'text' });
             document.getElementById('message-input').value = "";
         }
     }
 
     function loadMessages() {
         const box = document.getElementById('chat-box');
-        const id = myUser < activeChat ? myUser+"_"+activeChat : activeChat+"_"+myUser;
-        db.ref("msgs/" + id).off();
         box.innerHTML = "";
-        db.ref("msgs/" + id).on("child_added", snap => {
+        db.ref("chats/" + activeChat).off();
+        db.ref("chats/" + activeChat).on("child_added", snap => {
             const m = snap.val();
             const div = document.createElement('div');
             div.className = `msg ${m.from === myUser ? 'my-msg' : 'other-msg'}`;
@@ -208,12 +190,12 @@
     }
 
     function sendPhoto(input) {
+        const file = input.files[0]; if(!file) return;
         const reader = new FileReader();
-        reader.onload = e => {
-            const id = myUser < activeChat ? myUser+"_"+activeChat : activeChat+"_"+myUser;
-            db.ref("msgs/" + id).push({ from: myUser, text: e.target.result, type: 'image' });
+        reader.onload = function(e) {
+            db.ref("chats/" + activeChat).push({ from: myUser, text: e.target.result, type: 'image' });
         };
-        reader.readAsDataURL(input.files[0]);
+        reader.readAsDataURL(file);
     }
 
     function logout() { localStorage.removeItem('threndly_user'); location.reload(); }
