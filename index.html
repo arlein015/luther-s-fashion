@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trendly - Accueil</title>
+  <title>Trendly - Messages</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0; padding: 0;
-      background: #f4f4f9;
+      background: #f9f9f9;
     }
     header {
       background: #4a90e2;
@@ -30,39 +30,61 @@
     }
     main {
       display: flex;
+      flex-direction: column;
       padding: 20px;
     }
-    #feed {
-      flex: 2;
-      margin-right: 20px;
+    #chat-list {
+      margin-bottom: 20px;
     }
-    #feed form {
+    #chat-list h2 {
+      margin-bottom: 10px;
+    }
+    #conversations {
+      list-style: none;
+      padding: 0;
+    }
+    #conversations li {
+      background: white;
+      padding: 12px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    #chat-window {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    #messages {
+      min-height: 150px;
       margin-bottom: 15px;
     }
-    #feed input {
-      padding: 8px;
-      width: 70%;
+    .message {
+      background: #e6f0ff;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      border-radius: 15px;
+      max-width: 70%;
     }
-    #feed button {
+    form {
+      display: flex;
+      gap: 10px;
+    }
+    form input {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    form button {
       padding: 8px 12px;
       background: #4a90e2;
       color: white;
       border: none;
+      border-radius: 8px;
       cursor: pointer;
-    }
-    .post {
-      background: white;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    aside {
-      flex: 1;
-      background: #fff;
-      padding: 15px;
-      border-radius: 5px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     footer {
       text-align: center;
@@ -75,7 +97,7 @@
 </head>
 <body>
   <header>
-    <h1>Trendly</h1>
+    <h1>Messages</h1>
     <nav>
       <ul>
         <li><a href="index.html">Accueil</a></li>
@@ -86,19 +108,19 @@
   </header>
 
   <main>
-    <section id="feed">
-      <h2>Fil d’actualité</h2>
-      <form id="post-form">
-        <input type="text" id="post-input" placeholder="Exprimez-vous..." required>
-        <button type="submit">Publier</button>
-      </form>
-      <div id="posts"></div>
+    <section id="chat-list">
+      <h2>Conversations</h2>
+      <ul id="conversations"></ul>
     </section>
 
-    <aside>
-      <h2>Suggestions d’amis</h2>
-      <ul id="suggestions"></ul>
-    </aside>
+    <section id="chat-window">
+      <h2 id="chat-title">Sélectionnez une conversation</h2>
+      <div id="messages"></div>
+      <form id="message-form">
+        <input type="text" id="message-input" placeholder="Écrire un message..." required>
+        <button type="submit">Envoyer</button>
+      </form>
+    </section>
   </main>
 
   <footer>
@@ -106,53 +128,54 @@
   </footer>
 
   <script>
-    // Exemple de posts initiaux
-    const posts = [
-      { user: "Arlein", content: "Bienvenue sur Trendly 🎉" },
-      { user: "Marie", content: "Quel beau projet !" }
+    const conversations = [
+      { id: 1, name: "Murah Camayo 🍭", messages: ["Salut Arlein !", "Tu bosses sur Trendly ?"] },
+      { id: 2, name: "Norah Nelsie", messages: ["Coucou 👋", "On se capte bientôt ?"] },
+      { id: 3, name: "Aina Andriah", messages: ["Hello !", "J’adore ton projet 🚀"] }
     ];
 
-    // Suggestions d’amis
-    const suggestions = ["Jean", "Sofia", "Lucas", "Emma"];
+    const convList = document.getElementById("conversations");
+    const chatTitle = document.getElementById("chat-title");
+    const messagesContainer = document.getElementById("messages");
+    const form = document.getElementById("message-form");
+    const input = document.getElementById("message-input");
 
-    const postsContainer = document.getElementById("posts");
-    const suggestionsContainer = document.getElementById("suggestions");
-    const form = document.getElementById("post-form");
-    const input = document.getElementById("post-input");
+    let currentConv = null;
 
-    // Afficher les posts existants
-    function renderPosts() {
-      postsContainer.innerHTML = "";
-      posts.forEach(post => {
-        const div = document.createElement("div");
-        div.className = "post";
-        div.innerHTML = `<strong>${post.user}</strong>: ${post.content}`;
-        postsContainer.appendChild(div);
-      });
-    }
-
-    // Afficher les suggestions d’amis
-    function renderSuggestions() {
-      suggestionsContainer.innerHTML = "";
-      suggestions.forEach(name => {
-        const li = document.createElement("li");
-        li.textContent = name;
-        suggestionsContainer.appendChild(li);
-      });
-    }
-
-    // Ajouter un nouveau post
-    form.addEventListener("submit", e => {
-      e.preventDefault();
-      const newPost = { user: "Vous", content: input.value };
-      posts.unshift(newPost); // ajoute en haut du fil
-      input.value = "";
-      renderPosts();
+    // Afficher la liste des conversations
+    conversations.forEach(conv => {
+      const li = document.createElement("li");
+      li.textContent = conv.name;
+      li.addEventListener("click", () => openConversation(conv));
+      convList.appendChild(li);
     });
 
-    // Initialisation
-    renderPosts();
-    renderSuggestions();
+    function openConversation(conv) {
+      currentConv = conv;
+      chatTitle.textContent = `Conversation avec ${conv.name}`;
+      messagesContainer.innerHTML = "";
+      conv.messages.forEach(msg => {
+        const div = document.createElement("div");
+        div.className = "message";
+        div.textContent = msg;
+        messagesContainer.appendChild(div);
+      });
+    }
+
+    // Envoyer un nouveau message
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      if (!currentConv) return;
+      const newMsg = input.value;
+      currentConv.messages.push(newMsg);
+
+      const div = document.createElement("div");
+      div.className = "message";
+      div.textContent = newMsg;
+      messagesContainer.appendChild(div);
+
+      input.value = "";
+    });
   </script>
 </body>
 </html>
