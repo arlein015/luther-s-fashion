@@ -3,50 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threndly ✅ Premium</title>
+    <title>Threndly ✅</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         :root { --cyan: #00d2ff; --bg: #000; --grad: linear-gradient(135deg, #2D9CDB 0%, #BB6BD9 100%); }
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: white; margin: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* Login Screen */
+        /* Login */
         #auth-screen { position: fixed; inset: 0; background: #000; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .auth-card { background: #111; padding: 25px; border-radius: 20px; border: 1px solid #222; width: 300px; text-align: center; }
         .logo-te { font-size: 2.5rem; font-weight: bold; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; }
         .auth-input { background: #1a1a1a; border: 1px solid #333; color: white; padding: 12px; border-radius: 10px; width: 100%; margin-bottom: 10px; outline: none; box-sizing: border-box; }
-        .btn-main { background: var(--grad); border: none; padding: 14px; width: 100%; border-radius: 30px; color: white; font-weight: bold; cursor: pointer; }
+        .btn-main { background: var(--grad); border: none; padding: 14px; border-radius: 30px; color: white; font-weight: bold; cursor: pointer; width: 100%; }
 
-        /* Chat Interface */
-        #app-interface { display: none; flex-direction: column; height: 100vh; }
+        /* Header */
         header { padding: 12px 20px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; background: #000; }
-        .chat-partner { font-weight: bold; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
-        
+        #partner-name { font-weight: bold; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+
+        /* Chat */
         #chat-box { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .msg { padding: 8px; border-radius: 18px; max-width: 70%; position: relative; word-wrap: break-word; }
         
-        .msg { padding: 8px; border-radius: 18px; max-width: 75%; position: relative; }
-        .msg img, .msg video { max-width: 100%; border-radius: 12px; display: block; }
+        /* Affichage de l'image dans la bulle */
+        .msg img { max-width: 100%; border-radius: 12px; display: block; cursor: pointer; }
+        
         .other-msg { align-self: flex-start; background: #262626; border-bottom-left-radius: 4px; }
         .my-msg { align-self: flex-end; background: var(--grad); border-bottom-right-radius: 4px; }
 
-        /* Input area with media buttons */
-        #input-area { padding: 10px; background: #000; border-top: 1px solid #222; display: flex; flex-direction: column; gap: 10px; }
-        .controls { display: flex; gap: 10px; align-items: center; }
+        /* Footer */
+        #input-area { padding: 15px; background: #000; border-top: 1px solid #222; display: flex; gap: 10px; align-items: center; }
         #message-input { flex: 1; background: #1a1a1a; border: none; padding: 12px 18px; border-radius: 25px; color: white; outline: none; }
-        
-        .icon-btn { color: #888; font-size: 1.3rem; cursor: pointer; transition: 0.2s; }
-        .icon-btn:hover { color: var(--cyan); }
-        .recording { color: #ff4444 !important; animation: pulse 1s infinite; }
-
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-        
-        /* Video Call Overlay (Simple placeholder) */
-        #video-call-ui { display:none; position:fixed; inset:0; background:black; z-index:2000; flex-direction:column; }
-        #local-video { position:absolute; bottom:20px; right:20px; width:100px; border-radius:10px; border:2px solid white; transform: scaleX(-1); }
-        #remote-video { width:100%; height:100%; object-fit: cover; }
+        .icon-btn { color: #888; font-size: 1.4rem; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -54,61 +44,38 @@
 <div id="auth-screen">
     <div class="logo-te">Threndly</div>
     <div class="auth-card">
-        <input type="text" id="user-id" class="auth-input" placeholder="Email ou Numéro">
+        <input type="text" id="user-id" class="auth-input" placeholder="Ton nom">
         <input type="password" id="user-pass" class="auth-input" placeholder="Mot de passe">
-        <button class="btn-main" onclick="handleAuth()">Se connecter</button>
+        <button class="btn-main" onclick="handleAuth()">Se connecter ✅</button>
     </div>
 </div>
 
-<div id="app-interface">
+<div id="app-interface" style="display:none;">
     <header>
-        <div class="chat-partner" id="partner-display">Threndly ✅</div>
-        <div style="display:flex; gap:18px">
-            <i class="fas fa-phone icon-btn" onclick="startCall('audio')"></i>
-            <i class="fas fa-video icon-btn" onclick="startCall('video')"></i>
-            <i class="fas fa-sign-out-alt icon-btn" onclick="logout()" style="color:#ff4444"></i>
-        </div>
+        <div id="partner-name">Threndly <i class="fas fa-check-circle" style="color:var(--cyan); font-size:0.9rem"></i></div>
+        <i class="fas fa-sign-out-alt" onclick="logout()" style="color:#ff4444; cursor:pointer"></i>
     </header>
 
     <div id="chat-box"></div>
 
     <div id="input-area">
-        <div class="controls">
-            <label for="media-upload" class="icon-btn"><i class="fas fa-plus-circle"></i></label>
-            <input type="file" id="media-upload" hidden accept="image/*,video/*" onchange="uploadMedia(this.files[0])">
-            
-            <input type="text" id="message-input" placeholder="Message..." onkeypress="if(event.key=='Enter')sendMsg()">
-            
-            <i class="fas fa-microphone icon-btn" id="mic-btn" onclick="toggleRecording()"></i>
-            <button style="background:var(--grad); border:none; color:white; width:40px; height:40px; border-radius:50%" onclick="sendMsg()"><i class="fas fa-arrow-up"></i></button>
-        </div>
-    </div>
-</div>
-
-<div id="video-call-ui" id="call-ui">
-    <video id="remote-video" autoplay playsinline></video>
-    <video id="local-video" autoplay playsinline muted></video>
-    <div style="position:absolute; bottom:30px; left:50%; transform:translateX(-50%); display:flex; gap:20px">
-        <button onclick="switchCamera()" style="background:#444; color:white; border:none; padding:15px; border-radius:50%"><i class="fas fa-sync"></i></button>
-        <button onclick="endCall()" style="background:#ff4444; color:white; border:none; padding:15px; border-radius:50%"><i class="fas fa-phone-slash"></i></button>
+        <label for="img-input" class="icon-btn"><i class="fas fa-image"></i></label>
+        <input type="file" id="img-input" hidden accept="image/*" onchange="sendPhoto(this)">
+        
+        <input type="text" id="message-input" placeholder="Message..." onkeypress="if(event.key=='Enter')sendMsg()">
+        <button style="background:var(--grad); border:none; color:white; width:42px; height:42px; border-radius:50%" onclick="sendMsg()"><i class="fas fa-arrow-up"></i></button>
     </div>
 </div>
 
 <script>
     const firebaseConfig = {
         databaseURL: "https://trendly-fca7c-default-rtdb.firebaseio.com",
-        projectId: "trendly-fca7c",
-        storageBucket: "trendly-fca7c.appspot.com"
+        projectId: "trendly-fca7c"
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    const storage = firebase.storage();
 
     let myUser = localStorage.getItem('threndly_user') || "";
-    let mediaRecorder;
-    let audioChunks = [];
-    let currentStream;
-    let isFrontCamera = true;
 
     if(myUser) enterApp(myUser);
 
@@ -125,95 +92,60 @@
         startChat();
     }
 
-    // --- ENVOI DE MESSAGES ---
-    function sendMsg(type = 'text', content = null) {
+    function sendMsg() {
         const input = document.getElementById('message-input');
-        const text = content || input.value.trim();
-        if(text){
-            db.ref("messages").push({
-                user: myUser,
-                type: type,
-                content: text,
-                timestamp: Date.now()
-            });
+        if(input.value.trim()){
+            db.ref("messages").push({ user: myUser, text: input.value, type: 'text' });
             input.value = "";
         }
     }
 
-    // --- ENVOI DE PHOTOS / VIDÉOS ---
-    async function uploadMedia(file) {
-        if(!file) return;
-        const ref = storage.ref(`media/${Date.now()}_${file.name}`);
-        await ref.put(file);
-        const url = await ref.getDownloadURL();
-        const type = file.type.startsWith('image') ? 'image' : 'video';
-        sendMsg(type, url);
+    // --- FONCTION PHOTO ---
+    function sendPhoto(input) {
+        const file = input.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.src = e.target.result;
+            img.onload = function() {
+                // On réduit la taille pour que l'envoi soit instantané
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const maxW = 500; 
+                const scale = maxW / img.width;
+                canvas.width = maxW;
+                canvas.height = img.height * scale;
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                
+                // On transforme l'image en texte "Base64"
+                const base64Img = canvas.toDataURL('image/jpeg', 0.7);
+                db.ref("messages").push({ user: myUser, text: base64Img, type: 'image' });
+            }
+        };
+        reader.readAsDataURL(file);
     }
 
-    // --- MESSAGE VOCAL ---
-    async function toggleRecording() {
-        const micBtn = document.getElementById('mic-btn');
-        if (!mediaRecorder || mediaRecorder.state === "inactive") {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorder = new MediaRecorder(stream);
-            audioChunks = [];
-            mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-            mediaRecorder.onstop = async () => {
-                const blob = new Blob(audioChunks, { type: 'audio/ogg; codecs=opus' });
-                const ref = storage.ref(`vocaux/${Date.now()}.ogg`);
-                await ref.put(blob);
-                const url = await ref.getDownloadURL();
-                sendMsg('audio', url);
-            };
-            mediaRecorder.start();
-            micBtn.classList.add('recording');
-        } else {
-            mediaRecorder.stop();
-            micBtn.classList.remove('recording');
-        }
-    }
-
-    // --- APPEL VIDÉO & CAMÉRA ---
-    async function startCall(mode) {
-        document.getElementById('video-call-ui').style.display = 'flex';
-        currentStream = await navigator.mediaDevices.getUserMedia({ 
-            video: mode === 'video' ? { facingMode: "user" } : false, 
-            audio: true 
-        });
-        document.getElementById('local-video').srcObject = currentStream;
-    }
-
-    async function switchCamera() {
-        isFrontCamera = !isFrontCamera;
-        const videoTrack = currentStream.getVideoTracks()[0];
-        videoTrack.stop();
-        const newStream = await navigator.mediaDevices.getUserMedia({ 
-            video: { facingMode: isFrontCamera ? "user" : "environment" } 
-        });
-        const newTrack = newStream.getVideoTracks()[0];
-        currentStream.removeTrack(videoTrack);
-        currentStream.addTrack(newTrack);
-        document.getElementById('local-video').srcObject = currentStream;
-    }
-
-    function endCall() {
-        currentStream.getTracks().forEach(track => track.stop());
-        document.getElementById('video-call-ui').style.display = 'none';
-    }
-
-    // --- AFFICHAGE CHAT ---
     function startChat() {
+        const box = document.getElementById('chat-box');
+        db.ref("messages").off();
         db.ref("messages").on("child_added", snap => {
             const data = snap.val();
             const isMe = data.user === myUser;
-            const box = document.getElementById('chat-box');
+            
+            // Nom de l'ami en haut
+            if(!isMe) document.getElementById('partner-name').innerHTML = `${data.user} <i class="fas fa-check-circle" style="color:var(--cyan); font-size:0.9rem"></i>`;
+
             const div = document.createElement('div');
             div.className = `msg ${isMe ? 'my-msg' : 'other-msg'}`;
             
-            if(data.type === 'text') div.innerText = data.content;
-            if(data.type === 'image') div.innerHTML = `<img src="${data.content}" onclick="window.open(this.src)">`;
-            if(data.type === 'video') div.innerHTML = `<video controls src="${data.content}"></video>`;
-            if(data.type === 'audio') div.innerHTML = `<audio controls src="${data.content}" style="width:200px"></audio>`;
+            // Si c'est une image, on crée une balise IMG
+            if(data.type === 'image') {
+                div.innerHTML = `<img src="${data.text}" onclick="window.open(this.src)">`;
+            } else {
+                div.innerText = data.text;
+            }
             
             box.appendChild(div);
             box.scrollTop = box.scrollHeight;
