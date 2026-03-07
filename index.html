@@ -8,12 +8,12 @@
     body {
       font-family: "Segoe UI", Arial, sans-serif;
       margin: 0; padding: 0;
-      background: #f2f3f7;
+      background: #f9f9f9;
       color: #333;
     }
     header {
       background: #fff;
-      padding: 15px;
+      padding: 12px;
       border-bottom: 1px solid #ddd;
       text-align: center;
       font-weight: bold;
@@ -99,6 +99,16 @@
       font-size: 13px;
       color: #4a90e2;
       cursor: pointer;
+      position: relative;
+    }
+    .notif {
+      background: red;
+      color: white;
+      font-size: 10px;
+      border-radius: 50%;
+      padding: 2px 6px;
+      position: absolute;
+      top: -5px; right: -10px;
     }
   </style>
 </head>
@@ -138,18 +148,19 @@
   <!-- Navigation -->
   <footer>
     <div>🏠 Accueil</div>
-    <div>👥 Ami(e)s</div>
+    <div>👥 Ami(e)s <span class="notif">65</span></div>
     <div>➕</div>
-    <div>💬 Messages</div>
+    <div>💬 Messages <span class="notif">42</span></div>
     <div>👤 Profil</div>
   </footer>
 
   <script>
     const conversations = [
       { name: "Murah Camayo 🍭", last: "Salut !", time: "59 min" },
-      { name: "Espérée", last: "À demain", time: "1 j" },
-      { name: "Haëckel", last: "Ok merci", time: "6 j" },
-      { name: "Gladys", last: "Demande acceptée", time: "6 j" }
+      { name: "Espérée", last: "Efa tampitra", time: "1 j" },
+      { name: "personne", last: "Dis bonjour à personne", time: "" },
+      { name: "Haëckel 🇲🇬", last: "Ça va toi ?", time: "6 j" },
+      { name: "Gladys", last: "Demande de message acceptée", time: "6 j" }
     ];
 
     const convContainer = document.getElementById("conversations");
