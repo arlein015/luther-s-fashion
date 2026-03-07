@@ -3,81 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trendly ✅</title>
+    <title>Threndly ✅</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        :root { --cyan: #00d2ff; --bg: #000; --sidebar: #121212; --grad: linear-gradient(135deg, #2D9CDB 0%, #BB6BD9 100%); }
+        /* TES COULEURS ET TON DESIGN EXACT */
+        :root { --cyan: #00d2ff; --bg: #000; --sidebar: #0a0a0a; --grad: linear-gradient(135deg, #2D9CDB 0%, #BB6BD9 100%); }
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: white; margin: 0; height: 100vh; display: flex; overflow: hidden; }
 
-        /* Login */
-        #auth-screen { position: fixed; inset: 0; background: #000; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .auth-card { background: #111; padding: 25px; border-radius: 20px; border: 1px solid #222; width: 300px; text-align: center; }
-        .logo-main { height: 80px; margin-bottom: 20px; }
+        /* Sidebar Header */
+        #sidebar { width: 350px; background: var(--bg); border-right: 1px solid #1a1a1a; display: flex; flex-direction: column; }
+        .sidebar-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logo-text { font-size: 1.5rem; font-weight: bold; color: #4facfe; display: flex; align-items: center; gap: 8px; }
+        .logo-text span { background: #9b51e0; width: 15px; height: 15px; border-radius: 4px; }
 
-        /* Sidebar */
-        #sidebar { width: 350px; background: var(--sidebar); border-right: 1px solid #222; display: flex; flex-direction: column; }
-        .sidebar-header { padding: 15px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #222; }
-        .trendly-logo-small { height: 30px; width: auto; object-fit: contain; }
-        .header-title { font-size: 1.3rem; font-weight: bold; flex: 1; }
+        .search-container { padding: 0 15px 15px; }
+        .search-bar { width: 100%; background: #1a1a1a; border: none; padding: 12px; border-radius: 10px; color: white; outline: none; }
 
-        .search-area { padding: 10px 15px; }
-        .search-bar { width: 100%; background: #222; border: none; padding: 10px; border-radius: 10px; color: white; outline: none; }
+        /* Liste d'amis Style */
+        .friend-item { padding: 15px; display: flex; align-items: center; gap: 15px; cursor: pointer; }
+        .friend-avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 1px solid #333; }
+        .friend-name { font-weight: bold; display: flex; align-items: center; gap: 5px; }
+        .friend-last { font-size: 0.85rem; color: #888; margin-top: 2px; }
+        .badge-verified { color: var(--cyan); font-size: 0.8rem; }
+
+        /* NOUVEAU : Section Suggestions */
+        .section-title { padding: 10px 15px; font-size: 0.75rem; color: #555; text-transform: uppercase; letter-spacing: 1px; }
+        .add-btn { background: #1a1a1a; border: 1px solid #333; color: white; padding: 5px 10px; border-radius: 5px; font-size: 0.7rem; cursor: pointer; margin-left: auto; }
+        .add-btn:hover { background: var(--cyan); border-color: var(--cyan); }
+
+        /* Chat Window */
+        #main-chat { flex: 1; display: none; flex-direction: column; background: var(--bg); }
+        header { padding: 15px; border-bottom: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; }
+        #chat-box { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
         
-        /* Listes */
-        .list-section-title { padding: 15px; color: var(--cyan); font-size: 0.75rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
-        #friends-list { flex: 1; overflow-y: auto; }
-        .friend-item { padding: 12px 15px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: 0.2s; }
-        .friend-item:hover { background: #1a1a1a; }
-        .avatar { width: 45px; height: 45px; border-radius: 50%; background: #333; }
-        .friend-info { flex: 1; overflow: hidden; }
-        .friend-name { font-weight: bold; font-size: 0.95rem; display: flex; align-items: center; gap: 5px; }
-        .friend-last { font-size: 0.8rem; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .msg { padding: 10px 14px; border-radius: 12px; max-width: 60%; font-size: 0.95rem; }
+        .my-msg { align-self: flex-end; background: var(--grad); color: white; border-bottom-right-radius: 2px; }
+        .other-msg { align-self: flex-start; background: #262626; border-bottom-left-radius: 2px; }
+        .msg img { max-width: 100%; border-radius: 8px; margin-top: 5px; }
 
-        /* Bouton Ajouter */
-        .add-btn { background: var(--grad); border: none; color: white; padding: 5px 12px; border-radius: 15px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
+        /* Input */
+        #input-area { padding: 20px; display: flex; align-items: center; gap: 15px; }
+        .input-container { flex: 1; background: #1a1a1a; border-radius: 12px; display: flex; align-items: center; padding: 0 15px; }
+        #message-input { flex: 1; background: transparent; border: none; padding: 12px 0; color: white; outline: none; }
+        .icon-btn { color: #888; font-size: 1.2rem; cursor: pointer; }
+        .send-btn { background: var(--grad); border: none; width: 40px; height: 40px; border-radius: 50%; color: white; cursor: pointer; }
 
-        /* Chat */
-        #main-chat { flex: 1; display: none; flex-direction: column; background: #000; }
-        header { padding: 10px 20px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; height: 60px; }
-        #chat-box { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 8px; }
-        .msg { padding: 10px 14px; border-radius: 18px; max-width: 70%; line-height: 1.4; }
-        .my-msg { align-self: flex-end; background: var(--grad); border-bottom-right-radius: 4px; }
-        .other-msg { align-self: flex-start; background: #262626; border-bottom-left-radius: 4px; }
-        .msg img { max-width: 100%; border-radius: 10px; margin-top: 5px; }
-
-        #input-area { padding: 15px; border-top: 1px solid #222; display: flex; align-items: center; gap: 10px; }
-        .input-box { flex: 1; background: #1a1a1a; border-radius: 25px; padding: 10px 15px; }
-        #message-input { background: transparent; border: none; color: white; width: 100%; outline: none; }
-        
-        /* Appels */
-        #call-screen { display:none; position:fixed; inset:0; background:#000; z-index:3000; }
-        #local-video { position:absolute; bottom:30px; right:20px; width:110px; height:160px; border-radius:12px; border:2px solid #fff; object-fit: cover; }
-        #remote-video { width:100%; height:100%; object-fit: cover; }
-
-        @media (max-width: 768px) { #sidebar { width: 100%; } #main-chat { position: fixed; inset: 0; z-index: 100; } }
+        /* Login Screen */
+        #auth-screen { position: fixed; inset: 0; background: #000; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .login-card { background: #0a0a0a; padding: 30px; border-radius: 20px; width: 300px; text-align: center; border: 1px solid #1a1a1a; }
     </style>
 </head>
 <body>
 
 <div id="auth-screen">
-    <img src="https://i.ibb.co/Vmq7D30/trendly-logo-exact.png" class="logo-main">
-    <div class="auth-card">
-        <input type="text" id="user-id" class="auth-input" placeholder="Ton nom d'utilisateur">
-        <button onclick="handleAuth()" class="btn-main" style="background:var(--grad); border:none; padding:12px; width:100%; color:white; border-radius:20px; cursor:pointer;">Se connecter ✅</button>
+    <div class="login-card">
+        <h2 style="color:var(--cyan)">Threndly ✅</h2>
+        <input type="text" id="user-id" placeholder="Ton nom" style="width:100%; padding:12px; margin: 10px 0; background:#1a1a1a; border:none; color:white; border-radius:8px; box-sizing:border-box;">
+        <button onclick="handleAuth()" style="width:100%; padding:12px; background:var(--grad); border:none; color:white; border-radius:8px; font-weight:bold; cursor:pointer;">Entrer</button>
     </div>
 </div>
 
 <div id="sidebar">
     <div class="sidebar-header">
-        <img src="https://i.ibb.co/Vmq7D30/trendly-logo-exact.png" class="trendly-logo-small">
-        <div class="header-title">Discussions</div>
-        <i class="fas fa-ellipsis-v" style="color:#888; cursor:pointer"></i>
+        <div class="logo-text">Threndly <span></span></div>
+        <i class="fas fa-sign-out-alt icon-btn" onclick="logout()"></i>
     </div>
-    <div class="search-area">
-        <input type="text" class="search-bar" placeholder="Rechercher un ami...">
+    <div class="search-container">
+        <input type="text" class="search-bar" placeholder="Rechercher...">
     </div>
     <div id="friends-list">
         </div>
@@ -86,31 +81,22 @@
 <div id="main-chat">
     <header>
         <div style="display:flex; align-items:center; gap:10px;">
-            <i class="fas fa-arrow-left" onclick="closeChat()" id="back-btn" style="cursor:pointer"></i>
-            <img id="chat-avatar" class="avatar" style="width:35px; height:35px">
-            <div id="chat-name" style="font-weight:bold"></div>
+            <img id="chat-avatar" src="" style="width:35px; height:35px; border-radius:50%; display:none;">
+            <div id="chat-name" style="font-weight:bold;"></div>
         </div>
-        <div style="display:flex; gap:20px; color:#888; font-size:1.2rem">
-            <i class="fas fa-phone"></i>
-            <i class="fas fa-video"></i>
+        <div style="display:flex; gap:20px;">
+            <i class="fas fa-phone icon-btn"></i>
+            <i class="fas fa-video icon-btn"></i>
         </div>
     </header>
     <div id="chat-box"></div>
     <div id="input-area">
-        <label for="img-input" style="color:#888; font-size:1.4rem; cursor:pointer"><i class="far fa-image"></i></label>
+        <label for="img-input"><i class="far fa-image icon-btn"></i></label>
         <input type="file" id="img-input" hidden accept="image/*" onchange="sendPhoto(this)">
-        <div class="input-box">
-            <input type="text" id="message-input" placeholder="Écris un message..." onkeypress="if(event.key=='Enter')sendMsg()">
+        <div class="input-container">
+            <input type="text" id="message-input" placeholder="Message..." onkeypress="if(event.key=='Enter')sendMsg()">
         </div>
-        <button onclick="sendMsg()" style="background:var(--grad); border:none; width:40px; height:40px; border-radius:50%; color:white;"><i class="fas fa-arrow-up"></i></button>
-    </div>
-</div>
-
-<div id="call-screen">
-    <video id="remote-video" autoplay playsinline></video>
-    <video id="local-video" autoplay playsinline muted></video>
-    <div style="position:absolute; bottom:40px; left:50%; transform:translateX(-50%);">
-        <button onclick="endCall()" style="background:#ff4444; border:none; padding:15px; border-radius:50%; color:white;"><i class="fas fa-phone-slash"></i></button>
+        <button class="send-btn" onclick="sendMsg()"><i class="fas fa-arrow-up"></i></button>
     </div>
 </div>
 
@@ -119,7 +105,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     
-    let myUser = localStorage.getItem('trendly_user') || "";
+    let myUser = localStorage.getItem('threndly_user') || "";
     let activeChat = "";
 
     if(myUser) login(myUser);
@@ -131,32 +117,27 @@
 
     function login(name) {
         myUser = name;
-        localStorage.setItem('trendly_user', name);
+        localStorage.setItem('threndly_user', name);
         document.getElementById('auth-screen').style.display = 'none';
-        // On s'enregistre dans l'annuaire de Threndly
         db.ref("users/" + name).update({ username: name, lastSeen: Date.now() });
-        loadAllData();
+        loadInterface();
     }
 
-    function loadAllData() {
+    function loadInterface() {
         const list = document.getElementById('friends-list');
         
-        // --- 1. CHARGER MES AMIS ACCEPTÉS ---
+        // 1. Charger mes amis
         db.ref("friends/" + myUser).on("value", snap => {
-            list.innerHTML = `<div class="list-section-title">Mes Discussions</div>`;
+            list.innerHTML = `<div class="section-title">Mes Discussions</div>`;
             if(snap.exists()){
-                snap.forEach(child => {
-                    const friend = child.val();
-                    addFriendUI(friend.name, "Ami", false);
-                });
+                snap.forEach(child => addFriendUI(child.val().name, "En ligne", false));
             }
 
-            // --- 2. CHARGER LES SUGGESTIONS (Gens pas encore amis) ---
+            // 2. Charger les suggestions (Gens pas encore amis)
             db.ref("users").once("value", usersSnap => {
-                list.innerHTML += `<div class="list-section-title">Suggestions d'amis</div>`;
-                usersSnap.forEach(userChild => {
-                    const user = userChild.val();
-                    // Si ce n'est pas moi et pas encore mon ami
+                list.innerHTML += `<div class="section-title">Suggestions d'amis</div>`;
+                usersSnap.forEach(u => {
+                    const user = u.val();
                     if(user.username !== myUser) {
                         db.ref("friends/" + myUser + "/" + user.username).once("value", check => {
                             if(!check.exists()) addFriendUI(user.username, "Nouveau", true);
@@ -167,30 +148,27 @@
         });
     }
 
-    function addFriendUI(name, status, isSuggestion) {
+    function addFriendUI(name, sub, isSug) {
         const list = document.getElementById('friends-list');
         const div = document.createElement('div');
         div.className = 'friend-item';
-        
         div.innerHTML = `
-            <img src="https://i.pravatar.cc/150?u=${name}" class="avatar">
+            <img src="https://i.pravatar.cc/150?u=${name}" class="friend-avatar">
             <div class="friend-info">
-                <div class="friend-name">${name} <i class="fas fa-check-circle" style="color:var(--cyan); font-size:0.7rem"></i></div>
-                <div class="friend-last">${isSuggestion ? "Découvrir sur Threndly" : "En ligne"}</div>
+                <div class="friend-name">${name} <i class="fas fa-check-circle badge-verified"></i></div>
+                <div class="friend-last">${sub}</div>
             </div>
-            ${isSuggestion ? `<button class="add-btn" onclick="addFriend(event, '${name}')">Ajouter +</button>` : ''}
+            ${isSug ? `<button class="add-btn" onclick="addFriend(event, '${name}')">Ajouter +</button>` : ''}
         `;
-        
-        div.onclick = () => { if(!isSuggestion) openChat(name); };
+        div.onclick = () => { if(!isSug) openChat(name); };
         list.appendChild(div);
     }
 
     function addFriend(e, name) {
         e.stopPropagation();
-        // On ajoute l'ami dans Firebase pour les deux personnes
         db.ref("friends/" + myUser + "/" + name).set({ name: name });
         db.ref("friends/" + name + "/" + myUser).set({ name: myUser });
-        alert(name + " a été ajouté à tes amis ! ✅");
+        alert(name + " ajouté ! ✅");
     }
 
     function openChat(name) {
@@ -198,26 +176,25 @@
         document.getElementById('main-chat').style.display = 'flex';
         document.getElementById('chat-name').innerText = name;
         document.getElementById('chat-avatar').src = "https://i.pravatar.cc/150?u=" + name;
+        document.getElementById('chat-avatar').style.display = "block";
         loadMessages();
     }
-
-    function closeChat() { document.getElementById('main-chat').style.display = 'none'; }
 
     function sendMsg() {
         const text = document.getElementById('message-input').value;
         if(text && activeChat) {
-            const chatId = myUser < activeChat ? myUser+"_"+activeChat : activeChat+"_"+myUser;
-            db.ref("messages/" + chatId).push({ from: myUser, text: text, type: 'text', time: Date.now() });
+            const id = myUser < activeChat ? myUser+"_"+activeChat : activeChat+"_"+myUser;
+            db.ref("msgs/" + id).push({ from: myUser, text: text, type: 'text' });
             document.getElementById('message-input').value = "";
         }
     }
 
     function loadMessages() {
         const box = document.getElementById('chat-box');
-        const chatId = myUser < activeChat ? myUser+"_"+activeChat : activeChat+"_"+myUser;
-        db.ref("messages/" + chatId).off();
+        const id = myUser < activeChat ? myUser+"_"+activeChat : activeChat+"_"+myUser;
+        db.ref("msgs/" + id).off();
         box.innerHTML = "";
-        db.ref("messages/" + chatId).on("child_added", snap => {
+        db.ref("msgs/" + id).on("child_added", snap => {
             const m = snap.val();
             const div = document.createElement('div');
             div.className = `msg ${m.from === myUser ? 'my-msg' : 'other-msg'}`;
@@ -228,16 +205,15 @@
     }
 
     function sendPhoto(input) {
-        const file = input.files[0]; if(!file) return;
         const reader = new FileReader();
-        reader.onload = function(e) {
-            const chatId = myUser < activeChat ? myUser+"_"+activeChat : activeChat+"_"+myUser;
-            db.ref("messages/" + chatId).push({ from: myUser, text: e.target.result, type: 'image', time: Date.now() });
+        reader.onload = e => {
+            const id = myUser < activeChat ? myUser+"_"+activeChat : activeChat+"_"+myUser;
+            db.ref("msgs/" + id).push({ from: myUser, text: e.target.result, type: 'image' });
         };
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(input.files[0]);
     }
 
-    function logout() { localStorage.removeItem('trendly_user'); location.reload(); }
+    function logout() { localStorage.removeItem('threndly_user'); location.reload(); }
 </script>
 </body>
 </html>
