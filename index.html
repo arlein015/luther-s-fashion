@@ -10,33 +10,39 @@
     
     <style>
         :root { --cyan: #00d2ff; --bg: #000; --grad: linear-gradient(135deg, #2D9CDB 0%, #BB6BD9 100%); }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); color: white; margin: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); color: white; margin: 0; height: 100vh; display: flex; flex-direction: column; }
 
-        /* Login */
+        /* Login Screen */
         #auth-screen { position: fixed; inset: 0; background: #000; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .auth-card { background: #111; padding: 25px; border-radius: 20px; border: 1px solid #222; width: 300px; text-align: center; }
         .logo-te { font-size: 2.5rem; font-weight: bold; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; }
         .auth-input { background: #1a1a1a; border: 1px solid #333; color: white; padding: 12px; border-radius: 10px; width: 100%; margin-bottom: 10px; outline: none; box-sizing: border-box; }
         .btn-main { background: var(--grad); border: none; padding: 14px; border-radius: 30px; color: white; font-weight: bold; cursor: pointer; width: 100%; }
 
-        /* Header */
-        header { padding: 12px 20px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; background: #000; }
-        #partner-name { font-weight: bold; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+        /* Interface App */
+        #app-interface { display: none; flex-direction: column; height: 100vh; }
+        
+        /* Header avec les boutons d'appel */
+        header { padding: 10px 15px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; background: #000; height: 60px; }
+        .partner-info { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 1.1rem; }
+        .header-btns { display: flex; gap: 18px; color: #888; font-size: 1.2rem; }
+        .header-btns i { cursor: pointer; transition: 0.3s; }
+        .header-btns i:hover { color: white; }
 
-        /* Chat */
+        /* Zone de discussion */
         #chat-box { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .msg { padding: 8px; border-radius: 18px; max-width: 70%; position: relative; word-wrap: break-word; }
-        
-        /* Affichage de l'image dans la bulle */
-        .msg img { max-width: 100%; border-radius: 12px; display: block; cursor: pointer; }
-        
+        .msg { padding: 10px; border-radius: 18px; max-width: 75%; position: relative; }
+        .msg img { max-width: 100%; border-radius: 12px; display: block; margin-top: 5px; }
         .other-msg { align-self: flex-start; background: #262626; border-bottom-left-radius: 4px; }
         .my-msg { align-self: flex-end; background: var(--grad); border-bottom-right-radius: 4px; }
 
-        /* Footer */
-        #input-area { padding: 15px; background: #000; border-top: 1px solid #222; display: flex; gap: 10px; align-items: center; }
-        #message-input { flex: 1; background: #1a1a1a; border: none; padding: 12px 18px; border-radius: 25px; color: white; outline: none; }
+        /* Barre de saisie en bas */
+        #input-area { padding: 12px 15px; background: #000; border-top: 1px solid #222; display: flex; align-items: center; gap: 12px; }
+        .input-container { flex: 1; background: #1a1a1a; border-radius: 25px; display: flex; align-items: center; padding: 0 15px; }
+        #message-input { flex: 1; background: transparent; border: none; padding: 12px 0; color: white; outline: none; font-size: 0.95rem; }
+        
         .icon-btn { color: #888; font-size: 1.4rem; cursor: pointer; }
+        .send-btn { background: var(--grad); border: none; width: 42px; height: 42px; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -50,20 +56,29 @@
     </div>
 </div>
 
-<div id="app-interface" style="display:none;">
+<div id="app-interface">
     <header>
-        <div id="partner-name">Threndly <i class="fas fa-check-circle" style="color:var(--cyan); font-size:0.9rem"></i></div>
-        <i class="fas fa-sign-out-alt" onclick="logout()" style="color:#ff4444; cursor:pointer"></i>
+        <div class="partner-info" id="partner-display">
+            Threndly <i class="fas fa-check-circle" style="color:var(--cyan); font-size:0.9rem"></i>
+        </div>
+        <div class="header-btns">
+            <i class="fas fa-phone"></i>
+            <i class="fas fa-video"></i>
+            <i class="fas fa-sign-out-alt" onclick="logout()" style="color:#ff4444"></i>
+        </div>
     </header>
 
     <div id="chat-box"></div>
 
     <div id="input-area">
-        <label for="img-input" class="icon-btn"><i class="fas fa-image"></i></label>
+        <label for="img-input" class="icon-btn"><i class="far fa-image"></i></label>
         <input type="file" id="img-input" hidden accept="image/*" onchange="sendPhoto(this)">
         
-        <input type="text" id="message-input" placeholder="Message..." onkeypress="if(event.key=='Enter')sendMsg()">
-        <button style="background:var(--grad); border:none; color:white; width:42px; height:42px; border-radius:50%" onclick="sendMsg()"><i class="fas fa-arrow-up"></i></button>
+        <div class="input-container">
+            <input type="text" id="message-input" placeholder="Message..." onkeypress="if(event.key=='Enter')sendMsg()">
+        </div>
+        
+        <button class="send-btn" onclick="sendMsg()"><i class="fas fa-arrow-up"></i></button>
     </div>
 </div>
 
@@ -100,17 +115,14 @@
         }
     }
 
-    // --- FONCTION PHOTO ---
     function sendPhoto(input) {
         const file = input.files[0];
         if (!file) return;
-
         const reader = new FileReader();
         reader.onload = function(e) {
             const img = new Image();
             img.src = e.target.result;
             img.onload = function() {
-                // On réduit la taille pour que l'envoi soit instantané
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
                 const maxW = 500; 
@@ -118,8 +130,6 @@
                 canvas.width = maxW;
                 canvas.height = img.height * scale;
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                
-                // On transforme l'image en texte "Base64"
                 const base64Img = canvas.toDataURL('image/jpeg', 0.7);
                 db.ref("messages").push({ user: myUser, text: base64Img, type: 'image' });
             }
@@ -134,18 +144,15 @@
             const data = snap.val();
             const isMe = data.user === myUser;
             
-            // Nom de l'ami en haut
-            if(!isMe) document.getElementById('partner-name').innerHTML = `${data.user} <i class="fas fa-check-circle" style="color:var(--cyan); font-size:0.9rem"></i>`;
+            // Mise à jour du nom de l'autre en haut
+            if(!isMe) {
+                document.getElementById('partner-display').innerHTML = `${data.user} <i class="fas fa-check-circle" style="color:var(--cyan); font-size:0.9rem"></i>`;
+            }
 
             const div = document.createElement('div');
             div.className = `msg ${isMe ? 'my-msg' : 'other-msg'}`;
-            
-            // Si c'est une image, on crée une balise IMG
-            if(data.type === 'image') {
-                div.innerHTML = `<img src="${data.text}" onclick="window.open(this.src)">`;
-            } else {
-                div.innerText = data.text;
-            }
+            if(data.type === 'image') div.innerHTML = `<img src="${data.text}">`;
+            else div.innerText = data.text;
             
             box.appendChild(div);
             box.scrollTop = box.scrollHeight;
