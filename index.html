@@ -2,160 +2,180 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Threndly - Connexion</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Threndly - Pro</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { 
-            --blue: #2D9CDB; 
-            --purple: #BB6BD9; 
-            --black: #000000;
-            --dark-grey: #1a1a1a;
+            --blue: #2D9CDB; --purple: #BB6BD9; --black: #000000;
             --grad: linear-gradient(135deg, #2D9CDB 0%, #BB6BD9 100%); 
         }
+        * { box-sizing: border-box; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; background: #4A5568; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 
-        * { box-sizing: border-box; font-family: -apple-system, sans-serif; }
-        body { margin: 0; background-color: #4A5568; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-
-        /* --- CARTE DE CONNEXION / INSCRIPTION --- */
-        .auth-container { 
-            background: var(--black); 
-            width: 90%; 
-            max-width: 420px; 
-            padding: 40px 30px; 
-            border-radius: 30px; 
-            text-align: center; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border: 1px solid #222;
+        /* --- AUTH CARD --- */
+        .auth-card { 
+            background: var(--black); width: 90%; max-width: 420px; padding: 40px 30px; 
+            border-radius: 30px; text-align: center; border: 1px solid #222; position: relative; z-index: 10;
         }
+        .logo-text { font-size: 2.2rem; font-weight: 800; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 25px; }
+        input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #333; background: #1a1a1a; color: white; outline: none; margin-bottom: 12px; }
+        input:focus { border-color: var(--blue); }
+        .btn-p { width: 100%; padding: 16px; background: var(--grad); border: none; border-radius: 12px; color: white; font-weight: bold; cursor: pointer; }
 
-        .logo-text { font-size: 2.5rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 5px; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .logo-icon { color: var(--blue); margin-left: 5px; }
-
-        h2 { color: white; margin: 20px 0 5px 0; font-size: 1.5rem; }
-        p.subtitle { color: #888; font-size: 0.9rem; margin-bottom: 30px; }
-
-        .input-group { text-align: left; margin-bottom: 15px; }
-        label { display: block; color: white; font-size: 0.85rem; margin-bottom: 8px; margin-left: 5px; }
-        
-        input { 
-            width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #333; 
-            background: var(--dark-grey); color: white; outline: none; font-size: 1rem;
-        }
-        input:focus { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(45, 156, 219, 0.2); }
-
-        /* --- BOUTONS --- */
-        .btn-primary { 
-            width: 100%; padding: 16px; background: var(--grad); border: none; 
-            border-radius: 12px; color: white; font-weight: bold; cursor: pointer; 
-            font-size: 1rem; margin-top: 10px; transition: opacity 0.2s;
-        }
-        .btn-social { 
-            width: 100%; padding: 14px; border-radius: 12px; border: none; 
-            color: white; font-weight: 600; margin-top: 10px; display: flex; 
-            align-items: center; justify-content: center; gap: 10px; cursor: pointer;
-        }
-        .google { background: #EA4335; }
-        .facebook { background: #1877F2; }
-
-        .divider { margin: 20px 0; color: #444; display: flex; align-items: center; font-size: 0.8rem; }
-        .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: #222; margin: 0 10px; }
-
-        .footer-links { margin-top: 25px; font-size: 0.85rem; }
-        .footer-links a { color: var(--blue); text-decoration: none; font-weight: 600; }
-
-        /* --- PAGES --- */
-        #verify-screen, #chat-screen { display: none; }
-
-        /* --- CHAT --- */
-        #chat-screen { position: fixed; inset: 0; background: var(--black); flex-direction: row; }
+        /* --- CHAT SCREEN --- */
+        #chat-screen { position: fixed; inset: 0; background: var(--black); display: none; flex-direction: row; z-index: 20; }
         #sidebar { width: 70px; border-right: 1px solid #1a1a1a; display: flex; flex-direction: column; align-items: center; padding-top: 20px; }
         #chat-content { flex: 1; display: flex; flex-direction: column; }
+        header { padding: 15px 20px; border-bottom: 1px solid #1a1a1a; font-weight: bold; color: white; display: flex; justify-content: space-between; }
+        #msg-list { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+        
+        .bubble { padding: 12px 16px; border-radius: 18px; max-width: 75%; color: white; font-size: 0.95rem; cursor: pointer; }
+        .me { align-self: flex-end; background: var(--grad); border-bottom-right-radius: 4px; }
+        .other { align-self: flex-start; background: #222; border-bottom-left-radius: 4px; }
+
+        footer { padding: 15px; display: flex; gap: 10px; background: #080808; border-top: 1px solid #1a1a1a; }
+        
+        /* MODAL AMIS */
+        #friends-list { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100; display: none; flex-direction: column; padding: 40px 20px; }
+        .user-item { padding: 15px; border-bottom: 1px solid #111; display: flex; align-items: center; gap: 10px; cursor: pointer; color: white; }
     </style>
 </head>
 <body>
 
-    <div id="signup-screen" class="auth-container">
-        <div class="logo-text">THRENDLY<i class="fas fa-chart-line logo-icon"></i></div>
-        <h2>Créer un compte</h2>
-        <p class="subtitle">Inscrivez-vous pour commencer à discuter</p>
-
-        <div class="input-group">
-            <label>E-mail ou Numéro</label>
-            <input type="text" id="reg-contact" placeholder="vous@exemple.com">
-        </div>
-        <div class="input-group">
-            <label>Nom d'utilisateur</label>
-            <input type="text" id="reg-user" placeholder="@username">
-        </div>
-        <div class="input-group">
-            <label>Mot de passe</label>
-            <input type="password" id="reg-pass" placeholder="Entrez votre mot de passe">
-        </div>
-        <div class="input-group">
-            <label>Confirmer le mot de passe</label>
-            <input type="password" id="reg-conf" placeholder="Répétez le mot de passe">
-        </div>
-
-        <button class="btn-primary" onclick="showVerify()">S'inscrire</button>
-
-        <div class="divider">OU</div>
-
-        <button class="btn-social google"><i class="fab fa-google"></i> Continuer avec Google</button>
-        <button class="btn-social facebook"><i class="fab fa-facebook-f"></i> Continuer avec Facebook</button>
-
-        <div class="footer-links">
-            <a href="#">Mot de passe oublié ?</a><br><br>
-            <span style="color:#888">Vous avez déjà un compte ?</span> <a href="#" onclick="alert('Lien de connexion')">Se connecter</a>
-        </div>
+    <div id="auth-box" class="auth-card">
+        <div class="logo-text">THRENDLY <i class="fas fa-chart-line"></i></div>
+        <input type="text" id="reg-user" placeholder="@username">
+        <input type="text" id="reg-name" placeholder="Nom complet">
+        <input type="password" id="reg-pass" placeholder="Mot de passe">
+        <button class="btn-p" onclick="goVerify()">S'inscrire</button>
+        <p style="color:#555; font-size:0.8rem; margin-top:20px;">Déjà un compte ? <span style="color:var(--blue)" onclick="location.reload()">Connexion</span></p>
     </div>
 
-    <div id="verify-screen" class="auth-container">
+    <div id="verify-box" class="auth-card" style="display:none;">
         <h2>Vérification</h2>
-        <p class="subtitle">Entrez le code à 6 chiffres envoyé</p>
-        <input type="text" id="digit-code" maxlength="6" style="text-align:center; font-size:2rem; letter-spacing:8px; margin-bottom:20px;">
-        <button class="btn-primary" onclick="toChat()">Valider</button>
+        <p style="color:#888">Code à 6 chiffres (123456)</p>
+        <input type="text" id="v-code" maxlength="6" style="text-align:center; font-size:1.5rem; letter-spacing:10px;">
+        <button class="btn-p" onclick="finishAll()">Valider</button>
     </div>
 
     <div id="chat-screen">
         <div id="sidebar">
-            <div style="width:45px; height:45px; background:var(--grad); border-radius:12px; margin-bottom:20px;"></div>
-            <i class="fas fa-plus-circle" style="color:var(--blue); font-size:1.8rem;"></i>
+            <div style="width:40px; height:40px; background:var(--grad); border-radius:10px; margin-bottom:20px;"></div>
+            <i class="fas fa-plus-circle" style="color:var(--blue); font-size:1.8rem; cursor:pointer;" onclick="showFriends()"></i>
+            <i class="fas fa-sign-out-alt" style="color:#333; margin-top:auto; margin-bottom:20px;" onclick="logout()"></i>
         </div>
         <div id="chat-content">
-            <header style="padding:20px; border-bottom:1px solid #1a1a1a; font-weight:bold; color:white;">Threndly Network</header>
-            <div id="msg-list" style="flex:1; padding:20px; overflow-y:auto; color:white;">
-                <p style="color:#444; text-align:center;">Sélectionnez un ami pour discuter</p>
-            </div>
+            <header>
+                <span id="partner-name">Discussion</span>
+                <i class="fas fa-ellipsis-v" style="color:#444"></i>
+            </header>
+            <div id="msg-list"></div>
+            <footer>
+                <input type="text" id="m-in" placeholder="Votre message..." onkeypress="if(event.key=='Enter')send()">
+                <button onclick="send()" class="btn-p" style="width:50px; border-radius:50%; margin:0;"><i class="fas fa-paper-plane"></i></button>
+            </footer>
         </div>
     </div>
 
+    <div id="friends-list">
+        <h2 style="color:white; text-align:center;">Nouveaux Amis</h2>
+        <div id="u-container"></div>
+        <button class="btn-p" style="margin-top:20px; background:#222;" onclick="hideFriends()">Fermer</button>
+    </div>
+
     <script>
-        // Config Firebase
         const firebaseConfig = { databaseURL: "https://trendly-fca7c-default-rtdb.firebaseio.com", projectId: "trendly-fca7c" };
         firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
-        function showVerify() {
-            const u = document.getElementById('reg-user').value;
-            const p = document.getElementById('reg-pass').value;
-            const c = document.getElementById('reg-conf').value;
-            if(!u || p !== c) return alert("Champs invalides !");
+        let myID = localStorage.getItem('threndly_id') || "";
+        let chatKey = "";
+        let tempUser = {};
 
-            document.getElementById('signup-screen').style.display = 'none';
-            document.getElementById('verify-screen').style.display = 'block';
-        }
-
-        function toChat() {
-            const code = document.getElementById('digit-code').value;
-            if(code === "123456") {
-                localStorage.setItem('threndly_id', 'user_test');
-                document.getElementById('verify-screen').style.display = 'none';
-                document.body.style.backgroundColor = "black";
+        // --- DÉMARRAGE ---
+        window.onload = () => {
+            if(myID) { 
+                document.body.style.background = "black";
+                document.getElementById('auth-box').style.display = 'none';
                 document.getElementById('chat-screen').style.display = 'flex';
-            } else { alert("Code : 123456"); }
+                listenForUsers();
+            }
+        };
+
+        function goVerify() {
+            const u = document.getElementById('reg-user').value.trim().toLowerCase();
+            if(!u) return alert("Pseudo requis");
+            tempUser = { user: u, name: document.getElementById('reg-name').value };
+            document.getElementById('auth-box').style.display = 'none';
+            document.getElementById('verify-box').style.display = 'block';
         }
+
+        function finishAll() {
+            if(document.getElementById('v-code').value === "123456") {
+                db.ref("profiles/"+tempUser.user).set(tempUser);
+                localStorage.setItem('threndly_id', tempUser.user);
+                location.reload();
+            }
+        }
+
+        function showFriends() {
+            document.getElementById('friends-list').style.display = 'flex';
+        }
+        function hideFriends() { document.getElementById('friends-list').style.display = 'none'; }
+
+        function listenForUsers() {
+            db.ref("profiles").on("value", snap => {
+                const cont = document.getElementById('u-container');
+                cont.innerHTML = "";
+                snap.forEach(u => {
+                    if(u.key !== myID) {
+                        const d = document.createElement('div');
+                        d.className = "user-item";
+                        d.innerHTML = `<div style="width:35px;height:35px;background:var(--grad);border-radius:50%"></div><b>${u.key}</b>`;
+                        d.onclick = () => startChat(u.key);
+                        cont.appendChild(d);
+                    }
+                });
+            });
+        }
+
+        function startChat(other) {
+            chatKey = [myID, other].sort().join("_");
+            document.getElementById('partner-name').innerText = other;
+            hideFriends();
+            loadMessages();
+        }
+
+        function send() {
+            const inp = document.getElementById('m-in');
+            if(inp.value.trim() && chatKey) {
+                db.ref("messages/"+chatKey).push({ from: myID, text: inp.value, time: Date.now() });
+                inp.value = "";
+            }
+        }
+
+        function loadMessages() {
+            const box = document.getElementById('msg-list');
+            db.ref("messages/"+chatKey).off();
+            box.innerHTML = "";
+            db.ref("messages/"+chatKey).on("child_added", snap => {
+                const m = snap.val();
+                const d = document.createElement('div');
+                d.className = `bubble ${m.from === myID ? 'me' : 'other'}`;
+                d.innerText = m.text;
+                // Option suppression au clic
+                d.onclick = () => { if(m.from === myID && confirm("Supprimer ?")) snap.ref.remove(); };
+                box.appendChild(d);
+                box.scrollTop = box.scrollHeight;
+            });
+            // Pour la suppression en direct
+            db.ref("messages/"+chatKey).on("child_removed", () => loadMessages());
+        }
+
+        function logout() { localStorage.clear(); location.reload(); }
     </script>
 </body>
 </html>
