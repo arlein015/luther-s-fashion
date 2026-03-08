@@ -10,10 +10,10 @@
     <style>
         :root { --cyan: #00d2ff; --bg: #000; --sidebar: #0a0a0a; --grad: linear-gradient(135deg, #2D9CDB 0%, #BB6BD9 100%); }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html, body { height: 100%; width: 100%; overflow: hidden; position: fixed; background: #000; }
-        body { font-family: -apple-system, system-ui, sans-serif; color: white; margin: 0; display: flex; }
+        html, body { height: 100%; width: 100%; overflow: hidden; position: fixed; background: #000; margin: 0; color: white; }
+        body { font-family: -apple-system, system-ui, sans-serif; display: flex; }
 
-        /* Auth Screen */
+        /* --- ECRAN AUTHENTIFICATION --- */
         #auth-screen { position: fixed; inset: 0; background: #000; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .auth-card { background: #111; padding: 30px; border-radius: 30px; width: 100%; max-width: 350px; text-align: center; border: 1px solid #222; }
         .logo-img-large { width: 180px; margin-bottom: 25px; }
@@ -22,21 +22,18 @@
         .auth-footer { margin-top: 20px; font-size: 0.9rem; color: #888; }
         .auth-link { color: var(--cyan); cursor: pointer; font-weight: bold; }
 
-        /* Profil Setup (Choix Photo) */
-        #profile-setup { position: fixed; inset: 0; background: #000; z-index: 2500; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        /* --- SETUP PROFIL (CHOIX PHOTO) --- */
+        #profile-setup { position: fixed; inset: 0; background: #000; z-index: 2500; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
         #profile-preview { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid var(--cyan); margin-bottom: 20px; background: #111; }
 
-        /* Sidebar & Suggestions */
-        #sidebar { width: 85px; background: var(--sidebar); border-right: 1px solid #1a1a1a; display: flex; flex-direction: column; flex-shrink: 0; }
-        .sidebar-header { padding: 20px 0; display: flex; flex-direction: column; align-items: center; gap: 20px; }
-        .logo-img-small { width: 45px; height: 45px; object-fit: contain; }
-        .add-btn { width: 50px; height: 50px; border-radius: 50%; background: #1a1a1a; display: flex; align-items: center; justify-content: center; color: var(--cyan); border: 1px solid #333; cursor: pointer; }
+        /* --- INTERFACE PRINCIPALE --- */
+        #sidebar { width: 85px; background: var(--sidebar); border-right: 1px solid #1a1a1a; display: flex; flex-direction: column; align-items: center; padding-top: 20px; flex-shrink: 0; }
+        .logo-small { width: 45px; height: 45px; margin-bottom: 20px; }
+        .add-btn { width: 50px; height: 50px; border-radius: 50%; background: #1a1a1a; display: flex; align-items: center; justify-content: center; color: var(--cyan); border: 1px solid #333; cursor: pointer; font-size: 1.5rem; }
 
         #directory-modal { position: fixed; inset: 0; background: #000; z-index: 3000; display: none; flex-direction: column; padding: 20px; padding-top: 60px; }
         .user-row { padding: 15px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #222; }
-        .user-row:active { background: #111; }
 
-        /* Chat Window */
         #main-chat { flex: 1; display: none; flex-direction: column; background: #000; }
         header { padding: 15px; border-bottom: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; }
         #chat-box { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
@@ -44,11 +41,11 @@
         .my-msg { align-self: flex-end; background: var(--grad); }
         .other-msg { align-self: flex-start; background: #262626; }
 
-        #input-area { padding: 10px 15px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); display: flex; align-items: center; gap: 10px; border-top: 1px solid #1a1a1a; }
+        #input-area { padding: 10px 15px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #1a1a1a; }
         .input-container { flex: 1; background: #1a1a1a; border-radius: 25px; padding: 12px 20px; }
         #message-input { background: transparent; border: none; color: white; width: 100%; outline: none; font-size: 16px; }
 
-        @media (min-width: 900px) { #sidebar { width: 280px; } .user-row { padding: 15px 25px; } }
+        @media (min-width: 900px) { #sidebar { width: 280px; align-items: flex-start; padding: 20px; } }
     </style>
 </head>
 <body>
@@ -57,22 +54,26 @@
     <div class="auth-card">
         <img src="logo.png" class="logo-img-large">
         <h2 id="auth-title">Connexion</h2>
+        
         <input type="text" id="username" class="auth-input" placeholder="Identifiant">
         <input type="password" id="password" class="auth-input" placeholder="Mot de passe">
+        
         <button onclick="processAuth()" class="auth-btn" id="auth-btn-text">Se connecter</button>
+        
         <div class="auth-footer">
             <div id="toggle-text">Vous n'avez pas de compte ? <span class="auth-link" onclick="toggleAuth()">S'inscrire</span></div>
-            <span class="auth-link" style="font-size:0.8rem; display:block; margin-top:10px;" onclick="alert('Contactez l\'admin pour reset.')">Mot de passe oublié ?</span>
+            <span class="auth-link" style="font-size:0.8rem; display:block; margin-top:15px;" onclick="alert('Contactez l\'admin pour réinitialiser.')">Mot de passe oublié ?</span>
         </div>
     </div>
 </div>
 
 <div id="profile-setup">
-    <h3>Choisis ta photo</h3>
-    <img src="https://i.pravatar.cc/150?u=default" id="profile-preview">
+    <h2>Presque fini !</h2>
+    <p>Choisis ta photo de profil</p>
+    <img src="https://i.pravatar.cc/150?u=temp" id="profile-preview">
     <input type="file" id="photo-input" hidden accept="image/*" onchange="previewPhoto(this)">
-    <button onclick="document.getElementById('photo-input').click()" class="auth-btn" style="background:#222; margin-bottom:10px;">Ouvrir la galerie 📸</button>
-    <button onclick="saveProfile()" class="auth-btn">Terminer ✅</button>
+    <button onclick="document.getElementById('photo-input').click()" class="auth-btn" style="background:#222; margin-bottom:10px;">Choisir une photo 📸</button>
+    <button onclick="saveProfile()" class="auth-btn">Commencer sur Threndly ✅</button>
 </div>
 
 <div id="directory-modal">
@@ -84,11 +85,9 @@
 </div>
 
 <div id="sidebar">
-    <div class="sidebar-header">
-        <img src="logo.png" class="logo-img-small">
-        <div class="add-btn" onclick="toggleDir()"><i class="fas fa-plus"></i></div>
-    </div>
-    <div id="friends-list" style="flex:1; overflow-y:auto;"></div>
+    <img src="logo.png" class="logo-small">
+    <div class="add-btn" onclick="toggleDir()"><i class="fas fa-plus"></i></div>
+    <div id="friends-list" style="width:100%; margin-top:20px;"></div>
 </div>
 
 <div id="main-chat">
@@ -97,7 +96,6 @@
             <img src="" id="chat-avatar" style="width:40px; height:40px; border-radius:50%;">
             <span id="chat-name" style="font-weight:bold;"></span>
         </div>
-        <i class="fas fa-sign-out-alt" onclick="logout()" style="color:#444; cursor:pointer;"></i>
     </header>
     <div id="chat-box"></div>
     <div id="input-area">
@@ -107,37 +105,44 @@
 </div>
 
 <script>
+    // CONFIGURATION FIREBASE (RESTE LA MEME)
     const firebaseConfig = { databaseURL: "https://trendly-fca7c-default-rtdb.firebaseio.com", projectId: "trendly-fca7c" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
     let isSignup = false;
     let myUser = localStorage.getItem('threndly_user') || "";
-    let myPhoto = "";
+    let myPhotoBase64 = "";
 
     if(myUser) { document.getElementById('auth-screen').style.display='none'; }
 
+    // BASCULE ENTRE CONNEXION ET INSCRIPTION
     function toggleAuth() {
         isSignup = !isSignup;
-        document.getElementById('auth-title').innerText = isSignup ? "Inscription" : "Connexion";
+        document.getElementById('auth-title').innerText = isSignup ? "Créer un compte" : "Connexion";
         document.getElementById('auth-btn-text').innerText = isSignup ? "S'inscrire" : "Se connecter";
+        document.getElementById('toggle-text').innerHTML = isSignup ? 
+            "Déjà un compte ? <span class='auth-link' onclick='toggleAuth()'>Se connecter</span>" : 
+            "Pas de compte ? <span class='auth-link' onclick='toggleAuth()'>S'inscrire</span>";
     }
 
     function processAuth() {
         const u = document.getElementById('username').value.trim().toLowerCase();
         const p = document.getElementById('password').value.trim();
-        if(!u || !p) return alert("Remplis tout !");
+        if(!u || !p) return alert("Remplis les champs !");
 
         if(isSignup) {
             db.ref("auth/"+u).once("value", snap => {
-                if(snap.exists()) return alert("Déjà pris !");
+                if(snap.exists()) return alert("Identifiant déjà pris !");
                 myUser = u;
                 document.getElementById('profile-setup').style.display = 'flex';
             });
         } else {
             db.ref("auth/"+u).once("value", snap => {
-                if(snap.exists() && snap.val().pass === p) loginSuccess(u);
-                else alert("Erreur !");
+                if(snap.exists() && snap.val().pass === p) {
+                    localStorage.setItem('threndly_user', u);
+                    location.reload();
+                } else alert("Identifiant ou mot de passe incorrect.");
             });
         }
     }
@@ -145,8 +150,8 @@
     function previewPhoto(input) {
         const reader = new FileReader();
         reader.onload = e => { 
-            myPhoto = e.target.result;
-            document.getElementById('profile-preview').src = myPhoto;
+            myPhotoBase64 = e.target.result;
+            document.getElementById('profile-preview').src = myPhotoBase64;
         };
         reader.readAsDataURL(input.files[0]);
     }
@@ -154,33 +159,34 @@
     function saveProfile() {
         const p = document.getElementById('password').value;
         db.ref("auth/"+myUser).set({ pass: p });
-        db.ref("profiles/"+myUser).set({ name: myUser, img: myPhoto || "https://i.pravatar.cc/150?u="+myUser });
-        loginSuccess(myUser);
-    }
-
-    function loginSuccess(u) {
-        localStorage.setItem('threndly_user', u);
+        db.ref("profiles/"+myUser).set({ 
+            name: myUser, 
+            img: myPhotoBase64 || "https://i.pravatar.cc/150?u="+myUser 
+        });
+        localStorage.setItem('threndly_user', myUser);
         location.reload();
     }
 
     function toggleDir() {
         const m = document.getElementById('directory-modal');
         m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
-        if(m.style.display === 'flex') {
-            db.ref("profiles").once("value", snap => {
-                const list = document.getElementById('suggestions-list');
-                list.innerHTML = "";
-                snap.forEach(uSnap => {
-                    const u = uSnap.val();
-                    if(u.name === myUser) return;
-                    const div = document.createElement('div');
-                    div.className = "user-row";
-                    div.onclick = () => { startChat(u.name, u.img); toggleDir(); };
-                    div.innerHTML = `<img src="${u.img}" style="width:50px; height:50px; border-radius:50%; object-fit:cover;"><span>${u.name}</span>`;
-                    list.appendChild(div);
-                });
+        if(m.style.display === 'flex') loadSuggestions();
+    }
+
+    function loadSuggestions() {
+        db.ref("profiles").once("value", snap => {
+            const list = document.getElementById('suggestions-list');
+            list.innerHTML = "";
+            snap.forEach(uSnap => {
+                const u = uSnap.val();
+                if(u.name === myUser) return;
+                const div = document.createElement('div');
+                div.className = "user-row";
+                div.onclick = () => { startChat(u.name, u.img); toggleDir(); };
+                div.innerHTML = `<img src="${u.img}" style="width:50px; height:50px; border-radius:50%; object-fit:cover;"><span>${u.name}</span>`;
+                list.appendChild(div);
             });
-        }
+        });
     }
 
     function startChat(name, img) {
@@ -213,8 +219,6 @@
             input.value = "";
         }
     }
-
-    function logout() { localStorage.clear(); location.reload(); }
 </script>
 </body>
 </html>
