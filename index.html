@@ -3,89 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Threndly - Bienvenue</title>
+    <title>Threndly</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --blue: #2D9CDB; --purple: #BB6BD9; --grad: linear-gradient(135deg, #2D9CDB 0%, #BB6BD9 100%); }
-        * { box-sizing: border-box; font-family: sans-serif; }
-        body { margin: 0; background: #000; color: white; height: 100vh; display: flex; flex-direction: column; }
+        * { box-sizing: border-box; font-family: -apple-system, sans-serif; }
+        body { margin: 0; background: #000; color: white; height: 100vh; overflow: hidden; }
 
-        /* --- 1. PAGE D'INSCRIPTION (VISIBLE EN PREMIER) --- */
-        #signup-page { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .card { background: #111; width: 100%; max-width: 400px; padding: 30px; border-radius: 25px; border: 1px solid #222; text-align: center; }
-        .logo { width: 150px; margin-bottom: 20px; }
+        /* --- ÉCRAN 1 : INSCRIPTION (PREMIER PLAN) --- */
+        #signup-screen { position: fixed; inset: 0; background: #000; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .auth-card { background: #111; width: 100%; max-width: 400px; padding: 30px; border-radius: 25px; border: 1px solid #222; text-align: center; }
+        .logo { width: 160px; margin-bottom: 25px; }
         .input-group { text-align: left; margin-bottom: 15px; }
-        label { font-size: 0.8rem; color: #888; display: block; margin-bottom: 5px; }
-        input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #1a1a1a; color: white; outline: none; }
-        .btn-main { width: 100%; padding: 16px; background: var(--grad); border: none; border-radius: 12px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 1rem; }
-        
-        /* Boutons Sociaux */
-        .social { width: 100%; padding: 12px; margin-top: 10px; border-radius: 12px; border: 1px solid #333; background: #080808; color: white; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; }
+        label { font-size: 0.75rem; color: #888; display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #333; background: #1a1a1a; color: white; outline: none; }
+        .btn-main { width: 100%; padding: 16px; background: var(--grad); border: none; border-radius: 12px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .auth-link { color: var(--blue); font-size: 0.85rem; cursor: pointer; text-decoration: none; display: inline-block; margin-top: 15px; }
 
-        /* --- 2. PAGE PHOTO (ETAPE INTERMEDIAIRE) --- */
-        #photo-page { display: none; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; }
+        /* --- ÉCRAN 2 : PHOTO --- */
+        #photo-screen { position: fixed; inset: 0; background: #000; z-index: 200; display: none; flex-direction: column; align-items: center; justify-content: center; }
         #preview { width: 130px; height: 130px; border-radius: 50%; object-fit: cover; border: 3px solid var(--blue); margin: 20px; }
 
-        /* --- 3. PAGE DE DISCUSSION --- */
-        #chat-page { display: none; height: 100vh; flex-direction: row; }
+        /* --- ÉCRAN 3 : ZONE DE DISCUSSION --- */
+        #chat-screen { display: none; height: 100vh; flex-direction: row; }
         #sidebar { width: 80px; background: #0a0a0a; border-right: 1px solid #1a1a1a; display: flex; flex-direction: column; align-items: center; padding-top: 20px; }
-        #chat-area { flex: 1; display: flex; flex-direction: column; }
-        header { padding: 15px; border-bottom: 1px solid #1a1a1a; font-weight: bold; }
-        #messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .bubble { padding: 12px; border-radius: 15px; max-width: 70%; }
-        .me { align-self: flex-end; background: var(--grad); }
-        .other { align-self: flex-start; background: #222; }
-        footer { padding: 15px; display: flex; gap: 10px; border-top: 1px solid #1a1a1a; }
+        #chat-main { flex: 1; display: flex; flex-direction: column; }
+        header { padding: 15px 20px; border-bottom: 1px solid #1a1a1a; display: flex; align-items: center; gap: 10px; font-weight: bold; }
+        #msg-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .bubble { padding: 12px 16px; border-radius: 18px; max-width: 75%; font-size: 0.95rem; }
+        .me { align-self: flex-end; background: var(--grad); color: white; }
+        .other { align-self: flex-start; background: #222; color: white; }
+        footer { padding: 15px; display: flex; gap: 10px; background: #050505; border-top: 1px solid #1a1a1a; }
         footer input { flex: 1; }
     </style>
 </head>
 <body>
 
-    <div id="signup-page">
-        <div class="card">
+    <div id="signup-screen">
+        <div class="auth-card">
             <img src="logo.png" class="logo">
-            <h2>Créer un compte</h2>
+            <h2 style="margin-bottom: 5px;">Créer un compte</h2>
+            <p style="color: #666; font-size: 0.9rem; margin-bottom: 25px;">Rejoignez Threndly dès maintenant</p>
+            
             <div class="input-group">
                 <label>IDENTIFIANT</label>
-                <input type="text" id="user" placeholder="Ton pseudo">
+                <input type="text" id="user-id" placeholder="Votre pseudo">
             </div>
             <div class="input-group">
                 <label>MOT DE PASSE</label>
-                <input type="password" id="pass" placeholder="••••••••">
+                <input type="password" id="user-pass" placeholder="••••••••">
             </div>
             <div class="input-group">
                 <label>CONFIRMER LE MOT DE PASSE</label>
-                <input type="password" id="pass-conf" placeholder="••••••••">
+                <input type="password" id="user-conf" placeholder="••••••••">
             </div>
-            <button class="btn-main" onclick="goPhoto()">S'inscrire</button>
+
+            <button class="btn-main" onclick="goToPhoto()">S'inscrire</button>
             
-            <p style="color:#555; font-size:0.8rem; margin:15px 0;">OU</p>
-            <button class="social"><i class="fab fa-google" style="color:#EA4335"></i> Google</button>
-            <button class="social"><i class="fab fa-facebook" style="color:#1877F2"></i> Facebook</button>
+            <div style="margin-top: 10px;">
+                <span class="auth-link" onclick="alert('Contactez l\'assistance pour réinitialiser votre mot de passe.')">Mot de passe oublié ?</span>
+            </div>
+            <div style="margin-top: 5px;">
+                <span style="font-size: 0.8rem; color: #555;">Déjà un compte ?</span> <span class="auth-link" onclick="location.reload()">Se connecter</span>
+            </div>
         </div>
     </div>
 
-    <div id="photo-page">
-        <h2>Presque fini !</h2>
-        <p style="color:#888">Choisis ta plus belle photo</p>
+    <div id="photo-screen">
+        <h2>Photo de profil</h2>
+        <p style="color:#888">Dernière étape !</p>
         <img src="https://i.pravatar.cc/150?u=temp" id="preview">
-        <input type="file" id="file" hidden accept="image/*" onchange="showImg(this)">
-        <button class="btn-main" style="background:#222; width:200px;" onclick="document.getElementById('file').click()">Galerie 📸</button>
-        <button class="btn-main" style="width:200px;" onclick="finish()">Accéder au Chat ✅</button>
+        <input type="file" id="file-input" hidden accept="image/*" onchange="loadPreview(this)">
+        <button class="btn-main" style="background:#222; width:220px;" onclick="document.getElementById('file-input').click()">Choisir une photo 📸</button>
+        <button class="btn-main" style="width:220px; margin-top: 15px;" onclick="finishAndChat()">Accéder au Chat ✅</button>
     </div>
 
-    <div id="chat-page">
+    <div id="chat-screen">
         <div id="sidebar">
-            <img src="logo.png" style="width:40px; margin-bottom:20px;">
-            <div style="font-size:1.5rem; color:var(--blue); cursor:pointer;" onclick="alert('Suggestions d\'amis bientôt !')"><i class="fas fa-plus-circle"></i></div>
+            <img src="logo.png" style="width:40px; margin-bottom:25px;">
+            <div style="width:45px; height:45px; border-radius:50%; background:#111; display:flex; align-items:center; justify-content:center; color:var(--blue); border:1px solid #222; cursor:pointer;"><i class="fas fa-plus"></i></div>
         </div>
-        <div id="chat-area">
-            <header>Threndly Chat</header>
-            <div id="messages"></div>
+        <div id="chat-main">
+            <header>
+                <img src="" id="my-avatar-mini" style="width:35px; height:35px; border-radius:50%; background:#222;">
+                <span id="display-name">Threndly Discussion</span>
+            </header>
+            <div id="msg-container"></div>
             <footer>
-                <input type="text" id="msg" placeholder="Ton message...">
+                <input type="text" id="msg-input" placeholder="Écrire un message...">
                 <button onclick="send()" class="btn-main" style="width:50px; margin:0; border-radius:50%;"><i class="fas fa-paper-plane"></i></button>
             </footer>
         </div>
@@ -96,57 +103,58 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let myName = "";
-        let myPic = "";
+        let currentU = "";
+        let currentP = "";
 
-        // 1. Aller vers la photo
-        function goPhoto() {
-            const u = document.getElementById('user').value.trim();
-            const p = document.getElementById('pass').value;
-            const pc = document.getElementById('pass-conf').value;
+        // 1. Inscription vers Photo
+        function goToPhoto() {
+            const u = document.getElementById('user-id').value.trim();
+            const p = document.getElementById('user-pass').value;
+            const pc = document.getElementById('user-conf').value;
 
-            if(!u || !p) return alert("Remplis tout !");
-            if(p !== pc) return alert("Les mots de passe sont différents !");
+            if(!u || !p) return alert("Veuillez remplir tous les champs.");
+            if(p !== pc) return alert("Les mots de passe ne correspondent pas.");
             
-            myName = u;
-            document.getElementById('signup-page').style.display = 'none';
-            document.getElementById('photo-page').style.display = 'flex';
+            currentU = u;
+            document.getElementById('signup-screen').style.display = 'none';
+            document.getElementById('photo-screen').style.display = 'flex';
         }
 
-        // 2. Afficher la photo choisie
-        function showImg(input) {
+        // 2. Aperçu photo
+        function loadPreview(input) {
             const reader = new FileReader();
             reader.onload = e => { 
-                myPic = e.target.result;
-                document.getElementById('preview').src = myPic;
+                currentP = e.target.result;
+                document.getElementById('preview').src = currentP;
+                document.getElementById('my-avatar-mini').src = currentP;
             };
             reader.readAsDataURL(input.files[0]);
         }
 
-        // 3. Finir et aller au chat
-        function finish() {
-            db.ref("profiles/"+myName).set({ name: myName, img: myPic || "https://i.pravatar.cc/150?u="+myName });
-            document.getElementById('photo-page').style.display = 'none';
-            document.getElementById('chat-page').style.display = 'flex';
-            loadChat();
+        // 3. Finaliser et ouvrir le chat
+        function finishAndChat() {
+            db.ref("profiles/"+currentU).set({ name: currentU, img: currentP || "https://i.pravatar.cc/150?u="+currentU });
+            document.getElementById('photo-screen').style.display = 'none';
+            document.getElementById('chat-screen').style.display = 'flex';
+            loadMessages();
         }
 
         function send() {
-            const m = document.getElementById('msg');
-            if(m.value.trim()) {
-                db.ref("messages/general").push({ from: myName, text: m.value });
-                m.value = "";
+            const inp = document.getElementById('msg-input');
+            if(inp.value.trim()) {
+                db.ref("messages/general").push({ from: currentU, text: inp.value });
+                inp.value = "";
             }
         }
 
-        function loadChat() {
+        function loadMessages() {
             db.ref("messages/general").on("child_added", snap => {
-                const data = snap.val();
-                const div = document.createElement('div');
-                div.className = `bubble ${data.from === myName ? 'me' : 'other'}`;
-                div.innerText = data.text;
-                document.getElementById('messages').appendChild(div);
-                document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+                const m = snap.val();
+                const d = document.createElement('div');
+                d.className = `bubble ${m.from === currentU ? 'me' : 'other'}`;
+                d.innerText = m.text;
+                document.getElementById('msg-container').appendChild(d);
+                document.getElementById('msg-container').scrollTop = document.getElementById('msg-container').scrollHeight;
             });
         }
     </script>
