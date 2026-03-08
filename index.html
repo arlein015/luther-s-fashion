@@ -13,73 +13,82 @@
         html, body { height: 100%; width: 100%; overflow: hidden; position: fixed; }
         body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); color: white; margin: 0; display: flex; }
 
-        /* Écran d'Authentification Stylé */
+        /* Écran d'Authentification */
         #auth-screen { position: fixed; inset: 0; background: #000; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        .auth-card { background: #111; padding: 35px 25px; border-radius: 30px; width: 100%; max-width: 350px; text-align: center; border: 1px solid #222; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        .logo-img-large { width: 200px; margin-bottom: 30px; }
+        .auth-card { background: #111; padding: 35px 25px; border-radius: 30px; width: 100%; max-width: 350px; text-align: center; border: 1px solid #222; }
+        .logo-img-large { width: 180px; margin-bottom: 30px; }
         
-        .auth-input { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 15px; border: 1px solid #333; background: #050505; color: white; font-size: 1rem; outline: none; transition: 0.3s; }
-        .auth-input:focus { border-color: var(--cyan); box-shadow: 0 0 10px rgba(0, 210, 255, 0.1); }
-        
-        .auth-btn { background: var(--grad); border: none; padding: 16px; border-radius: 30px; color: white; width: 100%; font-weight: bold; cursor: pointer; font-size: 1rem; margin-top: 10px; transition: 0.2s; }
-        .auth-btn:active { transform: scale(0.96); }
+        .auth-input { width: 100%; padding: 15px; margin-bottom: 12px; border-radius: 15px; border: 1px solid #333; background: #050505; color: white; font-size: 1rem; outline: none; }
+        .auth-btn { background: var(--grad); border: none; padding: 16px; border-radius: 30px; color: white; width: 100%; font-weight: bold; cursor: pointer; font-size: 1rem; margin-top: 10px; }
 
-        .auth-links { margin-top: 25px; font-size: 0.9rem; color: #888; display: flex; flex-direction: column; gap: 10px; }
-        .auth-links span { color: var(--cyan); cursor: pointer; font-weight: bold; }
-        
-        /* Sidebar & Chat (Design Slim et Mobile) */
+        .auth-footer { margin-top: 20px; font-size: 0.9rem; color: #888; display: flex; flex-direction: column; gap: 12px; }
+        .auth-link { color: var(--cyan); cursor: pointer; font-weight: bold; }
+
+        /* Sidebar & Navigation */
         #sidebar { width: 85px; background: var(--sidebar); border-right: 1px solid #1a1a1a; display: flex; flex-direction: column; flex-shrink: 0; }
         .sidebar-header { padding: 20px 0; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-        .logo-box { width: 45px; height: 45px; margin-bottom: 10px; }
-        /* Correction Logo Sidebar */
-        .logo-img-small { width: 100%; height: 100%; object-fit: contain; } 
-        .add-friend-btn { width: 45px; height: 45px; border-radius: 50%; background: #1a1a1a; display: flex; align-items: center; justify-content: center; color: var(--cyan); cursor: pointer; border: 1px solid #333; }
+        .logo-img-small { width: 45px; height: 45px; object-fit: contain; }
+        .add-btn { width: 45px; height: 45px; border-radius: 50%; background: #1a1a1a; display: flex; align-items: center; justify-content: center; color: var(--cyan); border: 1px solid #333; }
 
-        #friends-list { flex: 1; overflow-y: auto; }
+        #friends-list { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
         .friend-item { padding: 15px 0; display: flex; flex-direction: column; align-items: center; cursor: pointer; position: relative; }
-        /* Photo de Profil Mobile */
-        .friend-avatar { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid transparent; } 
-        .friend-item.active .friend-avatar { border-color: var(--cyan); }
+        .friend-avatar { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid transparent; transition: 0.3s; }
+        .friend-item.active .friend-avatar { border-color: var(--cyan); transform: scale(1.05); }
 
+        /* Modal Annuaire Amis */
+        #directory-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 3000; display: none; flex-direction: column; padding: 25px; padding-top: 70px; }
+        .user-row { padding: 15px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #222; }
+
+        /* Chat Window */
         #main-chat { flex: 1; display: none; flex-direction: column; background: #000; }
-        header { padding: 15px; border-bottom: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; }
+        header { padding: 15px; border-bottom: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; background: #050505; }
         #chat-box { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .msg { padding: 12px 16px; border-radius: 20px; max-width: 85%; }
-        .my-msg { align-self: flex-end; background: var(--grad); }
-        .other-msg { align-self: flex-start; background: #262626; }
+        
+        .msg { padding: 12px 18px; border-radius: 22px; max-width: 80%; font-size: 1rem; line-height: 1.4; }
+        .my-msg { align-self: flex-end; background: var(--grad); border-bottom-right-radius: 4px; }
+        .other-msg { align-self: flex-start; background: #262626; border-bottom-left-radius: 4px; }
 
-        #input-area { padding: 10px 15px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); display: flex; align-items: center; gap: 10px; border-top: 1px solid #1a1a1a; }
-        .input-container { flex: 1; background: #1a1a1a; border-radius: 25px; padding: 10px 18px; }
+        /* Zone de Saisie adaptée au Clavier */
+        #input-area { padding: 10px 15px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); display: flex; align-items: center; gap: 10px; border-top: 1px solid #1a1a1a; background: #050505; }
+        .input-container { flex: 1; background: #1a1a1a; border-radius: 25px; padding: 12px 20px; }
         #message-input { background: transparent; border: none; color: white; width: 100%; outline: none; font-size: 16px; }
+        .send-btn { background: var(--grad); border: none; width: 48px; height: 48px; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; }
 
-        @media (min-width: 900px) { #sidebar { width: 280px; } .friend-item { flex-direction: row; padding: 15px 20px; gap: 15px; } .logo-box { display: none; } }
+        @media (min-width: 900px) {
+            #sidebar { width: 280px; }
+            .friend-item { flex-direction: row; padding: 15px 20px; gap: 15px; }
+            .friend-name-label { display: block !important; font-weight: bold; }
+        }
     </style>
 </head>
 <body>
 
 <div id="auth-screen">
     <div class="auth-card">
-        <img src="logo.png" class="logo-img-large" alt="Threndly">
-        <h2 id="auth-title" style="margin-bottom: 20px; font-size: 1.2rem;">Connexion</h2>
-        
-        <input type="text" id="username" class="auth-input" placeholder="Identifiant (ex: arlein015)">
+        <img src="logo.png" class="logo-img-large">
+        <h2 id="auth-title">Connexion</h2>
+        <input type="text" id="username" class="auth-input" placeholder="Identifiant">
         <input type="password" id="password" class="auth-input" placeholder="Mot de passe">
-        
         <button id="auth-submit" onclick="processAuth()" class="auth-btn">Se connecter</button>
-        
-        <div class="auth-links">
-            <div id="auth-toggle-text">
-                Vous n'avez pas de compte ? <span onclick="toggleAuthMode()">S'inscrire</span>
-            </div>
-            <span style="font-size:0.8rem;" onclick="forgotPassword()">Mot de passe oublié ?</span>
+        <div class="auth-footer">
+            <div id="toggle-text">Vous n'avez pas de compte ? <span class="auth-link" onclick="toggleAuth()">S'inscrire</span></div>
+            <span style="font-size:0.8rem;" class="auth-link" onclick="forgotPass()">Mot de passe oublié ?</span>
         </div>
     </div>
 </div>
 
+<div id="directory-modal">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h3>Utilisateurs Threndly</h3>
+        <i class="fas fa-times" onclick="toggleDir()" style="font-size:1.5rem;"></i>
+    </div>
+    <div id="users-list" style="overflow-y:auto; flex:1;"></div>
+</div>
+
 <div id="sidebar">
     <div class="sidebar-header">
-        <div class="logo-box"><img src="logo.png" class="logo-img-small"></div>
-        <div class="add-friend-btn" onclick="openDirectory()"><i class="fas fa-plus"></i></div>
+        <img src="logo.png" class="logo-img-small">
+        <div class="add-btn" onclick="toggleDir()"><i class="fas fa-plus"></i></div>
     </div>
     <div id="friends-list"></div>
 </div>
@@ -87,10 +96,10 @@
 <div id="main-chat">
     <header>
         <div style="display:flex; align-items:center; gap:12px;">
-            <img src="" id="chat-avatar" style="width:40px; height:40px; border-radius:50%; border: 1px solid #333;">
-            <div id="chat-name" style="font-weight:bold;"></div>
+            <img src="" id="chat-avatar" style="width:40px; height:40px; border-radius:50%; border:1px solid #333;">
+            <span id="chat-name" style="font-weight:bold;"></span>
         </div>
-        <i class="fas fa-sign-out-alt" onclick="logout()" style="color:#444; cursor:pointer; font-size:1.2rem;"></i>
+        <i class="fas fa-sign-out-alt" onclick="logout()" style="color:#555; cursor:pointer;"></i>
     </header>
     <div id="chat-box"></div>
     <div id="input-area">
@@ -99,7 +108,7 @@
         <div class="input-container">
             <input type="text" id="message-input" placeholder="Message..." onkeypress="if(event.key=='Enter')sendMsg()">
         </div>
-        <button onclick="sendMsg()" class="auth-btn" style="width:45px; height:45px; margin:0; border-radius:50%; flex-shrink:0;"><i class="fas fa-arrow-up"></i></button>
+        <button class="send-btn" onclick="sendMsg()"><i class="fas fa-arrow-up"></i></button>
     </div>
 </div>
 
@@ -108,87 +117,100 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    let isSignUpMode = false;
+    let isSignup = false;
     let myUser = localStorage.getItem('threndly_user') || "";
+    let activeRoomID = "";
 
-    if(myUser) { document.getElementById('auth-screen').style.display = 'none'; loadFriends(); }
+    if(myUser) { document.getElementById('auth-screen').style.display='none'; }
 
-    function toggleAuthMode() {
-        isSignUpMode = !isSignUpMode;
-        document.getElementById('auth-title').innerText = isSignUpMode ? "Créer un compte" : "Connexion";
-        document.getElementById('auth-submit').innerText = isSignUpMode ? "S'inscrire" : "Se connecter";
-        document.getElementById('auth-toggle-text').innerHTML = isSignUpMode ? 
-            "Vous avez déjà un compte ? <span onclick='toggleAuthMode()'>Se connecter</span>" : 
-            "Vous n'avez pas de compte ? <span onclick='toggleAuthMode()'>S'inscrire</span>";
-    }
-
-    function forgotPassword() {
-        alert("Pour réinitialiser votre mot de passe, veuillez contacter l'administrateur à admin@threndly.com.");
+    function toggleAuth() {
+        isSignup = !isSignup;
+        document.getElementById('auth-title').innerText = isSignup ? "Créer un compte" : "Connexion";
+        document.getElementById('auth-submit').innerText = isSignup ? "S'inscrire" : "Se connecter";
+        document.getElementById('toggle-text').innerHTML = isSignup ? 
+            "Vous avez un compte ? <span class='auth-link' onclick='toggleAuth()'>Se connecter</span>" : 
+            "Pas de compte ? <span class='auth-link' onclick='toggleAuth()'>S'inscrire</span>";
     }
 
     function processAuth() {
-        const user = document.getElementById('username').value.trim().toLowerCase();
-        const pass = document.getElementById('password').value.trim();
+        const u = document.getElementById('username').value.trim().toLowerCase();
+        const p = document.getElementById('password').value.trim();
+        if(!u || !p) return alert("Remplis tout !");
 
-        if(!user || !pass) return alert("Remplis tous les champs !");
-        if(pass.length < 6) return alert("Le mot de passe doit faire au moins 6 caractères !");
-
-        if(isSignUpMode) {
-            // Inscription : Vérifie si le pseudo existe déjà
-            db.ref("users_auth/" + user).once("value", snap => {
-                if(snap.exists()) return alert("Cet identifiant est déjà pris !");
-                
-                // Crée le compte (Identifiant + Mot de passe)
-                db.ref("users_auth/" + user).set({ password: pass }).then(() => {
-                    // Crée le profil public avec photo par défaut
-                    db.ref("users_list/" + user).set({ 
-                        name: user, 
-                        // Photo de profil par défaut
-                        img: "https://i.pravatar.cc/150?u=" + user 
-                    });
-                    completeLogin(user);
-                });
+        if(isSignup) {
+            db.ref("auth/"+u).once("value", snap => {
+                if(snap.exists()) return alert("Déjà pris !");
+                db.ref("auth/"+u).set({ pass: p });
+                db.ref("profiles/"+u).set({ name: u, img: "https://i.pravatar.cc/150?u="+u });
+                login(u);
             });
         } else {
-            // Connexion : Vérifie les identifiants
-            db.ref("users_auth/" + user).once("value", snap => {
-                if(snap.exists() && snap.val().password === pass) {
-                    completeLogin(user);
-                } else {
-                    alert("Identifiant ou mot de passe incorrect !");
-                }
+            db.ref("auth/"+u).once("value", snap => {
+                if(snap.exists() && snap.val().pass === p) login(u);
+                else alert("Erreur d'identifiants");
             });
         }
     }
 
-    function completeLogin(name) {
-        myUser = name;
-        localStorage.setItem('threndly_user', name);
-        document.getElementById('auth-screen').style.display = 'none';
-        loadFriends();
+    function login(u) {
+        myUser = u;
+        localStorage.setItem('threndly_user', u);
+        location.reload();
     }
 
-    function loadFriends() {
-        const list = document.getElementById('friends-list');
-        list.innerHTML = "";
-        
-        // Exemple d'amis avec photo de profil
-        const friends = [
-            { name: "Joselyna", img: "https://i.pravatar.cc/150?u=jos" },
-            { name: "Nelly", img: "https://i.pravatar.cc/150?u=nel" }
-        ];
+    function toggleDir() {
+        const m = document.getElementById('directory-modal');
+        m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
+        if(m.style.display === 'flex') loadUsers();
+    }
 
-        friends.forEach(f => {
-            const div = document.createElement('div');
-            div.className = 'friend-item';
-            div.innerHTML = `
-                <img src="${f.img}" class="friend-avatar">
-                <div class="friend-name-label" style="display:none; color:white; font-size:0.9rem; margin-left:10px;">${f.name}</div>
-            `;
-            list.appendChild(div);
+    function loadUsers() {
+        const list = document.getElementById('users-list');
+        list.innerHTML = "";
+        db.ref("profiles").once("value", snap => {
+            snap.forEach(uSnap => {
+                const u = uSnap.val();
+                if(u.name === myUser) return;
+                const div = document.createElement('div');
+                div.className = "user-row";
+                div.onclick = () => { startChat(u.name, u.img); toggleDir(); };
+                div.innerHTML = `<img src="${u.img}" style="width:45px; height:45px; border-radius:50%;"><span>${u.name}</span>`;
+                list.appendChild(div);
+            });
         });
     }
 
+    function startChat(name, img) {
+        activeRoomID = [myUser, name].sort().join("_");
+        document.getElementById('main-chat').style.display = 'flex';
+        document.getElementById('chat-name').innerText = name;
+        document.getElementById('chat-avatar').src = img;
+        loadMessages();
+    }
+
+    function sendMsg() {
+        const input = document.getElementById('message-input');
+        if(input.value.trim() && activeRoomID) {
+            db.ref("messages/"+activeRoomID).push({ from: myUser, text: input.value, time: Date.now() });
+            input.value = "";
+        }
+    }
+
+    function loadMessages() {
+        const box = document.getElementById('chat-box');
+        db.ref("messages/"+activeRoomID).off();
+        box.innerHTML = "";
+        db.ref("messages/"+activeRoomID).on("child_added", snap => {
+            const m = snap.val();
+            const div = document.createElement('div');
+            div.className = `msg ${m.from === myUser ? 'my-msg' : 'other-msg'}`;
+            div.innerText = m.text;
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+        });
+    }
+
+    function forgotPass() { alert("Contactez l'admin pour changer votre mot de passe."); }
     function logout() { localStorage.clear(); location.reload(); }
 </script>
 </body>
