@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Threndly - Réseau Intelligent</title>
+    <title>Threndly - Sécurisé</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -11,96 +11,96 @@
         :root { 
             --blue: #2D9CDB; 
             --purple: #BB6BD9; 
+            --black: #000000;
             --grad: linear-gradient(135deg, #2D9CDB 0%, #BB6BD9 100%); 
-            --dark-bg: #000000;
-            --card-bg: #111111;
         }
         * { box-sizing: border-box; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
-        body, html { margin: 0; padding: 0; height: 100%; width: 100%; background: var(--dark-bg); color: white; overflow: hidden; display: flex; }
+        body { margin: 0; background: var(--black); color: white; height: 100vh; overflow: hidden; display: flex; }
 
-        /* --- ÉCRANS DE BIENVENUE --- */
-        .full-screen { position: fixed; inset: 0; background: var(--dark-bg); z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px; }
-        .card { background: var(--card-bg); width: 100%; max-width: 400px; padding: 35px; border-radius: 28px; border: 1px solid #222; text-align: center; }
-        .logo { width: 150px; margin-bottom: 25px; }
-        input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #1a1a1a; color: white; outline: none; margin-bottom: 15px; }
-        .btn { width: 100%; padding: 16px; background: var(--grad); border: none; border-radius: 12px; color: white; font-weight: bold; cursor: pointer; }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        /* --- INTERFACE PRINCIPALE --- */
-        #sidebar { width: 80px; background: #080808; border-right: 1px solid #1a1a1a; display: flex; flex-direction: column; align-items: center; padding-top: 25px; flex-shrink: 0; }
-        #chat-area { flex: 1; display: flex; flex-direction: column; background: var(--dark-bg); position: relative; }
+        /* --- ÉCRANS AUTHENTIFICATION --- */
+        .overlay { position: fixed; inset: 0; background: var(--black); z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
+        .card { background: #111; width: 100%; max-width: 420px; padding: 30px; border-radius: 28px; border: 1px solid #222; text-align: center; }
+        .logo { width: 140px; margin-bottom: 20px; }
         
-        header { padding: 18px 25px; border-bottom: 1px solid #1a1a1a; display: none; align-items: center; gap: 15px; background: #050505; }
-        #header-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid #333; }
-        
-        #msg-list { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .bubble { padding: 12px 18px; border-radius: 22px; max-width: 80%; font-size: 0.95rem; line-height: 1.4; }
-        .me { align-self: flex-end; background: var(--grad); color: white; border-bottom-right-radius: 4px; }
-        .other { align-self: flex-start; background: #222; color: white; border-bottom-left-radius: 4px; }
+        .input-group { text-align: left; margin-bottom: 12px; }
+        label { font-size: 0.7rem; color: #666; font-weight: bold; margin-left: 5px; }
+        input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #333; background: #1a1a1a; color: white; outline: none; margin-top: 5px; }
+        input:focus { border-color: var(--blue); }
 
-        footer { padding: 15px; display: none; gap: 12px; background: #0a0a0a; border-top: 1px solid #1a1a1a; }
-        footer input { margin: 0; flex: 1; border-radius: 30px; }
+        .btn { width: 100%; padding: 16px; background: var(--grad); border: none; border-radius: 12px; color: white; font-weight: bold; cursor: pointer; font-size: 1rem; margin-top: 10px; }
+        .link { color: var(--blue); font-size: 0.85rem; cursor: pointer; margin-top: 15px; display: inline-block; }
 
-        /* MODAL AMIS */
-        #friend-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 10000; display: none; flex-direction: column; padding: 30px; }
-        .user-row { display: flex; align-items: center; gap: 15px; padding: 15px; border-bottom: 1px solid #111; cursor: pointer; }
-        .user-row img { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; }
+        /* --- ZONE DE CHAT --- */
+        #sidebar { width: 80px; background: #080808; border-right: 1px solid #1a1a1a; display: flex; flex-direction: column; align-items: center; padding-top: 25px; }
+        #chat-main { flex: 1; display: flex; flex-direction: column; }
+        header { padding: 15px 20px; border-bottom: 1px solid #1a1a1a; display: flex; align-items: center; gap: 12px; font-weight: bold; }
+        #msg-list { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+        .bubble { padding: 12px 16px; border-radius: 20px; max-width: 75%; }
+        .me { align-self: flex-end; background: var(--grad); }
+        .other { align-self: flex-start; background: #222; }
+        footer { padding: 15px; display: flex; gap: 10px; background: #050505; border-top: 1px solid #1a1a1a; }
     </style>
 </head>
 <body>
 
-    <div id="auth-screen" class="full-screen">
+    <div id="signup-screen" class="overlay" style="display: flex;">
         <div class="card">
             <img src="logo.png" class="logo">
-            <h2>Inscription</h2>
-            <input type="text" id="reg-user" placeholder="Pseudo (ex: arthur)">
-            <input type="password" id="reg-pass" placeholder="Mot de passe">
-            <button class="btn" onclick="startSignup()">S'inscrire</button>
-            <p style="font-size:0.8rem; color:#444; margin-top:15px; cursor:pointer;" onclick="alert('Contactez l\'admin')">Mot de passe oublié ?</p>
-        </div>
-    </div>
-
-    <div id="photo-screen" class="full-screen">
-        <div class="card">
-            <h2>Photo de profil</h2>
-            <img src="https://i.pravatar.cc/150?u=temp" id="preview" style="width:130px; height:130px; border-radius:50%; margin:25px; border:3px solid var(--blue); object-fit:cover;">
-            <input type="file" id="file" hidden accept="image/*" onchange="handlePreview(this)">
-            <button class="btn" style="background:#222; margin-bottom:12px;" onclick="document.getElementById('file').click()">Galerie 📸</button>
-            <button class="btn" id="finish-btn" onclick="saveAccount()">Finaliser ✅</button>
-        </div>
-    </div>
-
-    <div id="sidebar">
-        <img src="logo.png" style="width:40px; margin-bottom:30px;">
-        <div onclick="openFriends()" style="color:var(--blue); font-size:2rem; cursor:pointer;"><i class="fas fa-plus-circle"></i></div>
-        <div onclick="logout()" style="margin-top:auto; margin-bottom:30px; color:#333; cursor:pointer;"><i class="fas fa-sign-out-alt"></i></div>
-    </div>
-
-    <div id="chat-area">
-        <div id="empty-state" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#222; text-align:center;">
-            <i class="far fa-comments" style="font-size:4rem; margin-bottom:15px;"></i>
-            <p>Cliquez sur le + pour<br>trouver un ami</p>
-        </div>
-        <header id="chat-header">
-            <img id="header-img">
-            <div style="display:flex; flex-direction:column;">
-                <span id="header-name" style="font-weight:bold;">Ami</span>
-                <span style="font-size:0.7rem; color:#2ecc71;">● En ligne</span>
+            <h2 style="margin-bottom: 20px;">Créer un compte</h2>
+            
+            <div class="input-group">
+                <label>E-MAIL OU NUMÉRO</label>
+                <input type="text" id="reg-contact" placeholder="vous@exemple.com ou 06...">
             </div>
-        </header>
-        <div id="msg-list"></div>
-        <footer id="chat-footer">
-            <input type="text" id="msg-in" placeholder="Message privé..." onkeypress="if(event.key=='Enter')send()">
-            <button onclick="send()" class="btn" style="width:52px; border-radius:50%; margin:0;"><i class="fas fa-paper-plane"></i></button>
-        </footer>
+            <div class="input-group">
+                <label>NOM D'UTILISATEUR (USERNAME)</label>
+                <input type="text" id="reg-user" placeholder="@identifiant">
+            </div>
+            <div class="input-group">
+                <label>NOM SUR LE PROFIL</label>
+                <input type="text" id="reg-name" placeholder="Votre nom public">
+            </div>
+            <div class="input-group">
+                <label>MOT DE PASSE</label>
+                <input type="password" id="reg-pass" placeholder="••••••••">
+            </div>
+            <div class="input-group">
+                <label>CONFIRMER LE MOT DE PASSE</label>
+                <input type="password" id="reg-conf" placeholder="••••••••">
+            </div>
+
+            <button class="btn" onclick="sendValidation()">S'inscrire</button>
+            <div class="link" onclick="alert('Indisponible')">Déjà un compte ? Se connecter</div>
+        </div>
     </div>
 
-    <div id="friend-modal">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
-            <h2 style="margin:0;">Suggestions d'amis</h2>
-            <i class="fas fa-times" onclick="closeFriends()" style="font-size:1.8rem; cursor:pointer;"></i>
+    <div id="verify-screen" class="overlay">
+        <div class="card">
+            <i class="fas fa-shield-alt" style="font-size: 3rem; color: var(--purple); margin-bottom: 15px;"></i>
+            <h2>Vérification</h2>
+            <p style="color: #888; font-size: 0.9rem;">Entrez le code à 6 chiffres envoyé à votre adresse.</p>
+            <input type="text" id="v-code" maxlength="6" style="text-align: center; font-size: 2rem; letter-spacing: 10px; margin: 20px 0;" placeholder="000000">
+            <button class="btn" onclick="verifyCode()">Valider le compte</button>
+            <div class="link" onclick="location.reload()">Retour</div>
         </div>
-        <div id="users-list"></div>
+    </div>
+
+    <div id="chat-screen" style="display: none; width: 100%;">
+        <div id="sidebar">
+            <img src="logo.png" style="width:40px; margin-bottom:25px;">
+            <div style="color:var(--blue); font-size:1.8rem; cursor:pointer;" onclick="openFriends()"><i class="fas fa-plus-circle"></i></div>
+        </div>
+        <div id="chat-main">
+            <header>
+                <div id="h-img" style="width:35px; height:35px; border-radius:50%; background:#222;"></div>
+                <span id="h-name">Threndly Chat</span>
+            </header>
+            <div id="msg-list"></div>
+            <footer>
+                <input type="text" id="m-in" placeholder="Message privé..." style="flex:1;">
+                <button onclick="sendMsg()" class="btn" style="width:50px; border-radius:50%; margin:0;"><i class="fas fa-paper-plane"></i></button>
+            </footer>
+        </div>
     </div>
 
     <script>
@@ -108,111 +108,63 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let myID = localStorage.getItem('threndly_id') || "";
-        let activeChatKey = "";
-        let myBase64 = "";
+        let userData = {};
+        const fakeCode = "123456"; // Pour le test, le code est 123456
 
-        // DÉMARRAGE AUTOMATIQUE
-        window.onload = () => {
-            if(!myID) {
-                document.getElementById('auth-screen').style.display = 'flex';
-            } else {
-                listenForUsers();
-            }
-        };
-
-        function startSignup() {
-            const u = document.getElementById('reg-user').value.trim().toLowerCase();
-            const p = document.getElementById('reg-pass').value;
-            if(!u || !p) return alert("Remplis tout !");
-            myID = u;
-            document.getElementById('auth-screen').style.display = 'none';
-            document.getElementById('photo-screen').style.display = 'flex';
-        }
-
-        function handlePreview(input) {
-            const reader = new FileReader();
-            reader.onload = e => { 
-                myBase64 = e.target.result;
-                document.getElementById('preview').src = myBase64;
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-
-        function saveAccount() {
-            const btn = document.getElementById('finish-btn');
+        // 1. Envoyer la validation
+        function sendValidation() {
+            const contact = document.getElementById('reg-contact').value;
+            const user = document.getElementById('reg-user').value.trim().toLowerCase();
             const pass = document.getElementById('reg-pass').value;
-            btn.disabled = true;
-            btn.innerText = "Création...";
+            const conf = document.getElementById('reg-conf').value;
 
-            // Enregistrement double (Auth + Profil)
-            db.ref("auth/"+myID).set({ pass: pass }).then(() => {
-                return db.ref("profiles/"+myID).set({ 
-                    name: myID, 
-                    img: myBase64 || "https://i.pravatar.cc/150?u="+myID 
+            if(!contact || !user || pass !== conf) return alert("Vérifiez vos informations !");
+            
+            userData = { contact, user, name: document.getElementById('reg-name').value, pass };
+            
+            // On cache l'inscription et on montre le code
+            document.getElementById('signup-screen').style.display = 'none';
+            document.getElementById('verify-screen').style.display = 'flex';
+            
+            console.log("Code envoyé à : " + contact + " (Code de test : 123456)");
+        }
+
+        // 2. Vérifier le code 6 chiffres
+        function verifyCode() {
+            const code = document.getElementById('v-code').value;
+            if(code === fakeCode) {
+                // Sauvegarde Firebase
+                db.ref("profiles/" + userData.user).set({
+                    name: userData.name,
+                    contact: userData.contact,
+                    img: "https://i.pravatar.cc/150?u=" + userData.user
                 });
-            }).then(() => {
-                localStorage.setItem('threndly_id', myID);
-                location.reload();
-            }).catch(e => {
-                alert("Erreur !");
-                btn.disabled = false;
-            });
+                localStorage.setItem('threndly_id', userData.user);
+                
+                // Direction le chat
+                document.getElementById('verify-screen').style.display = 'none';
+                document.getElementById('chat-screen').style.display = 'flex';
+                alert("Compte validé ! Bienvenue sur Threndly.");
+            } else {
+                alert("Code incorrect !");
+            }
         }
 
-        function listenForUsers() {
-            db.ref("profiles").on("value", snap => {
-                const list = document.getElementById('users-list');
-                list.innerHTML = "";
-                snap.forEach(child => {
-                    const u = child.val();
-                    if(u.name !== myID) {
-                        const row = document.createElement('div');
-                        row.className = "user-row";
-                        row.onclick = () => openChat(u.name, u.img);
-                        row.innerHTML = `<img src="${u.img}"><b>${u.name}</b>`;
-                        list.appendChild(row);
-                    }
-                });
-            });
-        }
-
-        function openChat(name, img) {
-            activeChatKey = [myID, name].sort().join("_");
-            document.getElementById('empty-state').style.display = 'none';
-            document.getElementById('chat-header').style.display = 'flex';
-            document.getElementById('chat-footer').style.display = 'flex';
-            document.getElementById('header-name').innerText = name;
-            document.getElementById('header-img').src = img;
-            closeFriends();
-            loadMessages();
-        }
-
-        function loadMessages() {
-            const box = document.getElementById('msg-list');
-            db.ref("messages/" + activeChatKey).off();
-            box.innerHTML = "";
-            db.ref("messages/" + activeChatKey).on("child_added", snap => {
-                const m = snap.val();
-                const d = document.createElement('div');
-                d.className = `bubble ${m.from === myID ? 'me' : 'other'}`;
-                d.innerText = m.text;
-                box.appendChild(d);
-                box.scrollTop = box.scrollHeight;
-            });
-        }
-
-        function send() {
-            const inp = document.getElementById('msg-in');
-            if(inp.value.trim() && activeChatKey) {
-                db.ref("messages/" + activeChatKey).push({ from: myID, text: inp.value });
+        // --- Fonctions Chat ---
+        function sendMsg() {
+            const inp = document.getElementById('m-in');
+            const myID = localStorage.getItem('threndly_id');
+            if(inp.value.trim()) {
+                db.ref("messages/general").push({ from: myID, text: inp.value });
                 inp.value = "";
             }
         }
-
-        function openFriends() { document.getElementById('friend-modal').style.display = 'flex'; }
-        function closeFriends() { document.getElementById('friend-modal').style.display = 'none'; }
-        function logout() { localStorage.clear(); location.reload(); }
+        
+        // Auto-connexion
+        if(localStorage.getItem('threndly_id')) {
+            document.getElementById('signup-screen').style.display = 'none';
+            document.getElementById('chat-screen').style.display = 'flex';
+        }
     </script>
 </body>
 </html>
