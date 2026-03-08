@@ -19,11 +19,9 @@
             --input-bg: #1a1a1a;
         }
 
-        * { box-sizing: border-box; font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-        
-        body, html { margin: 0; padding: 0; height: 100%; width: 100%; background-color: var(--bg-black); display: flex; align-items: center; justify-content: center; color: var(--white); }
+        * { box-sizing: border-box; font-family: -apple-system, system-ui, sans-serif; }
+        body, html { margin: 0; padding: 0; height: 100%; width: 100%; background-color: var(--bg-black); display: flex; align-items: center; justify-content: center; color: var(--white); overflow: hidden; }
 
-        /* Carte d'authentification style Threndly */
         .auth-card {
             background: var(--card-dark);
             width: 90%;
@@ -31,33 +29,29 @@
             padding: 40px 30px;
             border-radius: 24px;
             border: 1px solid #222;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
             text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
         }
 
-        .logo-container { margin-bottom: 25px; }
-        .logo-img { width: 180px; }
-
-        h2 { color: var(--white); margin-bottom: 8px; font-size: 1.6rem; font-weight: 700; }
+        .logo-img { width: 180px; margin-bottom: 25px; }
+        h2 { margin-bottom: 8px; font-size: 1.6rem; }
         p.subtitle { color: var(--text-gray); margin-bottom: 30px; font-size: 0.95rem; }
 
         .form-group { text-align: left; margin-bottom: 18px; }
-        label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-gray); margin-bottom: 8px; margin-left: 5px; }
+        label { display: block; font-size: 0.75rem; font-weight: bold; color: var(--text-gray); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
         
         .auth-input {
             width: 100%;
             padding: 14px 18px;
             border: 1px solid #333;
             border-radius: 12px;
-            font-size: 1rem;
             background: var(--input-bg);
             color: white;
             outline: none;
-            transition: all 0.3s;
+            transition: 0.3s;
         }
-        .auth-input:focus { border-color: var(--primary-blue); background: #222; }
+        .auth-input:focus { border-color: var(--primary-blue); }
 
-        /* Boutons avec ton dégradé Logo */
         .btn-submit {
             width: 100%;
             padding: 15px;
@@ -65,69 +59,35 @@
             color: white;
             border: none;
             border-radius: 12px;
-            font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
             margin-top: 10px;
-            transition: transform 0.2s;
         }
-        .btn-submit:active { transform: scale(0.98); }
 
-        .separator {
-            margin: 25px 0;
-            display: flex;
-            align-items: center;
-            color: #444;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-        .separator::before, .separator::after { content: ""; flex: 1; height: 1px; background: #222; }
-        .separator span { padding: 0 15px; }
-
-        /* Boutons Sociaux adaptés au thème sombre */
-        .social-btn {
-            width: 100%;
-            padding: 13px;
-            margin-bottom: 12px;
-            border: 1px solid #333;
-            border-radius: 12px;
-            color: white;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            cursor: pointer;
-            background: #080808;
-            transition: background 0.3s;
-        }
-        .social-btn:hover { background: #151515; }
-        .fa-google { color: #EA4335; }
-        .fa-facebook { color: #1877F2; }
+        #confirm-group { display: none; } /* Caché par défaut, activé pour l'inscription */
 
         .auth-footer { margin-top: 30px; font-size: 0.9rem; color: var(--text-gray); }
-        .auth-footer a { color: var(--primary-blue); text-decoration: none; font-weight: bold; cursor: pointer; }
-        
+        .auth-link { color: var(--primary-blue); text-decoration: none; font-weight: bold; cursor: pointer; }
+
         /* Setup Photo */
         #profile-setup { display: none; flex-direction: column; align-items: center; }
-        #preview-img { width: 130px; height: 130px; border-radius: 50%; object-fit: cover; margin: 20px 0; border: 3px solid var(--primary-blue); }
-
+        #preview-img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin: 20px 0; border: 3px solid var(--primary-blue); }
     </style>
 </head>
 <body>
 
-    <div class="auth-card">
+    <div class="auth-card" id="main-auth-card">
         <div class="logo-container">
             <img src="logo.png" class="logo-img" alt="Threndly">
         </div>
 
-        <div id="login-section">
+        <div id="auth-form">
             <h2 id="title">Connexion</h2>
             <p class="subtitle" id="subtitle">Heureux de vous revoir sur Threndly</p>
 
             <div class="form-group">
                 <label>IDENTIFIANT</label>
-                <input type="text" id="username" class="auth-input" placeholder="Pseudo ou email">
+                <input type="text" id="username" class="auth-input" placeholder="Votre pseudo">
             </div>
 
             <div class="form-group">
@@ -135,26 +95,26 @@
                 <input type="password" id="password" class="auth-input" placeholder="••••••••">
             </div>
 
+            <div class="form-group" id="confirm-group">
+                <label>CONFIRMER LE MOT DE PASSE</label>
+                <input type="password" id="confirm-password" class="auth-input" placeholder="••••••••">
+            </div>
+
             <button class="btn-submit" id="btn-main" onclick="handleAuth()">Se connecter</button>
 
-            <div class="separator"><span>OU</span></div>
-
-            <button class="social-btn"><i class="fab fa-google"></i> Continuer avec Google</button>
-            <button class="social-btn"><i class="fab fa-facebook"></i> Continuer avec Facebook</button>
-
             <div class="auth-footer">
-                <a onclick="alert('Contactez l\'admin pour reset')">Mot de passe oublié ?</a><br><br>
-                <span id="footer-text">Nouveau ici ?</span> <a id="toggle-link" onclick="toggleMode()">Créer un compte</a>
+                <span id="footer-text">Nouveau ici ?</span> 
+                <span class="auth-link" id="toggle-link" onclick="toggleMode()">Créer un compte</span>
             </div>
         </div>
 
         <div id="profile-setup">
             <h2>Photo de profil</h2>
-            <p class="subtitle">Montrez qui vous êtes !</p>
+            <p class="subtitle">Choisissez une photo pour Threndly</p>
             <img src="https://i.pravatar.cc/150?u=temp" id="preview-img">
             <input type="file" id="file-input" hidden accept="image/*" onchange="loadPreview(this)">
-            <button class="btn-submit" style="background:#222;" onclick="document.getElementById('file-input').click()">Choisir une photo 📸</button>
-            <button class="btn-submit" onclick="finishSignup()" style="margin-top:15px;">Finaliser l'inscription ✅</button>
+            <button class="btn-submit" style="background:#222;" onclick="document.getElementById('file-input').click()">Ouvrir la Galerie 📸</button>
+            <button class="btn-submit" onclick="finishSignup()" style="margin-top:15px;">Finaliser ✅</button>
         </div>
     </div>
 
@@ -167,11 +127,21 @@
         let tempUser = "";
         let base64Photo = "";
 
+        // --- VERIFICATION DE CONNEXION ---
+        // Si l'utilisateur n'est pas connecté, il reste bloqué sur cette page.
+        window.onload = function() {
+            if(localStorage.getItem('threndly_user')) {
+                // Si déjà connecté, on peut rediriger vers le chat
+                // window.location.href = "chat.html"; 
+                console.log("Utilisateur déjà connecté");
+            }
+        };
+
         function toggleMode() {
             isSignupMode = !isSignupMode;
             document.getElementById('title').innerText = isSignupMode ? "Inscription" : "Connexion";
-            document.getElementById('subtitle').innerText = isSignupMode ? "Rejoignez l'aventure Threndly" : "Heureux de vous revoir sur Threndly";
             document.getElementById('btn-main').innerText = isSignupMode ? "S'inscrire" : "Se connecter";
+            document.getElementById('confirm-group').style.display = isSignupMode ? "block" : "none";
             document.getElementById('footer-text').innerText = isSignupMode ? "Déjà un compte ?" : "Nouveau ici ?";
             document.getElementById('toggle-link').innerText = isSignupMode ? "Se connecter" : "Créer un compte";
         }
@@ -179,21 +149,27 @@
         function handleAuth() {
             const u = document.getElementById('username').value.trim().toLowerCase();
             const p = document.getElementById('password').value.trim();
+            const cp = document.getElementById('confirm-password').value.trim();
+
             if(!u || !p) return alert("Veuillez remplir les champs.");
 
             if(isSignupMode) {
+                // VERIFICATION DU DOUBLE MOT DE PASSE
+                if(p !== cp) return alert("Les mots de passe ne correspondent pas !");
+                
                 db.ref("auth/"+u).once("value", snap => {
                     if(snap.exists()) return alert("Cet identifiant est déjà pris.");
                     tempUser = u;
-                    document.getElementById('login-section').style.display = 'none';
+                    document.getElementById('auth-form').style.display = 'none';
                     document.getElementById('profile-setup').style.display = 'flex';
                 });
             } else {
                 db.ref("auth/"+u).once("value", snap => {
                     if(snap.exists() && snap.val().pass === p) {
                         localStorage.setItem('threndly_user', u);
+                        alert("Connexion réussie !");
                         location.reload(); 
-                    } else alert("Erreur d'identifiants.");
+                    } else alert("Identifiant ou mot de passe incorrect.");
                 });
             }
         }
@@ -215,6 +191,7 @@
                 img: base64Photo || "https://i.pravatar.cc/150?u="+tempUser 
             });
             localStorage.setItem('threndly_user', tempUser);
+            alert("Compte créé avec succès !");
             location.reload();
         }
     </script>
