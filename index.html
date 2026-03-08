@@ -11,142 +11,150 @@
         :root { 
             --primary-blue: #2D9CDB; 
             --primary-purple: #BB6BD9;
-            --bg-dark: #34495E; /* Couleur de fond du modèle */
+            --bg-black: #000000;
+            --card-dark: #111111;
             --white: #FFFFFF;
-            --text-gray: #7F8C8D;
-            --input-border: #ECF0F1;
+            --text-gray: #888888;
+            --grad: linear-gradient(135deg, #2D9CDB 0%, #BB6BD9 100%);
+            --input-bg: #1a1a1a;
         }
 
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { box-sizing: border-box; font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
         
-        body, html { margin: 0; padding: 0; height: 100%; width: 100%; background-color: var(--bg-dark); display: flex; align-items: center; justify-content: center; }
+        body, html { margin: 0; padding: 0; height: 100%; width: 100%; background-color: var(--bg-black); display: flex; align-items: center; justify-content: center; color: var(--white); }
 
-        /* Conteneur de la Carte (Exactement comme ton image) */
+        /* Carte d'authentification style Threndly */
         .auth-card {
-            background: var(--white);
+            background: var(--card-dark);
             width: 90%;
             max-width: 400px;
             padding: 40px 30px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border-radius: 24px;
+            border: 1px solid #222;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
             text-align: center;
         }
 
-        .logo-container { margin-bottom: 30px; }
-        .logo-img { width: 220px; }
+        .logo-container { margin-bottom: 25px; }
+        .logo-img { width: 180px; }
 
-        h2 { color: #2C3E50; margin-bottom: 5px; font-size: 1.5rem; }
-        p.subtitle { color: var(--text-gray); margin-bottom: 30px; font-size: 0.9rem; }
+        h2 { color: var(--white); margin-bottom: 8px; font-size: 1.6rem; font-weight: 700; }
+        p.subtitle { color: var(--text-gray); margin-bottom: 30px; font-size: 0.95rem; }
 
-        .form-group { text-align: left; margin-bottom: 20px; }
-        label { display: block; font-size: 0.85rem; font-weight: bold; color: #34495E; margin-bottom: 8px; }
+        .form-group { text-align: left; margin-bottom: 18px; }
+        label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-gray); margin-bottom: 8px; margin-left: 5px; }
         
         .auth-input {
             width: 100%;
-            padding: 12px 15px;
-            border: 1px solid var(--input-border);
-            border-radius: 8px;
+            padding: 14px 18px;
+            border: 1px solid #333;
+            border-radius: 12px;
             font-size: 1rem;
-            color: #333;
+            background: var(--input-bg);
+            color: white;
             outline: none;
-            transition: border 0.3s;
+            transition: all 0.3s;
         }
-        .auth-input:focus { border-color: var(--primary-blue); }
+        .auth-input:focus { border-color: var(--primary-blue); background: #222; }
 
-        /* Bouton Bleu Threndly */
+        /* Boutons avec ton dégradé Logo */
         .btn-submit {
             width: 100%;
-            padding: 14px;
-            background-color: var(--primary-blue);
+            padding: 15px;
+            background: var(--grad);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
             margin-top: 10px;
+            transition: transform 0.2s;
         }
+        .btn-submit:active { transform: scale(0.98); }
 
         .separator {
             margin: 25px 0;
             display: flex;
             align-items: center;
-            color: var(--text-gray);
+            color: #444;
             font-size: 0.8rem;
+            font-weight: bold;
         }
-        .separator::before, .separator::after { content: ""; flex: 1; height: 1px; background: #eee; }
-        .separator span { padding: 0 10px; }
+        .separator::before, .separator::after { content: ""; flex: 1; height: 1px; background: #222; }
+        .separator span { padding: 0 15px; }
 
-        /* Boutons Sociaux */
+        /* Boutons Sociaux adaptés au thème sombre */
         .social-btn {
             width: 100%;
-            padding: 12px;
+            padding: 13px;
             margin-bottom: 12px;
-            border: none;
-            border-radius: 8px;
+            border: 1px solid #333;
+            border-radius: 12px;
             color: white;
             font-weight: 500;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
             cursor: pointer;
+            background: #080808;
+            transition: background 0.3s;
         }
-        .btn-google { background-color: #EA4335; }
-        .btn-facebook { background-color: #1877F2; }
+        .social-btn:hover { background: #151515; }
+        .fa-google { color: #EA4335; }
+        .fa-facebook { color: #1877F2; }
 
-        .auth-footer { margin-top: 25px; font-size: 0.85rem; }
+        .auth-footer { margin-top: 30px; font-size: 0.9rem; color: var(--text-gray); }
         .auth-footer a { color: var(--primary-blue); text-decoration: none; font-weight: bold; cursor: pointer; }
         
-        /* Setup Photo (Caché au début) */
+        /* Setup Photo */
         #profile-setup { display: none; flex-direction: column; align-items: center; }
-        #preview-img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin: 20px 0; border: 3px solid var(--primary-blue); }
+        #preview-img { width: 130px; height: 130px; border-radius: 50%; object-fit: cover; margin: 20px 0; border: 3px solid var(--primary-blue); }
 
-        /* Interface Chat (Cachée au début) */
-        #app-interface { display: none; }
     </style>
 </head>
 <body>
 
-    <div class="auth-card" id="auth-container">
+    <div class="auth-card">
         <div class="logo-container">
             <img src="logo.png" class="logo-img" alt="Threndly">
         </div>
 
         <div id="login-section">
-            <h2 id="title">Content de vous revoir</h2>
-            <p class="subtitle" id="subtitle">Connectez-vous à votre compte</p>
+            <h2 id="title">Connexion</h2>
+            <p class="subtitle" id="subtitle">Heureux de vous revoir sur Threndly</p>
 
             <div class="form-group">
-                <label id="label-user">Identifiant</label>
-                <input type="text" id="username" class="auth-input" placeholder="Entrez votre identifiant">
+                <label>IDENTIFIANT</label>
+                <input type="text" id="username" class="auth-input" placeholder="Pseudo ou email">
             </div>
 
             <div class="form-group">
-                <label>Mot de passe</label>
-                <input type="password" id="password" class="auth-input" placeholder="Entrez votre mot de passe">
+                <label>MOT DE PASSE</label>
+                <input type="password" id="password" class="auth-input" placeholder="••••••••">
             </div>
 
             <button class="btn-submit" id="btn-main" onclick="handleAuth()">Se connecter</button>
 
             <div class="separator"><span>OU</span></div>
 
-            <button class="social-btn btn-google"><i class="fab fa-google"></i> Continuer avec Google</button>
-            <button class="social-btn btn-facebook"><i class="fab fa-facebook"></i> Continuer avec Facebook</button>
+            <button class="social-btn"><i class="fab fa-google"></i> Continuer avec Google</button>
+            <button class="social-btn"><i class="fab fa-facebook"></i> Continuer avec Facebook</button>
 
             <div class="auth-footer">
                 <a onclick="alert('Contactez l\'admin pour reset')">Mot de passe oublié ?</a><br><br>
-                <span id="footer-text">Vous n'avez pas de compte ?</span> <a id="toggle-link" onclick="toggleMode()">S'inscrire</a>
+                <span id="footer-text">Nouveau ici ?</span> <a id="toggle-link" onclick="toggleMode()">Créer un compte</a>
             </div>
         </div>
 
         <div id="profile-setup">
-            <h2>Presque fini !</h2>
-            <p class="subtitle">Choisissez votre photo de profil</p>
+            <h2>Photo de profil</h2>
+            <p class="subtitle">Montrez qui vous êtes !</p>
             <img src="https://i.pravatar.cc/150?u=temp" id="preview-img">
             <input type="file" id="file-input" hidden accept="image/*" onchange="loadPreview(this)">
-            <button class="btn-submit" style="background:#444; margin-bottom:10px;" onclick="document.getElementById('file-input').click()">Choisir une photo 📸</button>
-            <button class="btn-submit" onclick="finishSignup()">Commencer ✅</button>
+            <button class="btn-submit" style="background:#222;" onclick="document.getElementById('file-input').click()">Choisir une photo 📸</button>
+            <button class="btn-submit" onclick="finishSignup()" style="margin-top:15px;">Finaliser l'inscription ✅</button>
         </div>
     </div>
 
@@ -161,21 +169,21 @@
 
         function toggleMode() {
             isSignupMode = !isSignupMode;
-            document.getElementById('title').innerText = isSignupMode ? "Créez votre compte" : "Content de vous revoir";
-            document.getElementById('subtitle').innerText = isSignupMode ? "Rejoignez la communauté Threndly" : "Connectez-vous à votre compte";
+            document.getElementById('title').innerText = isSignupMode ? "Inscription" : "Connexion";
+            document.getElementById('subtitle').innerText = isSignupMode ? "Rejoignez l'aventure Threndly" : "Heureux de vous revoir sur Threndly";
             document.getElementById('btn-main').innerText = isSignupMode ? "S'inscrire" : "Se connecter";
-            document.getElementById('footer-text').innerText = isSignupMode ? "Vous avez déjà un compte ?" : "Vous n'avez pas de compte ?";
-            document.getElementById('toggle-link').innerText = isSignupMode ? "Se connecter" : "S'inscrire";
+            document.getElementById('footer-text').innerText = isSignupMode ? "Déjà un compte ?" : "Nouveau ici ?";
+            document.getElementById('toggle-link').innerText = isSignupMode ? "Se connecter" : "Créer un compte";
         }
 
         function handleAuth() {
             const u = document.getElementById('username').value.trim().toLowerCase();
             const p = document.getElementById('password').value.trim();
-            if(!u || !p) return alert("Veuillez remplir tous les champs");
+            if(!u || !p) return alert("Veuillez remplir les champs.");
 
             if(isSignupMode) {
                 db.ref("auth/"+u).once("value", snap => {
-                    if(snap.exists()) return alert("Cet identifiant est déjà utilisé");
+                    if(snap.exists()) return alert("Cet identifiant est déjà pris.");
                     tempUser = u;
                     document.getElementById('login-section').style.display = 'none';
                     document.getElementById('profile-setup').style.display = 'flex';
@@ -184,8 +192,8 @@
                 db.ref("auth/"+u).once("value", snap => {
                     if(snap.exists() && snap.val().pass === p) {
                         localStorage.setItem('threndly_user', u);
-                        window.location.href = "chat.html"; // Redirection vers ton chat
-                    } else alert("Identifiant ou mot de passe incorrect");
+                        location.reload(); 
+                    } else alert("Erreur d'identifiants.");
                 });
             }
         }
@@ -207,7 +215,7 @@
                 img: base64Photo || "https://i.pravatar.cc/150?u="+tempUser 
             });
             localStorage.setItem('threndly_user', tempUser);
-            window.location.href = "chat.html";
+            location.reload();
         }
     </script>
 </body>
