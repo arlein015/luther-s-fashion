@@ -15,38 +15,36 @@
             --dark-bg: #000000;
             --card-bg: #111111;
         }
-        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
         body, html { margin: 0; padding: 0; height: 100%; width: 100%; background: var(--dark-bg); color: white; overflow: hidden; display: flex; }
 
         /* --- ÉCRANS DE BIENVENUE --- */
         .full-screen { position: fixed; inset: 0; background: var(--dark-bg); z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px; }
-        .card { background: var(--card-bg); width: 100%; max-width: 400px; padding: 35px; border-radius: 28px; border: 1px solid #222; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+        .card { background: var(--card-bg); width: 100%; max-width: 400px; padding: 35px; border-radius: 28px; border: 1px solid #222; text-align: center; }
         .logo { width: 150px; margin-bottom: 25px; }
-        input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #1a1a1a; color: white; outline: none; margin-bottom: 15px; font-size: 1rem; }
-        input:focus { border-color: var(--blue); }
-        .btn { width: 100%; padding: 16px; background: var(--grad); border: none; border-radius: 12px; color: white; font-weight: bold; cursor: pointer; font-size: 1rem; transition: transform 0.2s; }
-        .btn:active { transform: scale(0.98); }
+        input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #1a1a1a; color: white; outline: none; margin-bottom: 15px; }
+        .btn { width: 100%; padding: 16px; background: var(--grad); border: none; border-radius: 12px; color: white; font-weight: bold; cursor: pointer; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
         /* --- INTERFACE PRINCIPALE --- */
         #sidebar { width: 80px; background: #080808; border-right: 1px solid #1a1a1a; display: flex; flex-direction: column; align-items: center; padding-top: 25px; flex-shrink: 0; }
         #chat-area { flex: 1; display: flex; flex-direction: column; background: var(--dark-bg); position: relative; }
         
-        header { padding: 18px 25px; border-bottom: 1px solid #1a1a1a; display: flex; align-items: center; gap: 15px; background: #050505; }
-        #header-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: none; border: 1px solid #333; }
+        header { padding: 18px 25px; border-bottom: 1px solid #1a1a1a; display: none; align-items: center; gap: 15px; background: #050505; }
+        #header-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid #333; }
         
         #msg-list { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .bubble { padding: 12px 18px; border-radius: 22px; max-width: 80%; font-size: 0.95rem; line-height: 1.4; word-wrap: break-word; }
+        .bubble { padding: 12px 18px; border-radius: 22px; max-width: 80%; font-size: 0.95rem; line-height: 1.4; }
         .me { align-self: flex-end; background: var(--grad); color: white; border-bottom-right-radius: 4px; }
         .other { align-self: flex-start; background: #222; color: white; border-bottom-left-radius: 4px; }
 
         footer { padding: 15px; display: none; gap: 12px; background: #0a0a0a; border-top: 1px solid #1a1a1a; }
-        footer input { margin: 0; flex: 1; border-radius: 30px; padding-left: 20px; }
+        footer input { margin: 0; flex: 1; border-radius: 30px; }
 
         /* MODAL AMIS */
         #friend-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 10000; display: none; flex-direction: column; padding: 30px; }
-        .user-row { display: flex; align-items: center; gap: 15px; padding: 15px; border-bottom: 1px solid #111; cursor: pointer; transition: background 0.2s; border-radius: 12px; }
-        .user-row:hover { background: #111; }
-        .user-row img { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid #222; }
+        .user-row { display: flex; align-items: center; gap: 15px; padding: 15px; border-bottom: 1px solid #111; cursor: pointer; }
+        .user-row img { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; }
     </style>
 </head>
 <body>
@@ -54,23 +52,21 @@
     <div id="auth-screen" class="full-screen">
         <div class="card">
             <img src="logo.png" class="logo">
-            <h2>Bienvenue sur Threndly</h2>
-            <p style="color:#666; margin-bottom:20px;">Créez votre compte intelligent</p>
+            <h2>Inscription</h2>
             <input type="text" id="reg-user" placeholder="Pseudo (ex: arthur)">
             <input type="password" id="reg-pass" placeholder="Mot de passe">
             <button class="btn" onclick="startSignup()">S'inscrire</button>
-            <p style="font-size:0.8rem; color:#444; margin-top:15px; cursor:pointer;" onclick="alert('Contactez l\'admin pour reset')">Mot de passe oublié ?</p>
+            <p style="font-size:0.8rem; color:#444; margin-top:15px; cursor:pointer;" onclick="alert('Contactez l\'admin')">Mot de passe oublié ?</p>
         </div>
     </div>
 
     <div id="photo-screen" class="full-screen">
         <div class="card">
             <h2>Photo de profil</h2>
-            <p style="color:#888">Choisissez comment vos amis vous voient</p>
             <img src="https://i.pravatar.cc/150?u=temp" id="preview" style="width:130px; height:130px; border-radius:50%; margin:25px; border:3px solid var(--blue); object-fit:cover;">
             <input type="file" id="file" hidden accept="image/*" onchange="handlePreview(this)">
             <button class="btn" style="background:#222; margin-bottom:12px;" onclick="document.getElementById('file').click()">Galerie 📸</button>
-            <button class="btn" onclick="saveAccount()">Finaliser ✅</button>
+            <button class="btn" id="finish-btn" onclick="saveAccount()">Finaliser ✅</button>
         </div>
     </div>
 
@@ -85,7 +81,7 @@
             <i class="far fa-comments" style="font-size:4rem; margin-bottom:15px;"></i>
             <p>Cliquez sur le + pour<br>trouver un ami</p>
         </div>
-        <header id="chat-header" style="display:none;">
+        <header id="chat-header">
             <img id="header-img">
             <div style="display:flex; flex-direction:column;">
                 <span id="header-name" style="font-weight:bold;">Ami</span>
@@ -104,7 +100,7 @@
             <h2 style="margin:0;">Suggestions d'amis</h2>
             <i class="fas fa-times" onclick="closeFriends()" style="font-size:1.8rem; cursor:pointer;"></i>
         </div>
-        <div id="users-list" style="overflow-y:auto; flex:1;"></div>
+        <div id="users-list"></div>
     </div>
 
     <script>
@@ -113,16 +109,14 @@
         const db = firebase.database();
 
         let myID = localStorage.getItem('threndly_id') || "";
-        let chatPartner = "";
         let activeChatKey = "";
         let myBase64 = "";
 
-        // DÉMARRAGE INTELLIGENT
+        // DÉMARRAGE AUTOMATIQUE
         window.onload = () => {
             if(!myID) {
                 document.getElementById('auth-screen').style.display = 'flex';
             } else {
-                console.log("Session active : " + myID);
                 listenForUsers();
             }
         };
@@ -130,7 +124,7 @@
         function startSignup() {
             const u = document.getElementById('reg-user').value.trim().toLowerCase();
             const p = document.getElementById('reg-pass').value;
-            if(!u || !p) return alert("Veuillez tout remplir !");
+            if(!u || !p) return alert("Remplis tout !");
             myID = u;
             document.getElementById('auth-screen').style.display = 'none';
             document.getElementById('photo-screen').style.display = 'flex';
@@ -146,64 +140,64 @@
         }
 
         function saveAccount() {
+            const btn = document.getElementById('finish-btn');
             const pass = document.getElementById('reg-pass').value;
-            db.ref("auth/"+myID).set({ pass: pass });
-            db.ref("profiles/"+myID).set({ 
-                name: myID, 
-                img: myBase64 || "https://i.pravatar.cc/150?u="+myID 
+            btn.disabled = true;
+            btn.innerText = "Création...";
+
+            // Enregistrement double (Auth + Profil)
+            db.ref("auth/"+myID).set({ pass: pass }).then(() => {
+                return db.ref("profiles/"+myID).set({ 
+                    name: myID, 
+                    img: myBase64 || "https://i.pravatar.cc/150?u="+myID 
+                });
             }).then(() => {
                 localStorage.setItem('threndly_id', myID);
                 location.reload();
+            }).catch(e => {
+                alert("Erreur !");
+                btn.disabled = false;
             });
         }
 
-        // SYNC DES UTILISATEURS (LIVE)
         function listenForUsers() {
             db.ref("profiles").on("value", snap => {
                 const list = document.getElementById('users-list');
                 list.innerHTML = "";
-                let count = 0;
                 snap.forEach(child => {
                     const u = child.val();
                     if(u.name !== myID) {
-                        count++;
                         const row = document.createElement('div');
                         row.className = "user-row";
-                        row.onclick = () => openPrivateChat(u.name, u.img);
-                        row.innerHTML = `<img src="${u.img}"><div><b>${u.name}</b><br><small style="color:#555;">Threndly User</small></div>`;
+                        row.onclick = () => openChat(u.name, u.img);
+                        row.innerHTML = `<img src="${u.img}"><b>${u.name}</b>`;
                         list.appendChild(row);
                     }
                 });
-                if(count === 0) list.innerHTML = "<p style='text-align:center; color:#444;'>Aucun ami trouvé pour l'instant...</p>";
             });
         }
 
-        // CHAT PRIVÉ (TUNNEL UNIQUE)
-        function openPrivateChat(name, img) {
-            chatPartner = name;
-            activeChatKey = [myID, name].sort().join("_"); // Clé unique intelligente
-            
+        function openChat(name, img) {
+            activeChatKey = [myID, name].sort().join("_");
             document.getElementById('empty-state').style.display = 'none';
             document.getElementById('chat-header').style.display = 'flex';
             document.getElementById('chat-footer').style.display = 'flex';
             document.getElementById('header-name').innerText = name;
             document.getElementById('header-img').src = img;
-            document.getElementById('header-img').style.display = 'block';
-            
             closeFriends();
             loadMessages();
         }
 
         function loadMessages() {
             const box = document.getElementById('msg-list');
-            db.ref("messages/" + activeChatKey).off(); // Nettoyage de l'ancien listener
+            db.ref("messages/" + activeChatKey).off();
             box.innerHTML = "";
             db.ref("messages/" + activeChatKey).on("child_added", snap => {
                 const m = snap.val();
-                const div = document.createElement('div');
-                div.className = `bubble ${m.from === myID ? 'me' : 'other'}`;
-                div.innerText = m.text;
-                box.appendChild(div);
+                const d = document.createElement('div');
+                d.className = `bubble ${m.from === myID ? 'me' : 'other'}`;
+                d.innerText = m.text;
+                box.appendChild(d);
                 box.scrollTop = box.scrollHeight;
             });
         }
@@ -211,11 +205,7 @@
         function send() {
             const inp = document.getElementById('msg-in');
             if(inp.value.trim() && activeChatKey) {
-                db.ref("messages/" + activeChatKey).push({
-                    from: myID,
-                    text: inp.value,
-                    time: Date.now()
-                });
+                db.ref("messages/" + activeChatKey).push({ from: myID, text: inp.value });
                 inp.value = "";
             }
         }
