@@ -24,18 +24,22 @@
         .auth-btn { background: var(--grad); border: none; padding: 16px; border-radius: 30px; color: white; width: 100%; font-weight: bold; cursor: pointer; font-size: 1rem; margin-top: 10px; transition: 0.2s; }
         .auth-btn:active { transform: scale(0.96); }
 
-        .auth-switch { margin-top: 25px; font-size: 0.9rem; color: #888; }
-        .auth-switch span { color: var(--cyan); cursor: pointer; font-weight: bold; margin-left: 5px; }
-
-        /* Sidebar & Chat (Gardés du design précédent) */
+        .auth-links { margin-top: 25px; font-size: 0.9rem; color: #888; display: flex; flex-direction: column; gap: 10px; }
+        .auth-links span { color: var(--cyan); cursor: pointer; font-weight: bold; }
+        
+        /* Sidebar & Chat (Design Slim et Mobile) */
         #sidebar { width: 85px; background: var(--sidebar); border-right: 1px solid #1a1a1a; display: flex; flex-direction: column; flex-shrink: 0; }
         .sidebar-header { padding: 20px 0; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-        .logo-img-small { width: 45px; height: 45px; object-fit: contain; }
+        .logo-box { width: 45px; height: 45px; margin-bottom: 10px; }
+        /* Correction Logo Sidebar */
+        .logo-img-small { width: 100%; height: 100%; object-fit: contain; } 
         .add-friend-btn { width: 45px; height: 45px; border-radius: 50%; background: #1a1a1a; display: flex; align-items: center; justify-content: center; color: var(--cyan); cursor: pointer; border: 1px solid #333; }
 
         #friends-list { flex: 1; overflow-y: auto; }
-        .friend-item { padding: 15px 0; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-        .friend-avatar { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; }
+        .friend-item { padding: 15px 0; display: flex; flex-direction: column; align-items: center; cursor: pointer; position: relative; }
+        /* Photo de Profil Mobile */
+        .friend-avatar { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid transparent; } 
+        .friend-item.active .friend-avatar { border-color: var(--cyan); }
 
         #main-chat { flex: 1; display: none; flex-direction: column; background: #000; }
         header { padding: 15px; border-bottom: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; }
@@ -48,7 +52,7 @@
         .input-container { flex: 1; background: #1a1a1a; border-radius: 25px; padding: 10px 18px; }
         #message-input { background: transparent; border: none; color: white; width: 100%; outline: none; font-size: 16px; }
 
-        @media (min-width: 900px) { #sidebar { width: 280px; } .friend-item { flex-direction: row; padding: 15px 20px; gap: 15px; } }
+        @media (min-width: 900px) { #sidebar { width: 280px; } .friend-item { flex-direction: row; padding: 15px 20px; gap: 15px; } .logo-box { display: none; } }
     </style>
 </head>
 <body>
@@ -58,20 +62,23 @@
         <img src="logo.png" class="logo-img-large" alt="Threndly">
         <h2 id="auth-title" style="margin-bottom: 20px; font-size: 1.2rem;">Connexion</h2>
         
-        <input type="text" id="username" class="auth-input" placeholder="Identifiant">
+        <input type="text" id="username" class="auth-input" placeholder="Identifiant (ex: arlein015)">
         <input type="password" id="password" class="auth-input" placeholder="Mot de passe">
         
         <button id="auth-submit" onclick="processAuth()" class="auth-btn">Se connecter</button>
         
-        <div class="auth-switch" id="auth-toggle-text">
-            Vous n'avez pas de compte ? <span onclick="toggleAuthMode()">S'inscrire</span>
+        <div class="auth-links">
+            <div id="auth-toggle-text">
+                Vous n'avez pas de compte ? <span onclick="toggleAuthMode()">S'inscrire</span>
+            </div>
+            <span style="font-size:0.8rem;" onclick="forgotPassword()">Mot de passe oublié ?</span>
         </div>
     </div>
 </div>
 
 <div id="sidebar">
     <div class="sidebar-header">
-        <img src="logo.png" class="logo-img-small">
+        <div class="logo-box"><img src="logo.png" class="logo-img-small"></div>
         <div class="add-friend-btn" onclick="openDirectory()"><i class="fas fa-plus"></i></div>
     </div>
     <div id="friends-list"></div>
@@ -80,17 +87,19 @@
 <div id="main-chat">
     <header>
         <div style="display:flex; align-items:center; gap:12px;">
-            <img src="" id="chat-avatar" style="width:40px; height:40px; border-radius:50%;">
+            <img src="" id="chat-avatar" style="width:40px; height:40px; border-radius:50%; border: 1px solid #333;">
             <div id="chat-name" style="font-weight:bold;"></div>
         </div>
-        <i class="fas fa-sign-out-alt" onclick="logout()" style="color:#444; cursor:pointer;"></i>
+        <i class="fas fa-sign-out-alt" onclick="logout()" style="color:#444; cursor:pointer; font-size:1.2rem;"></i>
     </header>
     <div id="chat-box"></div>
     <div id="input-area">
+        <label for="img-input"><i class="far fa-image" style="color:#888; font-size:1.6rem; cursor:pointer;"></i></label>
+        <input type="file" id="img-input" hidden accept="image/*" onchange="sendPhoto(this)">
         <div class="input-container">
             <input type="text" id="message-input" placeholder="Message..." onkeypress="if(event.key=='Enter')sendMsg()">
         </div>
-        <button onclick="sendMsg()" class="auth-btn" style="width:45px; height:45px; margin:0; border-radius:50%;"><i class="fas fa-arrow-up"></i></button>
+        <button onclick="sendMsg()" class="auth-btn" style="width:45px; height:45px; margin:0; border-radius:50%; flex-shrink:0;"><i class="fas fa-arrow-up"></i></button>
     </div>
 </div>
 
@@ -113,21 +122,35 @@
             "Vous n'avez pas de compte ? <span onclick='toggleAuthMode()'>S'inscrire</span>";
     }
 
+    function forgotPassword() {
+        alert("Pour réinitialiser votre mot de passe, veuillez contacter l'administrateur à admin@threndly.com.");
+    }
+
     function processAuth() {
         const user = document.getElementById('username').value.trim().toLowerCase();
         const pass = document.getElementById('password').value.trim();
 
         if(!user || !pass) return alert("Remplis tous les champs !");
+        if(pass.length < 6) return alert("Le mot de passe doit faire au moins 6 caractères !");
 
         if(isSignUpMode) {
+            // Inscription : Vérifie si le pseudo existe déjà
             db.ref("users_auth/" + user).once("value", snap => {
                 if(snap.exists()) return alert("Cet identifiant est déjà pris !");
+                
+                // Crée le compte (Identifiant + Mot de passe)
                 db.ref("users_auth/" + user).set({ password: pass }).then(() => {
-                    db.ref("users_list/" + user).set({ name: user });
+                    // Crée le profil public avec photo par défaut
+                    db.ref("users_list/" + user).set({ 
+                        name: user, 
+                        // Photo de profil par défaut
+                        img: "https://i.pravatar.cc/150?u=" + user 
+                    });
                     completeLogin(user);
                 });
             });
         } else {
+            // Connexion : Vérifie les identifiants
             db.ref("users_auth/" + user).once("value", snap => {
                 if(snap.exists() && snap.val().password === pass) {
                     completeLogin(user);
@@ -146,7 +169,24 @@
     }
 
     function loadFriends() {
-        // Logique de chargement des amis...
+        const list = document.getElementById('friends-list');
+        list.innerHTML = "";
+        
+        // Exemple d'amis avec photo de profil
+        const friends = [
+            { name: "Joselyna", img: "https://i.pravatar.cc/150?u=jos" },
+            { name: "Nelly", img: "https://i.pravatar.cc/150?u=nel" }
+        ];
+
+        friends.forEach(f => {
+            const div = document.createElement('div');
+            div.className = 'friend-item';
+            div.innerHTML = `
+                <img src="${f.img}" class="friend-avatar">
+                <div class="friend-name-label" style="display:none; color:white; font-size:0.9rem; margin-left:10px;">${f.name}</div>
+            `;
+            list.appendChild(div);
+        });
     }
 
     function logout() { localStorage.clear(); location.reload(); }
