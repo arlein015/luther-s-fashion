@@ -9,39 +9,49 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --cyan: #00d2ff; --bg: #000; --sidebar: #0a0a0a; --grad: linear-gradient(135deg, #2D9CDB 0%, #BB6BD9 100%); }
-        /* Optimisation pour le rafraîchissement mobile */
         html { overscroll-behavior-y: contain; }
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: white; margin: 0; height: 100vh; display: flex; overflow: hidden; }
 
+        /* Écran de connexion - LOGO ENCORE PLUS GROS */
         #auth-screen { position: fixed; inset: 0; background: #000; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .logo-img-large { width: 220px; margin-bottom: 35px; }
+        .logo-img-large { width: 250px; margin-bottom: 40px; }
 
-        #sidebar { width: 280px; background: var(--sidebar); border-right: 1px solid #1a1a1a; display: flex; flex-direction: column; flex-shrink: 0; }
-        .sidebar-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .logo-img-small { height: 55px; }
+        /* Sidebar Réduite pour laisser de la place au Chat */
+        #sidebar { width: 85px; background: var(--sidebar); border-right: 1px solid #1a1a1a; display: flex; flex-direction: column; flex-shrink: 0; transition: 0.3s; }
+        .sidebar-header { padding: 15px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .logo-img-small { width: 50px; height: auto; object-fit: contain; }
 
-        #friends-list { flex: 1; overflow-y: auto; }
-        .friend-item { padding: 15px; display: flex; align-items: center; gap: 12px; cursor: pointer; border-bottom: 1px solid #111; position: relative; }
-        .friend-avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
-        .friend-info { flex: 1; overflow: hidden; }
-        .friend-name { font-weight: bold; font-size: 0.95rem; display: flex; align-items: center; gap: 5px; }
+        #friends-list { flex: 1; overflow-y: auto; padding-top: 10px; }
+        .friend-item { padding: 15px 0; display: flex; flex-direction: column; align-items: center; cursor: pointer; position: relative; }
+        .friend-avatar { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid transparent; }
+        .friend-item.active .friend-avatar { border-color: var(--cyan); }
+        .friend-name-label { display: none; } /* On cache les noms pour gagner de la place */
         
-        /* Chiffre des nouveaux messages */
-        .unread-badge { background: #ff3b30; color: white; font-size: 0.75rem; font-weight: bold; padding: 2px 7px; border-radius: 10px; min-width: 10px; text-align: center; }
+        .unread-badge { position: absolute; top: 12px; right: 12px; background: #ff3b30; color: white; font-size: 0.7rem; font-weight: bold; padding: 2px 6px; border-radius: 10px; border: 2px solid #000; }
 
+        /* Zone de Discussion MAXIMISÉE */
         #main-chat { flex: 1; display: none; flex-direction: column; background: #000; }
-        header { padding: 12px 20px; border-bottom: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; }
+        header { padding: 12px 20px; border-bottom: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; background: #050505; }
         #chat-box { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
         
-        .msg { padding: 12px 18px; border-radius: 20px; max-width: 75%; font-size: 0.95rem; }
+        .msg { padding: 12px 18px; border-radius: 20px; max-width: 85%; font-size: 1rem; line-height: 1.4; word-wrap: break-word; }
         .my-msg { align-self: flex-end; background: var(--grad); border-bottom-right-radius: 4px; }
         .other-msg { align-self: flex-start; background: #262626; border-bottom-left-radius: 4px; }
-        .msg img { max-width: 100%; border-radius: 10px; margin-top: 5px; }
+        .msg img { max-width: 100%; border-radius: 12px; }
 
-        #input-area { padding: 15px 25px; display: flex; align-items: center; gap: 15px; border-top: 1px solid #1a1a1a; }
-        .input-container { flex: 1; background: #1a1a1a; border-radius: 25px; padding: 12px 20px; }
-        #message-input { background: transparent; border: none; color: white; width: 100%; outline: none; }
-        .send-btn { background: var(--grad); border: none; width: 45px; height: 45px; border-radius: 50%; color: white; cursor: pointer; }
+        /* Barre d'envoi Large */
+        #input-area { padding: 15px 20px; display: flex; align-items: center; gap: 12px; border-top: 1px solid #1a1a1a; background: #050505; }
+        .input-container { flex: 1; background: #1a1a1a; border-radius: 30px; padding: 12px 20px; }
+        #message-input { background: transparent; border: none; color: white; width: 100%; outline: none; font-size: 1rem; }
+        .send-btn { background: var(--grad); border: none; width: 48px; height: 48px; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+        /* Design pour Ordinateur (on réaffiche les noms si l'écran est large) */
+        @media (min-width: 900px) {
+            #sidebar { width: 280px; }
+            .friend-item { flex-direction: row; padding: 15px; gap: 15px; }
+            .friend-name-label { display: block; font-weight: bold; font-size: 0.95rem; }
+            .sidebar-header { flex-direction: row; justify-content: space-between; }
+        }
     </style>
 </head>
 <body>
@@ -57,7 +67,7 @@
 <div id="sidebar">
     <div class="sidebar-header">
         <img src="logo.png" class="logo-img-small">
-        <i class="fas fa-sign-out-alt" onclick="logout()" style="color:#555; cursor:pointer"></i>
+        <i class="fas fa-sign-out-alt" onclick="logout()" style="color:#444; cursor:pointer; font-size: 1.2rem;"></i>
     </div>
     <div id="friends-list"></div>
 </div>
@@ -65,11 +75,10 @@
 <div id="main-chat">
     <header>
         <div style="display:flex; align-items:center; gap:12px;">
-            <i class="fas fa-arrow-left" onclick="closeChat()" style="margin-right:10px; cursor:pointer"></i>
-            <img src="" id="chat-avatar" style="width:42px; height:42px; border-radius:50%;">
-            <div id="chat-name" style="font-weight:bold;"></div>
+            <img src="" id="chat-avatar" style="width:40px; height:40px; border-radius:50%; border: 1px solid #333;">
+            <div id="chat-name" style="font-weight:bold; font-size: 1.1rem;"></div>
         </div>
-        <div style="display:flex; gap:20px; color:#555;">
+        <div style="display:flex; gap:20px; color:#666; font-size: 1.2rem;">
             <i class="fas fa-phone"></i>
             <i class="fas fa-video"></i>
         </div>
@@ -137,13 +146,11 @@
         list.innerHTML = "";
         friendsData.forEach(f => {
             const div = document.createElement('div');
-            div.className = 'friend-item';
+            div.className = `friend-item ${activeChat === f.id ? 'active' : ''}`;
             div.onclick = () => openChat(f.id, f.img);
             div.innerHTML = `
                 <img src="${f.img}" class="friend-avatar">
-                <div class="friend-info">
-                    <div class="friend-name">${f.name} <i class="fas fa-check-circle" style="color:var(--cyan); font-size:0.7rem"></i></div>
-                </div>
+                <div class="friend-name-label">${f.name}</div>
                 ${f.unread > 0 ? `<div class="unread-badge">${f.unread}</div>` : ''}
             `;
             list.appendChild(div);
@@ -158,18 +165,14 @@
         document.getElementById('main-chat').style.display = 'flex';
         document.getElementById('chat-name').innerText = id;
         document.getElementById('chat-avatar').src = img;
-        renderFriends();
+        sortAndRender();
         loadMessages();
     }
 
     function sendMsg() {
         const input = document.getElementById('message-input');
         if(input.value.trim() && activeChat) {
-            db.ref("chats/" + activeChat).push({ 
-                from: myUser, 
-                text: input.value, 
-                time: Date.now() 
-            });
+            db.ref("chats/" + activeChat).push({ from: myUser, text: input.value, time: Date.now() });
             input.value = "";
         }
     }
@@ -179,11 +182,7 @@
         if(!file || !activeChat) return;
         const reader = new FileReader();
         reader.onload = (e) => {
-            db.ref("chats/" + activeChat).push({ 
-                from: myUser, 
-                text: e.target.result, 
-                time: Date.now() 
-            });
+            db.ref("chats/" + activeChat).push({ from: myUser, text: e.target.result, time: Date.now() });
         };
         reader.readAsDataURL(file);
     }
@@ -202,7 +201,6 @@
         });
     }
 
-    function closeChat() { document.getElementById('main-chat').style.display = 'none'; activeChat = ""; }
     function logout() { localStorage.removeItem('threndly_user'); location.reload(); }
 </script>
 </body>
