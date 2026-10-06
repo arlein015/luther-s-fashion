@@ -1,1 +1,272 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Catalogue – Luther-S-Mode</title>
+<meta name="description" content="Tous les produits Luther-S-Mode : recherche, catégories et commande facile.">
+<style>
+  :root {
+    --bg: #fafaf7; --card: #ffffff; --text: #1d1d1b; --muted: #6b6b66;
+    --btn: #1d1d1b; --btn-text: #ffffff; --border: #e6e4dc; --ph: #eceae2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141413; --card: #1e1e1c; --text: #f2f1ec; --muted: #a3a39b;
+      --btn: #f2f1ec; --btn-text: #141413; --border: #34342f; --ph: #2a2a27;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.5;
+  }
+  .top, main { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+  .top { padding-top: 18px; padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .brand { font-weight: 800; font-size: 1.2rem; letter-spacing: -0.02em; color: var(--text); text-decoration: none; }
+  .back { color: var(--muted); font-size: .9rem; text-decoration: none; }
+  .back:hover { color: var(--text); }
+  h1 { font-size: clamp(1.6rem, 5vw, 2.4rem); letter-spacing: -0.03em; margin: 20px 0 14px; }
+  .tools { display: grid; grid-template-columns: 1fr; gap: 10px; }
+  @media (min-width: 700px) { .tools { grid-template-columns: 2fr 1fr 1fr; } }
+  input, select {
+    width: 100%; padding: 12px 14px; font-size: 1rem; color: var(--text);
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  }
+  input:focus-visible, select:focus-visible, .btn:focus-visible, .card:focus-visible {
+    outline: 2px solid var(--text); outline-offset: 2px;
+  }
+  .muted { color: var(--muted); font-size: .9rem; margin: 14px 0 8px; }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 8px 0 24px; }
+  @media (min-width: 700px) { .grid { grid-template-columns: repeat(3, 1fr); gap: 16px; } }
+  @media (min-width: 960px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    overflow: hidden; text-decoration: none; color: inherit; display: flex; flex-direction: column;
+  }
+  .card:hover { border-color: var(--text); }
+  .card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; background: var(--ph); display: block; }
+  .card .body { padding: 12px; display: flex; flex-direction: column; gap: 4px; }
+  .card h2 { font-size: .95rem; font-weight: 600; line-height: 1.3; }
+  .card .cat { font-size: .78rem; color: var(--muted); }
+  .card .price { font-weight: 800; margin-top: 2px; }
+  .empty { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 40px 0; }
+  .pager { display: flex; justify-content: center; align-items: center; gap: 14px; padding: 8px 0 48px; }
+  .btn {
+    display: inline-block; border: 0; cursor: pointer; font-size: .95rem; font-weight: 700;
+    background: var(--btn); color: var(--btn-text); padding: 10px 16px; border-radius: 10px; text-decoration: none;
+  }
+  .btn[disabled] { opacity: .35; cursor: default; }
+  footer { max-width: 1100px; margin: 0 auto; padding: 20px 16px 40px; border-top: 1px solid var(--border); color: var(--muted); font-size: .8rem; }
+</style>
+</head>
+<body>
 
+<header class="top">
+  <a class="brand" href="index.html" id="brand">Luther-S-Mode</a>
+  <a class="back" href="index.html">&larr; Accueil</a>
+</header>
+
+<main>
+  <h1>Catalogue</h1>
+
+  <div class="tools">
+    <input id="q" type="search" placeholder="Rechercher un produit…" aria-label="Rechercher un produit" autocomplete="off">
+    <select id="cat" aria-label="Catégorie"><option value="">Toutes les catégories</option></select>
+    <select id="sort" aria-label="Trier">
+      <option value="">Ordre par défaut</option>
+      <option value="asc">Prix croissant</option>
+      <option value="desc">Prix décroissant</option>
+    </select>
+  </div>
+
+  <p id="count" class="muted" aria-live="polite"></p>
+  <section id="grid" class="grid"></section>
+  <nav id="pager" class="pager" aria-label="Pages"></nav>
+</main>
+
+<footer>&copy; <span id="year"></span> Luther-S-Mode</footer>
+
+<script>
+  /* ============ RÉGLAGES À MODIFIER ============ */
+  const CONFIG = {
+    brand: "Luther-S-Mode",
+    currency: "Ar",          // ex. "Ar", "€", "$"
+    perPage: 24              // produits par page
+  };
+  /* ============================================= */
+
+  const PLACEHOLDER = "data:image/svg+xml," + encodeURIComponent(
+    "<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><rect width='100%' height='100%' fill='#d9d6cb'/></svg>"
+  );
+
+  const $ = function (id) { return document.getElementById(id); };
+  const state = { q: "", cat: "", sort: "", page: 1 };
+  let ALL = [];
+
+  function norm(s) {
+    return String(s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+  function fmtPrice(n) {
+    return typeof n === "number" ? new Intl.NumberFormat("fr-FR").format(n) + " " + CONFIG.currency : "";
+  }
+
+  function readURL() {
+    const p = new URLSearchParams(location.search);
+    state.q = p.get("q") || "";
+    state.cat = p.get("cat") || "";
+    state.sort = p.get("sort") || "";
+    state.page = Math.max(1, parseInt(p.get("page"), 10) || 1);
+  }
+  function writeURL() {
+    const p = new URLSearchParams();
+    if (state.q) p.set("q", state.q);
+    if (state.cat) p.set("cat", state.cat);
+    if (state.sort) p.set("sort", state.sort);
+    if (state.page > 1) p.set("page", state.page);
+    const s = p.toString();
+    history.replaceState(null, "", s ? "?" + s : location.pathname);
+  }
+
+  function filtered() {
+    const q = norm(state.q);
+    let list = ALL.filter(function (p) {
+      if (state.cat && p.category !== state.cat) return false;
+      if (!q) return true;
+      return norm(p.title + " " + (p.description || "") + " " + (p.category || "")).indexOf(q) !== -1;
+    });
+    if (state.sort === "asc") list = list.slice().sort(function (a, b) { return (a.price || 0) - (b.price || 0); });
+    if (state.sort === "desc") list = list.slice().sort(function (a, b) { return (b.price || 0) - (a.price || 0); });
+    return list;
+  }
+
+  function card(p) {
+    const a = document.createElement("a");
+    a.className = "card";
+    a.href = "produit.html?id=" + encodeURIComponent(p.id);
+
+    const img = document.createElement("img");
+    img.src = p.image || PLACEHOLDER;
+    img.alt = p.title;
+    img.loading = "lazy";
+    img.onerror = function () { this.onerror = null; this.src = PLACEHOLDER; };
+
+    const body = document.createElement("div");
+    body.className = "body";
+
+    const h2 = document.createElement("h2");
+    h2.textContent = p.title;
+    body.appendChild(h2);
+
+    if (p.category) {
+      const c = document.createElement("span");
+      c.className = "cat";
+      c.textContent = p.category;
+      body.appendChild(c);
+    }
+    const price = fmtPrice(p.price);
+    if (price) {
+      const pr = document.createElement("span");
+      pr.className = "price";
+      pr.textContent = price;
+      body.appendChild(pr);
+    }
+
+    a.appendChild(img);
+    a.appendChild(body);
+    return a;
+  }
+
+  function render() {
+    const list = filtered();
+    const pages = Math.max(1, Math.ceil(list.length / CONFIG.perPage));
+    if (state.page > pages) state.page = pages;
+    const start = (state.page - 1) * CONFIG.perPage;
+    const slice = list.slice(start, start + CONFIG.perPage);
+
+    const grid = $("grid");
+    grid.replaceChildren();
+    if (!slice.length) {
+      const e = document.createElement("p");
+      e.className = "empty";
+      e.textContent = "Aucun produit ne correspond à ta recherche.";
+      grid.appendChild(e);
+    } else {
+      slice.forEach(function (p) { grid.appendChild(card(p)); });
+    }
+
+    $("count").textContent = list.length + (list.length > 1 ? " produits" : " produit");
+
+    const pager = $("pager");
+    pager.replaceChildren();
+    if (pages > 1) {
+      const prev = document.createElement("button");
+      prev.className = "btn"; prev.type = "button"; prev.textContent = "← Précédent";
+      prev.disabled = state.page <= 1;
+      prev.onclick = function () { go(state.page - 1); };
+
+      const info = document.createElement("span");
+      info.className = "muted"; info.style.margin = "0";
+      info.textContent = "Page " + state.page + " / " + pages;
+
+      const next = document.createElement("button");
+      next.className = "btn"; next.type = "button"; next.textContent = "Suivant →";
+      next.disabled = state.page >= pages;
+      next.onclick = function () { go(state.page + 1); };
+
+      pager.appendChild(prev); pager.appendChild(info); pager.appendChild(next);
+    }
+    writeURL();
+  }
+
+  function go(page) {
+    state.page = page;
+    render();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function fillCategories() {
+    const cats = Array.from(new Set(ALL.map(function (p) { return p.category; }).filter(Boolean)))
+      .sort(function (a, b) { return a.localeCompare(b, "fr"); });
+    const sel = $("cat");
+    cats.forEach(function (c) {
+      const o = document.createElement("option");
+      o.value = c; o.textContent = c;
+      sel.appendChild(o);
+    });
+  }
+
+  function init() {
+    $("year").textContent = new Date().getFullYear();
+    $("brand").textContent = CONFIG.brand;
+    readURL();
+
+    fetch("products.json", { cache: "no-cache" })
+      .then(function (r) {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json();
+      })
+      .then(function (data) {
+        ALL = (Array.isArray(data) ? data : []).filter(function (p) { return p && p.id && p.title; });
+        fillCategories();
+        $("q").value = state.q;
+        $("cat").value = state.cat;
+        $("sort").value = state.sort;
+        render();
+      })
+      .catch(function () {
+        $("grid").innerHTML = "";
+        const e = document.createElement("p");
+        e.className = "empty";
+        e.textContent = "Impossible de charger les produits. Vérifie le fichier products.json.";
+        $("grid").appendChild(e);
+      });
+
+    $("q").addEventListener("input", function (e) { state.q = e.target.value; state.page = 1; render(); });
+    $("cat").addEventListener("change", function (e) { state.cat = e.target.value; state.page = 1; render(); });
+    $("sort").addEventListener("change", function (e) { state.sort = e.target.value; state.page = 1; render(); });
+  }
+  init();
+</script>
+</body>
+</html>
