@@ -16,10 +16,6 @@
     "description": "Décris ici la matière, la coupe et les tailles disponibles."
   }
 ]
-/* ============================================================
-   products.js – charge les produits depuis Google Sheets
-   (ou depuis products.json si le tableau n'est pas disponible)
-   ============================================================ */
 
 const PRODUCTS_SOURCE = {
   sheetCsvUrl: "https://docs.google.com/spreadsheets/d/1iyXPqTEU2OdXihbdwkmhIwZyiAo4vEqfxSy48Sx39To/edit?usp=sharing"
