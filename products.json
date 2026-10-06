@@ -1,1 +1,18 @@
-
+[
+  {
+    "id": "veste-verte",
+    "title": "Veste verte",
+    "price": 85000,
+    "category": "Vestes",
+    "image": "images/veste-verte.jpg",
+    "description": "Décris ici la matière, la coupe et les tailles disponibles."
+  },
+  {
+    "id": "veste-jaune",
+    "title": "Veste jaune",
+    "price": 85000,
+    "category": "Vestes",
+    "image": "images/veste-jaune.jpg",
+    "description": "Décris ici la matière, la coupe et les tailles disponibles."
+  }
+]
